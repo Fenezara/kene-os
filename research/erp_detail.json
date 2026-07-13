@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://www.odoo.com",
+    "name": "Odoo: Open Source ERP and CRM",
+    "snippet": "Odoo is a suite of open source business apps that cover all your company needs: CRM, eCommerce, accounting, inventory, point of sale, project management, etc.",
+    "host_name": "www.odoo.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.appvizer.com/magazine/operations/erp/erpnext-vs-odoo",
+    "name": "Odoo vs ERPNext: the 2025 open source ERP comparison - Appvizer",
+    "snippet": "ERPNext is an open source ERP solution. Designed for SMEs and larger companies alike, CRM module: tracking of prospects, opportunities, ...",
+    "host_name": "www.appvizer.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://portcities.net/blog/erp-and-odoo-insights-2/odoo-vs-erpnext-which-erp-system-is-scalable-for-smes-95",
+    "name": "Comparing Odoo & ERPNext ERPs for Scalability in SMEs - Portcities",
+    "snippet": "ERPNext is better if you are looking for a simpler and more affordable ERP solution that caters to small and medium-sized businesses.",
+    "host_name": "portcities.net",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=hy1QsNDMVek",
+    "name": "Odoo vs ERPNext: Which Open-Source ERP Is Actually Worth",
+    "snippet": "... Inventory Management 04:48– Pricing Breakdown 05:20 – Which ERP Should You Choose? #Odoo #ERPNext #OpenSourceERP #BusinessSoftware ...",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.kerningcode.com/fr/blog/odoo-25/odoo-vs-erpnext-la-solution-erp-ultime-pour-la-gestion-d-entreprise-272",
+    "name": "Odoo vs ERPNext : La solution ERP ultime pour la gestion d'entreprise",
+    "snippet": "Cette solution ERP open source comprend des modules pour la comptabilité, la gestion des stocks, les ressources humaines et la CRM, tous conçus pour ...",
+    "host_name": "www.kerningcode.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/sysadmin/comments/1m9q6ug/odoo_or_erpnext_for_erp_system",
+    "name": "Odoo or ERPNext for ERP system? : r/sysadmin - Reddit",
+    "snippet": "Both Odoo and ERPNext can work for a medium company in logistics and manufacturing. Odoo has a bigger ecosystem and more third-party apps, while ...",
+    "host_name": "www.reddit.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://cloudpepper.io/blog/odoo-vs-erpnext-complete-comparison-guide",
+    "name": "Odoo vs ERPNext: Practical Comparison - Cloudpepper",
+    "snippet": "Odoo and ERPNext are two widely used open-source ERP options. Both cover accounting, inventory, sales, HR, manufacturing, and procurement, but ...",
+    "host_name": "cloudpepper.io",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.cudio.com/blog/erpnext-vs-odoo",
+    "name": "ERPNext vs Odoo: Features, Pricing & Which Wins [UPDATED 2026]",
+    "snippet": "ERPNext is tailored for small and medium-sized businesses, offering simplicity and cost-effectiveness, while Odoo is more comprehensive with ...",
+    "host_name": "www.cudio.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.dasolo.ai/fr/blog/integrations-odoo-3/odoo-vs-erpnext-comparatif-erp-open-source-102",
+    "name": "Odoo ou ERPNext : Comparatif Honnête pour Choisir un ERP Open",
+    "snippet": "Elle propose les fonctions ERP classiques : comptabilité, stock, CRM, RH, paie, fabrication et gestion de projets, le tout construit sur une ...",
+    "host_name": "www.dasolo.ai",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://odoofan.substack.com/p/erpnext-vs-odoo-a-comprehensive-comparison",
+    "name": "ERPNext vs Odoo: A Comprehensive Comparison of Two Leading ERP",
+    "snippet": "ERPNext: ERPNext includes essential accounting features such as invoicing, expense tracking, asset management, and financial reporting. It also ...",
+    "host_name": "odoofan.substack.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
