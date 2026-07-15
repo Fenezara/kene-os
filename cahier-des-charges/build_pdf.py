@@ -26,6 +26,7 @@ CDC_FILES = [
     ("09-plan-test.md", "Partie 9 — Plan de Test & Qualité"),
     ("10-operations-support.md", "Partie 10 — Opérations, Support & Migration"),
     ("11-evolutions-diagnostic.md", "Partie 11 — Évolutions & Améliorations du Diagnostic"),
+    ("12-enrichissement-creatif.md", "Partie 12 — Enrichissement Créatif, Innovations & Immersion 3D"),
 ]
 
 # Fichiers d'enquêtes/analyses à inclure en annexe
@@ -108,6 +109,7 @@ def build_toc() -> str:
                     <li>Partie 9 — Plan de Test & Qualité</li>
                     <li>Partie 10 — Opérations, Support & Migration</li>
                     <li>Partie 11 — Évolutions & Améliorations du Diagnostic (VISIA-like, multi-zones corps)</li>
+                    <li>Partie 12 — Enrichissement Créatif, Innovations & Immersion 3D</li>
                 </ul>
             </div>
             <div class="toc-section">
@@ -203,8 +205,25 @@ def build_executive_summary() -> str:
             <li>SaaS Pro (3 paliers : Essentiel 15 000 FCFA, Pro 35 000, Chaîne 75 000)</li>
             <li>Commission marketplace (8-12%)</li>
             <li>Commission transactions Mobile Money</li>
-            <li>Premium B2C (diagnostic avancé, dermo-conseil)</li>
+            <li>Premium B2C (Glow Pass 5 000 FCFA/mois)</li>
+            <li>Kènè Credits (monnaie virtuelle engagement)</li>
+            <li>B2B White Label (licence IA)</li>
         </ul>
+        
+        <h2>8. Vision créative & immersive (Partie 12)</h2>
+        <p>Kènè n'est pas qu'une app fonctionnelle — c'est une <strong>expérience de soi</strong>. 12 innovations stratégiques + 8 features bonus + 4 innovations accessibilité rendent l'app <strong>unique, hyper intuitive, immersive</strong> :</p>
+        <ul>
+            <li><strong>Kènè Mirror</strong> : miroir IA temps réel avec overlay doré</li>
+            <li><strong>Peau Journey</strong> : timeline 3D évolutive</li>
+            <li><strong>Rooted Routine</strong> : routine gamifiée (jardin botanique virtuel)</li>
+            <li><strong>Skin Twin</strong> : avatar 3D de la peau</li>
+            <li><strong>Mama Kènè</strong> : coach IA vocal en langues locales</li>
+            <li><strong>5 scènes 3D signatures</strong> au scroll (sphère, voyage sous peau, jardin glow, souk immersif, constellation)</li>
+            <li><strong>Shaders signatures</strong> : Peau vivante, Glow Duafe, Kente Flow</li>
+            <li><strong>Sound design</strong> opt-in (balafon, kora, marimba)</li>
+            <li><strong>31 nouvelles user stories créatives</strong> (US-300 à US-330)</li>
+        </ul>
+        <p><strong>Stack immersive</strong> : React Three Fiber + GSAP ScrollTrigger + Lenis + MediaPipe + GLSL shaders + Web Audio API</p>
     </section>
     """
 

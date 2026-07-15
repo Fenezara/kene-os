@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://discourse.threejs.org/t/interactive-3d-portfolio-an-immersive-scroll-experience/44520",
+    "name": "Interactive 3D Portfolio - An Immersive Scroll Experience - Showcase - three.js forum",
+    "snippet": "This is a scroll experience that takes you through a room. All of the modeling and animation is done in blender. Then used in Threejs through ...",
+    "host_name": "discourse.threejs.org",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=rbIbvw6c53k",
+    "name": "This 3D Scroll Animation is INSANE Thanks to Three.js (3D Animation Tutorial) - YouTube",
+    "snippet": "Learn how to create an eye-catching 3D scroll animation for websites using HTML, CSS, and JavaScript! This tutorial dives into Three.js, ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.instagram.com/reel/DOb4AD-k6Vr",
+    "name": "These types of websites can be stunning and immersive, but if not managed well, they can  - Instagram",
+    "snippet": "React Three Fiber – If you're using React, this is a React renderer for Three.js. GSAP – For smooth animations and scroll-based effects. Blender ...",
+    "host_name": "www.instagram.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://tympanus.net/codrops/tag/react-three-fiber",
+    "name": "React Three Fiber - Codrops",
+    "snippet": "Learn how to build smooth, immersive 3D scroll experiences using GSAP, WebGL, and Three.js, turning simple scrolling into responsive visual motion.",
+    "host_name": "tympanus.net",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.facebook.com/groups/learnwithsumit/posts/1519172229400846",
+    "name": "Sagar's immersive portfolio with Next.js, GSAP, and Three.js - Facebook",
+    "snippet": "Explore a stunning 3D circular layout of images that rotate seamlessly as you scroll, built with Three.js and React Three Fiber.",
+    "host_name": "www.facebook.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://wawasensei.dev/tuto/react-three-fiber-tutorial-scroll-animations",
+    "name": "React Three Fiber tutorial - Scroll Animations - Wawa Sensei",
+    "snippet": "In this tutorial, we'll guide you through creating stunning scroll-based animations with React Three Fiber.",
+    "host_name": "wawasensei.dev",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/webgl/comments/1p2ev0r/build_an_award_winning_3d_website_with",
+    "name": "Build an award Winning 3D Website with scroll-based animations with three.js and GSAP : r/webgl - Reddit",
+    "snippet": "r/threejs - built a platform where users can interact with 3D models using natural. 0:40. 153.",
+    "host_name": "www.reddit.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.facebook.com/groups/webflowdesign/posts/2347366842102004",
+    "name": "Website featuring 3d animations and scroll-based interactions - Facebook",
+    "snippet": "Explore a stunning 3D circular layout of images that rotate seamlessly as you scroll, built with Three.js and React Three Fiber.",
+    "host_name": "www.facebook.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  }
+]
