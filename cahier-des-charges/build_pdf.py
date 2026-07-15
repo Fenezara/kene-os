@@ -27,6 +27,7 @@ CDC_FILES = [
     ("10-operations-support.md", "Partie 10 — Opérations, Support & Migration"),
     ("11-evolutions-diagnostic.md", "Partie 11 — Évolutions & Améliorations du Diagnostic"),
     ("12-enrichissement-creatif.md", "Partie 12 — Enrichissement Créatif, Innovations & Immersion 3D"),
+    ("13-innovations-avancees.md", "Partie 13 — Innovations Avancées & Vision Long Terme"),
 ]
 
 # Fichiers d'enquêtes/analyses à inclure en annexe
@@ -110,6 +111,7 @@ def build_toc() -> str:
                     <li>Partie 10 — Opérations, Support & Migration</li>
                     <li>Partie 11 — Évolutions & Améliorations du Diagnostic (VISIA-like, multi-zones corps)</li>
                     <li>Partie 12 — Enrichissement Créatif, Innovations & Immersion 3D</li>
+                    <li>Partie 13 — Innovations Avancées & Vision Long Terme (biométrie, Web3, wellness, éco, IoT)</li>
                 </ul>
             </div>
             <div class="toc-section">
@@ -224,6 +226,20 @@ def build_executive_summary() -> str:
             <li><strong>31 nouvelles user stories créatives</strong> (US-300 à US-330)</li>
         </ul>
         <p><strong>Stack immersive</strong> : React Three Fiber + GSAP ScrollTrigger + Lenis + MediaPipe + GLSL shaders + Web Audio API</p>
+        
+        <h2>9. Vision long terme (Partie 13)</h2>
+        <p>Avec <strong>48 innovations cumulées</strong> (Parties 12 + 13), Kènè devient l'OS beauté africain de référence :</p>
+        <ul>
+            <li><strong>Biométrie</strong> : DNA peau, microbiome, biometric auth, skin age predictor</li>
+            <li><strong>IA générative</strong> : routine generator, product formulator, glow chat, skin story</li>
+            <li><strong>Web3 & communauté</strong> : Glow NFT, Kènè DAO, glow-to-earn, social commerce circle</li>
+            <li><strong>Wellness holistique</strong> : mindful glow (méditation), stress index, sleep sync, cycle-sync beauty</li>
+            <li><strong>Éco-responsabilité</strong> : Eco Score Kènè (A-E), Glow Carbon, Refill Revolution, Heritage Source blockchain</li>
+            <li><strong>IoT devices</strong> : Kènè Mirror Pro (institut), Glow Band (wearable), Smart Cabinet, Diffuser</li>
+            <li><strong>IA éthique</strong> : Explainable AI, Bias Dashboard public, Model Cards, Customer Data Vault</li>
+            <li><strong>Business innovations</strong> : Kènè Insurance, Glow Savings, Kènè Credit, Beauty Marketplace B2B</li>
+        </ul>
+        <p><strong>Valorisation potentielle</strong> : 5-10M€ (Phase 1) → 100-200M€ (Phase 3) → 500M€+ (Phase 4 Beauty OS)</p>
     </section>
     """
 
