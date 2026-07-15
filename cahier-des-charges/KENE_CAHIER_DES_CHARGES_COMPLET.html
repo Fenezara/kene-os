@@ -404,6 +404,7 @@
                     <li>Partie 8 — Spécifications IA Approfondies</li>
                     <li>Partie 9 — Plan de Test & Qualité</li>
                     <li>Partie 10 — Opérations, Support & Migration</li>
+                    <li>Partie 11 — Évolutions & Améliorations du Diagnostic (VISIA-like, multi-zones corps)</li>
                 </ul>
             </div>
             <div class="toc-section">
@@ -474,7 +475,17 @@
         
         <h2>6. Roadmap</h2>
         <ul>
-            <li><strong>Phase 1</strong> (mois 1-6) : CI + SN, MVP cœur puis étendu (paie CNPS/IPM, compta SYSCOHADA)</li>
+            <li><strong>Phase 1A</strong> (mois 1-4) : CI + SN, MVP cœur (10 indicateurs visage, RDV, caisse MoMo)</li>
+            <li><strong>Phase 1B</strong> (mois 5-6) : Étendu (paie CNPS/IPM, compta SYSCOHADA) + <strong>évolutions diagnostic</strong> (Partie 11) :
+                <ul>
+                    <li>Layout VISIA-like (grille 2×4 indicateurs + marquages colorés)</li>
+                    <li>Vues spectrales simulées par IA (UV, thermique, lumière bleue)</li>
+                    <li>14 indicateurs visage (+ taches UV, zones rouges, porphyrines, taches brunes)</li>
+                    <li>Multi-zones corps (visage + dos + cuir chevelu + mains + barbe + nævi corps)</li>
+                    <li>Modèle IA multi-têtes spécialisées par zone</li>
+                    <li>UX capture adaptative + détection auto zone</li>
+                </ul>
+            </li>
             <li><strong>Phase 2</strong> (mois 7-12) : UEMOA + CEMAC</li>
             <li><strong>Phase 3</strong> (mois 13-20) : Nigeria + Ghana (anglophone)</li>
             <li><strong>Phase 4</strong> (mois 21-30) : Afrique de l'Est + Australe</li>
@@ -14562,6 +14573,884 @@ Garantit l'exploitation production, la satisfaction client et la continuité</p>
 </tbody>
 </table>
 <p><strong>Total : 11 documents, ~6 000 lignes de spécifications détaillées, prêts pour la construction.</strong></p>
+</section>
+<section class="chapter">
+<h1 class="chapter-title">Partie 11 — Évolutions & Améliorations du Diagnostic</h1>
+<blockquote>
+<p>Consolidation des 6 évolutions issues de l'analyse des solutions professionnelles (VISIA, analyseurs spectraux) et de l'extension multi-zones du corps</p>
+<p>Périmètre : MVP 1B () — Phase 1A inchangée</p>
+</blockquote>
+<hr />
+<h2 id="contexte">CONTEXTE</h2>
+<p>L'analyse de 4 solutions professionnelles (VISIA, analyseur 8 spectres, Aura, Le Verdun) et de 8 apps mobiles concurrentes a révélé :</p>
+<ol>
+<li><strong>Layout professionnel type VISIA</strong> (grille 2×4 indicateurs avec marquages colorés + pourcentages) — à reproduire</li>
+<li><strong>Vues spectrales multiples</strong> (UV, polarisée, thermique, lumière bleue) — à simuler par IA</li>
+<li><strong>Indicateurs complémentaires</strong> (taches UV, zones rouges, porphyrines) — à ajouter</li>
+<li><strong>Limitation majeure du marché</strong> : toutes les solutions se limitent au visage (+ cou)</li>
+<li><strong>Opportunité Kènè</strong> : extension multi-zones du corps, en particulier pour peaux mélanodermes (pathologies spécifiques invisibles sur visage seul)</li>
+</ol>
+<hr />
+<h2 id="evolution-a-ecran-resultats-mode-visia-like">ÉVOLUTION A — Écran résultats « Mode VISIA-like »</h2>
+<h3 id="a1-objectif">A.1 Objectif</h3>
+<p>Reproduire le rendu professionnel d'un appareil VISIA (~30 000€) sur smartphone, avec un layout grille d'indicateurs, des marquages colorés par indicateur, et des pourcentages de sévérité.</p>
+<h3 id="a2-layout-de-lecran-resultats-enrichi">A.2 Layout de l'écran résultats (enrichi)</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="border: 1px solid #F00">┌─────────────────────────────────────────┐</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span>SCORE<span style="color: #BBB"> </span>GLOBAL<span style="color: #BBB"> </span>Kènè<span style="color: #BBB">    </span>[<span style="color: #40A070">72</span><span style="color: #666">/</span><span style="color: #40A070">100</span>]<span style="color: #BBB">          </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">←</span><span style="color: #BBB"> </span>Hero<span style="color: #BBB"> </span>(jauge<span style="color: #BBB"> </span>circulaire<span style="color: #BBB"> </span>animée)
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">«</span><span style="color: #BBB"> </span>Votre<span style="color: #BBB"> </span>peau<span style="color: #BBB"> </span>va<span style="color: #BBB"> </span>bien<span style="color: #BBB"> </span><span style="border: 1px solid #F00">»</span><span style="color: #BBB">                  </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">├─────────────────────────────────────────┤</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span>[Visage]<span style="color: #BBB"> </span>[Dos]<span style="color: #BBB"> </span>[Cuir<span style="color: #BBB"> </span>chevelu]<span style="color: #BBB"> </span>[Mains]<span style="color: #BBB">   </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">←</span><span style="color: #BBB"> </span>Onglets<span style="color: #BBB"> </span>multi<span style="color: #666">-</span>zones<span style="color: #BBB"> </span>(Évolution<span style="color: #BBB"> </span>D)
+<span style="border: 1px solid #F00">├─────────────────────────────────────────┤</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span>Vues<span style="color: #BBB"> </span><span style="color: #666">:</span><span style="color: #BBB"> </span>[Standard]<span style="color: #BBB"> </span>[Pigment]<span style="color: #BBB"> </span>[Inflam.]<span style="color: #BBB">   </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">←</span><span style="color: #BBB"> </span>Toggle<span style="color: #BBB"> </span>vues<span style="color: #BBB"> </span>spectrales<span style="color: #BBB"> </span>(Évolution<span style="color: #BBB"> </span>B)
+<span style="border: 1px solid #F00">├─────────────────────────────────────────┤</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">┌──────┐</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">┌──────┐</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">┌──────┐</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">┌──────┐</span><span style="color: #BBB">    </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span>Taches<span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span>Rides<span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span>Texture<span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span>Pores<span style="border: 1px solid #F00">│</span><span style="color: #BBB">    </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">←</span><span style="color: #BBB"> </span>Grille<span style="color: #BBB"> </span><span style="color: #40A070">2</span><span style="border: 1px solid #F00">×</span><span style="color: #40A070">4</span><span style="color: #BBB"> </span>(<span style="color: #40A070">8</span><span style="color: #BBB"> </span>indicateurs<span style="color: #BBB"> </span>visibles)
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="color: #40A070">82</span><span style="color: #666">%</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="color: #40A070">63</span><span style="color: #666">%</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="color: #40A070">55</span><span style="color: #666">%</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="color: #40A070">88</span><span style="color: #666">%</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">    </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span>[photo]<span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span>[photo]<span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span>[photo]<span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span>[photo]<span style="border: 1px solid #F00">│</span><span style="color: #BBB">    </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">└──────┘</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">└──────┘</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">└──────┘</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">└──────┘</span><span style="color: #BBB">    </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">┌──────┐</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">┌──────┐</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">┌──────┐</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">┌──────┐</span><span style="color: #BBB">    </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span>Taches<span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span>Taches<span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span>Zones<span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span>Porphyr<span style="border: 1px solid #F00">│</span><span style="color: #BBB">    </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span>UV<span style="color: #BBB">   </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span>Brunes<span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span>Rouges<span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span>ines<span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">    </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="color: #40A070">18</span><span style="color: #666">%</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="color: #40A070">80</span><span style="color: #666">%</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="color: #40A070">34</span><span style="color: #666">%</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="color: #40A070">48</span><span style="color: #666">%</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">    </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">└──────┘</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">└──────┘</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">└──────┘</span><span style="color: #BBB"> </span><span style="border: 1px solid #F00">└──────┘</span><span style="color: #BBB">    </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">├─────────────────────────────────────────┤</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span>[Toutes]<span style="color: #BBB"> </span>[PIH]<span style="color: #BBB"> </span>[Acné]<span style="color: #BBB"> </span>[Rides]<span style="border: 1px solid #F00">…</span><span style="color: #BBB">          </span><span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">←</span><span style="color: #BBB"> </span>Filtres<span style="color: #BBB"> </span>par<span style="color: #BBB"> </span>indicateur
+<span style="border: 1px solid #F00">├─────────────────────────────────────────┤</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span>Recommandations<span style="color: #BBB">                         </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">•</span><span style="color: #BBB"> </span>Routine<span style="color: #BBB"> </span>matin<span style="color: #666">/</span>soir<span style="color: #BBB">                    </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">•</span><span style="color: #BBB"> </span>Produits<span style="color: #BBB"> </span>conseillés<span style="color: #BBB">                   </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">│</span><span style="color: #BBB">  </span><span style="border: 1px solid #F00">•</span><span style="color: #BBB"> </span>Soins<span style="color: #BBB"> </span>institut<span style="color: #BBB">                        </span><span style="border: 1px solid #F00">│</span>
+<span style="border: 1px solid #F00">└─────────────────────────────────────────┘</span>
+</code></pre></div>
+
+<h3 id="a3-fonctionnalites-cles">A.3 Fonctionnalités clés</h3>
+<table>
+<thead>
+<tr>
+<th>Fonctionnalité</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hero score</strong></td>
+<td>Jauge circulaire 0-100 animée + interprétation textuelle</td>
+</tr>
+<tr>
+<td><strong>Grille indicateurs</strong></td>
+<td>2×4 (visage) ou adapté par zone (Évolution D)</td>
+</tr>
+<tr>
+<td><strong>Marquages colorés</strong></td>
+<td>Par indicateur : points (taches/pores), lignes (rides), zones (texture/rougeurs)</td>
+</tr>
+<tr>
+<td><strong>Pourcentages</strong></td>
+<td>Sévérité 0-100% par indicateur + code couleur (vert/orange/rouge)</td>
+</tr>
+<tr>
+<td><strong>Toggle filtres</strong></td>
+<td>Bouton « Toutes » ou filtrer par indicateur (affiche seulement ses marquages)</td>
+</tr>
+<tr>
+<td><strong>Comparaison percentile</strong></td>
+<td>« Vous êtes dans le top 30% des peaux de votre âge/carnation »</td>
+</tr>
+<tr>
+<td><strong>Comparaison avant/après</strong></td>
+<td>Slider 2 diagnostics (Évolution déjà prévue US-018)</td>
+</tr>
+<tr>
+<td><strong>Disclaimer</strong></td>
+<td>« Kènè n'est pas un diagnostic médical »</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a4-user-stories-associees">A.4 User stories associées</h3>
+<h4 id="us-200-ecran-resultats-visia-like">US-200 — Écran résultats VISIA-like</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> voir mes résultats sous forme de grille professionnelle d'indicateurs avec marquages colorés <strong>afin de</strong> visualiser mes problèmes comme chez le dermatologue.</p>
+<p><strong>Critères :</strong><br />
+- Layout grille 2×4 par défaut (8 indicateurs principaux)<br />
+- Chaque case : photo visage + marquage couleur + pourcentage + label<br />
+- Hero score global en haut<br />
+- Toggle filtre par indicateur<br />
+- Animation d'apparition des marquages (progressif)</p>
+<h4 id="us-201-filtre-par-indicateur">US-201 — Filtre par indicateur</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> cliquer sur un indicateur pour voir seulement ses marquages <strong>afin de</strong> focaliser sur un problème.</p>
+<ul>
+<li>Bouton radio « Toutes » (défaut) + un bouton par indicateur</li>
+<li>Au clic, seules les zones correspondantes sont mises en évidence</li>
+<li>Les autres marquages s'estompent (opacité 20%)</li>
+</ul>
+<h4 id="us-202-comparaison-percentile">US-202 — Comparaison percentile</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> savoir où je me situe vs les peaux de mon âge/carnation <strong>afin de</strong> contextualiser mon score.</p>
+<ul>
+<li>Calcul basé sur dataset anonymisé Kènè</li>
+<li>« Vous êtes dans le top X% des peaux Fitzpatrick V, 25-34 ans »</li>
+<li>Histogramme de distribution avec position de la cliente</li>
+</ul>
+<hr />
+<h2 id="evolution-b-vues-spectrales-simulees-par-ia">ÉVOLUTION B — Vues spectrales simulées par IA</h2>
+<h3 id="b1-objectif">B.1 Objectif</h3>
+<p>Simuler par IA les vues spectrales des appareils professionnels (UV, polarisée, thermique, lumière bleue) à partir d'une simple photo RGB smartphone. Chaque vue est labelisée « estimation IA » (transparence).</p>
+<h3 id="b2-les-4-vues-spectrales-simulees">B.2 Les 4 vues spectrales simulées</h3>
+<table>
+<thead>
+<tr>
+<th>Vue</th>
+<th>Spectre simulé</th>
+<th>Ce qu'elle révèle</th>
+<th>Techno IA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Standard</strong></td>
+<td>RGB naturelle</td>
+<td>Vue normale de référence</td>
+<td>Aucune (photo brute)</td>
+</tr>
+<tr>
+<td><strong>Pigmentation profonde</strong></td>
+<td>UV simulé</td>
+<td>Mélanine invisible, taches futures</td>
+<td>Segmentation U-Net</td>
+</tr>
+<tr>
+<td><strong>Inflammation</strong></td>
+<td>Thermique simulée</td>
+<td>Rougeurs masquées par mélanine</td>
+<td>Modèle GAN pix2pix</td>
+</tr>
+<tr>
+<td><strong>Acné/Sébum</strong></td>
+<td>Lumière bleue simulée</td>
+<td>Porphyrines, activité bactérienne</td>
+<td>Modèle de transfert</td>
+</tr>
+</tbody>
+</table>
+<h3 id="b3-user-stories">B.3 User stories</h3>
+<h4 id="us-210-selecteur-de-vue-spectrale">US-210 — Sélecteur de vue spectrale</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> basculer entre vues standard / pigmentation / inflammation / acné <strong>afin de</strong> voir ma peau sous différents angles.</p>
+<ul>
+<li>4 boutons radio en haut de l'écran résultats</li>
+<li>Transition fluide entre vues (cross-fade 300ms)</li>
+<li>Chaque vue affiche un disclaimer discret « Estimation IA »</li>
+</ul>
+<h4 id="us-211-vue-pigmentation-profonde">US-211 — Vue pigmentation profonde</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> voir les taches pigmentaires invisibles à l'œil nu <strong>afin d'</strong>anticiper les futures taches.</p>
+<ul>
+<li>IA entraînée sur paires photos RGB ↔ UV VISIA</li>
+<li>Affiche zones de mélanine profonde en surbrillance</li>
+<li>Disclaimer : « Estimation — consultez un dermatologue pour confirmation »</li>
+</ul>
+<h4 id="us-212-vue-inflammation">US-212 — Vue inflammation</h4>
+<p><strong>En tant que</strong> cliente mélanoderme, <strong>je veux</strong> voir les rougeurs masquées par ma mélanine <strong>afin de</strong> détecter inflammations.</p>
+<ul>
+<li>Spécifiquement adapté peaux mélanodermes (où rougeurs invisibles)</li>
+<li>Heatmap thermique simulée par IA</li>
+<li>Important pour détection eczéma, dermite, rosée</li>
+</ul>
+<h4 id="us-213-vue-acnesebum">US-213 — Vue acné/sébum</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> voir l'activité bactérienne de mon acné <strong>afin de</strong> comprendre sa sévérité.</p>
+<ul>
+<li>Simule lumière bleue (excite porphyrines)</li>
+<li>Affiche points fluorescents = activité bactérienne</li>
+<li>Utile pour suivi traitement acné</li>
+</ul>
+<h3 id="b4-limitations-transparence">B.4 Limitations &amp; transparence</h3>
+<table>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Précision inférieure à appareil pro</td>
+<td>Disclaimer clair « estimation IA »</td>
+</tr>
+<tr>
+<td>Faux positifs possibles</td>
+<td>Toujours valider avec dermatologue pour diagnostic</td>
+</tr>
+<tr>
+<td>Pas de vraie lumière UV (sécurité)</td>
+<td>Estimation logicielle uniquement</td>
+</tr>
+<tr>
+<td>Conditions de capture variables</td>
+<td>Assistance capture + recalage IA</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="evolution-c-indicateurs-complementaires">ÉVOLUTION C — Indicateurs complémentaires</h2>
+<h3 id="c1-indicateurs-visia-ajoutes-au-mvp-1b">C.1 Indicateurs VISIA ajoutés au MVP 1B</h3>
+<table>
+<thead>
+<tr>
+<th>Indicateur</th>
+<th>Description</th>
+<th>Sévérité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Taches UV</strong></td>
+<td>Dommages solaires invisibles (mélanine profonde)</td>
+<td>0-3</td>
+</tr>
+<tr>
+<td><strong>Zones Rouges</strong></td>
+<td>Érythème, inflammation, sensibilité (spécialement utile peaux mélanodermes où rougeurs masquées)</td>
+<td>0-3</td>
+</tr>
+<tr>
+<td><strong>Porphyrines</strong></td>
+<td>Activité bactérienne (Propionibacterium acnes) — indicateur acné</td>
+<td>0-3</td>
+</tr>
+<tr>
+<td><strong>Taches Brunes</strong></td>
+<td>Hyperpigmentation (taches de vieillesse, mélasma établi)</td>
+<td>0-3</td>
+</tr>
+</tbody>
+</table>
+<h3 id="c2-nouveau-total-14-indicateurs-visage-mvp-1b">C.2 Nouveau total : 14 indicateurs visage (MVP 1B)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Indicateur</th>
+<th>Source</th>
+<th>Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1-10</td>
+<td>(initiaux : PIH, mélasma, acné, PFB, pores, texture, séborrhée, ridules, taches solaires, nævi)</td>
+<td>Cahier initial</td>
+<td>1A</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Taches UV</td>
+<td>Évolution C</td>
+<td>1B</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Zones Rouges (érythème)</td>
+<td>Évolution C</td>
+<td>1B</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Porphyrines</td>
+<td>Évolution C</td>
+<td>1B</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Taches Brunes</td>
+<td>Évolution C</td>
+<td>1B</td>
+</tr>
+</tbody>
+</table>
+<h3 id="c3-user-stories">C.3 User stories</h3>
+<h4 id="us-220-diagnostic-14-indicateurs">US-220 — Diagnostic 14 indicateurs</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> un diagnostic à 14 indicateurs <strong>afin d'</strong>obtenir une analyse aussi complète qu'en cabinet.</p>
+<ul>
+<li>Étend US-010 (10 → 14 indicateurs visage)</li>
+<li>Chaque indicateur : sévérité 0-3 + marquage couleur + heatmap</li>
+<li>Score global recalculé (poids actualisés)</li>
+</ul>
+<hr />
+<h2 id="evolution-d-multi-zones-corps">ÉVOLUTION D — Multi-zones corps</h2>
+<h3 id="d1-objectif">D.1 Objectif</h3>
+<p>Étendre l'analyse au-delà du visage pour couvrir les zones du corps pertinentes pour peaux mélanodermes. C'est un <strong>avantage différenciant majeur</strong> vs VISIA et apps concurrentes (toutes limitées au visage).</p>
+<h3 id="d2-zones-couvertes-mvp-1b">D.2 Zones couvertes (MVP 1B)</h3>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>Indicateurs spécifiques</th>
+<th>Justification peau mélanoderme</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Visage</strong> (14 indicateurs)</td>
+<td>PIH, mélasma, acné, PFB, pores, texture, séborrhée, ridules, taches UV/brunes/solaires, zones rouges, porphyrines, nævi</td>
+<td>Cœur MVP 1A</td>
+</tr>
+<tr>
+<td><strong>Dos</strong></td>
+<td>Acné kystique, PIH post-acné, kéloïdes, pityriasis versicolor, taches</td>
+<td>Acné tronc très fréquent chez femmes africaines</td>
+</tr>
+<tr>
+<td><strong>Cuir chevelu + Nuque</strong></td>
+<td>Pseudofolliculite, dermite séborrhéique, psoriasis, acné keloidalis nuchae (AKN), alopécie traction</td>
+<td>Spécifique cheveux crépus</td>
+</tr>
+<tr>
+<td><strong>Mains</strong></td>
+<td>Taches de vieillesse, vitiligo, dermatosis papulosa nigra (DPN), sécheresse</td>
+<td>Première zone à vieillir</td>
+</tr>
+<tr>
+<td><strong>Barbe</strong></td>
+<td>Pseudofolliculite barbe (PFB), rasoir bumps</td>
+<td>Spécifique poils crépus</td>
+</tr>
+<tr>
+<td><strong>Nævi corps</strong> (cartographie)</td>
+<td>Nævi ABCDE, mélanome acral (paumes, plantes, ongles)</td>
+<td>Mélanome acral plus fréquent peau noire</td>
+</tr>
+</tbody>
+</table>
+<h3 id="d3-indicateurs-par-zone-pas-tous-partout">D.3 Indicateurs par zone (pas tous partout)</h3>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>Indicateurs pertinents</th>
+<th>Indicateurs non pertinents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Visage</td>
+<td>Tous (14)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Dos</td>
+<td>Acné, PIH, kéloïdes, pityriasis, taches</td>
+<td>Rides, pores, ridules</td>
+</tr>
+<tr>
+<td>Cuir chevelu/nuque</td>
+<td>PFB, dermite, psoriasis, AKN</td>
+<td>Rides, pores, taches UV</td>
+</tr>
+<tr>
+<td>Mains</td>
+<td>Taches, vitiligo, DPN, sécheresse</td>
+<td>Acné, pores, séborrhée</td>
+</tr>
+<tr>
+<td>Barbe</td>
+<td>PFB, AKN</td>
+<td>Tous autres</td>
+</tr>
+<tr>
+<td>Nævi corps</td>
+<td>ABCDE, mélanome acral</td>
+<td>Tous autres</td>
+</tr>
+</tbody>
+</table>
+<h3 id="d4-score-multi-zones-pondere">D.4 Score multi-zones pondéré</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>Score Kènè Global = moyenne pondérée :
+  - Visage : 40% (priorité cosmétique)
+  - Dos : 15%
+  - Cuir chevelu/nuque : 10%
+  - Mains : 10%
+  - Barbe (si applicable) : 5%
+  - Nævi corps : 20% (sécurité patient — élevé)
+</code></pre></div>
+
+<blockquote>
+<p>Si aucune zone scannée → score calculé sur zones scannées seulement (poids redistribués).</p>
+</blockquote>
+<h3 id="d5-user-stories">D.5 User stories</h3>
+<h4 id="us-230-selection-zone-du-corps">US-230 — Sélection zone du corps</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> choisir la zone du corps à analyser <strong>afin de</strong> cibler mes préoccupations.</p>
+<ul>
+<li>Écran de sélection : visage (défaut) + dos + cuir chevelu + mains + barbe + nævi corps</li>
+<li>Icônes claires par zone</li>
+<li>Description courte : « Acné, PIH, kéloïdes » pour le dos</li>
+</ul>
+<h4 id="us-231-capture-adaptative-par-zone">US-231 — Capture adaptative par zone</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> une assistance capture spécifique à la zone <strong>afin de</strong> prendre une bonne photo.</p>
+<ul>
+<li><strong>Visage</strong> : cercle de guidage + détection visage (existant US-010)</li>
+<li><strong>Dos</strong> : assistance grille (haut/milieu/bas) + détection dos</li>
+<li><strong>Cuir chevelu</strong> : partition en 4 zones + assistance focus</li>
+<li><strong>Mains</strong> : cadre adapté (paume + dos main)</li>
+<li><strong>Barbe</strong> : cercle de guidage menton + joues</li>
+<li><strong>Nævi</strong> : macro rapprochée + règle de référence 6mm</li>
+</ul>
+<h4 id="us-232-diagnostic-specifique-par-zone">US-232 — Diagnostic spécifique par zone</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> un diagnostic adapté à la zone scannée <strong>afin d'</strong>obtenir des indicateurs pertinents.</p>
+<ul>
+<li>Ex : dos → acné kystique, PIH, kéloïdes, pityriasis (pas de rides)</li>
+<li>Modèle IA spécifique par zone (voir Évolution E)</li>
+<li>Score par zone (0-100) + score global multi-zones pondéré</li>
+</ul>
+<h4 id="us-233-ecran-resultats-multi-zones">US-233 — Écran résultats multi-zones</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> voir mes résultats par zone via onglets <strong>afin de</strong> naviguer facilement.</p>
+<ul>
+<li>Onglets horizontaux : [Visage] [Dos] [Cuir chevelu] [Mains] [Barbe] [Nævi]</li>
+<li>Chaque onglet → layout grille adapté aux indicateurs de la zone</li>
+<li>Onglet « Synthèse » → score global multi-zones + priorités</li>
+</ul>
+<h4 id="us-234-cartographie-nvi-corps">US-234 — Cartographie nævi corps</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> cartographier mes grains de beauté <strong>afin de</strong> suivre leur évolution.</p>
+<ul>
+<li>Capture successive des nævi (jusqu'à 20 par diagnostic)</li>
+<li>Localisation sur silhouette corps (avant/arrière)</li>
+<li>Évaluation ABCDE par nævus</li>
+<li>Alerte orientation dermatologique si ≥ 2 critères ABCDE</li>
+<li>Comparaison temporelle (évolution taille/couleur/forme)</li>
+</ul>
+<hr />
+<h2 id="evolution-e-modele-ia-multi-tetes-specialisees">ÉVOLUTION E — Modèle IA multi-têtes spécialisées</h2>
+<h3 id="e1-architecture-ia-enrichie">E.1 Architecture IA enrichie</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>Input photo (224×224×3)
+  ↓
+Détection automatique zone ( EfficientNet-Light classifier )
+  ↓
+Routing vers tête spécialisée :
+  ├── Visage : EfficientNet-B4 + 14 têtes (10 initiales + 4 Évolution C)
+  ├── Dos : EfficientNet-B4 + 5 têtes (acné, PIH, kéloïdes, pityriasis, taches)
+  ├── Cuir chevelu : EfficientNet-B4 + 4 têtes (PFB, dermite, psoriasis, AKN)
+  ├── Mains : EfficientNet-B4 + 4 têtes (taches, vitiligo, DPN, sécheresse)
+  ├── Barbe : EfficientNet-B0 + 2 têtes (PFB, AKN)
+  └── Nævi : EfficientNet-B4 + 2 têtes (ABCDE classification, melanoma acral screening)
+  ↓
+Têtes spectrales (Évolution B) :
+  ├── U-Net : segmentation pigmentation profonde (UV simulé)
+  ├── GAN pix2pix : inflammation (thermique simulé)
+  └── Transfert learning : porphyrines (lumière bleue simulée)
+  ↓
+Heatmap Grad-CAM par indicateur + par vue spectrale
+  ↓
+Score par zone + score global pondéré multi-zones
+</code></pre></div>
+
+<h3 id="e2-dataset-multi-zones-extension-partie-8">E.2 Dataset multi-zones (extension Partie 8)</h3>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>Cible images MVP 1B</th>
+<th>Cumul depuis MVP 1A</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Visage</td>
+<td>50 000 (déjà MVP 1A)</td>
+<td>50 000</td>
+</tr>
+<tr>
+<td>Dos</td>
+<td>+ 10 000</td>
+<td>60 000</td>
+</tr>
+<tr>
+<td>Cuir chevelu/nuque</td>
+<td>+ 5 000</td>
+<td>65 000</td>
+</tr>
+<tr>
+<td>Mains</td>
+<td>+ 5 000</td>
+<td>70 000</td>
+</tr>
+<tr>
+<td>Barbe</td>
+<td>+ 3 000</td>
+<td>73 000</td>
+</tr>
+<tr>
+<td>Nævi corps</td>
+<td>+ 8 000</td>
+<td>81 000</td>
+</tr>
+<tr>
+<td><strong>Total MVP 1B</strong></td>
+<td><strong>81 000 images</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="e3-metriques-devaluation-par-zone">E.3 Métriques d'évaluation par zone</h3>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>F1 min</th>
+<th>Recall min (critique)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Visage (14 indicateurs)</td>
+<td>0,80</td>
+<td>0,78</td>
+</tr>
+<tr>
+<td>Dos (5 indicateurs)</td>
+<td>0,75</td>
+<td>0,72</td>
+</tr>
+<tr>
+<td>Cuir chevelu (4)</td>
+<td>0,75</td>
+<td>0,70</td>
+</tr>
+<tr>
+<td>Mains (4)</td>
+<td>0,78</td>
+<td>0,75</td>
+</tr>
+<tr>
+<td>Barbe (2)</td>
+<td>0,82</td>
+<td>0,80</td>
+</tr>
+<tr>
+<td><strong>Nævi (ABCDE)</strong></td>
+<td><strong>0,90</strong></td>
+<td><strong>0,85</strong> (sécurité patient)</td>
+</tr>
+<tr>
+<td>Vues spectrales (B)</td>
+<td>0,75</td>
+<td>0,72</td>
+</tr>
+</tbody>
+</table>
+<h3 id="e4-biais-equite-multi-zones">E.4 Biais &amp; équité multi-zones</h3>
+<p>Surveillance par sous-groupe (carnation Fitzpatrick IV-VI × zone × genre × âge × pays). Différence max acceptable : 5%.</p>
+<hr />
+<h2 id="evolution-f-ux-capture-adaptative">ÉVOLUTION F — UX capture adaptative</h2>
+<h3 id="f1-detection-automatique-de-zone">F.1 Détection automatique de zone</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>FONCTION détecter_zone(photo):
+    classifier = EfficientNet-Light (5 classes : visage/dos/main/barbe/nævi)
+    zone = classifier.predict(photo)
+    RETOURNER zone + confidence_score
+
+    SI confidence &lt; 70%:
+        demander à la cliente de sélectionner manuellement
+</code></pre></div>
+
+<h3 id="f2-assistance-capture-par-zone">F.2 Assistance capture par zone</h3>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>Assistance</th>
+<th>Indicateurs qualité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Visage</strong></td>
+<td>Cercle de guidage + détection visage</td>
+<td>Luminosité, distance, flou, alignement</td>
+</tr>
+<tr>
+<td><strong>Dos</strong></td>
+<td>Grille 3×1 (haut/milieu/bas) + détection dos</td>
+<td>Cadre complet, luminosité</td>
+</tr>
+<tr>
+<td><strong>Cuir chevelu</strong></td>
+<td>4 quadrants + focus rapproché</td>
+<td>Distance (5-10 cm), séparation cheveux</td>
+</tr>
+<tr>
+<td><strong>Mains</strong></td>
+<td>Cadre rectangulaire + détection main</td>
+<td>Paume ouverte, fond uni</td>
+</tr>
+<tr>
+<td><strong>Barbe</strong></td>
+<td>Cercle menton + joues</td>
+<td>Visage de face, zone barbue visible</td>
+</tr>
+<tr>
+<td><strong>Nævi</strong></td>
+<td>Macro rapprochée + règle 6mm</td>
+<td>Focus net, règle de référence visible</td>
+</tr>
+</tbody>
+</table>
+<h3 id="f3-user-stories">F.3 User stories</h3>
+<h4 id="us-240-detection-auto-zone">US-240 — Détection auto zone</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> que l'app détecte automatiquement la zone photographiée <strong>afin de</strong> ne pas avoir à sélectionner manuellement.</p>
+<ul>
+<li>Modèle léger de classification de zone</li>
+<li>Si confidence &gt; 70% → confirmation rapide</li>
+<li>Si &lt; 70% → sélection manuelle proposée</li>
+</ul>
+<h4 id="us-241-assistance-capture-multi-zones">US-241 — Assistance capture multi-zones</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> une assistance visuelle adaptée à chaque zone <strong>afin de</strong> réussir ma photo.</p>
+<ul>
+<li>Overlay spécifique par zone (cercle, grille, cadre…)</li>
+<li>Indicateurs qualité temps réel</li>
+<li>Recadrage auto post-capture si nécessaire</li>
+</ul>
+<h4 id="us-242-recommandation-de-zones-a-scanner">US-242 — Recommandation de zones à scanner</h4>
+<p><strong>En tant que</strong> cliente, <strong>je veux</strong> être guidée sur les zones pertinentes <strong>afin de</strong> ne rien oublier.</p>
+<ul>
+<li>Si première analyse : recommander « Visage + nævi corps » (base)</li>
+<li>Si acné visage détectée : recommander « + Dos » (acné tronc)</li>
+<li>Si PFB barbe détecté : recommander « + Cuir chevelu/nuque »</li>
+<li>Si nævi suspect : recommander « cartographie complète »</li>
+</ul>
+<hr />
+<h2 id="synthese-des-nouvelles-user-stories-partie-11">SYNTHÈSE DES NOUVELLES USER STORIES (Partie 11)</h2>
+<table>
+<thead>
+<tr>
+<th>US</th>
+<th>Évolution</th>
+<th>Phase</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US-200</td>
+<td>A</td>
+<td></td>
+<td>Écran résultats VISIA-like</td>
+</tr>
+<tr>
+<td>US-201</td>
+<td>A</td>
+<td></td>
+<td>Filtre par indicateur</td>
+</tr>
+<tr>
+<td>US-202</td>
+<td>A</td>
+<td></td>
+<td>Comparaison percentile</td>
+</tr>
+<tr>
+<td>US-210</td>
+<td>B</td>
+<td></td>
+<td>Sélecteur vue spectrale</td>
+</tr>
+<tr>
+<td>US-211</td>
+<td>B</td>
+<td></td>
+<td>Vue pigmentation profonde</td>
+</tr>
+<tr>
+<td>US-212</td>
+<td>B</td>
+<td></td>
+<td>Vue inflammation</td>
+</tr>
+<tr>
+<td>US-213</td>
+<td>B</td>
+<td></td>
+<td>Vue acné/sébum</td>
+</tr>
+<tr>
+<td>US-220</td>
+<td>C</td>
+<td></td>
+<td>Diagnostic 14 indicateurs visage</td>
+</tr>
+<tr>
+<td>US-230</td>
+<td>D</td>
+<td></td>
+<td>Sélection zone du corps</td>
+</tr>
+<tr>
+<td>US-231</td>
+<td>D</td>
+<td></td>
+<td>Capture adaptative par zone</td>
+</tr>
+<tr>
+<td>US-232</td>
+<td>D</td>
+<td></td>
+<td>Diagnostic spécifique par zone</td>
+</tr>
+<tr>
+<td>US-233</td>
+<td>D</td>
+<td></td>
+<td>Écran résultats multi-zones</td>
+</tr>
+<tr>
+<td>US-234</td>
+<td>D</td>
+<td></td>
+<td>Cartographie nævi corps</td>
+</tr>
+<tr>
+<td>US-240</td>
+<td>F</td>
+<td></td>
+<td>Détection auto zone</td>
+</tr>
+<tr>
+<td>US-241</td>
+<td>F</td>
+<td></td>
+<td>Assistance capture multi-zones</td>
+</tr>
+<tr>
+<td>US-242</td>
+<td>F</td>
+<td></td>
+<td>Recommandation de zones à scanner</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total : 17 nouvelles user stories (toutes en MVP 1B )</strong></p>
+<hr />
+<h2 id="impact-sur-les-parties-existantes">IMPACT SUR LES PARTIES EXISTANTES</h2>
+<h3 id="mise-a-jour-partie-1-us-010-diagnostic">Mise à jour Partie 1 — US-010 (diagnostic)</h3>
+<p>Étendu à :<br />
+- 14 indicateurs visage (au lieu de 10)<br />
+- 6 zones corps scannables (au lieu de visage seul)<br />
+- Score multi-zones pondéré</p>
+<h3 id="mise-a-jour-partie-5-taxonomie-peau">Mise à jour Partie 5 — Taxonomie peau</h3>
+<ul>
+<li>Ajout 4 indicateurs VISIA (taches UV, zones rouges, porphyrines, taches brunes)</li>
+<li>Ajout tableau indicateurs par zone corps</li>
+<li>Score pondéré multi-zones</li>
+</ul>
+<h3 id="mise-a-jour-partie-8-specifications-ia">Mise à jour Partie 8 — Spécifications IA</h3>
+<ul>
+<li>Architecture multi-têtes par zone</li>
+<li>Dataset 81 000 images (vs 50 000 initial)</li>
+<li>Métriques par zone</li>
+<li>Vues spectrales simulées (U-Net, GAN pix2pix)</li>
+</ul>
+<h3 id="mise-a-jour-partie-3-ecran-c4-resultats">Mise à jour Partie 3 — Écran C4 (résultats)</h3>
+<ul>
+<li>Nouveau layout VISIA-like (grille 2×4)</li>
+<li>Toggle filtres par indicateur</li>
+<li>Onglets multi-zones</li>
+<li>Toggle vues spectrales</li>
+</ul>
+<hr />
+<h2 id="avantages-differenciants-finaux">AVANTAGES DIFFÉRENCIANTS FINAUX</h2>
+<table>
+<thead>
+<tr>
+<th>Critère</th>
+<th>VISIA</th>
+<th>Apps mobiles</th>
+<th><strong>Kènè (avec évolutions)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zones du corps</td>
+<td>Visage (+cou)</td>
+<td>Visage + nævi</td>
+<td><strong>Visage + 5 zones corps</strong></td>
+</tr>
+<tr>
+<td>Indicateurs visage</td>
+<td>8</td>
+<td>5-10</td>
+<td><strong>14</strong></td>
+</tr>
+<tr>
+<td>Peaux mélanodermes</td>
+<td>Biaisé</td>
+<td>Biaisé</td>
+<td>Dataset panafricain</td>
+</tr>
+<tr>
+<td>Vues spectrales</td>
+<td>Vraies (appareil pro)</td>
+<td>Aucune</td>
+<td>⚠ Simulées par IA (labelisées)</td>
+</tr>
+<tr>
+<td>Indicateurs afro-spécifiques (PFB, AKN, acanthosis)</td>
+<td></td>
+<td></td>
+<td>Couverts</td>
+</tr>
+<tr>
+<td>Cartographie nævi ABCDE</td>
+<td>Basique</td>
+<td>Basique</td>
+<td>Renforcé + mélanome acral</td>
+</tr>
+<tr>
+<td>Suivi longitudinal multi-zones</td>
+<td></td>
+<td>Visage seul</td>
+<td>Toutes zones</td>
+</tr>
+<tr>
+<td>Coût</td>
+<td>30 000€</td>
+<td>Gratuit mais limité</td>
+<td>Gratuit + complet</td>
+</tr>
+<tr>
+<td>Accessibilité</td>
+<td>Cabinet dermato</td>
+<td>Chez soi</td>
+<td>Chez soi, mobile</td>
+</tr>
+<tr>
+<td>Calibrage mélanoderme</td>
+<td></td>
+<td></td>
+<td>Différenciant clé</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="roadmap-ia-mise-a-jour">ROADMAP IA MISE À JOUR</h2>
+<h3 id="phase-1a-mois-1-4-inchangee">Phase 1A (mois 1-4)  — inchangée</h3>
+<ul>
+<li>10 indicateurs visage</li>
+<li>Inférence cloud</li>
+<li>Dataset 50 000 images visage</li>
+</ul>
+<h3 id="phase-1b-mois-5-6-evolutions-a-f">Phase 1B (mois 5-6)  — ÉVOLUTIONS A-F</h3>
+<ul>
+<li>14 indicateurs visage (+ 4 VISIA)</li>
+<li>Layout VISIA-like (Évolution A)</li>
+<li>Vues spectrales simulées (Évolution B)</li>
+<li>6 zones corps scannables (Évolution D)</li>
+<li>Modèle multi-têtes par zone (Évolution E)</li>
+<li>UX capture adaptative (Évolution F)</li>
+<li>Dataset 81 000 images multi-zones</li>
+<li>Edge inference offline</li>
+</ul>
+<h3 id="phase-2-mois-7-12">Phase 2 (mois 7-12)</h3>
+<ul>
+<li>Extension à toutes zones corps (jambes, pieds, plis, ongles…)</li>
+<li>Acanthosis nigricans, vergetures, eczéma, psoriasis</li>
+<li>Cartographie 3D nævi complète</li>
+<li>Études cliniques multi-zones</li>
+</ul>
+<hr />
+<p><em>Fin de la Partie 11. Les 6 évolutions consolident la supériorité de Kènè sur le marché mondial du diagnostic de peau mélanoderme.</em></p>
 </section>
 <section class="chapter">
 <h1 class="chapter-title">Annexe — Enquête Design Africain Moderne</h1>

@@ -25,6 +25,7 @@ CDC_FILES = [
     ("08-specifications-ia.md", "Partie 8 — Spécifications IA Approfondies"),
     ("09-plan-test.md", "Partie 9 — Plan de Test & Qualité"),
     ("10-operations-support.md", "Partie 10 — Opérations, Support & Migration"),
+    ("11-evolutions-diagnostic.md", "Partie 11 — Évolutions & Améliorations du Diagnostic"),
 ]
 
 # Fichiers d'enquêtes/analyses à inclure en annexe
@@ -106,6 +107,7 @@ def build_toc() -> str:
                     <li>Partie 8 — Spécifications IA Approfondies</li>
                     <li>Partie 9 — Plan de Test & Qualité</li>
                     <li>Partie 10 — Opérations, Support & Migration</li>
+                    <li>Partie 11 — Évolutions & Améliorations du Diagnostic (VISIA-like, multi-zones corps)</li>
                 </ul>
             </div>
             <div class="toc-section">
@@ -179,7 +181,17 @@ def build_executive_summary() -> str:
         
         <h2>6. Roadmap</h2>
         <ul>
-            <li><strong>Phase 1</strong> (mois 1-6) : CI + SN, MVP cœur puis étendu (paie CNPS/IPM, compta SYSCOHADA)</li>
+            <li><strong>Phase 1A</strong> (mois 1-4) : CI + SN, MVP cœur (10 indicateurs visage, RDV, caisse MoMo)</li>
+            <li><strong>Phase 1B</strong> (mois 5-6) : Étendu (paie CNPS/IPM, compta SYSCOHADA) + <strong>évolutions diagnostic</strong> (Partie 11) :
+                <ul>
+                    <li>Layout VISIA-like (grille 2×4 indicateurs + marquages colorés)</li>
+                    <li>Vues spectrales simulées par IA (UV, thermique, lumière bleue)</li>
+                    <li>14 indicateurs visage (+ taches UV, zones rouges, porphyrines, taches brunes)</li>
+                    <li>Multi-zones corps (visage + dos + cuir chevelu + mains + barbe + nævi corps)</li>
+                    <li>Modèle IA multi-têtes spécialisées par zone</li>
+                    <li>UX capture adaptative + détection auto zone</li>
+                </ul>
+            </li>
             <li><strong>Phase 2</strong> (mois 7-12) : UEMOA + CEMAC</li>
             <li><strong>Phase 3</strong> (mois 13-20) : Nigeria + Ghana (anglophone)</li>
             <li><strong>Phase 4</strong> (mois 21-30) : Afrique de l'Est + Australe</li>
