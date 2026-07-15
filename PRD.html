@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kènè — PRD (Product Requirements Document)</title>
+    <meta name="author" content="Kènè">
+    <meta name="description" content="PRD MVP Kènè - Plateforme beauté mélanoderme panafricaine">
+
+<style>
+@page {
+    size: A4;
+    margin: 25mm 20mm 25mm 20mm;
+    @bottom-center {
+        content: "Kènè — PRD · Page " counter(page) " / " counter(pages);
+        font-family: Georgia, serif;
+        font-size: 9pt;
+        color: #888;
+    }
+}
+@page :first { margin: 0; @bottom-center { content: none; } }
+
+* { box-sizing: border-box; }
+html, body {
+    margin: 0; padding: 0;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 10.5pt; line-height: 1.55; color: #1A1410; background: #FFFFFF;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Helvetica', 'Arial', sans-serif; color: #1A1410;
+    font-weight: bold; line-height: 1.3; page-break-after: avoid;
+}
+h1 {
+    font-size: 22pt; color: #C8951E;
+    border-bottom: 3px solid #C8951E; padding-bottom: 8px;
+    margin-top: 30px; margin-bottom: 18px; page-break-before: always;
+}
+h2 {
+    font-size: 15pt; color: #A0522D; margin-top: 24px; margin-bottom: 12px;
+    border-left: 4px solid #C8951E; padding-left: 10px;
+}
+h3 { font-size: 12.5pt; color: #1A1410; margin-top: 18px; margin-bottom: 8px; }
+h4 { font-size: 11pt; color: #3F7D3F; margin-top: 14px; margin-bottom: 6px; }
+p { margin: 6px 0; text-align: justify; orphans: 3; widows: 3; }
+ul, ol { margin: 6px 0 6px 20px; padding-left: 15px; }
+li { margin: 3px 0; }
+strong { color: #1A1410; }
+a { color: #1B3A6B; text-decoration: none; }
+table {
+    border-collapse: collapse; width: 100%; margin: 12px 0;
+    font-size: 9.5pt; page-break-inside: avoid;
+}
+th, td { border: 1px solid #D6C7A8; padding: 6px 8px; text-align: left; vertical-align: top; }
+th { background: #F8F1E4; color: #1A1410; font-weight: bold; font-family: Helvetica, sans-serif; }
+tr:nth-child(even) { background: #FBF7EE; }
+code {
+    font-family: 'Courier New', monospace; background: #F4EDE0;
+    color: #8B1A3B; padding: 1px 4px; border-radius: 2px; font-size: 9pt;
+}
+pre {
+    background: #2D2418; color: #F8F1E4; padding: 10px 12px; border-radius: 4px;
+    font-family: 'Courier New', monospace; font-size: 8.5pt; line-height: 1.4;
+    overflow-x: auto; page-break-inside: avoid; margin: 10px 0;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+blockquote {
+    border-left: 4px solid #C8951E; background: #FBF7EE; margin: 10px 0;
+    padding: 8px 14px; color: #1A1410; font-style: italic;
+}
+hr { border: none; border-top: 1px solid #D6C7A8; margin: 20px 0; }
+
+/* Cover */
+.cover {
+    page-break-after: always;
+    background: linear-gradient(135deg, #1A1410 0%, #2D2418 50%, #1A1410 100%);
+    color: #F8F1E4; padding: 0; margin: 0; height: 297mm; width: 210mm;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+}
+.cover::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(200, 149, 30, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(160, 82, 45, 0.12) 0%, transparent 50%);
+}
+.cover-content { text-align: center; z-index: 1; padding: 40px; max-width: 80%; }
+.cover-logo {
+    font-family: Helvetica, sans-serif; font-size: 56pt; font-weight: bold;
+    color: #C8951E; margin-bottom: 30px; letter-spacing: 4px;
+}
+.cover-title {
+    font-family: Helvetica, sans-serif; font-size: 32pt; color: #F8F1E4;
+    border: none; padding: 0; margin: 0 0 15px 0; page-break-before: avoid;
+}
+.cover-subtitle { font-size: 14pt; color: #D6C7A8; margin: 10px 0 30px 0; font-style: italic; }
+.cover-divider { width: 80px; height: 3px; background: #C8951E; margin: 30px auto; }
+.cover-tagline { font-size: 18pt; color: #C8951E; font-style: italic; margin: 25px 0; }
+.cover-meta { margin-top: 50px; font-size: 11pt; color: #D6C7A8; line-height: 1.8; }
+.cover-meta strong { color: #F8F1E4; }
+.cover-footer { margin-top: 60px; font-size: 10pt; color: #A0522D; letter-spacing: 1px; }
+</style>
+
+</head>
+<body>
+<section class="cover">
+    <div class="cover-content">
+        <div class="cover-logo">Kènè</div>
+        <h1 class="cover-title">Product Requirements Document</h1>
+        <p class="cover-subtitle">Plateforme Beauté & Bien-être Mélanoderme pour l'Afrique</p>
+        <div class="cover-divider"></div>
+        <p class="cover-tagline">La beauté mélanoderme, de A à Z.</p>
+        <div class="cover-meta">
+            <p><strong>Version :</strong> 1.0 — MVP Vibe Coding</p>
+            <p><strong>Périmètre :</strong> 4 sprints (Sprint 1 à 4)</p>
+            <p><strong>Stack :</strong> Next.js 16 + TypeScript + Prisma + VLM</p>
+            <p><strong>Référence :</strong> Cahier des charges complet (286 pages)</p>
+        </div>
+        <div class="cover-footer">
+            <p>Panafricain · Mobile Money · Conforme OHADA · IA Mélanoderme</p>
+        </div>
+    </div>
+</section>
+<blockquote>
+<p><strong>Version</strong> : 1.0 — MVP Vibe Coding<br />
+<strong>Périmètre</strong> : 4 sprints (Sprint 1 à 4)<br />
+<strong>Référence</strong> : Cahier des charges complet (286 pages, 11 parties)<br />
+<strong>Stack</strong> : Next.js 16 + TypeScript + Prisma + SQLite + VLM (z-ai-web-dev-sdk)</p>
+</blockquote>
+<hr />
+<h2 id="1-vision">1. VISION</h2>
+<h3 id="11-enonce">1.1 Énoncé</h3>
+<p><strong>Kènè</strong> est la première plateforme beauté et bien-être panafricaine qui combine, en un seul produit :<br />
+- Diagnostic de peau par IA calibrée peaux mélanodermes (Fitzpatrick IV-VI)<br />
+- Mise en relation cliente ↔ entreprise (instituts, spas, dermo-conseillères)<br />
+- Gestion complète de l'entreprise (RDV, caisse, stock, paie CNPS/IGR, compta SYSCOHADA)<br />
+- Boutique cosmétique avec botaniques africains</p>
+<h3 id="12-tagline">1.2 Tagline</h3>
+<p><em>« La beauté mélanoderme, de A à Z. »</em></p>
+<h3 id="13-promesse">1.3 Promesse</h3>
+<blockquote>
+<p>Une cliente scanne sa peau → reçoit un diagnostic adapté à sa carnation → réserve un soin chez l'institut partenaire le plus proche → paie par Wave/Orange Money → l'institut gère tout le reste (caisse, stock, paie, compta) dans la même plateforme, en conformité avec la loi ivoirienne/sénégalaise.</p>
+</blockquote>
+<hr />
+<h2 id="2-probleme-solution">2. PROBLÈME → SOLUTION</h2>
+<h3 id="21-problemes-actuels-afrique-peaux-melanodermes">2.1 Problèmes actuels (Afrique, peaux mélanodermes)</h3>
+<table>
+<thead>
+<tr>
+<th>Problème</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Apps IA peau occidentales biaisées sur peaux noires</td>
+<td>Diagnostics erronés, exclusion</td>
+</tr>
+<tr>
+<td>Aucune solution spa/beauté n'intègre Mobile Money natif</td>
+<td>Inutilisable en CI/SN</td>
+</tr>
+<tr>
+<td>Paie CNPS/IGR et compta SYSCOHADA absentes des ERP génériques</td>
+<td>Conformité impossible sans intégrateur</td>
+</tr>
+<tr>
+<td>Solutions pro (VISIA) à 30 000€</td>
+<td>Inaccessibles</td>
+</tr>
+<tr>
+<td>Aucune app ne couvre le corps (visage uniquement)</td>
+<td>Pathologies invisibles (AKN, mélanome acral)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-solution-kene">2.2 Solution Kènè</h3>
+<table>
+<thead>
+<tr>
+<th>Pillier</th>
+<th>Différenciation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IA mélanoderme</strong></td>
+<td>Dataset panafricain, focus Fitzpatrick IV-VI</td>
+</tr>
+<tr>
+<td><strong>Mobile Money first</strong></td>
+<td>Wave + Orange Money natifs</td>
+</tr>
+<tr>
+<td><strong>Conformité out-of-the-box</strong></td>
+<td>CNPS CI, IPM SN, IGR, TVA, SYSCOHADA</td>
+</tr>
+<tr>
+<td><strong>Multi-zones corps</strong></td>
+<td>Visage + dos + cuir chevelu + mains + barbe + nævi</td>
+</tr>
+<tr>
+<td><strong>ERP métier beauté</strong></td>
+<td>RDV variables, commissions, fiches photo avant/après</td>
+</tr>
+<tr>
+<td><strong>Prix en XOF</strong></td>
+<td>Adapté au pouvoir d'achat</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-personas">3. PERSONAS</h2>
+<h3 id="31-cliente-mariam-28-ans-abidjan">3.1 Cliente — « Mariam, 28 ans, Abidjan »</h3>
+<ul>
+<li>Citadine, smartphone Android milieu de gamme</li>
+<li>Veut comprendre sa peau (mélanoderme, PIH post-acné)</li>
+<li>Réserve soins, achète produits</li>
+<li>Paie en Wave par défaut</li>
+</ul>
+<h3 id="32-gerante-institut-ndeye-35-ans-dakar">3.2 Gérante institut — « Ndeye, 35 ans, Dakar »</h3>
+<ul>
+<li>4-6 employées (esthéticiennes, caissière)</li>
+<li>Veut agenda + caisse + CRM + paie IPM en 1 outil</li>
+<li>Comptable externe pour liasse SYSCOHADA</li>
+</ul>
+<h3 id="33-dermo-conseillere-aissata-30-ans-bamako">3.3 Dermo-conseillère — « Aïssata, 30 ans, Bamako »</h3>
+<ul>
+<li>Conseil dermatologique personnalisé</li>
+<li>Veut assistant IA + fiches clients enrichies</li>
+</ul>
+<h3 id="34-comptable-chen-38-ans-douala">3.4 Comptable — « Chen, 38 ans, Douala »</h3>
+<ul>
+<li>Export liasse fiscale + déclaration CNPS</li>
+<li>Pas de ressaisie</li>
+</ul>
+<hr />
+<h2 id="4-perimetre-mvp-4-sprints-de-vibe-coding">4. PÉRIMÈTRE MVP — 4 Sprints de Vibe Coding</h2>
+<h3 id="sprint-1-magique-app-cliente-diagnostic-ia">Sprint 1 — « Magique » (App Cliente : Diagnostic IA)</h3>
+<p><strong>Objectif</strong> : effet wow, valide l'IA mélanoderme</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>User Stories clés</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Onboarding</td>
+<td>OTP téléphone, profil peau (Fitzpatrick, allergies), consentement santé</td>
+</tr>
+<tr>
+<td>Diagnostic IA</td>
+<td>Capture multi-zones assistée, inférence VLM, 14 indicateurs visage</td>
+</tr>
+<tr>
+<td>Résultats</td>
+<td>Écran VISIA-like (grille 2×4 + heatmaps + scores + pourcentages)</td>
+</tr>
+<tr>
+<td>Vues spectrales</td>
+<td>Standard / Pigmentation profonde / Inflammation / Acné (simulées)</td>
+</tr>
+<tr>
+<td>Multi-zones</td>
+<td>Visage + dos + cuir chevelu + mains + barbe + nævi corps</td>
+</tr>
+<tr>
+<td>Recommandations</td>
+<td>Routine matin/soir + produits + soins</td>
+</tr>
+<tr>
+<td>Orientation dermato</td>
+<td>Si ABCDE nævi suspect</td>
+</tr>
+<tr>
+<td>Historique</td>
+<td>Liste diagnostics + comparaison avant/après</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sprint-2-business-app-pro-agenda-caisse-crm">Sprint 2 — « Business » (App Pro : Agenda + Caisse + CRM)</h3>
+<p><strong>Objectif</strong> : valide la valeur ERP métier</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>User Stories clés</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Onboarding entreprise</td>
+<td>KYB, config pays (CI/SN), wizard setup</td>
+</tr>
+<tr>
+<td>Agenda Pro</td>
+<td>Vue multi-praticiennes, drag &amp; drop, rappels auto</td>
+</tr>
+<tr>
+<td>Caisse POS</td>
+<td>Encaissement Wave/Orange (simulé), espèces, ticket thermique</td>
+</tr>
+<tr>
+<td>CRM clients</td>
+<td>Fiches enrichies (diagnostics, photos avant/après, historique)</td>
+</tr>
+<tr>
+<td>Catalogue</td>
+<td>Soins + produits (avec botaniques africains)</td>
+</tr>
+<tr>
+<td>Stock</td>
+<td>Articles, lots, DLC, alertes seuil, mouvements</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sprint-3-argent-boutique-wallet-rdv-end-to-end">Sprint 3 — « Argent » (Boutique + Wallet + RDV end-to-end)</h3>
+<p><strong>Objectif</strong> : boucle cliente complète</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>User Stories clés</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boutique</td>
+<td>Catalogue cosmétique, recommandations post-diagnostic</td>
+</tr>
+<tr>
+<td>Panier + checkout</td>
+<td>Paiement MoMo simulé, wallet Kènè</td>
+</tr>
+<tr>
+<td>Wallet</td>
+<td>Cashback, parrainage, approvisionnement</td>
+</tr>
+<tr>
+<td>Réservation RDV</td>
+<td>Recherche instituts, créneaux, acompte MoMo</td>
+</tr>
+<tr>
+<td>Rappels</td>
+<td>SMS/WhatsApp (logs simulés)</td>
+</tr>
+<tr>
+<td>Avis post-RDV</td>
+<td>Notes + commentaires</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sprint-4-conformite-paie-compta">Sprint 4 — « Conformité » (Paie + Compta)</h3>
+<p><strong>Objectif</strong> : différenciant vs Odoo/PayFit</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>User Stories clés</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Employés &amp; RH</td>
+<td>Contrats CDI/CDD, pointage, congés</td>
+</tr>
+<tr>
+<td>Paie CI</td>
+<td>CNPS (pension 14%, prestations 5%, AT 2%), IGR barème, CN 1,5%</td>
+</tr>
+<tr>
+<td>Paie SN</td>
+<td>IPM, IPRES retraite 14%, IR Sénégal</td>
+</tr>
+<tr>
+<td>Bulletin paie</td>
+<td>PDF conforme, distribution employé</td>
+</tr>
+<tr>
+<td>Déclarations</td>
+<td>Export e-CNPS CI, IPM SN</td>
+</tr>
+<tr>
+<td>Compta SYSCOHADA</td>
+<td>Plan comptable, journaux auto, grand livre, balance</td>
+</tr>
+<tr>
+<td>TVA 18%</td>
+<td>Collectée/déductible, déclaration mensuelle</td>
+</tr>
+<tr>
+<td>Liasse fiscale</td>
+<td>Bilan + compte résultat + annexe</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-architecture-produit-3-faces">5. ARCHITECTURE PRODUIT (3 FACES)</h2>
+<table>
+<thead>
+<tr>
+<th>Face</th>
+<th>Plateforme</th>
+<th>Routes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>📱 App Cliente</td>
+<td>PWA mobile-first (Next.js)</td>
+<td><code>/</code> (client)</td>
+</tr>
+<tr>
+<td>💻 App Pro</td>
+<td>Web desktop/tablette</td>
+<td><code>/pro/*</code></td>
+</tr>
+<tr>
+<td>🛡 Console Admin</td>
+<td>Web</td>
+<td><code>/admin/*</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note</strong> : Une seule app Next.js, 3 espaces via route groups <code>(client)</code>, <code>(pro)</code>, <code>(admin)</code>.</p>
+<hr />
+<h2 id="6-design-system-panafricain">6. DESIGN SYSTEM PANAFRICAIN</h2>
+<h3 id="61-typographie">6.1 Typographie</h3>
+<ul>
+<li><strong>Titres &amp; logo</strong> : <code>Ojuju</code> (Ụdị Foundry, Google Fonts — 1ère fonderie africaine)</li>
+<li><strong>Corps</strong> : <code>Questrial</code> (Google Fonts, supporte diacritiques langues africaines)</li>
+<li><strong>Chiffres financiers</strong> : <code>IBM Plex Mono</code></li>
+</ul>
+<h3 id="62-palette">6.2 Palette</h3>
+<table>
+<thead>
+<tr>
+<th>Rôle</th>
+<th>Nom</th>
+<th>Hex</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primaire</td>
+<td>Or Kènè</td>
+<td><code>#C8951E</code></td>
+<td>CTA, accents</td>
+</tr>
+<tr>
+<td>Secondaire</td>
+<td>Terre Bogolan</td>
+<td><code>#A0522D</code></td>
+<td>Touches premium</td>
+</tr>
+<tr>
+<td>Mélanine</td>
+<td>Noir profond</td>
+<td><code>#1A1410</code></td>
+<td>Texte, élégance</td>
+</tr>
+<tr>
+<td>Croissance</td>
+<td>Vert Baobab</td>
+<td><code>#3F7D3F</code></td>
+<td>Succès, botaniques</td>
+</tr>
+<tr>
+<td>Confiance</td>
+<td>Bleu Indigo</td>
+<td><code>#1B3A6B</code></td>
+<td>Finance (en touches)</td>
+</tr>
+<tr>
+<td>Pureté</td>
+<td>Crème Karité</td>
+<td><code>#F8F1E4</code></td>
+<td>Fonds</td>
+</tr>
+<tr>
+<td>Accent</td>
+<td>Bordeaux Bissap</td>
+<td><code>#8B1A3B</code></td>
+<td>Alertes</td>
+</tr>
+<tr>
+<td>Vibrance</td>
+<td>Orange Sunset</td>
+<td><code>#E07A2B</code></td>
+<td>CTA secondaires</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-icones-linear-2px-stroke-derivees-adinkra">6.3 Icônes (linear 2px stroke, dérivées Adinkra)</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Icône source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RDV</td>
+<td>Sankofa (retour sources)</td>
+</tr>
+<tr>
+<td>Caisse/POS</td>
+<td>Aban (forteresse)</td>
+</tr>
+<tr>
+<td>Beauté/Soin</td>
+<td>Duafe (peigne)  logo</td>
+</tr>
+<tr>
+<td>IA Diagnostic</td>
+<td>Nea Onnim (savoir)</td>
+</tr>
+<tr>
+<td>Relation client</td>
+<td>Osram Ne Nsoromma (lune &amp; étoile)</td>
+</tr>
+<tr>
+<td>Stock</td>
+<td>Motif Kente géométrisé</td>
+</tr>
+<tr>
+<td>Paie</td>
+<td>Fihankra (sécurité)</td>
+</tr>
+<tr>
+<td>Comptabilité</td>
+<td>Motif tissé Baoulé</td>
+</tr>
+<tr>
+<td>Botaniques</td>
+<td>Silhouettes karité/baobab/moringa</td>
+</tr>
+</tbody>
+</table>
+<h3 id="64-patterns">6.4 Patterns</h3>
+<ul>
+<li><strong>Kente</strong> : bandes fines en arrière-plan headers</li>
+<li><strong>Bogolan</strong> : micro-points en filigrane fonds</li>
+<li><strong>Règle</strong> : patterns couvrent max 5-10% surface (éviter surcharge)</li>
+</ul>
+<h3 id="65-principes-ux">6.5 Principes UX</h3>
+<ul>
+<li>Mobile-first absolu</li>
+<li>Onboarding téléphone + OTP</li>
+<li>Boutons larges contrastés (Android milieu de gamme, luminosité forte)</li>
+<li>Iconographie explicite + texte</li>
+<li>Bottom navigation + FAB</li>
+<li>États offline gérés</li>
+<li>Dark mode</li>
+<li>Pas d'emoji (icônes cohérentes Adinkra)</li>
+</ul>
+<hr />
+<h2 id="7-architecture-technique">7. ARCHITECTURE TECHNIQUE</h2>
+<h3 id="71-stack">7.1 Stack</h3>
+<table>
+<thead>
+<tr>
+<th>Couche</th>
+<th>Technologie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Framework</td>
+<td>Next.js 16 App Router</td>
+</tr>
+<tr>
+<td>Langage</td>
+<td>TypeScript strict</td>
+</tr>
+<tr>
+<td>Styling</td>
+<td>Tailwind CSS 4 + shadcn/ui (custom panafricain)</td>
+</tr>
+<tr>
+<td>DB</td>
+<td>Prisma + SQLite (dev)</td>
+</tr>
+<tr>
+<td>IA</td>
+<td>z-ai-web-dev-sdk (VLM glm-4.6v)</td>
+</tr>
+<tr>
+<td>Animations</td>
+<td>Framer Motion</td>
+</tr>
+<tr>
+<td>Thème</td>
+<td>next-themes (dark mode)</td>
+</tr>
+<tr>
+<td>Icons</td>
+<td>Lucide + SVG Adinkra custom</td>
+</tr>
+</tbody>
+</table>
+<h3 id="72-structure-projet">7.2 Structure projet</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>src/
+├── app/
+│   ├── (client)/        # App Cliente (mobile-first)
+│   ├── (pro)/           # App Pro (desktop)
+│   └── (admin)/         # Console admin
+├── components/
+│   ├── ui/              # shadcn/ui
+│   └── kene/            # Composants Kènè (Adinkra icons, etc.)
+├── lib/
+│   ├── db/              # Prisma client + queries
+│   ├── ai/              # VLM diagnostic service
+│   ├── payroll/         # Calculs CNPS/IPM/IGR
+│   ├── accounting/      # SYSCOHADA engine
+│   └── utils/
+└── api/                 # Routes API (REST)
+</code></pre></div>
+
+<h3 id="73-base-de-donnees-prisma">7.3 Base de données (Prisma)</h3>
+<p><strong>Tables principales</strong> (multi-tenant via <code>tenant_id</code>) :<br />
+- Globales : <code>countries</code>, <code>currencies</code>, <code>momo_operators</code>, <code>users</code><br />
+- Tenant : <code>tenants</code>, <code>sites</code>, <code>employees</code>, <code>clients</code>, <code>services</code>, <code>resources</code><br />
+- Opérations : <code>appointments</code>, <code>sales</code>, <code>payments</code>, <code>diagnoses</code><br />
+- Produits : <code>products</code>, <code>inventory_items</code>, <code>inventory_movements</code><br />
+- Wallet : <code>wallets</code>, <code>wallet_transactions</code><br />
+- Paie (Sprint 4) : <code>pay_periods</code>, <code>payslips</code><br />
+- Compta (Sprint 4) : <code>accounting_entries</code>, <code>chart_of_accounts</code><br />
+- Sécurité : <code>audit_logs</code>, <code>consents</code></p>
+<h3 id="74-api-rest-selection">7.4 API REST (sélection)</h3>
+<ul>
+<li><code>POST /api/auth/otp/request</code> + <code>verify</code></li>
+<li><code>POST /api/diagnoses</code> (async, webhook completion)</li>
+<li><code>GET /api/institutes</code> + <code>availability</code> + <code>appointments</code></li>
+<li><code>POST /api/payments/initiate</code> (Wave/Orange simulés)</li>
+<li><code>GET/POST /api/pro/sales</code> (caisse)</li>
+<li><code>GET/POST /api/pro/clients</code> (CRM)</li>
+<li><code>POST /api/pro/payroll/run</code> (Sprint 4)</li>
+<li><code>GET /api/pro/accounting/*</code> (Sprint 4)</li>
+</ul>
+<h3 id="75-ia-diagnostic-vlm">7.5 IA Diagnostic (VLM)</h3>
+<p><strong>Approche</strong> :<br />
+- Cliente upload photo multi-zones (visage, dos, mains…)<br />
+- Backend appelle <code>zai.chat.completions.createVision()</code> avec prompt structuré<br />
+- Le VLM (glm-4.6v) analyse et renvoie JSON :<br />
+  - Score global 0-100<br />
+  - 14 indicateurs visage avec sévérité 0-3<br />
+  - Indicateurs spécifiques par zone (dos, mains, etc.)<br />
+  - Marquages zones (coordonnées bbox)<br />
+  - Recommandations routine/produits/soins<br />
+  - Flag orientation dermatologique (ABCDE)</p>
+<p><strong>Prompt IA</strong> (extrait) :</p>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>Analyse cette photo de peau mélanoderme. Retourne JSON :
+{
+  &quot;score_global&quot;: 0-100,
+  &quot;indicateurs&quot;: [
+    { &quot;nom&quot;: &quot;PIH&quot;, &quot;severite&quot;: 0-3, &quot;zones&quot;: [...] },
+    ...
+  ],
+  &quot;recommandations&quot;: {...},
+  &quot;orientation_dermato&quot;: bool,
+  &quot;raison_orientation&quot;: &quot;...&quot;
+}
+</code></pre></div>
+
+<h3 id="76-simulations-poc">7.6 Simulations (POC)</h3>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Simulation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wave / Orange Money</td>
+<td>Page paiement simulée (succès auto après 3s)</td>
+</tr>
+<tr>
+<td>SMS / WhatsApp</td>
+<td>Log dans console + table notifications</td>
+</tr>
+<tr>
+<td>Envoi email</td>
+<td>Log</td>
+</tr>
+<tr>
+<td>Impression ticket</td>
+<td>Vue HTML format ticket</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-regles-metier-critiques-a-coder">8. RÈGLES MÉTIER CRITIQUES (à coder)</h2>
+<h3 id="81-bareme-igr-ci-mensuel">8.1 Barème IGR CI (mensuel)</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code><span style="color: #40A070">0</span><span style="color: #BBB"> </span><span style="color: #666">-</span><span style="color: #BBB"> </span><span style="color: #40A070">75</span><span style="color: #BBB"> </span><span style="color: #40A070">000</span><span style="color: #BBB"> </span>:<span style="color: #BBB"> </span><span style="color: #40A070">0</span><span style="border: 1px solid #F00">%</span>
+<span style="color: #40A070">75</span><span style="color: #BBB"> </span><span style="color: #40A070">001</span><span style="color: #BBB"> </span><span style="color: #666">-</span><span style="color: #BBB"> </span><span style="color: #40A070">240</span><span style="color: #BBB"> </span><span style="color: #40A070">000</span><span style="color: #BBB"> </span>:<span style="color: #BBB"> </span><span style="color: #40A070">16</span><span style="border: 1px solid #F00">%</span>
+<span style="color: #40A070">240</span><span style="color: #BBB"> </span><span style="color: #40A070">001</span><span style="color: #BBB"> </span><span style="color: #666">-</span><span style="color: #BBB"> </span><span style="color: #40A070">800</span><span style="color: #BBB"> </span><span style="color: #40A070">000</span><span style="color: #BBB"> </span>:<span style="color: #BBB"> </span><span style="color: #40A070">21</span><span style="border: 1px solid #F00">%</span>
+<span style="color: #40A070">800</span><span style="color: #BBB"> </span><span style="color: #40A070">001</span><span style="color: #BBB"> </span><span style="color: #666">-</span><span style="color: #BBB"> </span><span style="color: #40A070">2</span><span style="color: #BBB"> </span><span style="color: #40A070">400</span><span style="color: #BBB"> </span><span style="color: #40A070">000</span><span style="color: #BBB"> </span>:<span style="color: #BBB"> </span><span style="color: #40A070">24</span><span style="border: 1px solid #F00">%</span>
+<span style="color: #40A070">2</span><span style="color: #BBB"> </span><span style="color: #40A070">400</span><span style="color: #BBB"> </span><span style="color: #40A070">001</span><span style="color: #BBB"> </span><span style="color: #666">-</span><span style="color: #BBB"> </span><span style="color: #40A070">8</span><span style="color: #BBB"> </span><span style="color: #40A070">000</span><span style="color: #BBB"> </span><span style="color: #40A070">000</span><span style="color: #BBB"> </span>:<span style="color: #BBB"> </span><span style="color: #40A070">28</span><span style="border: 1px solid #F00">%</span>
+<span style="color: #666">&gt;</span><span style="color: #BBB"> </span><span style="color: #40A070">8</span><span style="color: #BBB"> </span><span style="color: #40A070">000</span><span style="color: #BBB"> </span><span style="color: #40A070">000</span><span style="color: #BBB"> </span>:<span style="color: #BBB"> </span><span style="color: #40A070">36</span><span style="border: 1px solid #F00">%</span>
+</code></pre></div>
+
+<h3 id="82-cotisations-cnps-ci">8.2 Cotisations CNPS CI</h3>
+<ul>
+<li>Pension vieillesse : employeur 7,7% + salarié 6,3% (plafond 3 375 000 FCFA)</li>
+<li>Prestations familiales : employeur 5% (plafond 70 000)</li>
+<li>Maternité : employeur 0,75% (plafond 70 000)</li>
+<li>AT/MP : employeur 2% services (plafond 70 000)</li>
+<li>Congés payés : 8% (employeur)</li>
+<li>CN : 1,5% (salarié)</li>
+</ul>
+<h3 id="83-cotisations-ipmipres-sn">8.3 Cotisations IPM/IPRES SN</h3>
+<ul>
+<li>Prestations familiales : employeur 7% (plafond 63 000)</li>
+<li>IPRES retraite : employeur 8,4% + salarié 5,6% (plafond 432 000)</li>
+<li>IPRES cadres : employeur 3,6% + salarié 2,4%</li>
+</ul>
+<h3 id="84-tva">8.4 TVA</h3>
+<ul>
+<li>CI : 18%</li>
+<li>SN : 18%</li>
+</ul>
+<h3 id="85-syscohada-plan-comptable">8.5 SYSCOHADA — Plan comptable</h3>
+<p>9 classes (1 à 9), pré-chargé. Journaux auto depuis caisse/achats. Génération bilan + compte de résultat.</p>
+<h3 id="86-politique-annulation-rdv">8.6 Politique annulation RDV</h3>
+<table>
+<thead>
+<tr>
+<th>Délai avant RDV</th>
+<th>Remboursement acompte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; 72h</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>24-72h</td>
+<td>80%</td>
+</tr>
+<tr>
+<td>2-24h</td>
+<td>30%</td>
+</tr>
+<tr>
+<td>&lt; 2h</td>
+<td>0% (no-show)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="87-scoring-rfm">8.7 Scoring RFM</h3>
+<ul>
+<li>Récence (jours depuis dernière visite) : 1-5</li>
+<li>Fréquence (12 mois) : 1-5</li>
+<li>Montant (12 mois) : 1-5</li>
+<li>Segments : Champions, Fidèles, Potentiels, À risque, Perdus, Nouveaux</li>
+</ul>
+<h3 id="88-score-diagnostic-multi-zones">8.8 Score diagnostic multi-zones</h3>
+<div class="codehilite" style="background: #f0f0f0"><pre style="line-height: 125%;"><span></span><code>Score Global = moyenne pondérée :
+  - Visage : 40%
+  - Dos : 15%
+  - Cuir chevelu : 10%
+  - Mains : 10%
+  - Barbe : 5%
+  - Nævi corps : 20% (sécurité patient)
+</code></pre></div>
+
+<hr />
+<h2 id="9-criteres-de-succes-par-sprint">9. CRITÈRES DE SUCCÈS PAR SPRINT</h2>
+<h3 id="sprint-1-succes">Sprint 1 — Succès</h3>
+<ul>
+<li>[ ] Cliente peut s'inscrire par OTP</li>
+<li>[ ] Capture photo visage fonctionne avec assistance</li>
+<li>[ ] VLM renvoie un diagnostic structuré en &lt; 30s</li>
+<li>[ ] Écran résultats VISIA-like s'affiche (grille 2×4 + heatmaps)</li>
+<li>[ ] Multi-zones (visage + 2 autres) fonctionnel</li>
+<li>[ ] Recommandations affichées</li>
+<li>[ ] Historique consultable</li>
+<li>[ ] Orientation dermato si ABCDE</li>
+</ul>
+<h3 id="sprint-2-succes">Sprint 2 — Succès</h3>
+<ul>
+<li>[ ] Gérant peut créer compte entreprise + wizard setup</li>
+<li>[ ] Agenda multi-praticiennes fonctionnel (créer/déplacer RDV)</li>
+<li>[ ] Caisse encaisse (Wave/Orange simulés + espèces)</li>
+<li>[ ] CRM affiche fiches clients enrichies</li>
+<li>[ ] Catalogue soins/produits CRUD</li>
+<li>[ ] Stock décrémente à la vente</li>
+</ul>
+<h3 id="sprint-3-succes">Sprint 3 — Succès</h3>
+<ul>
+<li>[ ] Boutique catalogue consultable</li>
+<li>[ ] Panier + checkout (MoMo simulé)</li>
+<li>[ ] Wallet Kènè crédité (cashback)</li>
+<li>[ ] Réservation RDV end-to-end (recherche → acompte → confirmation)</li>
+<li>[ ] Rappels SMS simulés (logs)</li>
+<li>[ ] Avis post-RDV</li>
+</ul>
+<h3 id="sprint-4-succes">Sprint 4 — Succès</h3>
+<ul>
+<li>[ ] Employés créés avec contrats</li>
+<li>[ ] Pointage fonctionne</li>
+<li>[ ] Génération paie mensuelle CI (CNPS + IGR + CN)</li>
+<li>[ ] Génération paie mensuelle SN (IPRES + IR)</li>
+<li>[ ] Bulletin PDF conforme</li>
+<li>[ ] Export déclaration e-CNPS (format XML)</li>
+<li>[ ] Compta SYSCOHADA (journaux auto depuis caisse)</li>
+<li>[ ] Liasse fiscale (bilan + compte résultat)</li>
+</ul>
+<hr />
+<h2 id="10-metriques-de-succes-post-mvp">10. MÉTRIQUES DE SUCCÈS POST-MVP</h2>
+<h3 id="101-adoption">10.1 Adoption</h3>
+<ul>
+<li>10 instituts pilotes onboardés en 1 mois</li>
+<li>500 clientes inscrites en 2 mois</li>
+<li>50 diagnostics/jour en moyenne</li>
+</ul>
+<h3 id="102-engagement">10.2 Engagement</h3>
+<ul>
+<li>DAU/MAU &gt; 30% (clientes actives)</li>
+<li>70% des clientes font un 2e diagnostic dans le mois</li>
+<li>Taux de conversion diagnostic → RDV &gt; 15%</li>
+</ul>
+<h3 id="103-business">10.3 Business</h3>
+<ul>
+<li>5 instituts payants après 2 mois d'essai</li>
+<li>MRR &gt; 500 000 FCFA/mois (10 clients Pro)</li>
+<li>NPS &gt; 40</li>
+</ul>
+<hr />
+<h2 id="11-risques-mitigation-vibe-coding">11. RISQUES &amp; MITIGATION (vibe coding)</h2>
+<table>
+<thead>
+<tr>
+<th>Risque</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VLM biaisé sur peaux mélanodermes</td>
+<td>Prompt spécialisé + disclaimer clair « estimation IA »</td>
+</tr>
+<tr>
+<td>Mobile Money non disponible en sandbox</td>
+<td>Simulation réaliste + page paiement mock</td>
+</tr>
+<tr>
+<td>Volume de dev (4 sprints ambitieux)</td>
+<td>Prioriser Sprint 1 (effet wow) puis ajuster</td>
+</tr>
+<tr>
+<td>Pas de dataset réel</td>
+<td>VLM suffit pour POC, dataset CHU en parallèle</td>
+</tr>
+<tr>
+<td>Performance mobile (PWA)</td>
+<td>Lazy loading, compression images, offline-first</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12-non-covered-out-scope-mvp-vibe-coding">12. NON-COVERED (out scope MVP vibe coding)</h2>
+<ul>
+<li>App mobile native (React Native) → PWA à la place</li>
+<li>Paiements réels (clés API marchand MoMo) → simulés</li>
+<li>Entraînement modèle IA propriétaire → VLM existant</li>
+<li>Déploiement cloud régional AWS af-south-1 → local</li>
+<li>Marketplace cosmétique panafricaine → Phase 2</li>
+<li>Langues locales (nouchi, wolof, bambara) → français seul</li>
+<li>Multi-pays au-delà CI/SN → Phase 2+</li>
+<li>Téléconsultation vidéo → Phase 1B (post-vibe)</li>
+<li>Edge inference offline → Phase 1B</li>
+</ul>
+<hr />
+<h2 id="13-ordre-de-construction-recommande">13. ORDRE DE CONSTRUCTION RECOMMANDÉ</h2>
+<h3 id="phase-preliminaire-avant-sprint-1">Phase préliminaire (avant Sprint 1)</h3>
+<ol>
+<li>Setup design system (Ojuju, palette, shadcn custom)</li>
+<li>Setup Prisma + schéma DB initial</li>
+<li>Authentification OTP (base)</li>
+<li>Layouts 3 faces (client mobile, pro desktop, admin)</li>
+</ol>
+<h3 id="sprint-1-diagnostic-ia-priorite-max">Sprint 1 — Diagnostic IA (priorité max)</h3>
+<h3 id="sprint-2-app-pro-erp">Sprint 2 — App Pro ERP</h3>
+<h3 id="sprint-3-boutique-rdv-end-to-end">Sprint 3 — Boutique + RDV end-to-end</h3>
+<h3 id="sprint-4-paie-compta">Sprint 4 — Paie + Compta</h3>
+<hr />
+<h2 id="14-decisions-techniques-finales">14. DÉCISIONS TECHNIQUES FINALES</h2>
+<table>
+<thead>
+<tr>
+<th>Décision</th>
+<th>Choix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Framework</td>
+<td>Next.js 16 App Router</td>
+</tr>
+<tr>
+<td>Langage</td>
+<td>TypeScript strict</td>
+</tr>
+<tr>
+<td>Styling</td>
+<td>Tailwind 4 + shadcn/ui</td>
+</tr>
+<tr>
+<td>DB</td>
+<td>Prisma + SQLite</td>
+</tr>
+<tr>
+<td>IA</td>
+<td>z-ai-web-dev-sdk VLM (glm-4.6v)</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>OTP SMS (simulé) + JWT</td>
+</tr>
+<tr>
+<td>Multi-tenant</td>
+<td>Row-Level Security Prisma (<code>tenant_id</code>)</td>
+</tr>
+<tr>
+<td>Animations</td>
+<td>Framer Motion</td>
+</tr>
+<tr>
+<td>Thème</td>
+<td>next-themes (dark mode)</td>
+</tr>
+<tr>
+<td>State</td>
+<td>Zustand (client) + TanStack Query (server)</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Zod</td>
+</tr>
+<tr>
+<td>Icons</td>
+<td>Lucide + SVG Adinkra custom</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="15-prochaines-etapes-immediates">15. PROCHAINES ÉTAPES IMMÉDIATES</h2>
+<ol>
+<li>PRD validée (ce document)</li>
+<li>🚧 Setup design system + DB + auth</li>
+<li>🚧 Sprint 1 : Diagnostic IA</li>
+<li>🚧 Sprint 2 : App Pro</li>
+<li>🚧 Sprint 3 : Boutique + RDV</li>
+<li>🚧 Sprint 4 : Paie + Compta</li>
+</ol>
+<hr />
+<p><em>PRD Kènè v1.0 — Prêt pour vibe coding.</em></p>
+</body>
+</html>
