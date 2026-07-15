@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "### 1) Type d'analyse de peau, zones du corps couvertes, appareil  \nL'image présente une **analyse cutanée numérique** (analyse de la peau) réalisée via un appareil de diagnostic dermatologique. La zone du corps analysée est **exclusivement le visage** (visage complet, incluant le front, les joues, le nez, les lèvres et le menton). L'appareil utilisé est un dispositif de **photographie cutanée à haute résolution** (probablement un dermoscope ou un appareil de type \"skin analysis\" avec technologie de capture multi-spectrale), identifié par la présence d'un **support blanc en bas du visage** (collier ou support pour stabiliser la position du sujet lors de la capture).  \n\n\n### 2) Zones du corps analysées  \nSeul le **visage** est analysé. Les zones spécifiques couvertes incluent :  \n- Front  \n- Joues (gauche et droite)  \n- Nez  \n- Lèvres (supérieures et inférieures)  \n- Menton  \n- Paupières (supérieures et inférieures)  \n\nAucune autre partie du corps (corps, mains, dos, etc.) n'est visible ou analysée dans l'image.  \n\n\n### 3) Indicateurs/mesures affichés  \nL'analyse affiche **8 indicateurs cutanés distincts**, chacun représenté par une image spécifique :  \n1. **Taches** : Zones de pigmentation anormale (taches brunes, taches de vieillesse) visualisées en **bleu cyan**.  \n2. **Rides** : Micro-reliefs de la peau (ridules, rides) visualisées en **vert fluo**.  \n3. **Texture** : Rugosité et irrégularités de la surface cutanée (pores dilatés, grain de peau) visualisées en **jaune vert**.  \n4. **Pores** : Ouvertures des follicules pileux (pores dilatés) visualisées en **violet**.  \n5. **Taches UV** : Lésions induites par les rayons ultraviolets (taches de soleil, dommages photo-induits) visualisées en **jaune** sur un fond noir et blanc.  \n6. **Taches Brunes** : Hyperpigmentation (taches de vieillesse, melasma) visualisées en **jaune** sur un fond orange.  \n7. **Zones Rouges** : Inflammation, rougeurs (couperose, irritation) visualisées en **rouge** sur un fond rosé.  \n8. **Porphyrines** : Bactéries anaérobies (liées à l'acné) visualisées en **jaune** sur un fond bleu foncé.  \n\n\n### 4) Présentation visuelle (layout, graphiques, couleurs)  \n- **Layout** : L'image est organisée en **2 lignes de 4 panneaux** (8 panneaux au total), chacun correspondant à un indicateur. Chaque panneau contient :  \n  - Une photo du visage avec un **surbrillance (overlay)** de couleur spécifique à l'indicateur.  \n  - Un **label en bas du panneau** (texte en blanc sur fond gris foncé) indiquant le nom de l'indicateur (ex: \"Taches\", \"Rides\").  \n- **Graphiques** : Les surbrillances sont des **points ou des lignes colorées** qui se superposent à la peau, représentant la localisation et l'intensité de chaque problème cutané.  \n- **Couleurs** : Chaque indicateur utilise une couleur distincte pour faciliter la distinction :  \n  - Taches : Bleu cyan  \n  - Rides : Vert fluo  \n  - Texture : Jaune vert  \n  - Pores : Violet  \n  - Taches UV : Jaune (fond noir/blanc)  \n  - Taches Brunes : Jaune (fond orange)  \n  - Zones Rouges : Rouge (fond rosé)  \n  - Porphyrines : Jaune (fond bleu foncé)  \n\n\n### 5) Couverture du corps  \nL'analyse **couvre uniquement le visage**. Aucune partie du corps (corps, mains, dos, etc.) n'est incluse dans les images.  \n\n\nEn résumé, l'image détaille une analyse cutanée du visage via un appareil de diagnostic, avec 8 indicateurs visuels distincts, organisés en un layout clair et coloré, et exclusivement centrée sur le visage.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1784114187,
+  "id": "20260715191604c986b2b5e92f4b87",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "20260715191604c986b2b5e92f4b87",
+  "usage": {
+    "completion_tokens": 1021,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1098,
+    "prompt_tokens_details": {
+      "cached_tokens": 4
+    },
+    "total_tokens": 2119
+  }
+}
