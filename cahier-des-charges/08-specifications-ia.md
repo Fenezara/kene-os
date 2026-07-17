@@ -501,4 +501,56 @@ Client reçoit diagnostic
 
 ---
 
-*Fin de la Partie 8. Le moteur IA est spécifié de bout en bout : dataset éthique, modèle multi-tâches, MLOps complet, conformité non-médicale, roadmap évolutive.*
+---
+
+## 9. DERMATOLOGUE IA CONVERSATIONNEL MULTIMODAL
+
+### 9.1 Canaux d'Interaction & Traitement
+Le dermatologue IA de Kènè ("Mama Kènè AI") gère l'interaction de manière asynchrone et synchrone via 5 modalités d'échange :
+
+1. **Texte (Tchat)** :
+   - *Interface* : Type bulle de message WhatsApp classique.
+   - *Modèle* : LLM fine-tuné sur la taxonomie botanique africaine (Karité, Baobab, Moringa) et les pathologies courantes des peaux mélanodermes.
+   - *Sortie* : Réponses courtes, structurées avec des listes à puces faciles à lire sur mobile.
+
+2. **Audio (Notes Vocales)** :
+   - *Entrée* : Enregistrement de note vocale (.mp3/.wav/.m4a) traité par une API Speech-to-Text (Whisper ou local Web Speech).
+   - *Traduction / Transcription* : Transcription en français. Support multilingue (Wolof, Nouchi, Bambara) via des modèles de traduction fine-tunés.
+   - *Sortie* : Synthèse vocale Text-to-Speech (TTS) avec une voix chaleureuse et accentuée localement.
+
+3. **Photo (Analyse Visuelle Multimodale)** :
+   - *Traitement* : Inférence conjointe Vision-Language (VLM) + modèle de classification d'urgence.
+   - *Triage Clinique* :
+     - **Vert (Bénin / Cosmétique)** : Recommandation d'une routine hydratante ou apaisante.
+     - **Jaune (Doute / Intermédiaire)** : Transfert asynchrone de la photo et du fil de discussion à une dermo-conseillère humaine dans l'App Pro.
+     - **Rouge (Urgent / Médical)** : Alerte visuelle (Bordeaux Bissap) et proposition automatique de réservation de RDV avec un dermatologue partenaire ou de téléconsultation.
+
+4. **Vidéo (Avatar 3D interactif)** :
+   - *Interface* : Canvas WebGL avec un avatar stylisé ("Dr. Amina" ou le jumeau numérique "Skin Twin").
+   - *Lip-Sync* : Déformation de la géométrie de la bouche en fonction du spectre audio généré par le TTS (Mouth Blendshapes ou morph targets).
+   - *Usage* : Recommandations post-diagnostic sous forme de mini-consultation interactive guidée.
+
+5. **Relance & Suivi Proactif (WhatsApp/SMS)** :
+   - *Concept* : L'IA initie des conversations basées sur les jours clés de la routine (J+3, J+7, J+30).
+   - *Exemple* : "Mariam, c'est Mama Kènè. Ton traitement anti-taches a commencé il y a 7 jours. As-tu 1 minute pour m'envoyer une photo de ta joue pour suivre ton évolution ?"
+
+### 9.2 Arbre de Décision du Triage IA
+```mermaid
+graph TD
+    A[Upload Photo / Description Vocale] --> B{Analyse VLM & Classification}
+    B -->|Bénin / Routine| C[Triage VERT]
+    B -->|Doute / Sévérité Moyenne| D[Triage JAUNE]
+    B -->|Alerte / Pathologie / ABCDE Nævus| E[Triage ROUGE]
+    
+    C --> C1[Routine Botanique + Boutique Kènè]
+    
+    D --> D1[Notification Dermo-Conseillère Partner]
+    D1 --> D2[Validation humaine de la routine sous 24h]
+    
+    E --> E1[Alerte visuelle et sonore]
+    E1 --> E2[Prise de RDV prioritaire avec un dermatologue]
+```
+
+---
+
+*Fin de la Partie 8. Le moteur IA est spécifié de bout en bout : dataset éthique, modèle multi-tâches, MLOps complet, conformité non-médicale, roadmap évolutive et dermatologue conversationnel multimodal.*

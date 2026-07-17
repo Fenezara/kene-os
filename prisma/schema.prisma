@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +10,691 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// -------------------------------------------------------------
+// ENUMS (Prisma supports Enums on SQLite mapped as Text)
+// -------------------------------------------------------------
+
+enum UserStatus {
+  active
+  suspended
+  deleted
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum RoleType {
+  gerant
+  praticienne
+  caissier
+  comptable
+  rh
+  magasinier
+}
+
+enum TenantType {
+  institut
+  spa
+  dermo
+  massage
+  esthetique
+  chaine
+}
+
+enum SubscriptionTier {
+  essentiel
+  pro
+  chaine
+}
+
+enum SubscriptionStatus {
+  active
+  past_due
+  suspended
+}
+
+enum ContractType {
+  CDI
+  CDD
+  essai
+}
+
+enum EmployeeStatus {
+  active
+  leave
+  terminated
+}
+
+enum Gender {
+  M
+  F
+  O
+}
+
+enum FitzpatrickType {
+  I
+  II
+  III
+  IV
+  V
+  VI
+}
+
+enum SkinType {
+  grasse
+  seche
+  mixte
+  normale
+  sensible
+}
+
+enum AppointmentStatus {
+  pending
+  confirmed
+  in_progress
+  completed
+  cancelled
+  no_show
+}
+
+enum AppointmentSource {
+  online
+  walk_in
+  phone
+}
+
+enum MovementType {
+  purchase
+  sale
+  loss
+  transfer
+  adjustment
+}
+
+enum SaleStatus {
+  pending
+  paid
+  refunded
+  partial
+}
+
+enum PaymentMethod {
+  wave
+  orange
+  mtn
+  moov
+  cash
+  card
+  check
+  wallet
+}
+
+enum PaymentStatus {
+  pending
+  confirmed
+  failed
+  refunded
+}
+
+enum WalletTransactionType {
+  credit
+  debit
+}
+
+enum WalletTransactionReason {
+  cashback
+  referral
+  topup
+  payment
+  refund
+}
+
+enum PayPeriodStatus {
+  open
+  processing
+  closed
+}
+
+enum JournalType {
+  ventes
+  achats
+  banque
+  caisse
+  od
+}
+
+enum AccountType {
+  actif
+  passif
+  charge
+  produit
+}
+
+enum ConsentType {
+  health_data
+  marketing
+  third_party
+}
+
+// -------------------------------------------------------------
+// TABLES GLOBALES (Plateforme)
+// -------------------------------------------------------------
+
+model Country {
+  id           String   @id @default(uuid())
+  code         String   @unique // CI, SN, ML...
+  name         String
+  currencyCode String
+  language     String   // fr-CI, fr-SN
+  ohada        Boolean  @default(true)
+  active       Boolean  @default(true)
+  config       String   // Stringified JSON containing tax rules and settings
+  tenants      Tenant[]
+
+  @@map("kene_countries")
+}
+
+model Currency {
+  code     String   @id // XOF, XAF
+  name     String
+  symbol   String
+  decimals Int      @default(0)
+  tenants  Tenant[]
+
+  @@map("kene_currencies")
+}
+
+model MoMoOperator {
+  id             String    @id @default(uuid())
+  name           String    // Wave, Orange Money
+  code           String    @unique // WAVE, ORANGE
+  countries      String    // Stringified JSON list of country codes
+  commissionRate Float
+  active         Boolean   @default(true)
+  payments       Payment[]
+
+  @@map("kene_momo_operators")
+}
+
+model User {
+  id                String       @id @default(uuid())
+  phone             String       @unique
+  email             String?
+  passwordHash      String?      // Null for OTP-only users
+  twoFactorEnabled  Boolean      @default(false)
+  twoFactorSecret   String?
+  firstName         String
+  lastName          String
+  avatarUrl         String?
+  language          String       @default("fr-CI")
+  status            UserStatus   @default(active)
+  lastLoginAt       DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  roles             UserRole[]
+  clientProfiles    Client[]
+  employeeProfiles  Employee[]
+  diagnoses         Diagnosis[]
+  wallets           Wallet[]
+  consents          Consent[]
+  auditLogs         AuditLog[]
+
+  @@map("kene_users")
+}
+
+model UserRole {
+  userId      String
+  tenantId    String
+  role        RoleType
+  permissions String // Stringified JSON of permissions
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@id([userId, tenantId, role])
+  @@map("kene_user_roles")
+}
+
+// -------------------------------------------------------------
+// TABLES TENANT (Entreprises)
+// -------------------------------------------------------------
+
+model Tenant {
+  id                 String             @id @default(uuid())
+  name               String
+  legalName          String
+  type               TenantType
+  countryCode        String
+  currencyCode       String
+  rccm               String?
+  taxId              String?            // Taxpayer number
+  vatRate            Float              @default(0.18)
+  address            String             // Stringified JSON address object
+  subscriptionTier   SubscriptionTier   @default(essentiel)
+  subscriptionStatus SubscriptionStatus @default(active)
+  active             Boolean            @default(true)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  country            Country            @relation(fields: [countryCode], references: [code])
+  currency           Currency           @relation(fields: [currencyCode], references: [code])
+  userRoles          UserRole[]
+  sites              Site[]
+  employees          Employee[]
+  clients            Client[]
+  services           Service[]
+  resources          Resource[]
+  appointments       Appointment[]
+  products           Product[]
+  inventoryItems     InventoryItem[]
+  inventoryMovements InventoryMovement[]
+  sales              Sale[]
+  payments           Payment[]
+  diagnoses          Diagnosis[]
+  payPeriods         PayPeriod[]
+  payslips           Payslip[]
+  accountingEntries  AccountingEntry[]
+  chartOfAccounts    ChartOfAccount[]
+  auditLogs          AuditLog[]
+
+  @@map("kene_tenants")
+}
+
+model Site {
+  id                 String              @id @default(uuid())
+  tenantId           String
+  name               String
+  address            String              // Stringified JSON address
+  phone              String
+  active             Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  employees          Employee[]
+  resources          Resource[]
+  appointments       Appointment[]
+  inventoryItems     InventoryItem[]
+  inventoryMovements InventoryMovement[]
+  sales              Sale[]
+
+  @@map("kene_sites")
+}
+
+model Employee {
+  id              String         @id @default(uuid())
+  tenantId        String
+  userId          String?        // Link to user account if exists
+  siteId          String
+  firstName       String
+  lastName        String
+  birthDate       DateTime
+  gender          Gender
+  phone           String
+  email           String?
+  address         String         // Stringified JSON address
+  hireDate        DateTime
+  contractType    ContractType   @default(CDI)
+  contractEndDate DateTime?
+  position        String
+  baseSalary      Float
+  documents       String         // Stringified JSON list of document URLs
+  status          EmployeeStatus @default(active)
+  ribMomo         String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user            User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  site            Site           @relation(fields: [siteId], references: [id])
+  appointments    Appointment[]
+  sales           Sale[]
+  payslips        Payslip[]
+
+  @@map("kene_employees")
+}
+
+model Client {
+  id                 String          @id @default(uuid())
+  tenantId           String
+  userId             String?         // Link to platform user account
+  firstName          String
+  lastName           String
+  phone              String
+  email              String?
+  birthDate          DateTime?
+  gender             Gender?
+  fitzpatrickType    FitzpatrickType @default(V)
+  skinType           SkinType        @default(normale)
+  allergies          String          // Stringified JSON list
+  treatments         String          // Stringified JSON list of previous treatments
+  consentHealthData  Boolean         @default(false)
+  consentAt          DateTime?
+  notes              String?
+  rfmScore           String?         // Stringified JSON containing Recency, Frequency, Monetary
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  tenant             Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user               User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  appointments       Appointment[]
+  sales              Sale[]
+
+  @@map("kene_clients")
+}
+
+model Service {
+  id                String        @id @default(uuid())
+  tenantId          String
+  name              String
+  description       String?
+  category          String        // Category name
+  durationMin       Int
+  price             Float
+  vatRate           Float         @default(0.18)
+  resourcesRequired String        // Stringified JSON list of required resources
+  commissionRate    Float         @default(0.0)
+  active            Boolean       @default(true)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  tenant            Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  appointments      Appointment[]
+
+  @@map("kene_services")
+}
+
+model Resource {
+  id           String        @id @default(uuid())
+  tenantId     String
+  siteId       String
+  name         String
+  type         String        // cabine, appareil, salon
+  active       Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  site         Site          @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+
+  @@map("kene_resources")
+}
+
+model Appointment {
+  id               String            @id @default(uuid())
+  tenantId         String
+  clientId         String
+  siteId           String
+  serviceId        String
+  employeeId       String
+  resourceId       String?
+  startAt          DateTime
+  endAt            DateTime
+  status           AppointmentStatus @default(pending)
+  amount           Float
+  depositAmount    Float             @default(0.0)
+  depositPaymentId String?
+  source           AppointmentSource @default(online)
+  notes            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  tenant           Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client           Client            @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  site             Site              @relation(fields: [siteId], references: [id])
+  service          Service           @relation(fields: [serviceId], references: [id])
+  employee         Employee          @relation(fields: [employeeId], references: [id])
+  resource         Resource?         @relation(fields: [resourceId], references: [id], onDelete: SetNull)
+  payments         Payment[]
+  sales            Sale[]
+
+  @@map("kene_appointments")
+}
+
+model Product {
+  id                 String              @id @default(uuid())
+  tenantId           String
+  sku                String?
+  name               String
+  description        String?
+  category           String
+  botanical          String?             // karité, baobab, moringa...
+  purchasePrice      Float
+  salePrice          Float
+  vatRate            Float               @default(0.18)
+  supplierId         String?
+  threshold          Int                 @default(5)
+  active             Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  inventoryItems     InventoryItem[]
+  inventoryMovements InventoryMovement[]
+
+  @@map("kene_products")
+}
+
+model InventoryItem {
+  id         String    @id @default(uuid())
+  tenantId   String
+  siteId     String
+  productId  String
+  quantity   Int       @default(0)
+  lotNumber  String?
+  expiryDate DateTime?
+  updatedAt  DateTime  @updatedAt
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  site       Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([siteId, productId])
+  @@map("kene_inventory_items")
+}
+
+model InventoryMovement {
+  id           String       @id @default(uuid())
+  tenantId     String
+  siteId       String
+  productId    String
+  movementType MovementType
+  quantity     Int          // Signed integer
+  lotNumber    String?
+  referenceId  String?      // Sale ID, purchase order ID etc.
+  reason       String?
+  createdAt    DateTime     @default(now())
+  tenant       Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  site         Site         @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  product      Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("kene_inventory_movements")
+}
+
+model Sale {
+  id             String      @id @default(uuid())
+  tenantId       String
+  siteId         String
+  invoiceNumber  String      @unique // Sequential / auto-generated invoice number
+  clientId       String?
+  cashierId      String
+  saleDate       DateTime    @default(now())
+  items          String      // Stringified JSON array of items (sku, name, price, qty, vat)
+  subtotal       Float
+  discountAmount Float       @default(0.0)
+  vatAmount      Float
+  total          Float
+  status         SaleStatus  @default(pending)
+  appointmentId  String?
+  createdAt      DateTime    @default(now())
+  tenant         Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  site           Site        @relation(fields: [siteId], references: [id])
+  client         Client?     @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  cashier        Employee    @relation(fields: [cashierId], references: [id])
+  appointment    Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  payments       Payment[]
+
+  @@map("kene_sales")
+}
+
+model Payment {
+  id                String        @id @default(uuid())
+  tenantId          String
+  saleId            String?
+  appointmentId     String?
+  amount            Float
+  method            PaymentMethod
+  momoOperatorId    String?       // Wave, Orange Money operator reference
+  momoTransactionId String?       // Operator reference number
+  status            PaymentStatus @default(pending)
+  reconciled        Boolean       @default(false)
+  paidAt            DateTime?
+  metadata          String?       // Stringified JSON
+  createdAt         DateTime      @default(now())
+  tenant            Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  sale              Sale?         @relation(fields: [saleId], references: [id], onDelete: SetNull)
+  appointment       Appointment?  @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  momoOperator      MoMoOperator? @relation(fields: [momoOperatorId], references: [id], onDelete: SetNull)
+
+  @@map("kene_payments")
+}
+
+model Diagnosis {
+  id              String   @id @default(uuid())
+  clientId        String   // Platform User ID
+  tenantId        String?  // Salon Partner ID if run at salon
+  photos          String   // Stringified JSON of S3 URLs
+  scoreGlobal     Int
+  subScores       String   // Stringified JSON (hydration, brightness etc.)
+  indicators      String   // Stringified JSON (PIH: severity, acne: severity, triage level)
+  heatmapUrl      String?
+  recommendations String   // Stringified JSON routine, products, services
+  dermatoReferral Boolean  @default(false)
+  referralReason  String?
+  modelVersion    String
+  createdAt       DateTime @default(now())
+  client          User     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  tenant          Tenant?  @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+
+  @@map("kene_diagnoses")
+}
+
+model Wallet {
+  id           String              @id @default(uuid())
+  userId       String              @unique
+  balance      Float               @default(0.0)
+  currencyCode String              @default("XOF")
+  createdAt    DateTime            @default(now())
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions WalletTransaction[]
+
+  @@map("kene_wallets")
+}
+
+model WalletTransaction {
+  id          String                  @id @default(uuid())
+  walletId    String
+  type        WalletTransactionType
+  amount      Float
+  reason      WalletTransactionReason
+  referenceId String?                 // Links to Appointment, Sale etc.
+  createdAt   DateTime                @default(now())
+  wallet      Wallet                  @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@map("kene_wallet_transactions")
+}
+
+// -------------------------------------------------------------
+// TABLES PAIE & COMPTA (Conformité)
+// -------------------------------------------------------------
+
+model PayPeriod {
+  id          String          @id @default(uuid())
+  tenantId    String
+  periodMonth Int
+  periodYear  Int
+  status      PayPeriodStatus @default(open)
+  closedAt    DateTime?
+  createdAt   DateTime        @default(now())
+  tenant      Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  payslips    Payslip[]
+
+  @@unique([tenantId, periodMonth, periodYear])
+  @@map("kene_pay_periods")
+}
+
+model Payslip {
+  id           String    @id @default(uuid())
+  tenantId     String
+  employeeId   String
+  payPeriodId  String
+  grossSalary  Float
+  bonuses      String    // Stringified JSON list of bonuses
+  deductions   String    // Stringified JSON list of deductions
+  cnpsEmployee Float
+  cnpsEmployer Float
+  igrTax       Float
+  netPay       Float
+  pdfUrl       String?
+  createdAt    DateTime  @default(now())
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  employee     Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  payPeriod    PayPeriod @relation(fields: [payPeriodId], references: [id], onDelete: Cascade)
+
+  @@map("kene_payslips")
+}
+
+model AccountingEntry {
+  id          String      @id @default(uuid())
+  tenantId    String
+  entryNumber String      // Unique auto-increment invoice/entry number per tenant
+  journal     JournalType
+  entryDate   DateTime
+  reference   String?
+  description String
+  lines       String      // Stringified JSON of accounts, debits, credits
+  status      String      @default("draft") // draft, posted
+  createdAt   DateTime    @default(now())
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("kene_accounting_entries")
+}
+
+model ChartOfAccount {
+  id            String      @id @default(uuid())
+  tenantId      String
+  accountNumber String
+  name          String
+  class         Int         // Class 1 to 9
+  type          AccountType
+  parentId      String?
+  createdAt     DateTime    @default(now())
+  tenant        Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  parent        ChartOfAccount?  @relation("AccountHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children      ChartOfAccount[] @relation("AccountHierarchy")
+
+  @@unique([tenantId, accountNumber])
+  @@map("kene_chart_of_accounts")
+}
+
+// -------------------------------------------------------------
+// TABLES AUDIT & CONFORMITÉ
+// -------------------------------------------------------------
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  tenantId   String?
+  userId     String
+  action     String
+  entityType String
+  entityId   String?
+  changes    String?  // Stringified JSON
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  tenant     Tenant?  @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("kene_audit_logs")
+}
+
+model Consent {
+  id          String      @id @default(uuid())
+  userId      String
+  consentType ConsentType
+  granted     Boolean     @default(true)
+  grantedAt   DateTime    @default(now())
+  revokedAt   DateTime?
+  textVersion String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("kene_consents")
 }

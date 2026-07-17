@@ -274,6 +274,19 @@ Analyse cette photo de peau mélanoderme. Retourne JSON :
 }
 ```
 
+### 7.6 Dermatologue IA Conversationnel (Multi-modal)
+
+**Concept** : Un assistant d'éducation cutanée et de triage clinique (non-prescripteur) disponible sur 5 canaux d'interaction.
+
+- **💬 Tchat (Texte/Message)** : UI conversationnelle inspirée de WhatsApp pour poser des questions courantes sur les ingrédients botaniques, les routines, et analyser les symptômes.
+- **🎙️ Audio (Notes vocales - Entrée/Sortie)** : Support d'entrée et de sortie vocale dans les langues locales (Français, Nouchi, Wolof, Bambara) pour garantir l'inclusivité des utilisateurs peu lettrés ou préférant le vocal.
+- **📸 Photo (Visualisation & Triage)** : Upload d'une photo de lésion ou de nævus pour analyse immédiate (Grad-CAM, ABCDE, etc.) avec triage par niveau d'urgence :
+  - *Vert* : Soin de routine / Botanique conseillé.
+  - *Jaune* : Avis requis par une dermo-conseillère via l'app.
+  - *Rouge* : Alerte - Prise de RDV immédiate en institut ou chez un médecin partenaire.
+- **📹 Vidéo (Avatar Interactif)** : Un avatar 3D en WebGL représentant un dermatologue virtuel ou un "Skin Twin", animé en temps réel avec synchronisation des lèvres (lip-sync) lors de l'énonciation des conseils.
+- **📲 Suivi WhatsApp (Proactif)** : Des messages asynchrones envoyés à la cliente pour suivre son rituel (ex : "Bonjour Mariam, comment se porte ta peau après 3 jours de sérum Moringa ? Envoie-moi un message ou une photo !").
+
 ### 7.6 Simulations (POC)
 | Élément | Simulation |
 |---|---|
@@ -451,14 +464,15 @@ Score Global = moyenne pondérée :
 | Langage | TypeScript strict |
 | Styling | Tailwind 4 + shadcn/ui |
 | DB | Prisma + SQLite |
-| IA | z-ai-web-dev-sdk VLM (glm-4.6v) |
+| IA | z-ai-web-dev-sdk VLM (glm-4.6v) + LLM / Web Speech |
 | Auth | OTP SMS (simulé) + JWT |
 | Multi-tenant | Row-Level Security Prisma (`tenant_id`) |
-| Animations | Framer Motion |
+| Animations / 3D | Framer Motion + R3F / Drei + GSAP ScrollTrigger + Lenis |
 | Thème | next-themes (dark mode) |
 | State | Zustand (client) + TanStack Query (server) |
 | Validation | Zod |
 | Icons | Lucide + SVG Adinkra custom |
+| Face Tracking / Audio | MediaPipe Face Mesh + Web Audio API (balafon/kora effects) |
 
 ---
 
