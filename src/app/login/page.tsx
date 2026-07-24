@@ -55,11 +55,13 @@ export default function LoginPage() {
       }
 
       if (role === 'client') {
+        const clientNameVal = clientPhone ? `Cliente (${clientPhone})` : displayName;
         localStorage.setItem('kene_user', JSON.stringify({
-          firstName: displayName,
+          firstName: clientNameVal,
           lastName: '',
-          name: displayName,
-          email: userEmailOrName || 'client@kene.africa',
+          name: clientNameVal,
+          phone: clientPhone || '',
+          email: userEmailOrName || '',
           role: 'client',
         }));
         document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;

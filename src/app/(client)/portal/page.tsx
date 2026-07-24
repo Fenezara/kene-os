@@ -31,6 +31,17 @@ export default function ClientPortalPage() {
   const [clientContactMessage, setClientContactMessage] = useState('');
   const [isSubmittingContact, setIsSubmittingContact] = useState(false);
 
+  // Logged In Client User Profile State
+  const [userProfile, setUserProfile] = useState<any>({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    skinType: 'mixte',
+    fitzpatrickType: 'V'
+  });
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
   useEffect(() => {
     const savedAvatar = localStorage.getItem('kene_user_avatar');
     if (savedAvatar) setAvatarUrl(savedAvatar);
@@ -39,8 +50,16 @@ export default function ClientPortalPage() {
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
-        if (parsed.name || parsed.firstName) setClientContactName(parsed.name || parsed.firstName);
-        if (parsed.phone) setClientContactPhone(parsed.phone);
+        setUserProfile({
+          firstName: parsed.firstName || parsed.name || 'Cliente',
+          lastName: parsed.lastName || '',
+          phone: parsed.phone || '',
+          email: parsed.email || '',
+          skinType: parsed.skinType || 'mixte',
+          fitzpatrickType: parsed.fitzpatrickType || 'V'
+        });
+        setClientContactName(parsed.firstName || parsed.name || '');
+        setClientContactPhone(parsed.phone || '');
       } catch (e) {}
     }
 
@@ -116,6 +135,21 @@ export default function ClientPortalPage() {
     fetchPortalData();
     fetchSalons();
   }, []);
+
+  const handleSaveProfile = () => {
+    const updated = {
+      ...userProfile,
+      name: `${userProfile.firstName} ${userProfile.lastName}`.trim(),
+      role: 'client'
+    };
+    localStorage.setItem('kene_user', JSON.stringify(updated));
+    setUserProfile(updated);
+    setIsProfileModalOpen(false);
+    toast({
+      title: "👤 Profil Mis à Jour !",
+      description: "Vos informations personnelles ont été enregistrées avec succès.",
+    });
+  };
 
   const handleSubmitContactRequest = async () => {
     if (!clientContactName || !clientContactPhone) {
@@ -232,16 +266,103 @@ export default function ClientPortalPage() {
         onChange={handlePhotoUpload}
       />
 
-      {/* Profile Header with Photo Upload */}
+      {/* Profile Header with Photo Upload & Profile Edit Button */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pt-2 flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-display font-bold text-white">
-              Bonjour, <span className="text-[var(--gold-kene)]">{clientName}</span>
+              Bonjour, <span className="text-[var(--gold-kene)]">{userProfile.firstName || 'Cliente'} {userProfile.lastName}</span>
             </h1>
             <Sparkles className="w-5 h-5 text-[var(--gold-kene)] animate-pulse" />
           </div>
-          <p className="text-white/60 text-xs mt-1">Ravie de vous revoir sur votre espace Kènè.</p>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-white/60 text-xs">{userProfile.phone || userProfile.email || 'Membre Kènè'}</span>
+            <Dialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
+              <DialogTrigger asChild>
+                <button className="text-[10px] font-bold text-[var(--gold-kene)] underline hover:text-[var(--gold-kene)]/80 cursor-pointer flex items-center gap-1">
+                  <User className="w-3 h-3" /> Modifier mon profil
+                </button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#0F0A05] border border-[var(--gold-kene)]/30 text-white rounded-3xl max-w-md p-6">
+                <DialogHeader>
+                  <DialogTitle className="font-display text-lg text-white flex items-center gap-2">
+                    <User className="w-5 h-5 text-[var(--gold-kene)]" /> Mes Informations Personnelles
+                  </DialogTitle>
+                </DialogHeader>
+
+                <div className="space-y-3 my-2 text-xs">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <Label className="text-white/60 text-[10px]">Prénom</Label>
+                      <Input
+                        value={userProfile.firstName}
+                        onChange={(e) => setUserProfile({ ...userProfile, firstName: e.target.value })}
+                        placeholder="Aminata"
+                        className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-white/60 text-[10px]">Nom</Label>
+                      <Input
+                        value={userProfile.lastName}
+                        onChange={(e) => setUserProfile({ ...userProfile, lastName: e.target.value })}
+                        placeholder="Diallo"
+                        className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="text-white/60 text-[10px]">Téléphone (WhatsApp)</Label>
+                    <Input
+                      value={userProfile.phone}
+                      onChange={(e) => setUserProfile({ ...userProfile, phone: e.target.value })}
+                      placeholder="+225 07 00 11 22 33"
+                      className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="text-white/60 text-[10px]">Email</Label>
+                    <Input
+                      value={userProfile.email}
+                      onChange={(e) => setUserProfile({ ...userProfile, email: e.target.value })}
+                      placeholder="aminata@example.com"
+                      className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <Label className="text-white/60 text-[10px]">Type de Peau</Label>
+                      <Input
+                        value={userProfile.skinType}
+                        onChange={(e) => setUserProfile({ ...userProfile, skinType: e.target.value })}
+                        placeholder="Mixte / Grasse"
+                        className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-white/60 text-[10px]">Phototype Fitzpatrick</Label>
+                      <Input
+                        value={userProfile.fitzpatrickType}
+                        onChange={(e) => setUserProfile({ ...userProfile, fitzpatrickType: e.target.value })}
+                        placeholder="Phototype V ou VI"
+                        className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={handleSaveProfile}
+                    className="w-full h-10 bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-lg cursor-pointer mt-2"
+                  >
+                    <Check className="w-4 h-4 mr-1" /> Enregistrer mes Modifications
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
@@ -250,7 +371,7 @@ export default function ClientPortalPage() {
               <img src={avatarUrl} alt="Photo de profil" className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full bg-[var(--gold-kene)]/10 flex items-center justify-center text-[var(--gold-kene)] font-bold text-lg font-display">
-                {clientName.substring(0, 2).toUpperCase()}
+                {(userProfile.firstName || 'C').substring(0, 2).toUpperCase()}
               </div>
             )}
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-full">
