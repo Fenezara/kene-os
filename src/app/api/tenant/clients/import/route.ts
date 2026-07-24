@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: 'Tableau de clients valide requis' }, { status: 400 });
     }
 
-    const createdClients = [];
+    const createdClients: any[] = [];
     for (const c of clients) {
       const created = await db.client.create({
         data: {
