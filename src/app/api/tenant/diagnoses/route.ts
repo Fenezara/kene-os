@@ -55,11 +55,10 @@ export async function POST(req: Request) {
     let firstTenant = await db.tenant.findFirst();
     if (!firstTenant) {
       try {
-        firstTenant = await db.tenant.create({
+        firstTenant = await (db.tenant as any).create({
           data: {
             name: 'Institut Beauté Kènè',
             slug: 'kene-default-salon',
-            currency: 'XOF',
           }
         });
       } catch (e) {
@@ -72,7 +71,7 @@ export async function POST(req: Request) {
 
     const tenantId = firstTenant?.id || 'default-tenant-id';
 
-    let newDiagnosis = null;
+    let newDiagnosis: any = null;
     try {
       newDiagnosis = await db.diagnosis.create({
         data: {

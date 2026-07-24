@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Calendar, ScanFace, Wallet, ShoppingBag, Sprout, Bell, User, Sparkles, ArrowLeft, LogOut, MapPin } from 'lucide-react';
+import { Home, Calendar, ScanFace, Wallet, ShoppingBag, Sprout, Bell, User, Sparkles, ArrowLeft, LogOut, MapPin, Menu, X, MessageSquare, Stethoscope } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { RoleSwitcher } from '@/components/RoleSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -17,9 +18,9 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   React.useEffect(() => {
-    // Ensure active client session cookie is set for smooth portal navigation
     if (!document.cookie.includes('kene-session')) {
       document.cookie = 'kene-session=client-active; path=/; max-age=86400; SameSite=Lax';
     }
@@ -28,9 +29,10 @@ export default function ClientLayout({
   const navLinks = [
     { href: '/portal', label: 'Accueil', icon: Home },
     { href: '/salons', label: 'Salons & Carte', icon: MapPin },
-    { href: '/portfolio', label: 'Résultats IA', icon: Sparkles },
-    { href: '/appointments', label: 'Mes RDV', icon: Calendar },
+    { href: '/chat?mode=dr_diallo', label: 'Dr. Dermatologue IA', icon: Stethoscope },
     { href: '/diagnostic', label: 'Diagnostic IA', icon: ScanFace },
+    { href: '/appointments', label: 'Mes RDV', icon: Calendar },
+    { href: '/portfolio', label: 'Résultats IA', icon: Sparkles },
     { href: '/jardin', label: 'Jardin du Glow', icon: Sprout },
     { href: '/boutique', label: 'Boutique', icon: ShoppingBag },
     { href: '/client-wallet', label: 'Wallet', icon: Wallet },
@@ -44,15 +46,15 @@ export default function ClientLayout({
         <div className="max-w-7xl w-full mx-auto flex items-center justify-between">
           
           {/* Left Logo & Back Button */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <BackButton fallbackUrl="/portal" />
             <KeneLogo href="/portal" subtitle="CLIENT" size="sm" />
           </div>
 
-          {/* Desktop & Tablet Navigation Links (Hidden on Mobile) */}
+          {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-1 lg:gap-2">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive = pathname === link.href || (link.href.includes('chat') && pathname.includes('chat'));
               const Icon = link.icon;
               return (
                 <Link
@@ -71,7 +73,7 @@ export default function ClientLayout({
             })}
           </nav>
 
-          {/* Right Action Icons (Notifications & Profile & Logout & RoleSwitcher & ThemeToggle) */}
+          {/* Right Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             <ThemeToggle />
             <RoleSwitcher />
@@ -85,41 +87,108 @@ export default function ClientLayout({
               <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[var(--gold-kene)] animate-pulse" />
             </Link>
 
+            {/* Hamburger Button for Mobile */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white"
+              title="Menu Navigation"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+
             <button
               onClick={() => {
                 document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
                 localStorage.removeItem('kene_user');
                 window.location.href = '/login';
               }}
-              className="p-2 rounded-xl bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-400 transition cursor-pointer flex items-center gap-1 text-xs font-bold"
+              className="hidden md:flex p-2 rounded-xl bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-400 transition cursor-pointer items-center gap-1 text-xs font-bold"
               title="Déconnexion"
             >
               <LogOut className="w-4 h-4" />
-              <span className="hidden md:inline">Déconnexion</span>
+              <span>Déconnexion</span>
             </button>
-
-            <Link
-              href="/portal"
-              className="hidden sm:flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl bg-[var(--gold-kene)]/10 border border-[var(--gold-kene)]/30 hover:bg-[var(--gold-kene)]/20 transition"
-            >
-              <div className="w-6 h-6 rounded-full bg-[var(--gold-kene)] text-[#0F0A05] flex items-center justify-center text-xs font-bold font-display">
-                A
-              </div>
-              <span className="text-xs font-bold text-[var(--gold-kene)]">Mon Espace</span>
-            </Link>
           </div>
         </div>
       </header>
 
-      {/* --- MAIN CONTENT AREA (RESPONSIVE CONTAINER) --- */}
+      {/* --- MOBILE NAVIGATION DRAWER OVERLAY --- */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 md:hidden"
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="fixed inset-y-0 right-0 w-80 bg-[#140E09] border-l border-[var(--gold-kene)]/30 z-50 p-6 flex flex-col justify-between md:hidden shadow-2xl overflow-y-auto"
+            >
+              <div>
+                <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+                  <KeneLogo href="/portal" subtitle="MENU CLIENT" size="sm" />
+                  <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-white/50 hover:text-white rounded-xl bg-white/5">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="text-[10px] font-bold text-[var(--gold-kene)] uppercase tracking-widest mb-2 px-2">Navigation Complète Kènè</div>
+                  {navLinks.map((link) => {
+                    const isActive = pathname === link.href || (link.href.includes('chat') && pathname.includes('chat'));
+                    const Icon = link.icon;
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-semibold transition-all ${
+                          isActive
+                            ? 'bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold shadow-md'
+                            : 'text-white/80 hover:text-white hover:bg-white/5 border border-white/5'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4 shrink-0" />
+                        <span>{link.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-white/10 mt-6">
+                <button
+                  onClick={() => {
+                    document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
+                    localStorage.removeItem('kene_user');
+                    window.location.href = '/login';
+                  }}
+                  className="w-full py-3 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 font-bold text-xs flex items-center justify-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Se Déconnecter</span>
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* --- MAIN CONTENT AREA --- */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8 text-white">
         {children}
       </main>
 
-      {/* --- MOBILE BOTTOM NAVIGATION (Only visible on screens < 768px) --- */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1A1410]/95 border-t border-white/10 h-16 flex items-center justify-around z-50 backdrop-blur-lg shadow-2xl px-2">
-        {navLinks.slice(0, 5).map((link) => {
-          const isActive = pathname === link.href;
+      {/* --- MOBILE BOTTOM NAVIGATION --- */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#1A1410]/95 border-t border-white/10 h-16 flex items-center justify-around z-40 backdrop-blur-lg shadow-2xl px-2">
+        {navLinks.slice(0, 4).map((link) => {
+          const isActive = pathname === link.href || (link.href.includes('chat') && pathname.includes('chat'));
           const Icon = link.icon;
           return (
             <Link
@@ -136,6 +205,15 @@ export default function ClientLayout({
             </Link>
           );
         })}
+        
+        {/* Mobile "Plus" Menu Trigger */}
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="flex flex-col items-center gap-1 px-2 py-1 rounded-xl text-white/50 hover:text-white"
+        >
+          <Menu className="w-5 h-5 text-[var(--gold-kene)]" />
+          <span className="text-[10px] font-medium text-[var(--gold-kene)]">Plus</span>
+        </button>
       </nav>
 
       {/* --- DESKTOP FOOTER --- */}
@@ -145,6 +223,7 @@ export default function ClientLayout({
           <div className="flex gap-4">
             <Link href="/portal" className="hover:text-white transition">Accueil</Link>
             <Link href="/diagnostic" className="hover:text-white transition">Diagnostic IA</Link>
+            <Link href="/chat?mode=dr_diallo" className="hover:text-white transition">Dr. Dermatologue IA</Link>
             <Link href="/boutique" className="hover:text-white transition">Boutique</Link>
             <Link href="/client-wallet" className="hover:text-white transition">Wallet</Link>
           </div>
