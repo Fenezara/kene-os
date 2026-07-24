@@ -1,24 +1,48 @@
 {
-  "name": "Kènè — La beauté mélanoderme de A à Z",
-  "short_name": "Kene",
-  "description": "Première plateforme beauté et bien-être panafricaine avec diagnostic de peau IA.",
+  "name": "Kènè OS — Système Dermo-Cosmétique Panafricain",
+  "short_name": "Kènè OS",
+  "description": "Plateforme OS pour instituts de beauté, Spas, dermo-cosmétique et portail clientèle avec diagnostic IA.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#1A1410",
+  "background_color": "#0A0603",
   "theme_color": "#C8951E",
+  "categories": ["business", "beauty", "medical", "finance"],
   "icons": [
     {
-      "src": "/logo.svg",
+      "src": "/images/kene_logo.jpg",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "/logo.svg",
+      "src": "/images/kene_logo.jpg",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/jpeg",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Caisse POS",
+      "short_name": "Caisse",
+      "description": "Encaisser une vente au salon",
+      "url": "/pos",
+      "icons": [{ "src": "/images/kene_logo.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Agenda Rendez-Vous",
+      "short_name": "Agenda",
+      "description": "Planning des cabines et soins",
+      "url": "/agenda",
+      "icons": [{ "src": "/images/kene_logo.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Diagnostic IA",
+      "short_name": "Diagnostic",
+      "description": "Diagnostic cutané & ordonnance",
+      "url": "/diagnoses",
+      "icons": [{ "src": "/images/kene_logo.jpg", "sizes": "192x192" }]
     }
   ]
 }
