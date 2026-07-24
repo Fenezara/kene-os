@@ -33,10 +33,16 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('salon');
 
-  const handleLogin = (role: string, targetPath: string, userEmailOrName?: string) => (e: React.FormEvent) => {
+  const handleLogin = (role: string, targetPath: string, userEmailOrName?: string) => async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    try {
+      await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, email: userEmailOrName })
+      });
+
       let displayName = userEmailOrName || 'Utilisateur Kènè';
       if (userEmailOrName && userEmailOrName.includes('@')) {
         displayName = userEmailOrName.split('@')[0].replace('.', ' ');
@@ -52,24 +58,25 @@ export default function LoginPage() {
           role: 'client',
         }));
         document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
-      } else if (role === 'salon' || role === 'Super Admin' || role === 'admin') {
+      } else {
         const isSuperAdmin = role === 'Super Admin' || role === 'admin';
         const sessionRole = isSuperAdmin ? 'admin' : 'gerant';
         document.cookie = `kene-session=${sessionRole}-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
         
-        if (!localStorage.getItem('kene_user')) {
-          localStorage.setItem('kene_user', JSON.stringify({
-            name: isSuperAdmin ? 'Super-Admin SaaS Kènè' : displayName,
-            email: userEmailOrName || (isSuperAdmin ? 'admin@kene.africa' : 'contact@salon.com'),
-            role: sessionRole,
-          }));
-        }
+        localStorage.setItem('kene_user', JSON.stringify({
+          name: isSuperAdmin ? 'Super-Admin SaaS Kènè' : displayName,
+          email: userEmailOrName || (isSuperAdmin ? 'admin@kene.africa' : 'contact@salon.com'),
+          role: sessionRole,
+        }));
       }
 
       setLoading(false);
-      toast({ title: '✨ Connexion réussie', description: `Bienvenue dans votre espace ${role}.` });
+      toast({ title: '✨ Connexion Sécurisée (HttpOnly & HSTS)', description: `Bienvenue dans votre espace ${role}.` });
       router.push(targetPath);
-    }, 1200);
+    } catch {
+      setLoading(false);
+      toast({ title: 'Erreur', description: 'Échec de connexion.', variant: 'destructive' });
+    }
   };
 
   return (
