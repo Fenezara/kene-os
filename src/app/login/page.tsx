@@ -33,15 +33,43 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('salon');
 
-  const handleLogin = (role: string, targetPath: string) => (e: React.FormEvent) => {
+  const handleLogin = (role: string, targetPath: string, userEmailOrName?: string) => (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {
-      document.cookie = `kene-session=${role}-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      let displayName = userEmailOrName || 'Utilisateur Kènè';
+      if (userEmailOrName && userEmailOrName.includes('@')) {
+        displayName = userEmailOrName.split('@')[0].replace('.', ' ');
+        displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+      }
+
+      if (role === 'client') {
+        localStorage.setItem('kene_user', JSON.stringify({
+          firstName: displayName,
+          lastName: '',
+          name: displayName,
+          email: userEmailOrName || 'client@kene.africa',
+          role: 'client',
+        }));
+        document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      } else if (role === 'salon' || role === 'Super Admin' || role === 'admin') {
+        const isSuperAdmin = role === 'Super Admin' || role === 'admin';
+        const sessionRole = isSuperAdmin ? 'admin' : 'gerant';
+        document.cookie = `kene-session=${sessionRole}-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+        
+        if (!localStorage.getItem('kene_user')) {
+          localStorage.setItem('kene_user', JSON.stringify({
+            name: isSuperAdmin ? 'Super-Admin SaaS Kènè' : displayName,
+            email: userEmailOrName || (isSuperAdmin ? 'admin@kene.africa' : 'contact@salon.com'),
+            role: sessionRole,
+          }));
+        }
+      }
+
       setLoading(false);
       toast({ title: '✨ Connexion réussie', description: `Bienvenue dans votre espace ${role}.` });
       router.push(targetPath);
-    }, 1600);
+    }, 1200);
   };
 
   return (
