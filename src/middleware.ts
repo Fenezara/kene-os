@@ -26,11 +26,19 @@ export function middleware(request: NextRequest) {
   const session = request.cookies.get('kene-session');
   const { pathname } = request.nextUrl;
 
+  // Allow /admin/login to pass through without session check
+  if (pathname === '/admin/login') {
+    const response = NextResponse.next();
+    applySecurityHeaders(response);
+    return response;
+  }
+
   // 1. Check if route requires authentication
   const isProtected = PROTECTED_ROUTES.some(p => pathname.startsWith(p));
 
   if (isProtected && !session) {
-    const loginUrl = new URL('/login', request.url);
+    const targetRedirect = pathname.startsWith('/admin') ? '/admin/login' : '/login';
+    const loginUrl = new URL(targetRedirect, request.url);
     const safeRedirect = pathname.startsWith('/') ? pathname : '/dashboard';
     loginUrl.searchParams.set('redirect', safeRedirect);
     
@@ -43,9 +51,8 @@ export function middleware(request: NextRequest) {
   if (pathname.startsWith('/admin') && session) {
     const isSuperAdmin = session.value.startsWith('admin-');
     if (!isSuperAdmin) {
-      // Salon or Client attempting to access Admin interface -> Redirect to Salon Dashboard
-      const dashboardUrl = new URL('/dashboard', request.url);
-      const response = NextResponse.redirect(dashboardUrl);
+      const loginUrl = new URL('/admin/login', request.url);
+      const response = NextResponse.redirect(loginUrl);
       applySecurityHeaders(response);
       return response;
     }

@@ -10,10 +10,9 @@ import { useToast } from '@/hooks/use-toast';
 import { KeneLogo } from '@/components/ui/logo';
 
 const tabs = [
-  { key: 'client', label: 'Client', icon: '🌸' },
-  { key: 'salon', label: 'Mon Salon', icon: '✂️' },
-  { key: 'admin', label: 'Admin', icon: '🔐' },
-]
+  { key: 'client', label: 'Client 🌸', icon: '👤' },
+  { key: 'salon', label: 'Mon Salon ✂️', icon: '🏬' },
+];
 
 // Floating Kente pattern decoration
 function KenteOrb({ color, size, x, y, delay }: { color: string; size: number; x: string; y: string; delay: number }) {
