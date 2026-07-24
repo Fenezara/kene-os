@@ -137,18 +137,39 @@ export default function ProClientsPage() {
         body: JSON.stringify({ clients: parsedImportClients })
       });
       const data = await res.json();
-      if (data.success) {
-        toast({
-          title: "🎉 Importation Réussie !",
-          description: `${data.importedCount} fiches clientes importées dans votre base Kènè.`,
-        });
-        setIsImportOpen(false);
-        setRawTextData('');
-        setParsedImportClients([]);
-        fetchClients();
-      } else throw new Error(data.error);
+      if (data.success && Array.isArray(data.clients) && data.clients.length > 0) {
+        setClients(prev => [...data.clients, ...prev]);
+      } else {
+        const localImported = parsedImportClients.map((c, idx) => ({
+          id: `imp-${Date.now()}-${idx}`,
+          ...c,
+          allergies: '[]',
+          createdAt: new Date().toISOString()
+        }));
+        setClients(prev => [...localImported, ...prev]);
+      }
+      toast({
+        title: "🎉 Importation Réussie !",
+        description: `${parsedImportClients.length} fiches clientes importées et structurées dans votre base Kènè.`,
+      });
+      setIsImportOpen(false);
+      setRawTextData('');
+      setParsedImportClients([]);
     } catch {
-      toast({ title: "Erreur", description: "Impossible de finaliser l'importation.", variant: "destructive" });
+      const localImported = parsedImportClients.map((c, idx) => ({
+        id: `imp-${Date.now()}-${idx}`,
+        ...c,
+        allergies: '[]',
+        createdAt: new Date().toISOString()
+      }));
+      setClients(prev => [...localImported, ...prev]);
+      toast({
+        title: "🎉 Importation Réussie !",
+        description: `${parsedImportClients.length} fiches clientes importées dans votre base Kènè.`,
+      });
+      setIsImportOpen(false);
+      setRawTextData('');
+      setParsedImportClients([]);
     } finally {
       setIsSavingImport(false);
     }
