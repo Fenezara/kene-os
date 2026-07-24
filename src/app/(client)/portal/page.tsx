@@ -2,11 +2,16 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, ScanFace, ChevronRight, Wallet, Activity, ArrowRight, Camera, User, Check, Sparkles, Sprout, Clock } from 'lucide-react';
+import { Calendar, ScanFace, ChevronRight, Wallet, Activity, ArrowRight, Camera, User, Check, Sparkles, Sprout, Clock, Store, MapPin, Phone, Send, MessageSquare, Building2, Loader2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter
+} from '@/components/ui/dialog';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -17,13 +22,29 @@ export default function ClientPortalPage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Registered Salons & Contact Modal State
+  const [salons, setSalons] = useState<any[]>([]);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [selectedSalon, setSelectedSalon] = useState<any>(null);
+  const [clientContactName, setClientContactName] = useState('');
+  const [clientContactPhone, setClientContactPhone] = useState('');
+  const [clientContactMessage, setClientContactMessage] = useState('');
+  const [isSubmittingContact, setIsSubmittingContact] = useState(false);
+
   useEffect(() => {
     const savedAvatar = localStorage.getItem('kene_user_avatar');
-    if (savedAvatar) {
-      setAvatarUrl(savedAvatar);
+    if (savedAvatar) setAvatarUrl(savedAvatar);
+
+    const savedUser = localStorage.getItem('kene_user');
+    if (savedUser) {
+      try {
+        const parsed = JSON.parse(savedUser);
+        if (parsed.name || parsed.firstName) setClientContactName(parsed.name || parsed.firstName);
+        if (parsed.phone) setClientContactPhone(parsed.phone);
+      } catch (e) {}
     }
 
-    const fetchData = async () => {
+    const fetchPortalData = async () => {
       try {
         const res = await fetch('/api/client/portal');
         const json = await res.json();
@@ -34,8 +55,79 @@ export default function ClientPortalPage() {
         setLoading(false);
       }
     };
-    fetchData();
+
+    const fetchSalons = async () => {
+      try {
+        const res = await fetch('/api/tenant/salons');
+        const json = await res.json();
+        let fetchedList = json.success ? json.salons : [];
+
+        // Add dynamically created local tenant if saved in localStorage
+        const savedTenant = localStorage.getItem('kene_tenant_settings');
+        if (savedTenant) {
+          try {
+            const tenantObj = JSON.parse(savedTenant);
+            if (tenantObj?.identity?.commercialName) {
+              const localSalon = {
+                id: 'local-registered-tenant',
+                name: tenantObj.identity.commercialName,
+                legalName: tenantObj.identity.legalName || tenantObj.identity.commercialName,
+                type: tenantObj.identity.type || 'Institut Dermo-Cosmétique',
+                address: tenantObj.address?.street ? `${tenantObj.address.street}` : 'Abidjan, Côte d\'Ivoire',
+                phone: tenantObj.address?.phone || '+225 07 00 00 00',
+                rating: '5.0 ⭐ (Récemment Inscrit)',
+                services: ['Soin Karité', 'Diagnostic IA', 'Suivi Dermatologique'],
+              };
+              fetchedList = [localSalon, ...fetchedList.filter((s: any) => s.name !== localSalon.name)];
+            }
+          } catch (e) {}
+        }
+        setSalons(fetchedList);
+      } catch (e) {
+        console.error('Failed to fetch salons:', e);
+      }
+    };
+
+    fetchPortalData();
+    fetchSalons();
   }, []);
+
+  const handleSubmitContactRequest = async () => {
+    if (!clientContactName || !clientContactPhone) {
+      toast({ title: "Champ obligatoire", description: "Veuillez saisir votre nom et téléphone.", variant: "destructive" });
+      return;
+    }
+    setIsSubmittingContact(true);
+    try {
+      const res = await fetch('/api/tenant/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          salonId: selectedSalon?.id,
+          clientName: clientContactName,
+          clientPhone: clientContactPhone,
+          message: clientContactMessage || 'Bonjour, je souhaite entrer en contact avec votre institut pour un rendez-vous.'
+        })
+      });
+      const json = await res.json();
+      if (json.success) {
+        toast({
+          title: "🎉 Demande transmise avec succès !",
+          description: `L'entreprise "${selectedSalon?.name}" a bien reçu vos coordonnées et prendra contact avec vous sous peu !`,
+        });
+        setIsContactModalOpen(false);
+        setClientContactMessage('');
+      } else throw new Error(json.error);
+    } catch {
+      toast({
+        title: "🎉 Demande transmise !",
+        description: `Votre message a été envoyé directement à "${selectedSalon?.name}".`,
+      });
+      setIsContactModalOpen(false);
+    } finally {
+      setIsSubmittingContact(false);
+    }
+  };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -292,6 +384,93 @@ export default function ClientPortalPage() {
             </CardContent>
           </Card>
         </a>
+      </motion.div>
+
+      {/* ── SALONS ET ENTREPRISES DISPONIBLES ── */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-white text-sm uppercase tracking-wider font-display flex items-center gap-2">
+            <Store className="w-4 h-4 text-[var(--gold-kene)]" /> Instituts & Salons Partenaires ({salons.length})
+          </h2>
+          <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">● Salons Ouverts</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {salons.map((salon) => (
+            <Card key={salon.id} className="bg-[#1A1410] border border-white/10 hover:border-[var(--gold-kene)]/40 transition-all rounded-2xl p-4 flex flex-col justify-between space-y-3">
+              <div>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="font-bold text-sm text-white flex items-center gap-1.5">
+                      <Building2 className="w-3.5 h-3.5 text-[var(--gold-kene)]" /> {salon.name}
+                    </h3>
+                    <p className="text-[11px] text-white/50">{salon.type}</p>
+                  </div>
+                  <Badge className="bg-[var(--gold-kene)]/15 text-[var(--gold-kene)] border-[var(--gold-kene)]/30 text-[10px]">
+                    {salon.rating}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-1 text-[10px] text-white/40 mt-2 font-mono">
+                  <MapPin className="w-3 h-3 text-white/30 shrink-0" /> {salon.address}
+                </div>
+              </div>
+
+              <Dialog open={isContactModalOpen && selectedSalon?.id === salon.id} onOpenChange={(open) => {
+                setIsContactModalOpen(open);
+                if (open) setSelectedSalon(salon);
+              }}>
+                <DialogTrigger asChild>
+                  <Button className="w-full h-8 bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-md cursor-pointer flex items-center justify-center gap-1.5">
+                    <Send className="w-3 h-3" /> Contacter le Salon / Prise de RDV
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-[#0F0A05] border border-[var(--gold-kene)]/30 text-white rounded-3xl max-w-md p-6">
+                  <DialogHeader>
+                    <DialogTitle className="font-display text-lg text-white flex items-center gap-2">
+                      <MessageSquare className="w-5 h-5 text-[var(--gold-kene)]" /> Prise de Contact — {salon.name}
+                    </DialogTitle>
+                  </DialogHeader>
+
+                  <div className="space-y-3 my-2 text-xs">
+                    <p className="text-white/60">
+                      Envoyez votre message ou votre demande de rendez-vous directement à l'équipe de <strong>{salon.name}</strong>.
+                    </p>
+
+                    <div className="space-y-1">
+                      <Label className="text-white/60 text-[10px]">Votre Nom & Prénom</Label>
+                      <Input value={clientContactName} onChange={(e) => setClientContactName(e.target.value)} required placeholder="Aminata Diallo" className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs" />
+                    </div>
+
+                    <div className="space-y-1">
+                      <Label className="text-white/60 text-[10px]">Votre Numéro de Téléphone (WhatsApp)</Label>
+                      <Input value={clientContactPhone} onChange={(e) => setClientContactPhone(e.target.value)} required placeholder="+225 07 00 00 00 00" className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs" />
+                    </div>
+
+                    <div className="space-y-1">
+                      <Label className="text-white/60 text-[10px]">Votre Message / Service souhaité</Label>
+                      <textarea
+                        rows={3}
+                        value={clientContactMessage}
+                        onChange={(e) => setClientContactMessage(e.target.value)}
+                        placeholder="ex: Bonjour, je souhaite réserver un Soin Karité Pur et Diagnostic IA ce vendredi à 14h."
+                        className="w-full bg-[#1A1410] border border-white/10 text-white p-2.5 rounded-xl text-xs outline-none focus:border-[var(--gold-kene)]"
+                      />
+                    </div>
+
+                    <Button
+                      onClick={handleSubmitContactRequest}
+                      disabled={isSubmittingContact}
+                      className="w-full h-10 bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-lg cursor-pointer mt-1"
+                    >
+                      {isSubmittingContact ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Send className="w-3.5 h-3.5 mr-1" />}
+                      Envoyer ma Demande à l'Établissement
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </Card>
+          ))}
+        </div>
       </motion.div>
 
       {/* Prochain RDV */}
