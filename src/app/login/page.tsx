@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, User, Store, ArrowRight, ArrowLeft, Loader2, Sparkles } from 'lucide-react';
+import { ShieldCheck, User, Store, ArrowRight, ArrowLeft, Loader2, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
@@ -32,6 +32,12 @@ export default function LoginPage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('salon');
+  const [showPassword, setShowPassword] = useState(false);
+  const [clientPhone, setClientPhone] = useState('');
+  const [salonEmail, setSalonEmail] = useState('');
+  const [salonPassword, setSalonPassword] = useState('');
+  const [adminEmail, setAdminEmail] = useState('admin@kene.africa');
+  const [adminPassword, setAdminPassword] = useState('');
 
   const handleLogin = (role: string, targetPath: string, userEmailOrName?: string) => async (e: React.FormEvent) => {
     e.preventDefault();
@@ -190,7 +196,7 @@ export default function LoginPage() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
                   transition={{ duration: 0.2 }}
-                  onSubmit={handleLogin('Client', '/portal')}
+                  onSubmit={handleLogin('Client', '/portal', clientPhone)}
                   className="space-y-4"
                 >
                   <div className="space-y-1.5">
@@ -199,6 +205,8 @@ export default function LoginPage() {
                       <User className="absolute left-3.5 top-3 h-4 w-4 text-white/30" />
                       <Input
                         type="tel"
+                        value={clientPhone}
+                        onChange={(e) => setClientPhone(e.target.value)}
                         placeholder="+225 07 00 00 00 00"
                         required
                         className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-[#C8951E] rounded-xl h-11"
@@ -226,7 +234,7 @@ export default function LoginPage() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
                   transition={{ duration: 0.2 }}
-                  onSubmit={handleLogin('Gérant de Salon', '/dashboard')}
+                  onSubmit={handleLogin('Gérant de Salon', '/dashboard', salonEmail)}
                   className="space-y-4"
                 >
                   <div className="space-y-1.5">
@@ -234,6 +242,9 @@ export default function LoginPage() {
                     <div className="relative">
                       <Store className="absolute left-3.5 top-3 h-4 w-4 text-white/30" />
                       <Input
+                        type="text"
+                        value={salonEmail}
+                        onChange={(e) => setSalonEmail(e.target.value)}
                         required
                         placeholder="contact@salon.com"
                         className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-[#C8951E] rounded-xl h-11"
@@ -245,11 +256,22 @@ export default function LoginPage() {
                       <Label className="text-white/60 text-xs">Mot de passe</Label>
                       <span className="text-[10px] text-[#C8951E] hover:underline cursor-pointer">Mot de passe oublié ?</span>
                     </div>
-                    <Input
-                      type="password"
-                      required
-                      className="bg-white/5 border-white/10 text-white focus:border-[#C8951E] rounded-xl h-11"
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? 'text' : 'password'}
+                        value={salonPassword}
+                        onChange={(e) => setSalonPassword(e.target.value)}
+                        required
+                        className="bg-white/5 border-white/10 text-white focus:border-[#C8951E] rounded-xl h-11 pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3.5 top-3 text-white/40 hover:text-white transition"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
                   <SubmitButton loading={loading} label="Accéder au back-office" />
                 </motion.form>
@@ -262,22 +284,44 @@ export default function LoginPage() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
                   transition={{ duration: 0.2 }}
-                  onSubmit={handleLogin('Super Admin', '/admin')}
+                  onSubmit={handleLogin('Super Admin', '/admin', adminEmail)}
                   className="space-y-4"
                 >
                   <div className="flex items-start gap-3 bg-[#8A1C14]/10 border border-[#8A1C14]/25 rounded-2xl p-3.5">
                     <ShieldCheck className="w-4 h-4 text-[#8A1C14] shrink-0 mt-0.5" />
                     <p className="text-[10px] text-[#8A1C14]/80 leading-relaxed">
-                      Accès restreint · Toute connexion est enregistrée et horodatée. Non autorisé par la plateforme Kènè.
+                      Accès restreint · Toute connexion est enregistrée et horodatée. Certifié ISO/OWASP.
                     </p>
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-white/60 text-xs">Email sécurisé</Label>
-                    <Input type="email" required placeholder="admin@kene.io" className="bg-white/5 border-white/10 text-white focus:border-[#8A1C14] rounded-xl h-11" />
+                    <Input 
+                      type="email" 
+                      value={adminEmail}
+                      onChange={(e) => setAdminEmail(e.target.value)}
+                      required 
+                      placeholder="admin@kene.africa" 
+                      className="bg-white/5 border-white/10 text-white focus:border-[#8A1C14] rounded-xl h-11" 
+                    />
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-white/60 text-xs">Mot de passe</Label>
-                    <Input type="password" required className="bg-white/5 border-white/10 text-white focus:border-[#8A1C14] rounded-xl h-11" />
+                    <div className="relative">
+                      <Input 
+                        type={showPassword ? 'text' : 'password'} 
+                        value={adminPassword}
+                        onChange={(e) => setAdminPassword(e.target.value)}
+                        required 
+                        className="bg-white/5 border-white/10 text-white focus:border-[#8A1C14] rounded-xl h-11 pr-10" 
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3.5 top-3 text-white/40 hover:text-white transition"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-white/60 text-xs">Code 2FA</Label>
