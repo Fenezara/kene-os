@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Star, Phone, Clock, Calendar, Search, ShieldCheck, ChevronRight, Sparkles, Navigation, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -80,8 +80,71 @@ export default function SalonsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCity, setSelectedCity] = useState<string>('Tous');
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Toutes');
+  const [salonsList, setSalonsList] = useState<any[]>(SALONS);
 
-  const filteredSalons = SALONS.filter((s) => {
+  useEffect(() => {
+    const loadSalons = async () => {
+      let combined = [...SALONS];
+
+      // 1. Fetch active salons from server API
+      try {
+        const res = await fetch('/api/tenant/salons');
+        const json = await res.json();
+        if (json.success && Array.isArray(json.salons) && json.salons.length > 0) {
+          const apiSalons = json.salons.map((s: any) => ({
+            id: s.id,
+            name: s.name,
+            city: s.address?.includes('Dakar') ? 'Dakar 🇸🇳' : 'Abidjan 🇨🇮',
+            address: s.address || 'Abidjan, Côte d\'Ivoire',
+            phone: s.phone || '+225 07 00 00 00',
+            rating: 5.0,
+            reviewsCount: 1,
+            specialties: ['Dermo-Cosmétique', 'Diagnostic IA', 'Soins Botaniques'],
+            practitioners: [{ name: 'Équipe Praticienne', role: 'Experte Salon', avatar: '👩🏾‍⚕️' }],
+            openingHours: '08:30 - 19:30',
+            distance: '0.8 km',
+            certified: true,
+            isNew: true,
+          }));
+          combined = [...apiSalons, ...combined.filter(existing => !apiSalons.some(a => a.name === existing.name))];
+        }
+      } catch (e) {
+        console.error('API Salons error:', e);
+      }
+
+      // 2. Read locally created enterprise from localStorage
+      const savedTenant = localStorage.getItem('kene_tenant_settings');
+      if (savedTenant) {
+        try {
+          const tenantObj = JSON.parse(savedTenant);
+          if (tenantObj?.identity?.commercialName) {
+            const localSalon = {
+              id: 'local-enterprise-tenant',
+              name: tenantObj.identity.commercialName,
+              city: tenantObj.fiscal?.country === 'SN' ? 'Dakar 🇸🇳' : 'Abidjan 🇨🇮',
+              address: tenantObj.address?.street ? `${tenantObj.address.street}` : 'Abidjan, Côte d\'Ivoire',
+              phone: tenantObj.address?.phone || '+225 07 00 00 00',
+              rating: 5.0,
+              reviewsCount: 1,
+              specialties: ['Institut & Spa', 'Diagnostic IA', 'Soins Karité'],
+              practitioners: [{ name: tenantObj.identity.legalName || 'Gérant du Salon', role: 'Directrice Salon', avatar: '👑' }],
+              openingHours: '08:00 - 20:00',
+              distance: '0.5 km',
+              certified: true,
+              isNew: true,
+            };
+            combined = [localSalon, ...combined.filter(s => s.name !== localSalon.name)];
+          }
+        } catch (e) {}
+      }
+
+      setSalonsList(combined);
+    };
+
+    loadSalons();
+  }, []);
+
+  const filteredSalons = salonsList.filter((s) => {
     const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase()) || s.address.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCity = selectedCity === 'Tous' || s.city.includes(selectedCity);
     const matchesSpecialty = selectedSpecialty === 'Toutes' || s.specialties.includes(selectedSpecialty);
@@ -171,9 +234,16 @@ export default function SalonsPage() {
             {/* Top row */}
             <div className="flex justify-between items-start">
               <div className="space-y-1">
-                <span className="text-[10px] font-bold text-[#C8951E] font-mono bg-[#C8951E]/10 px-2.5 py-0.5 rounded-full border border-[#C8951E]/20">
-                  {salon.city}
-                </span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[10px] font-bold text-[#C8951E] font-mono bg-[#C8951E]/10 px-2.5 py-0.5 rounded-full border border-[#C8951E]/20">
+                    {salon.city}
+                  </span>
+                  {salon.isNew && (
+                    <span className="text-[9px] font-bold text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                      ✨ Entreprise Inscrite
+                    </span>
+                  )}
+                </div>
                 <h3 className="font-display font-bold text-base text-white group-hover:text-[#C8951E] transition-colors mt-1">
                   {salon.name}
                 </h3>
