@@ -75,6 +75,94 @@ const SALONS = [
   },
 ];
 
+function getRegisteredSalonsFromStorage() {
+  const found: any[] = [];
+
+  // Key 1: kene_tenant_settings
+  const savedTenant = typeof window !== 'undefined' ? localStorage.getItem('kene_tenant_settings') : null;
+  if (savedTenant) {
+    try {
+      const obj = JSON.parse(savedTenant);
+      const name = obj?.identity?.commercialName || obj?.identity?.legalName;
+      if (name) {
+        found.push({
+          id: 'tenant-setting-salon',
+          name,
+          city: obj.fiscal?.country === 'SN' ? 'Dakar 🇸🇳' : 'Abidjan 🇨🇮',
+          address: obj.address?.street || 'Abidjan, Côte d\'Ivoire',
+          phone: obj.address?.phone || '+225 07 00 00 00',
+          rating: 5.0,
+          reviewsCount: 1,
+          specialties: ['Dermo-Cosmétique', 'Diagnostic IA', 'Soins Botaniques'],
+          practitioners: [{ name: obj.identity?.legalName || 'Gérant du Salon', role: 'Directeur/Praticien', avatar: '👑' }],
+          openingHours: '08:00 - 20:00',
+          distance: '0.3 km',
+          certified: true,
+          isNew: true,
+        });
+      }
+    } catch (e) {}
+  }
+
+  // Key 2: kene_user (salonName or user name if gerant)
+  const savedUser = typeof window !== 'undefined' ? localStorage.getItem('kene_user') : null;
+  if (savedUser) {
+    try {
+      const u = JSON.parse(savedUser);
+      const salonName = u.salonName || (u.role === 'gerant' ? u.name : null);
+      if (salonName && !found.some(f => f.name.toLowerCase() === salonName.toLowerCase())) {
+        found.push({
+          id: 'user-salon',
+          name: salonName,
+          city: 'Abidjan 🇨🇮',
+          address: 'Abidjan, Côte d\'Ivoire',
+          phone: u.phone || '+225 07 00 00 00',
+          rating: 5.0,
+          reviewsCount: 1,
+          specialties: ['Dermo-Cosmétique', 'Soins Cutanés', 'Diagnostic IA'],
+          practitioners: [{ name: u.name || 'Praticien', role: 'Directrice', avatar: '👩🏾‍⚕️' }],
+          openingHours: '08:30 - 19:30',
+          distance: '0.4 km',
+          certified: true,
+          isNew: true,
+        });
+      }
+    } catch (e) {}
+  }
+
+  // Key 3: kene_registered_salons (Array)
+  const savedSalonsArray = typeof window !== 'undefined' ? localStorage.getItem('kene_registered_salons') : null;
+  if (savedSalonsArray) {
+    try {
+      const list = JSON.parse(savedSalonsArray);
+      if (Array.isArray(list)) {
+        list.forEach((item: any, idx: number) => {
+          const itemTitle = typeof item === 'string' ? item : item.name;
+          if (itemTitle && !found.some(f => f.name.toLowerCase() === itemTitle.toLowerCase())) {
+            found.push({
+              id: `array-salon-${idx}`,
+              name: itemTitle,
+              city: item.city || 'Abidjan 🇨🇮',
+              address: item.address || 'Abidjan, Côte d\'Ivoire',
+              phone: item.phone || '+225 07 00 00 00',
+              rating: 5.0,
+              reviewsCount: 1,
+              specialties: ['Institut & Dermo', 'Soins Karité'],
+              practitioners: [{ name: 'Équipe Kènè', role: 'Praticiennes', avatar: '✨' }],
+              openingHours: '08:00 - 20:00',
+              distance: '0.5 km',
+              certified: true,
+              isNew: true,
+            });
+          }
+        });
+      }
+    } catch (e) {}
+  }
+
+  return found;
+}
+
 export default function SalonsPage() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
@@ -86,7 +174,15 @@ export default function SalonsPage() {
     const loadSalons = async () => {
       let combined = [...SALONS];
 
-      // 1. Fetch active salons from server API
+      // 1. Extract all registered enterprise names from localStorage (Cabinet La Dermo, etc.)
+      const localSalons = getRegisteredSalonsFromStorage();
+      if (localSalons.length > 0) {
+        localSalons.forEach(ls => {
+          combined = [ls, ...combined.filter(s => s.name.toLowerCase() !== ls.name.toLowerCase())];
+        });
+      }
+
+      // 2. Fetch active salons from server API
       try {
         const res = await fetch('/api/tenant/salons');
         const json = await res.json();
@@ -106,36 +202,12 @@ export default function SalonsPage() {
             certified: true,
             isNew: true,
           }));
-          combined = [...apiSalons, ...combined.filter(existing => !apiSalons.some(a => a.name === existing.name))];
+          apiSalons.forEach((as: any) => {
+            combined = [as, ...combined.filter(existing => existing.name.toLowerCase() !== as.name.toLowerCase())];
+          });
         }
       } catch (e) {
         console.error('API Salons error:', e);
-      }
-
-      // 2. Read locally created enterprise from localStorage
-      const savedTenant = localStorage.getItem('kene_tenant_settings');
-      if (savedTenant) {
-        try {
-          const tenantObj = JSON.parse(savedTenant);
-          if (tenantObj?.identity?.commercialName) {
-            const localSalon = {
-              id: 'local-enterprise-tenant',
-              name: tenantObj.identity.commercialName,
-              city: tenantObj.fiscal?.country === 'SN' ? 'Dakar 🇸🇳' : 'Abidjan 🇨🇮',
-              address: tenantObj.address?.street ? `${tenantObj.address.street}` : 'Abidjan, Côte d\'Ivoire',
-              phone: tenantObj.address?.phone || '+225 07 00 00 00',
-              rating: 5.0,
-              reviewsCount: 1,
-              specialties: ['Institut & Spa', 'Diagnostic IA', 'Soins Karité'],
-              practitioners: [{ name: tenantObj.identity.legalName || 'Gérant du Salon', role: 'Directrice Salon', avatar: '👑' }],
-              openingHours: '08:00 - 20:00',
-              distance: '0.5 km',
-              certified: true,
-              isNew: true,
-            };
-            combined = [localSalon, ...combined.filter(s => s.name !== localSalon.name)];
-          }
-        } catch (e) {}
       }
 
       setSalonsList(combined);

@@ -62,26 +62,51 @@ export default function ClientPortalPage() {
         const json = await res.json();
         let fetchedList = json.success ? json.salons : [];
 
-        // Add dynamically created local tenant if saved in localStorage
+        // Add all dynamically created local tenants from localStorage (Cabinet La Dermo, etc.)
+        const localItems: any[] = [];
         const savedTenant = localStorage.getItem('kene_tenant_settings');
         if (savedTenant) {
           try {
             const tenantObj = JSON.parse(savedTenant);
-            if (tenantObj?.identity?.commercialName) {
-              const localSalon = {
+            const name = tenantObj?.identity?.commercialName || tenantObj?.identity?.legalName;
+            if (name) {
+              localItems.push({
                 id: 'local-registered-tenant',
-                name: tenantObj.identity.commercialName,
-                legalName: tenantObj.identity.legalName || tenantObj.identity.commercialName,
-                type: tenantObj.identity.type || 'Institut Dermo-Cosmétique',
+                name,
+                legalName: tenantObj.identity?.legalName || name,
+                type: tenantObj.identity?.type || 'Institut Dermo-Cosmétique',
                 address: tenantObj.address?.street ? `${tenantObj.address.street}` : 'Abidjan, Côte d\'Ivoire',
                 phone: tenantObj.address?.phone || '+225 07 00 00 00',
-                rating: '5.0 ⭐ (Récemment Inscrit)',
+                rating: '5.0 ⭐ (Entreprise Inscrite)',
                 services: ['Soin Karité', 'Diagnostic IA', 'Suivi Dermatologique'],
-              };
-              fetchedList = [localSalon, ...fetchedList.filter((s: any) => s.name !== localSalon.name)];
+              });
             }
           } catch (e) {}
         }
+
+        const savedUser = localStorage.getItem('kene_user');
+        if (savedUser) {
+          try {
+            const u = JSON.parse(savedUser);
+            const sName = u.salonName || (u.role === 'gerant' ? u.name : null);
+            if (sName && !localItems.some(l => l.name.toLowerCase() === sName.toLowerCase())) {
+              localItems.push({
+                id: 'local-user-salon',
+                name: sName,
+                legalName: sName,
+                type: 'Cabinet & Institut Dermo',
+                address: 'Abidjan, Côte d\'Ivoire',
+                phone: u.phone || '+225 07 00 00 00',
+                rating: '5.0 ⭐ (Entreprise Inscrite)',
+                services: ['Consultation Dermo', 'Soin Visage', 'Diagnostic IA'],
+              });
+            }
+          } catch (e) {}
+        }
+
+        localItems.forEach(item => {
+          fetchedList = [item, ...fetchedList.filter((s: any) => s.name.toLowerCase() !== item.name.toLowerCase())];
+        });
         setSalons(fetchedList);
       } catch (e) {
         console.error('Failed to fetch salons:', e);
