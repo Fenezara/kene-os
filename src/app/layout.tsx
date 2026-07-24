@@ -43,29 +43,36 @@ export const metadata: Metadata = {
   },
 };
 
+import { AuthProvider } from "@/components/providers/AuthProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="fr" className="dark" suppressHydrationWarning>
       <body
-        className={`${ojuju.variable} ${questrial.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${ojuju.variable} ${questrial.variable} ${geistMono.variable} antialiased bg-[#0F0A05] text-[#F8F1E4]`}
       >
-        {children}
-        <Toaster />
+        <AuthProvider>
+          {children}
+          <Toaster />
+        </AuthProvider>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                    console.log('Kènè Service Worker registered successfully:', reg.scope);
-                  }).catch(function(err) {
-                    console.warn('Kènè Service Worker registration failed:', err);
-                  });
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                  for (let registration of registrations) {
+                    registration.unregister();
+                  }
                 });
+                if ('caches' in window) {
+                  caches.keys().then(function(names) {
+                    for (let name of names) caches.delete(name);
+                  });
+                }
               }
             `,
           }}

@@ -114,17 +114,18 @@ export default function AppointmentsPage() {
   useEffect(() => {
     const userStr = localStorage.getItem('kene_user')
     if (userStr) {
-      const parsed = JSON.parse(userStr)
-      setUserId(parsed.id)
-      fetchData(parsed.id)
-    } else {
-      toast({
-        title: "🔑 Identification Requise",
-        description: "Veuillez vous connecter depuis la page d'accueil.",
-        variant: "destructive"
-      })
-      router.push('/')
+      try {
+        const parsed = JSON.parse(userStr)
+        setUserId(parsed.id)
+        fetchData(parsed.id)
+        return
+      } catch (e) {}
     }
+    
+    // Smooth fallback for client browsing: use demo user ID
+    const defaultUid = 'user-demo-01'
+    setUserId(defaultUid)
+    fetchData(defaultUid)
   }, [])
 
   // Calculate cancel refund estimation
@@ -267,7 +268,7 @@ export default function AppointmentsPage() {
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/portal')}
             className="text-karite/60 hover:text-karite transition cursor-pointer"
           >
             <ArrowLeft className="w-5 h-5" />

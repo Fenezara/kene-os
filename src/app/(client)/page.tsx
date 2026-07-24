@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { 
   Sparkles, ShoppingBag, Calendar, User, LogOut, ArrowRight, 
-  Sprout, FlaskConical, Wallet, Sun, Thermometer, Droplets, AlertTriangle 
+  Sprout, FlaskConical, Wallet, Sun, Thermometer, Droplets, AlertTriangle,
+  Copy, Share2, Coins
 } from 'lucide-react'
 import OTPAuth from '@/components/kene/OTPAuth'
+import { useToast } from '@/hooks/use-toast'
 
 export default function ClientHomePage() {
   const router = useRouter()
@@ -212,6 +214,9 @@ export default function ClientHomePage() {
               Lancer mon Diagnostic IA
               <ArrowRight className="w-4 h-4" />
             </button>
+
+            {/* Parrainage Block */}
+            <ReferralWidget userId={currentUser.id} />
           </motion.div>
         )}
       </div>
@@ -361,5 +366,112 @@ function SkinWeatherWidget() {
         </div>
       </div>
     </div>
+  )
+}
+
+function ReferralWidget({ userId }: { userId: string }) {
+  const [code, setCode] = useState<string>('')
+  const [totalEarned, setTotalEarned] = useState<number>(0)
+  const { toast } = useToast()
+
+  useEffect(() => {
+    const fetchReferral = async () => {
+      try {
+        const res = await fetch(`/api/referral?userId=${userId}`)
+        const data = await res.json()
+        if (data.success) {
+          setCode(data.referralCode)
+          const earned = data.referredUsers.reduce((sum: number, tx: any) => sum + tx.amount, 0)
+          setTotalEarned(earned)
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    fetchReferral()
+  }, [userId])
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code)
+    toast({
+      title: 'Code copié',
+      description: 'Votre code de parrainage a été copié dans le presse-papiers.',
+      className: 'bg-[#241C16] text-white border-white/10'
+    })
+  }
+
+  const handleShare = () => {
+    const url = `${window.location.origin}?ref=${code}`
+    if (navigator.share) {
+      navigator.share({
+        title: 'Rejoignez Kènè',
+        text: 'Utilisez mon code de parrainage pour recevoir 250 F !',
+        url
+      }).catch(console.error)
+    } else {
+      navigator.clipboard.writeText(url)
+      toast({
+        title: 'Lien copié',
+        description: 'Le lien de parrainage a été copié.',
+        className: 'bg-[#241C16] text-white border-white/10'
+      })
+    }
+  }
+
+  return (
+    <div className="bg-gradient-to-br from-gold-kene/20 to-[#1A1410] border border-gold-kene/30 rounded-3xl p-5 shadow-lg shadow-gold-kene/5 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gold-kene/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
+      
+      <div className="relative z-10 flex flex-col space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-gold-kene/20 flex items-center justify-center text-gold-kene">
+              <GiftIcon className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-white text-sm">Parrainez une amie</h3>
+              <p className="text-[10px] text-karite/60 font-sans">Gagnez 500 F par filleul actif</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <span className="text-[10px] text-karite/40 block font-sans">Gains</span>
+            <span className="font-mono font-bold text-gold-kene text-sm flex items-center justify-end gap-1">
+              {totalEarned} <Coins className="w-3 h-3" />
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-[#1A1410]/80 rounded-2xl p-1.5 flex items-center justify-between border border-white/5">
+          <span className="font-mono font-bold text-white text-sm tracking-widest px-3">{code || '...'}</span>
+          <div className="flex items-center gap-1">
+            <button 
+              onClick={handleCopy}
+              className="p-2 hover:bg-white/10 rounded-xl transition text-karite/60 hover:text-white"
+            >
+              <Copy className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={handleShare}
+              className="bg-gold-kene text-[#1A1410] p-2 rounded-xl hover:bg-gold-kene/90 transition"
+            >
+              <Share2 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function GiftIcon(props: any) {
+  return (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 12 20 22 4 22 4 12"></polyline>
+      <rect x="2" y="7" width="20" height="5"></rect>
+      <line x1="12" y1="22" x2="12" y2="7"></line>
+      <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+      <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+    </svg>
   )
 }

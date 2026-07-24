@@ -10,14 +10,16 @@
   --font-display: var(--font-ojuju);
   --font-mono: var(--font-geist-mono);
   
-  /* Custom colors */
+  /* Custom Afro-Futuristic colors */
   --color-gold-kene: #C8951E;
-  --color-bogolan: #A0522D;
-  --color-baobab: #3F7D3F;
-  --color-bissap: #8B1A3B;
+  --color-gold-light: #F3E5AB;
+  --color-gold-metallic: #D4AF37;
+  --color-bogolan: #8A3B14;
+  --color-baobab: #2E5A36;
+  --color-bissap: #8A1C14;
   --color-karite: #F8F1E4;
   --color-sunset: #E07A2B;
-  --color-indigo-kene: #1B3A6B;
+  --color-indigo-kene: #1E3A5F;
   --color-dark-cacao: #0F0A05;
   
   /* Easing curves */
@@ -62,72 +64,113 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: #F8F1E4; /* Crème Karité */
-  --foreground: #1A1410; /* Noir profond */
-  --card: #FFFDF9;
-  --card-foreground: #1A1410;
-  --popover: #FFFDF9;
-  --popover-foreground: #1A1410;
-  --primary: #C8951E; /* Or Kènè */
-  --primary-foreground: #F8F1E4;
-  --secondary: #A0522D; /* Terre Bogolan */
+  --radius: 0.75rem;
+  --background: #0F0A05;
+  --foreground: #F8F1E4;
+  --card: #1A1410;
+  --card-foreground: #F8F1E4;
+  --popover: #1A1410;
+  --popover-foreground: #F8F1E4;
+  --primary: #C8951E;
+  --primary-foreground: #0F0A05;
+  --secondary: #8A3B14;
   --secondary-foreground: #F8F1E4;
-  --muted: #EADEC9;
-  --muted-foreground: #5C5446;
-  --accent: #E07A2B; /* Orange Sunset */
-  --accent-foreground: #F8F1E4;
-  --destructive: #8B1A3B; /* Bordeaux Bissap */
-  --border: #EADEC9;
-  --input: #EADEC9;
+  --muted: #241C16;
+  --muted-foreground: #A39685;
+  --accent: #E07A2B;
+  --accent-foreground: #0F0A05;
+  --destructive: #8A1C14;
+  --border: #362A21;
+  --input: #362A21;
   --ring: #C8951E;
-  --chart-1: #C8951E;
-  --chart-2: #A0522D;
-  --chart-3: #3F7D3F;
-  --chart-4: #E07A2B;
-  --chart-5: #1B3A6B;
-  --sidebar: #FFFDF9;
-  --sidebar-foreground: #1A1410;
-  --sidebar-primary: #C8951E;
-  --sidebar-primary-foreground: #F8F1E4;
-  --sidebar-accent: #EADEC9;
-  --sidebar-accent-foreground: #1A1410;
-  --sidebar-border: #EADEC9;
-  --sidebar-ring: #C8951E;
 }
 
-.dark {
-  --background: #1A1410; /* Noir profond */
-  --foreground: #F8F1E4; /* Crème Karité */
-  --card: #241C16;
-  --card-foreground: #F8F1E4;
-  --popover: #241C16;
-  --popover-foreground: #F8F1E4;
-  --primary: #C8951E; /* Or Kènè */
-  --primary-foreground: #1A1410;
-  --secondary: #A0522D; /* Terre Bogolan */
-  --secondary-foreground: #F8F1E4;
-  --muted: #332820;
-  --muted-foreground: #A39685;
-  --accent: #E07A2B; /* Orange Sunset */
-  --accent-foreground: #1A1410;
-  --destructive: #8B1A3B; /* Bordeaux Bissap */
-  --border: #332820;
-  --input: #332820;
-  --ring: #C8951E;
-  --chart-1: #C8951E;
-  --chart-2: #A0522D;
-  --chart-3: #3F7D3F;
-  --chart-4: #E07A2B;
-  --chart-5: #1B3A6B;
-  --sidebar: #241C16;
-  --sidebar-foreground: #F8F1E4;
-  --sidebar-primary: #C8951E;
-  --sidebar-primary-foreground: #1A1410;
-  --sidebar-accent: #332820;
-  --sidebar-accent-foreground: #F8F1E4;
-  --sidebar-border: #332820;
-  --sidebar-ring: #C8951E;
+/* Comprehensive Light Mode Overrides for High Contrast Ivory & Gold Theme */
+.light-mode {
+  --background: #FAF6EE !important;
+  --foreground: #1F1712 !important;
+  --card: #FFFFFF !important;
+  --card-foreground: #1F1712 !important;
+  --popover: #FFFFFF !important;
+  --popover-foreground: #1F1712 !important;
+  --border: #E2D5BE !important;
+  --input: #E2D5BE !important;
+  --muted: #F2EAD8 !important;
+  --muted-foreground: #5A4D3E !important;
+}
+
+/* Backgrounds in Light Mode */
+.light-mode,
+.light-mode body {
+  background-color: #FAF6EE !important;
+  color: #1F1712 !important;
+}
+
+.light-mode [class*="bg-[#0A0603]"],
+.light-mode [class*="bg-[#0F0A05]"],
+.light-mode [class*="bg-[#110D09]"],
+.light-mode [class*="bg-[#140E0A]"],
+.light-mode [class*="bg-[#1E1610]"] {
+  background-color: #FAF6EE !important;
+  color: #1F1712 !important;
+}
+
+.light-mode [class*="bg-[#1A1410]"],
+.light-mode [class*="bg-[#241C16]"],
+.light-mode [class*="bg-[#362A21]"] {
+  background-color: #FFFFFF !important;
+  border-color: #E2D5BE !important;
+  color: #1F1712 !important;
+}
+
+.light-mode .bg-white\/5,
+.light-mode .bg-white\/10 {
+  background-color: #F2EAD8 !important;
+  color: #1F1712 !important;
+}
+
+/* High Contrast Text Adjustments in Light Mode */
+.light-mode .text-white {
+  color: #1F1712 !important;
+}
+
+.light-mode .text-white\/30,
+.light-mode .text-white\/40,
+.light-mode .text-white\/50,
+.light-mode .text-white\/60,
+.light-mode .text-white\/70,
+.light-mode .text-white\/80,
+.light-mode .text-gray-400,
+.light-mode .text-gray-500,
+.light-mode .text-karite\/50,
+.light-mode .text-karite\/70 {
+  color: #5A4D3E !important;
+}
+
+/* Pale yellow text overrides in Light Mode -> Dark Bronze Gold for High Contrast */
+.light-mode .text-\[\#F3E5AB\],
+.light-mode .text-\[\#D4AF37\] {
+  color: #8A5C0A !important;
+  font-weight: 700 !important;
+}
+
+.light-mode .text-\[\#F8F1E4\],
+.light-mode .text-karite {
+  color: #1F1712 !important;
+}
+
+/* Borders in Light Mode */
+.light-mode [class*="border-white\/5"],
+.light-mode [class*="border-white\/10"],
+.light-mode [class*="border-white\/20"],
+.light-mode [class*="border-white\/30"] {
+  border-color: #E2D5BE !important;
+}
+
+.light-mode [class*="border-\[\#C8951E\]\/20"],
+.light-mode [class*="border-\[\#C8951E\]\/30"],
+.light-mode [class*="border-\[\#C8951E\]\/40"] {
+  border-color: #C8951E !important;
 }
 
 @layer base {
@@ -135,9 +178,62 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans selection:bg-[#C8951E] selection:text-[#0F0A05];
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
   }
+}
+
+/* Custom Afro-Futuristic Aesthetic Utilities */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #C8951E 0%, #8A5C0A 50%, #8A3B14 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, #C8951E 0%, #D4AF37 50%, #F3E5AB 100%);
+}
+
+.gold-border-glow {
+  border: 1px solid rgba(200, 149, 30, 0.4);
+  box-shadow: 0 0 20px rgba(200, 149, 30, 0.15), inset 0 0 10px rgba(200, 149, 30, 0.05);
+}
+
+.glass-card-afro {
+  background: rgba(26, 20, 16, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(200, 149, 30, 0.2);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-card-hover:hover {
+  border-color: rgba(200, 149, 30, 0.6);
+  box-shadow: 0 10px 30px -10px rgba(200, 149, 30, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Background Woven Pattern Lines */
+.bg-pattern-kente {
+  background-image: radial-gradient(rgba(200, 149, 30, 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s infinite ease-in-out;
 }

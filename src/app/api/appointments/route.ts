@@ -67,7 +67,7 @@ async function getPrerequisites() {
         firstName: 'Mariama',
         lastName: 'Diallo',
         birthDate: new Date('1995-04-12'),
-        gender: 'female' as any,
+        gender: 'FEMALE' as any,
         phone: '+2250708091011',
         address: '{}',
         hireDate: new Date('2024-01-15'),

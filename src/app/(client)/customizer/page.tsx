@@ -1,11 +1,12 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion as m, AnimatePresence } from 'framer-motion'
 import { 
-  ArrowLeft, FlaskConical, Plus, Minus, ShieldCheck, 
-  Smartphone, CheckCircle2, ShoppingBag, Sparkles 
+  ArrowLeft, FlaskConical, Plus, Minus, 
+  Smartphone, CheckCircle2, ShoppingBag, 
+  Camera, Sparkles, Video, Eye, Palette
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
@@ -16,7 +17,7 @@ interface Ingredient {
   scientificName: string
   description: string
   color: string
-  rgb: [number, number, number] // For color mixing
+  rgb: [number, number, number]
 }
 
 const INGREDIENTS: Ingredient[] = [
@@ -26,14 +27,13 @@ const INGREDIENTS: Ingredient[] = [
   { id: 'bissap', name: 'Acide de Fleur de Bissap', scientificName: 'Hibiscus sabdariffa', description: 'Éclat & Peeling doux AHA', color: 'text-[#8A1C14]', rgb: [138, 28, 20] },
 ]
 
-export default function CustomizerPage() {
+function CustomizerContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
 
   const [selectedBase, setSelectedBase] = useState<'serum' | 'cream' | 'oil'>('serum')
   
-  // Concentrations (sum must not exceed 10%)
   const [concentrations, setConcentrations] = useState<Record<string, number>>({
     moringa: 1,
     baobab: 1,
@@ -41,7 +41,6 @@ export default function CustomizerPage() {
     bissap: 1,
   })
 
-  // Momo/Wallet checkout modal
   const [showCheckout, setShowCheckout] = useState(false)
   const [checkoutStep, setCheckoutStep] = useState<'input' | 'processing' | 'success'>('input')
   const [momoNumber, setMomoNumber] = useState('')
@@ -63,11 +62,9 @@ export default function CustomizerPage() {
     }
   }, [showCheckout])
 
-  // Load recommended ingredients if diagnosisId is present
   useEffect(() => {
     const diagId = searchParams.get('diagnosisId')
     if (diagId) {
-      // Simulate loading recommended pre-dosage based on VLM recommendations
       setConcentrations({
         moringa: 3,
         baobab: 2,
@@ -104,17 +101,15 @@ export default function CustomizerPage() {
     })
   }
 
-  // Calculate pricing
-  const basePrice = 15000 // 15 000 FCFA
-  const activePrice = totalActives * 1500 // 1 500 FCFA per 1%
+  const basePrice = 15000
+  const activePrice = totalActives * 1500
   const totalTTC = basePrice + activePrice
   const subtotal = Math.round(totalTTC / 1.18)
   const vatAmount = totalTTC - subtotal
 
-  // Color mixing algorithm for the fluid bottle
   const getMixedColor = () => {
-    let rSum = 240, gSum = 230, bSum = 210 // Default base color
-    let totalWeight = 5 // Base weight
+    let rSum = 240, gSum = 230, bSum = 210
+    let totalWeight = 5
 
     INGREDIENTS.forEach((ing) => {
       const pct = concentrations[ing.id] || 0
@@ -163,10 +158,9 @@ export default function CustomizerPage() {
         name: `Formule Custom : ${selectedBase === 'serum' ? 'Sérum' : selectedBase === 'cream' ? 'Émulsion' : 'Huile'} Kènè`,
         price: totalTTC,
         qty: 1,
-        category: 'produit', // Cosmétique sur mesure
+        category: 'produit',
       }]
 
-      // Call B2B sale endpoint to record checkout
       const res = await fetch('/api/sales', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -183,7 +177,6 @@ export default function CustomizerPage() {
       const data = await res.json()
       if (data.success) {
         setCheckoutStep('success')
-        // Give client loyalty points in local storage (Jardin du Glow)
         const storedPoints = localStorage.getItem('kene_points')
         const currentPoints = storedPoints ? parseInt(storedPoints) : 0
         localStorage.setItem('kene_points', String(currentPoints + 300))
@@ -202,27 +195,26 @@ export default function CustomizerPage() {
 
   return (
     <div className="flex-1 flex flex-col justify-between p-6 min-h-[85vh] text-white">
-      {/* Header bar */}
-      <header className="flex justify-between items-center mb-6">
-        <button
-          onClick={() => router.push('/')}
-          className="w-10 h-10 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-white hover:bg-white/10 transition cursor-pointer"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-        <span className="font-display font-bold text-lg text-gold-kene">Lab Sur Mesure</span>
-        <div className="w-10 h-10" /> {/* Spacer */}
+      <header className="flex flex-col gap-4 mb-6">
+        <div className="flex justify-between items-center">
+          <button
+            onClick={() => router.push('/')}
+            className="w-10 h-10 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-white hover:bg-white/10 transition cursor-pointer"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <span className="font-display font-bold text-lg text-gold-kene">Kènè Customizer</span>
+          <div className="w-10 h-10" />
+        </div>
       </header>
 
       <div className="flex-1 flex flex-col md:flex-row gap-6">
-        {/* Left Side: Interactive Bottle Visualizer */}
         <div className="flex flex-col items-center justify-center bg-[#1A1410] border border-white/5 rounded-3xl p-6 md:flex-1 relative min-h-[250px]">
           <div className="absolute top-4 left-4 text-left">
             <span className="text-[10px] text-white/40 block font-sans">Formulation unique</span>
             <span className="text-xs font-bold text-white capitalize">{selectedBase} personnalisé</span>
           </div>
 
-          {/* SVG Pipette Bottle */}
           <div className="relative w-32 h-44 mt-4">
             <m.svg
               viewBox="0 0 100 120"
@@ -230,20 +222,14 @@ export default function CustomizerPage() {
               animate={{ y: [0, -3, 0] }}
               transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
             >
-              {/* Pipette cap */}
               <rect x="42" y="2" width="16" height="15" rx="2" fill="#241C16" />
               <rect x="47" y="17" width="6" height="8" fill="#555" />
-              
-              {/* Bottle neck */}
               <rect x="40" y="25" width="20" height="8" rx="1" fill="#888" opacity="0.3" />
-              
-              {/* Bottle body (glass outer) */}
               <rect x="25" y="33" width="50" height="70" rx="8" fill="none" stroke="#fff" strokeWidth="2.5" opacity="0.4" />
               
-              {/* Fluid fill (mixed color) */}
               <m.rect
                 x="28"
-                y={100 - (33 + (totalActives * 3))} // Adjust height based on volume
+                y={100 - (33 + (totalActives * 3))}
                 width="44"
                 height={33 + (totalActives * 3)}
                 rx="4"
@@ -252,12 +238,10 @@ export default function CustomizerPage() {
                 transition={{ fill: { duration: 0.8 }, y: { duration: 0.5 }, height: { duration: 0.5 } }}
               />
 
-              {/* Glass shine reflections */}
               <path d="M29,38 Q32,60 29,95" stroke="#fff" strokeWidth="1.5" fill="none" opacity="0.3" />
               <path d="M71,45 Q68,70 71,90" stroke="#fff" strokeWidth="1" fill="none" opacity="0.15" />
             </m.svg>
 
-            {/* Glowing sparks indicating activity */}
             {totalActives > 0 && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <m.div
@@ -269,7 +253,6 @@ export default function CustomizerPage() {
             )}
           </div>
 
-          {/* Mixed stats badge */}
           <div className="mt-4 text-center">
             <span className="text-[10px] bg-gold-kene/10 text-gold-kene border border-gold-kene/20 px-2.5 py-1 rounded-full font-mono font-bold">
               Concentration : {totalActives.toFixed(1)}% / 10%
@@ -277,9 +260,7 @@ export default function CustomizerPage() {
           </div>
         </div>
 
-        {/* Right Side: Formula controllers */}
         <div className="space-y-6 md:flex-1">
-          {/* Base selector */}
           <div className="bg-[#1A1410] border border-white/5 p-5 rounded-3xl space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-gold-kene font-display">1. Choisissez votre Base</h3>
             <div className="grid grid-cols-3 gap-2">
@@ -304,7 +285,6 @@ export default function CustomizerPage() {
             </div>
           </div>
 
-          {/* Active dosing */}
           <div className="bg-[#1A1410] border border-white/5 p-5 rounded-3xl space-y-4">
             <div className="flex justify-between items-center border-b border-white/5 pb-2">
               <h3 className="text-xs font-bold uppercase tracking-wider text-gold-kene font-display">2. Dosez vos Actifs Sur Mesure</h3>
@@ -349,7 +329,6 @@ export default function CustomizerPage() {
         </div>
       </div>
 
-      {/* Pricing & Checkout Footer */}
       <footer className="mt-6 bg-[#1A1410] border border-white/5 p-5 rounded-3xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
         <div className="text-center md:text-left">
           <span className="text-[10px] text-white/40 uppercase font-semibold block">Tarif de votre formule unique</span>
@@ -370,7 +349,6 @@ export default function CustomizerPage() {
         </Button>
       </footer>
 
-      {/* Checkout Modal */}
       <AnimatePresence>
         {showCheckout && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
@@ -502,5 +480,210 @@ export default function CustomizerPage() {
         )}
       </AnimatePresence>
     </div>
+  )
+}
+
+function ARMirrorContent() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [cameraActive, setCameraActive] = useState(false)
+  const [selectedStyle, setSelectedStyle] = useState<'hair' | 'makeup'>('hair')
+  
+  const [hairColor, setHairColor] = useState('#1B1B1B') // Default 1B
+  const [makeupColor, setMakeupColor] = useState('#8A1C14') // Default Bissap/Bordeaux
+  const { toast } = useToast()
+  const router = useRouter()
+
+  const HAIR_SHADES = [
+    { id: '1b', name: 'Knotless #1B', color: '#1B1B1B' },
+    { id: '30', name: '#30 Miel', color: '#B37D4E' },
+    { id: '27', name: '#27 Doré', color: '#D4AF37' },
+    { id: 'bug', name: '#BUG Bordeaux', color: '#5D1916' },
+  ]
+
+  const MAKEUP_SHADES = [
+    { id: 'nude_v', name: 'Nude (Photo V)', color: '#A0522D' },
+    { id: 'nude_vi', name: 'Nude (Photo VI)', color: '#5C3317' },
+    { id: 'bissap', name: 'Bissap Glow', color: '#8A1C14' },
+    { id: 'karite', name: 'Karité Éclat', color: '#D97706' },
+  ]
+
+  useEffect(() => {
+    if (cameraActive && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+        .then((stream) => {
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream
+          }
+        })
+        .catch(() => {
+          toast({
+            title: "📸 Erreur Caméra",
+            description: "Impossible d'accéder à la caméra. Utilisation du modèle par défaut.",
+            variant: "destructive"
+          })
+        })
+    } else {
+      if (videoRef.current?.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream
+        stream.getTracks().forEach(track => track.stop())
+        videoRef.current.srcObject = null
+      }
+    }
+    return () => {
+      if (videoRef.current?.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream
+        stream.getTracks().forEach(track => track.stop())
+      }
+    }
+  }, [cameraActive])
+
+  const handleBook = () => {
+    const serviceName = selectedStyle === 'hair' 
+      ? `Tresses Africaines (${HAIR_SHADES.find(s => s.color === hairColor)?.name})` 
+      : `Mise en Beauté (${MAKEUP_SHADES.find(s => s.color === makeupColor)?.name})`
+      
+    toast({
+      title: "✅ Style sélectionné",
+      description: "Redirection vers la réservation...",
+    })
+    
+    // Simulate pre-filling checkout
+    setTimeout(() => {
+      router.push(`/checkout?service=${encodeURIComponent(serviceName)}`)
+    }, 1000)
+  }
+
+  return (
+    <div className="flex-1 flex flex-col p-4 text-white">
+      <div className="relative w-full aspect-[3/4] md:aspect-square bg-[#1A1410] rounded-3xl overflow-hidden border border-white/10 shadow-2xl mb-6">
+        {cameraActive ? (
+          <video 
+            ref={videoRef} 
+            autoPlay 
+            playsInline 
+            className="w-full h-full object-cover transform -scale-x-100"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#241C16] to-[#1A1410]">
+            <Camera className="w-16 h-16 text-white/20 mb-4" />
+            <p className="text-white/40 text-sm font-sans mb-4">Miroir Virtuel Désactivé</p>
+            <Button 
+              onClick={() => setCameraActive(true)}
+              className="bg-gold-kene text-[#1A1410] font-semibold rounded-full px-6"
+            >
+              Activer la Caméra
+            </Button>
+          </div>
+        )}
+
+        {/* AR Overlay Simulation */}
+        {cameraActive && (
+          <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center">
+            {selectedStyle === 'hair' && (
+              <m.div 
+                animate={{ backgroundColor: hairColor }}
+                className="w-48 h-64 border-4 border-dashed rounded-t-full opacity-50 mix-blend-overlay transition-colors duration-500"
+              />
+            )}
+            {selectedStyle === 'makeup' && (
+              <div className="flex gap-4 mt-20">
+                <m.div 
+                  animate={{ backgroundColor: makeupColor }}
+                  className="w-12 h-6 rounded-full opacity-40 mix-blend-multiply blur-sm transition-colors duration-500"
+                />
+              </div>
+            )}
+            <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 border border-white/10">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-[10px] font-mono text-white/80">AR ACTIVE</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Controls */}
+      <div className="bg-[#1A1410] border border-white/5 rounded-3xl p-5 mb-20 space-y-5">
+        <div className="flex gap-2 p-1 bg-white/5 rounded-xl">
+          <button 
+            onClick={() => setSelectedStyle('hair')}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition ${selectedStyle === 'hair' ? 'bg-white/10 text-white shadow-md' : 'text-white/50 hover:text-white'}`}
+          >
+            Tresses & Coiffures
+          </button>
+          <button 
+            onClick={() => setSelectedStyle('makeup')}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition ${selectedStyle === 'makeup' ? 'bg-white/10 text-white shadow-md' : 'text-white/50 hover:text-white'}`}
+          >
+            Maquillage (V & VI)
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-gold-kene font-display">
+            Sélectionnez votre teinte
+          </h3>
+          <div className="flex flex-wrap gap-3">
+            {(selectedStyle === 'hair' ? HAIR_SHADES : MAKEUP_SHADES).map((shade) => (
+              <button
+                key={shade.id}
+                onClick={() => selectedStyle === 'hair' ? setHairColor(shade.color) : setMakeupColor(shade.color)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition ${
+                  (selectedStyle === 'hair' ? hairColor : makeupColor) === shade.color 
+                    ? 'border-gold-kene bg-white/10' 
+                    : 'border-white/10 bg-white/5'
+                }`}
+              >
+                <div className="w-5 h-5 rounded-full shadow-inner border border-white/20" style={{ backgroundColor: shade.color }} />
+                <span className="text-[10px] font-semibold">{shade.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <Button
+          onClick={handleBook}
+          className="w-full bg-gold-kene hover:bg-gold-kene/90 text-[#1A1410] font-semibold py-6 rounded-2xl flex items-center justify-center gap-2 font-display cursor-pointer shadow-lg shadow-gold-kene/10"
+        >
+          <Sparkles className="w-4.5 h-4.5" />
+          Réserver ce Style
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+export default function CustomizerPage() {
+  const [activeTab, setActiveTab] = useState<'lab' | 'ar'>('lab')
+
+  return (
+    <Suspense fallback={<div className="flex justify-center py-20 text-gold-kene">Chargement du laboratoire...</div>}>
+      <div className="min-h-[85vh] flex flex-col bg-[#0A0603]">
+        {/* Tab Switcher */}
+        <div className="px-6 pt-4 flex gap-2">
+          <button 
+            onClick={() => setActiveTab('lab')}
+            className={`flex-1 py-3 text-xs font-display font-bold uppercase tracking-wider rounded-t-2xl transition border-b-2 ${
+              activeTab === 'lab' 
+                ? 'border-gold-kene text-gold-kene bg-gold-kene/5' 
+                : 'border-transparent text-white/40 hover:text-white/80'
+            }`}
+          >
+            Lab Sur Mesure
+          </button>
+          <button 
+            onClick={() => setActiveTab('ar')}
+            className={`flex-1 py-3 text-xs font-display font-bold uppercase tracking-wider rounded-t-2xl transition border-b-2 ${
+              activeTab === 'ar' 
+                ? 'border-gold-kene text-gold-kene bg-gold-kene/5' 
+                : 'border-transparent text-white/40 hover:text-white/80'
+            }`}
+          >
+            Miroir AR
+          </button>
+        </div>
+
+        {activeTab === 'lab' ? <CustomizerContent /> : <ARMirrorContent />}
+      </div>
+    </Suspense>
   )
 }

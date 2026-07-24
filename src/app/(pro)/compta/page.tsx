@@ -22,7 +22,7 @@ interface AccountingEntry {
   entryDate: string
   reference: string | null
   description: string
-  lines: string // Stringified AccountingLine[]
+  lines: string
   status: string
 }
 
@@ -33,8 +33,8 @@ export default function ComptaPage() {
   const [activeTab, setActiveTab] = useState<'journal' | 'grandLivre' | 'tva' | 'bilan' | 'compteResultat'>('journal')
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null)
   
-  // Ledger filters
   const [selectedAccount, setSelectedAccount] = useState<string>('all')
+  const [accountSearch, setAccountSearch] = useState<string>('')
 
   const fetchEntries = async () => {
     setLoading(true)
@@ -45,7 +45,6 @@ export default function ComptaPage() {
         setEntries(json.entries)
       }
 
-      // Fetch closed payroll sheets for SYSCOHADA integration
       const pRes = await fetch('/api/rh/payslips?month=7&year=2026')
       const pJson = await pRes.json()
       if (pJson.success) {
@@ -62,7 +61,6 @@ export default function ComptaPage() {
     fetchEntries()
   }, [])
 
-  // Helper to parse stringified lines
   const parseLines = (linesStr: string): AccountingLine[] => {
     try {
       return JSON.parse(linesStr)
@@ -71,7 +69,6 @@ export default function ComptaPage() {
     }
   }
 
-  // Calculate global totals
   const totalDebit = entries.reduce((acc, entry) => {
     const lines = parseLines(entry.lines)
     return acc + lines.reduce((lAcc, line) => lAcc + line.debit, 0)
@@ -82,7 +79,6 @@ export default function ComptaPage() {
     return acc + lines.reduce((lAcc, line) => lAcc + line.credit, 0)
   }, 0)
 
-  // SYSCOHADA accounts available in entries
   const availableAccounts = Array.from(
     new Set(
       entries.flatMap((entry) => 
@@ -102,11 +98,14 @@ export default function ComptaPage() {
     }
   }
 
-  // Filtered Grand Livre lines
   const grandLivreLines = entries.flatMap((entry) => {
     const lines = parseLines(entry.lines)
     return lines
-      .filter((line) => selectedAccount === 'all' || line.accountNumber === selectedAccount)
+      .filter((line) => {
+        const matchesSelect = selectedAccount === 'all' || line.accountNumber === selectedAccount;
+        const matchesSearch = accountSearch === '' || line.accountNumber.includes(accountSearch);
+        return matchesSelect && matchesSearch;
+      })
       .map((line) => ({
         ...line,
         entryNumber: entry.entryNumber,
@@ -116,28 +115,42 @@ export default function ComptaPage() {
       }))
   })
 
-  // VAT summary calculations
+  const handleExportCSV = () => {
+    if (grandLivreLines.length === 0) return;
+    const header = ['Date', 'Ecriture', 'Compte', 'Libelle', 'Reference', 'Debit', 'Credit'].join(',');
+    const csvLines = grandLivreLines.map(l => 
+      [
+        new Date(l.entryDate).toLocaleDateString(),
+        l.entryNumber,
+        l.accountNumber,
+        `"${l.description}"`,
+        `"${l.reference || ''}"`,
+        l.debit,
+        l.credit
+      ].join(',')
+    );
+    const csvContent = [header, ...csvLines].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Grand_Livre_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const tvaSummary = entries.reduce((summary, entry) => {
     const lines = parseLines(entry.lines)
-    
-    // Sum up items
     const vatLine = lines.find((l) => l.accountNumber === '4431')
     const soinLine = lines.find((l) => l.accountNumber === '706')
     const prodLine = lines.find((l) => l.accountNumber === '701')
     const debitLine = lines.find((l) => l.accountNumber === '5711' || l.accountNumber === '5212')
 
-    if (vatLine) {
-      summary.vatCollected += vatLine.credit
-    }
-    if (soinLine) {
-      summary.soinsHT += soinLine.credit
-    }
-    if (prodLine) {
-      summary.produitsHT += prodLine.credit
-    }
-    if (debitLine) {
-      summary.totalTTC += debitLine.debit
-    }
+    if (vatLine) summary.vatCollected += vatLine.credit
+    if (soinLine) summary.soinsHT += soinLine.credit
+    if (prodLine) summary.produitsHT += prodLine.credit
+    if (debitLine) summary.totalTTC += debitLine.debit
 
     return summary
   }, { soinsHT: 0, produitsHT: 0, vatCollected: 0, totalTTC: 0 })
@@ -158,7 +171,16 @@ export default function ComptaPage() {
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
+          <a href="/compta/export">
+            <Button
+              className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs py-2 px-3 flex items-center gap-1.5 cursor-pointer"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              Liasse Fiscale SYSCOHADA
+            </Button>
+          </a>
+
           <Button
             onClick={fetchEntries}
             className="bg-[#241C16]/50 hover:bg-[#241C16]/80 border border-white/10 text-white rounded-xl text-xs py-2 px-3 flex items-center gap-1.5 cursor-pointer"
@@ -166,8 +188,9 @@ export default function ComptaPage() {
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             Actualiser
           </Button>
+          
           <Button
-            onClick={() => alert("Export du Grand Livre comptable au format Excel (conforme états financiers) bientôt disponible !")}
+            onClick={() => window.open('/api/accounting/export?year=2026', '_blank')}
             className="bg-gold-kene hover:bg-gold-kene/90 text-[#1A1410] font-semibold rounded-xl text-xs py-2 px-3 flex items-center gap-1.5 cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
@@ -230,7 +253,6 @@ export default function ComptaPage() {
             exit={{ opacity: 0, y: -10 }}
             className="space-y-4"
           >
-            {/* Summary statistics */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className="bg-[#1A1410] border border-white/5 rounded-2xl p-4">
                 <span className="text-[10px] text-white/40 uppercase font-semibold">Total Écritures</span>
@@ -246,7 +268,6 @@ export default function ComptaPage() {
               </div>
             </div>
 
-            {/* Entries list */}
             <div className="bg-[#1A1410] border border-white/5 rounded-3xl overflow-hidden">
               <div className="p-5 border-b border-white/5">
                 <h3 className="font-display font-semibold text-sm uppercase text-gold-kene tracking-wider">Journal des ventes & caisse</h3>
@@ -298,7 +319,6 @@ export default function ComptaPage() {
                           </div>
                         </div>
 
-                        {/* Detailed Double Entry Lines */}
                         <AnimatePresence>
                           {isExpanded && (
                             <m.div
@@ -347,28 +367,42 @@ export default function ComptaPage() {
             exit={{ opacity: 0, y: -10 }}
             className="space-y-4"
           >
-            {/* Filter selectors */}
             <div className="bg-[#1A1410] border border-white/5 p-5 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <h3 className="font-display font-semibold text-sm uppercase text-gold-kene tracking-wider">Sélection Compte</h3>
                 <p className="text-[10px] text-white/40 mt-0.5">Filtrez le grand livre par compte du plan SYSCOHADA.</p>
               </div>
 
-              <select
-                value={selectedAccount}
-                onChange={(e) => setSelectedAccount(e.target.value)}
-                className="bg-[#241C16] border border-white/10 text-white text-xs rounded-xl px-4 py-2 outline-none focus:border-gold-kene transition w-full md:w-64 cursor-pointer"
-              >
-                <option value="all">Tous les comptes</option>
-                {availableAccounts.map((acc) => (
-                  <option key={acc} value={acc}>
-                    {acc} - {getAccountLabel(acc)}
-                  </option>
-                ))}
-              </select>
+              <div className="flex gap-3 flex-wrap w-full md:w-auto">
+                <input
+                  type="text"
+                  placeholder="Recherche rapide (ex: 5711, 706)"
+                  value={accountSearch}
+                  onChange={(e) => setAccountSearch(e.target.value)}
+                  className="bg-[#241C16] border border-white/10 text-white text-xs rounded-xl px-4 py-2 outline-none focus:border-gold-kene transition w-full md:w-48 placeholder:text-white/30"
+                />
+                <select
+                  value={selectedAccount}
+                  onChange={(e) => setSelectedAccount(e.target.value)}
+                  className="bg-[#241C16] border border-white/10 text-white text-xs rounded-xl px-4 py-2 outline-none focus:border-gold-kene transition w-full md:w-64 cursor-pointer"
+                >
+                  <option value="all">Tous les comptes</option>
+                  {availableAccounts.map((acc) => (
+                    <option key={acc} value={acc}>
+                      {acc} - {getAccountLabel(acc)}
+                    </option>
+                  ))}
+                </select>
+                <Button
+                  onClick={handleExportCSV}
+                  className="bg-[#241C16]/50 hover:bg-[#241C16] border border-white/10 text-white rounded-xl text-xs py-2 px-4 flex items-center gap-2 cursor-pointer w-full md:w-auto"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Exporter CSV
+                </Button>
+              </div>
             </div>
 
-            {/* General Ledger Table */}
             <div className="bg-[#1A1410] border border-white/5 rounded-3xl overflow-hidden">
               <table className="w-full text-left border-collapse text-xs font-sans">
                 <thead>
@@ -419,7 +453,6 @@ export default function ComptaPage() {
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            {/* Taxes breakdown */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-[#1A1410] border border-white/5 rounded-3xl p-6 space-y-4">
                 <div className="flex justify-between items-center border-b border-white/5 pb-3">
@@ -485,7 +518,6 @@ export default function ComptaPage() {
               </div>
             </div>
 
-            {/* Informative legal alert box */}
             <div className="bg-[#241C16] border border-white/5 rounded-3xl p-5 flex items-start gap-4">
               <BookOpen className="w-6 h-6 text-gold-kene shrink-0 mt-0.5" />
               <div className="space-y-1">
@@ -547,7 +579,6 @@ export default function ComptaPage() {
               className="space-y-6"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* ACTIF COLUMN */}
                 <div className="bg-[#1A1410] border border-white/5 rounded-3xl p-6 space-y-4">
                   <h3 className="font-display font-bold text-sm uppercase text-gold-kene tracking-wider border-b border-white/5 pb-2">ACTIF (Emplois)</h3>
                   
@@ -580,7 +611,6 @@ export default function ComptaPage() {
                   </div>
                 </div>
 
-                {/* PASSIF COLUMN */}
                 <div className="bg-[#1A1410] border border-white/5 rounded-3xl p-6 space-y-4">
                   <h3 className="font-display font-bold text-sm uppercase text-gold-kene tracking-wider border-b border-white/5 pb-2">PASSIF & CAPITAUX PROPRES</h3>
                   
@@ -640,7 +670,6 @@ export default function ComptaPage() {
                 </div>
               </div>
 
-              {/* Equivalence check bar */}
               <div className="bg-[#241C16] border border-white/5 rounded-2xl p-4 flex justify-between items-center text-xs font-sans">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
@@ -685,7 +714,6 @@ export default function ComptaPage() {
                 </h3>
 
                 <div className="space-y-4 text-xs font-sans">
-                  {/* revenues group */}
                   <div className="space-y-2">
                     <div className="flex justify-between border-b border-white/5 pb-1 text-gold-kene font-semibold uppercase tracking-wider text-[10px]">
                       <span>I. PRODUITS D'EXPLOITATION (Classe 7)</span>
@@ -705,7 +733,6 @@ export default function ComptaPage() {
                     </div>
                   </div>
 
-                  {/* expenses group */}
                   <div className="space-y-2 mt-4">
                     <div className="flex justify-between border-b border-white/5 pb-1 text-gold-kene font-semibold uppercase tracking-wider text-[10px]">
                       <span>II. CHARGES D'EXPLOITATION (Classe 6)</span>
@@ -725,7 +752,6 @@ export default function ComptaPage() {
                     </div>
                   </div>
 
-                  {/* net result */}
                   <div className="border-t-2 border-white/10 pt-4 flex justify-between items-center text-sm font-bold">
                     <span className="text-gold-kene">RÉSULTAT NET COMPTABLE (Bénéfice)</span>
                     <span className={`font-mono text-base ${netResult >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>

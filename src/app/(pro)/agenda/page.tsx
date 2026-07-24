@@ -1,364 +1,308 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import { motion as m, AnimatePresence } from 'framer-motion'
-import { 
-  Calendar as CalendarIcon, Clock, User, Sparkles, Plus, 
-  ChevronLeft, ChevronRight, Check, AlertCircle, Eye 
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useToast } from '@/hooks/use-toast'
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Calendar as CalendarIcon, Plus, Clock, User, Scissors, Check, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
-interface Appointment {
-  id: string
-  startAt: string
-  endAt: string
-  amount: number
-  status: string
-  notes: string | null
-  client: {
-    firstName: string
-    lastName: string
-    phone: string
-  }
-  service: {
-    name: string
-    category: string
-    price: number
-  }
-  employee: {
-    firstName: string
-    lastName: string
-    position: string
-  }
-}
+const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string; dot: string }> = {
+  pending:   { label: 'En attente',  bg: 'bg-yellow-500/10', text: 'text-yellow-400', dot: 'bg-yellow-400' },
+  confirmed: { label: 'Confirmé',    bg: 'bg-blue-500/10',   text: 'text-blue-400',   dot: 'bg-blue-400' },
+  in_progress: { label: 'En Soin',   bg: 'bg-purple-500/10', text: 'text-purple-400', dot: 'bg-purple-400' },
+  completed: { label: 'Terminé',     bg: 'bg-emerald-500/10',text: 'text-emerald-400',dot: 'bg-emerald-400' },
+  cancelled: { label: 'Annulé',      bg: 'bg-red-500/10',    text: 'text-red-400',    dot: 'bg-red-400' },
+};
 
-export default function AgendaPage() {
-  const { toast } = useToast()
-  const [appointments, setAppointments] = useState<Appointment[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(new Date())
+export default function ProAgendaPage() {
+  const { toast } = useToast();
+  const [appointments, setAppointments] = useState<any[]>([]);
+  const [metadata, setMetadata] = useState<any>({ employees: [], services: [], clients: [] });
+  const [loading, setLoading] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [activeEmployee, setActiveEmployee] = useState<string>('all');
 
-  // Form states
-  const [clientPhone, setClientPhone] = useState('')
-  const [notes, setNotes] = useState('')
-  const [appointmentTime, setAppointmentTime] = useState('10:00')
-  const [submitting, setSubmitting] = useState(false)
+  const [formData, setFormData] = useState({ clientId: '', serviceId: '', employeeId: '', startAt: '', time: '10:00' });
 
-  const fetchAppointments = async () => {
+  const fetchData = async () => {
     try {
-      const res = await fetch('/api/appointments')
-      const json = await res.json()
-      if (json.success) {
-        setAppointments(json.appointments)
-      }
-    } catch (e) {
-      console.error(e)
+      const [apptRes, metaRes] = await Promise.all([fetch('/api/tenant/appointments'), fetch('/api/tenant/agenda/metadata')]);
+      const [apptData, metaData] = await Promise.all([apptRes.json(), metaRes.json()]);
+      if (apptData.success) setAppointments(apptData.appointments);
+      if (metaData.success) setMetadata(metaData.data);
+    } catch {
+      toast({ title: "Erreur", description: "Impossible de charger l'agenda.", variant: "destructive" });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  useEffect(() => {
-    fetchAppointments()
-  }, [])
+  useEffect(() => { fetchData(); }, []);
 
-  const handleAddAppointment = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSubmitting(true)
-
-    // Build ISO Date from selected date and time
-    const [hours, minutes] = appointmentTime.split(':')
-    const startAt = new Date(selectedDate)
-    startAt.setHours(parseInt(hours), parseInt(minutes), 0, 0)
-
+  const handleCreateAppointment = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      const res = await fetch('/api/appointments', {
+      const dateTimeString = `${formData.startAt}T${formData.time}:00`;
+      const res = await fetch('/api/tenant/appointments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          startAt: startAt.toISOString(),
-          notes,
-        }),
-      })
-
-      const data = await res.json()
-
+        body: JSON.stringify({ ...formData, startAt: new Date(dateTimeString).toISOString() })
+      });
+      const data = await res.json();
       if (data.success) {
-        toast({
-          title: "🗓️ Rendez-vous programmé",
-          description: "Le rendez-vous a été enregistré dans le planning de l'institut.",
-        })
-        setShowAddModal(false)
-        setNotes('')
-        fetchAppointments()
-      } else {
-        throw new Error(data.error?.message || 'Erreur lors de la programmation.')
-      }
-    } catch (err: any) {
-      toast({
-        title: "❌ Erreur",
-        description: err.message,
-        variant: "destructive",
-      })
-    } finally {
-      setSubmitting(false)
+        toast({ title: "✅ RDV confirmé", description: "Rendez-vous ajouté à l'agenda." });
+        setIsDialogOpen(false);
+        fetchData();
+      } else throw new Error(data.error);
+    } catch {
+      toast({ title: "Erreur", description: "Impossible de créer le RDV.", variant: "destructive" });
     }
-  }
+  };
 
-  const hoursList = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00']
+  const todayAppts = appointments.filter(a => new Date(a.startAt).toDateString() === new Date().toDateString());
+  const pendingCount = appointments.filter(a => a.status === 'pending').length;
 
-  // Filter appointments for the selected date
-  const dailyAppointments = appointments.filter((app) => {
-    const appDate = new Date(app.startAt)
-    return (
-      appDate.getDate() === selectedDate.getDate() &&
-      appDate.getMonth() === selectedDate.getMonth() &&
-      appDate.getFullYear() === selectedDate.getFullYear()
-    )
-  })
+  const filtered = appointments.filter(a => {
+    if (activeFilter !== 'all' && a.status !== activeFilter) return false;
+    if (activeEmployee !== 'all' && a.employeeId !== activeEmployee) return false;
+    return true;
+  });
 
-  // Format date header
-  const formatDateHeader = (date: Date) => {
-    return date.toLocaleDateString('fr-FR', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    })
-  }
-
-  const changeDate = (days: number) => {
-    const nextDate = new Date(selectedDate)
-    nextDate.setDate(selectedDate.getDate() + days)
-    setSelectedDate(nextDate)
-  }
+  const sortedFiltered = [...filtered].sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
-      {/* Header bar */}
-      <div className="flex justify-between items-center bg-[#1A1410] border border-white/5 p-6 rounded-3xl shadow-lg">
+    <div className="space-y-6 text-white max-w-4xl mx-auto">
+
+      {/* ── HEADER ── */}
+      <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-display text-gold-kene">Agenda Interactif</h1>
-          <p className="text-xs text-white/50 font-sans mt-1">
-            Gérez le planning et attribuez les rendez-vous aux cabines de soins.
-          </p>
-        </div>
-        <Button
-          onClick={() => setShowAddModal(true)}
-          className="bg-gold-kene hover:bg-gold-kene/90 text-[#1A1410] font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 transition cursor-pointer"
-        >
-          <Plus className="w-5 h-5" />
-          Nouveau rendez-vous
-        </Button>
-      </div>
-
-      {/* Calendar navigation & display */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Navigation panel */}
-        <div className="lg:col-span-1 bg-[#1A1410] border border-white/5 p-6 rounded-3xl space-y-6 h-fit">
-          <div className="flex justify-between items-center border-b border-white/5 pb-4">
-            <h3 className="font-display font-semibold text-sm uppercase text-gold-kene tracking-wider">Sélection Date</h3>
-            <div className="flex gap-1">
-              <button 
-                onClick={() => changeDate(-1)} 
-                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition cursor-pointer text-white"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button 
-                onClick={() => changeDate(1)} 
-                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition cursor-pointer text-white"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-8 h-8 rounded-2xl bg-gradient-to-br from-[#C8951E] to-[#8A5C0A] flex items-center justify-center">
+              <CalendarIcon className="w-4 h-4 text-[#0F0A05]" />
             </div>
+            <h1 className="text-2xl font-display font-black text-white tracking-tight">
+              Agenda & <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">Réservations</span>
+            </h1>
           </div>
-          <div className="text-center py-4 bg-[#241C16]/50 rounded-2xl border border-white/5">
-            <CalendarIcon className="w-8 h-8 text-gold-kene mx-auto mb-2" />
-            <span className="text-sm font-semibold capitalize block text-white">{formatDateHeader(selectedDate)}</span>
-          </div>
-
-          {/* Quick list of daily clients */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-semibold uppercase text-white/40 tracking-wider">Rendez-vous du jour</h4>
-            {loading ? (
-              <div className="text-center py-4 text-white/40 text-xs">Chargement...</div>
-            ) : dailyAppointments.length === 0 ? (
-              <div className="text-center py-6 border border-dashed border-white/5 rounded-2xl text-white/30 text-xs">
-                Aucune prestation aujourd'hui.
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {dailyAppointments.map((app) => (
-                  <div key={app.id} className="bg-[#241C16]/30 border border-white/5 rounded-xl p-3 flex justify-between items-center text-xs">
-                    <div>
-                      <span className="font-bold block text-white">{app.client.firstName} {app.client.lastName}</span>
-                      <span className="text-[10px] text-white/50">{app.service.name}</span>
-                    </div>
-                    <span className="font-mono text-gold-kene">{new Date(app.startAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <p className="text-white/40 text-xs ml-10">{appointments.length} RDV total · {todayAppts.length} aujourd'hui · {pendingCount} en attente</p>
         </div>
 
-        {/* Daily Schedule Grid */}
-        <div className="lg:col-span-2 bg-[#1A1410] border border-white/5 p-6 rounded-3xl space-y-4">
-          <div className="border-b border-white/5 pb-4">
-            <h2 className="font-display font-bold text-lg text-white">Grille des Soins</h2>
-            <span className="text-xs text-white/40 font-sans">Aperçu chronologique de la journée</span>
-          </div>
-
-          <div className="space-y-1 divide-y divide-white/5 max-h-[60vh] overflow-y-auto pr-2 scrollbar-none">
-            {hoursList.map((hour) => {
-              // Find matching appointment for this hour block
-              const matchingApp = dailyAppointments.find((app) => {
-                const appHour = new Date(app.startAt).getHours()
-                return `${appHour < 10 ? '0' : ''}${appHour}:00` === hour
-              })
-
-              return (
-                <div key={hour} className="flex gap-4 py-4 items-start relative group">
-                  {/* Time column */}
-                  <div className="w-12 font-mono text-xs text-white/40 pt-1 shrink-0">
-                    {hour}
-                  </div>
-
-                  {/* Slot Column */}
-                  <div className="flex-1 min-h-[4rem]">
-                    {matchingApp ? (
-                      <m.div
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="bg-gradient-to-r from-[#241C16] to-[#1A1410] border border-gold-kene/20 border-l-4 border-l-gold-kene rounded-2xl p-4 flex justify-between items-start shadow-md hover:border-gold-kene/40 transition"
-                      >
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold text-white">{matchingApp.client.firstName} {matchingApp.client.lastName}</span>
-                            <span className="text-[10px] bg-gold-kene/10 text-gold-kene px-2 py-0.5 rounded-full font-medium">
-                              {matchingApp.service.category}
-                            </span>
-                          </div>
-                          <p className="text-xs font-semibold text-white/70">{matchingApp.service.name}</p>
-                          {matchingApp.notes && (
-                            <p className="text-[10px] text-white/40 italic font-sans">{matchingApp.notes}</p>
-                          )}
-                        </div>
-
-                        <div className="text-right space-y-1 shrink-0">
-                          <span className="font-mono text-xs font-bold text-white block">{matchingApp.amount.toLocaleString()} FCFA</span>
-                          <span className="text-[10px] text-white/40 block flex items-center gap-1 justify-end">
-                            <Clock className="w-3 h-3 text-gold-kene" /> {matchingApp.employee.firstName}
-                          </span>
-                        </div>
-                      </m.div>
-                    ) : (
-                      /* Empty slot trigger */
-                      <button
-                        onClick={() => {
-                          setAppointmentTime(hour)
-                          setShowAddModal(true)
-                        }}
-                        className="w-full h-12 border border-dashed border-white/5 hover:border-gold-kene/20 hover:bg-white/[0.01] rounded-2xl transition flex items-center justify-center text-white/20 hover:text-gold-kene/60 text-xs gap-1.5 cursor-pointer"
-                      >
-                        <Plus className="w-4 h-4" />
-                        Libre - Cliquer pour planifier
-                      </button>
-                    )}
-                  </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <motion.button
+              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              className="flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm text-[#0F0A05] cursor-pointer shrink-0"
+              style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)', boxShadow: '0 4px 20px rgba(200,149,30,0.3)' }}
+            >
+              <Plus className="w-4 h-4" /> Nouveau Rendez-vous
+            </motion.button>
+          </DialogTrigger>
+          <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/20 text-white rounded-3xl" style={{ boxShadow: '0 32px 64px rgba(0,0,0,0.7)' }}>
+            <div className="h-0.5 bg-gradient-to-r from-transparent via-[#C8951E] to-transparent -mt-[1px] mx-6 rounded-full" />
+            <DialogHeader className="pt-2">
+              <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
+                <span className="text-2xl">📅</span> Nouveau Rendez-vous
+              </DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleCreateAppointment} className="space-y-4 mt-2">
+              <div className="space-y-1.5">
+                <Label className="text-white/50 text-xs">Cliente</Label>
+                <Select value={formData.clientId} onValueChange={(v) => setFormData({ ...formData, clientId: v })} required>
+                  <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-xl"><SelectValue placeholder="Choisir une cliente..." /></SelectTrigger>
+                  <SelectContent className="bg-[#1A1410] border-[#362A21] text-white max-h-52">
+                    {metadata.clients.map((c: any) => <SelectItem key={c.id} value={c.id}>{c.firstName} {c.lastName}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-white/50 text-xs">Prestation</Label>
+                <Select value={formData.serviceId} onValueChange={(v) => setFormData({ ...formData, serviceId: v })} required>
+                  <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-xl"><SelectValue placeholder="Choisir un service..." /></SelectTrigger>
+                  <SelectContent className="bg-[#1A1410] border-[#362A21] text-white max-h-52">
+                    {metadata.services.map((s: any) => <SelectItem key={s.id} value={s.id}>{s.name} · {s.price?.toLocaleString()} FCFA</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-white/50 text-xs">Praticienne</Label>
+                <Select value={formData.employeeId} onValueChange={(v) => setFormData({ ...formData, employeeId: v })} required>
+                  <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-xl"><SelectValue placeholder="Choisir une praticienne..." /></SelectTrigger>
+                  <SelectContent className="bg-[#1A1410] border-[#362A21] text-white">
+                    {metadata.employees.map((e: any) => <SelectItem key={e.id} value={e.id}>{e.firstName} {e.lastName}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-white/50 text-xs">Date</Label>
+                  <Input type="date" required className="bg-white/5 border-white/10 text-white rounded-xl h-11 focus:border-[#C8951E]" value={formData.startAt} onChange={(e) => setFormData({ ...formData, startAt: e.target.value })} />
                 </div>
-              )
-            })}
-          </div>
-        </div>
+                <div className="space-y-1.5">
+                  <Label className="text-white/50 text-xs">Heure</Label>
+                  <Input type="time" required className="bg-white/5 border-white/10 text-white rounded-xl h-11 focus:border-[#C8951E]" value={formData.time} onChange={(e) => setFormData({ ...formData, time: e.target.value })} />
+                </div>
+              </div>
+              <DialogFooter className="mt-4 flex gap-2">
+                <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)} className="text-white/40 hover:text-white rounded-xl">Annuler</Button>
+                <motion.button whileTap={{ scale: 0.97 }} type="submit" className="flex-1 h-11 rounded-xl font-bold text-sm text-[#0F0A05] cursor-pointer" style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)' }}>
+                  ✅ Confirmer le RDV
+                </motion.button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </motion.div>
+
+      {/* ── STATUS FILTER PILLS & TABS ── */}
+      <div className="space-y-4">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex gap-2 flex-wrap">
+          {[
+            { key: 'all', label: 'Tous', count: appointments.length },
+            { key: 'pending', label: 'En attente', count: appointments.filter(a => a.status === 'pending').length },
+            { key: 'confirmed', label: 'Confirmés', count: appointments.filter(a => a.status === 'confirmed').length },
+            { key: 'in_progress', label: 'En Soin', count: appointments.filter(a => a.status === 'in_progress').length },
+            { key: 'completed', label: 'Terminés', count: appointments.filter(a => a.status === 'completed').length },
+            { key: 'cancelled', label: 'Annulés', count: appointments.filter(a => a.status === 'cancelled').length },
+          ].map(f => (
+            <button
+              key={f.key}
+              onClick={() => setActiveFilter(f.key)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
+                activeFilter === f.key
+                  ? 'bg-[#C8951E] text-[#0F0A05]'
+                  : 'bg-white/5 text-white/50 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              {f.label}
+              <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-mono ${activeFilter === f.key ? 'bg-[#0F0A05]/20' : 'bg-white/10'}`}>{f.count}</span>
+            </button>
+          ))}
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12 }} className="flex gap-4 overflow-x-auto pb-2 border-b border-white/5 no-scrollbar">
+          <button
+            onClick={() => setActiveEmployee('all')}
+            className={`text-[11px] font-bold pb-2 border-b-2 whitespace-nowrap transition-colors ${
+              activeEmployee === 'all' ? 'border-[#C8951E] text-[#C8951E]' : 'border-transparent text-white/40 hover:text-white'
+            }`}
+          >
+            Toutes les praticiennes
+          </button>
+          {metadata.employees.map((e: any) => (
+            <button
+              key={e.id}
+              onClick={() => setActiveEmployee(e.id)}
+              className={`text-[11px] font-bold pb-2 border-b-2 whitespace-nowrap transition-colors ${
+                activeEmployee === e.id ? 'border-[#C8951E] text-[#C8951E]' : 'border-transparent text-white/40 hover:text-white'
+              }`}
+            >
+              {e.firstName} {e.lastName}
+            </button>
+          ))}
+        </motion.div>
       </div>
 
-      {/* Appointment Creator Modal */}
-      <AnimatePresence>
-        {showAddModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-            <m.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-[#1A1410] border border-white/10 rounded-3xl p-6 w-full max-w-md shadow-2xl relative text-white"
-            >
-              <div className="mb-6">
-                <h3 className="font-display font-bold text-lg text-gold-kene">Planifier un Soin</h3>
-                <p className="text-xs text-white/40">Saisissez les détails pour réserver le créneau.</p>
-              </div>
+      {/* ── APPOINTMENTS LIST ── */}
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+        <div className="rounded-3xl border border-white/5 bg-[#1A1410] overflow-hidden">
+          {loading ? (
+            <div className="flex justify-center py-16">
+              <div className="animate-spin h-6 w-6 border-2 border-[#C8951E] border-t-transparent rounded-full" />
+            </div>
+          ) : sortedFiltered.length === 0 ? (
+            <div className="text-center py-16 text-white/20 text-xs">
+              <div className="text-4xl mb-3">📅</div>
+              Aucun rendez-vous dans cette catégorie.
+            </div>
+          ) : (
+            <div className="divide-y divide-white/5 relative">
+              {sortedFiltered.map((appt, i) => {
+                const s = STATUS_CONFIG[appt.status] || STATUS_CONFIG.pending;
+                const apptDate = new Date(appt.startAt);
+                const isToday = apptDate.toDateString() === new Date().toDateString();
+                
+                const now = new Date();
+                const isCurrent = isToday && now >= apptDate && now <= new Date(appt.endAt || apptDate.getTime() + 60 * 60 * 1000);
 
-              <form onSubmit={handleAddAppointment} className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-white/60">Numéro de téléphone du client (facultatif)</label>
-                  <Input
-                    type="tel"
-                    placeholder="+225 07 12 34 56"
-                    value={clientPhone}
-                    onChange={(e) => setClientPhone(e.target.value)}
-                    className="bg-[#241C16] border-white/10 text-white rounded-xl"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-white/60">Date sélectionnée</label>
-                    <Input
-                      type="text"
-                      value={selectedDate.toLocaleDateString('fr-FR')}
-                      disabled
-                      className="bg-[#241C16]/50 border-white/10 text-white/60 rounded-xl"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-white/60">Heure de début</label>
-                    <select
-                      value={appointmentTime}
-                      onChange={(e) => setAppointmentTime(e.target.value)}
-                      className="w-full bg-[#241C16] border border-white/10 rounded-xl text-white text-sm px-3 py-2 outline-none focus:border-gold-kene transition"
-                    >
-                      {hoursList.map((h) => (
-                        <option key={h} value={h}>{h}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-white/60">Notes / Précisions</label>
-                  <textarea
-                    placeholder="Détails du soin ou demandes spéciales..."
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    className="w-full h-24 bg-[#241C16] border border-white/10 rounded-xl text-white text-sm p-3 outline-none focus:border-gold-kene transition font-sans resize-none"
-                  />
-                </div>
-
-                <div className="flex gap-3 pt-4 border-t border-white/5">
-                  <Button
-                    type="button"
-                    onClick={() => setShowAddModal(false)}
-                    className="flex-1 bg-transparent hover:bg-white/5 border border-white/10 text-white py-2.5 rounded-xl cursor-pointer"
+                return (
+                  <motion.div
+                    key={appt.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    className={`relative flex items-center gap-4 px-5 py-4 transition-colors ${isCurrent ? 'bg-[#C8951E]/5' : 'hover:bg-white/[0.02]'}`}
                   >
-                    Annuler
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={submitting}
-                    className="flex-1 bg-gold-kene hover:bg-gold-kene/90 text-[#1A1410] font-semibold py-2.5 rounded-xl cursor-pointer"
-                  >
-                    {submitting ? 'Enregistrement...' : 'Confirmer'}
-                  </Button>
-                </div>
-              </form>
-            </m.div>
-          </div>
-        )}
-      </AnimatePresence>
+                    {/* Current Time Line Indicator */}
+                    {isCurrent && (
+                      <div className="absolute left-0 top-1/2 w-full h-[1px] bg-gradient-to-r from-[#C8951E] to-transparent pointer-events-none z-10 flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#C8951E] shadow-[0_0_8px_#C8951E] animate-pulse ml-0.5" />
+                        <span className="text-[#C8951E] text-[8px] font-bold font-mono ml-1 mt-3">MAINTENANT</span>
+                      </div>
+                    )}
+
+                    {/* Date block */}
+                    <div className={`flex flex-col items-center justify-center w-14 h-16 rounded-2xl shrink-0 border ${isToday ? 'border-[#C8951E]/40 bg-[#C8951E]/10' : 'border-white/10 bg-white/5'}`}>
+                      <span className={`text-[9px] uppercase font-bold tracking-wider ${isToday ? 'text-[#C8951E]' : 'text-white/40'}`}>
+                        {format(apptDate, 'MMM', { locale: fr })}
+                      </span>
+                      <span className={`text-xl font-display font-black ${isToday ? 'text-[#C8951E]' : 'text-white'}`}>
+                        {format(apptDate, 'dd')}
+                      </span>
+                      {isToday && <span className="text-[8px] text-[#C8951E] font-bold">AUJOURD'HUI</span>}
+                    </div>
+
+                    {/* Details */}
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-bold text-white font-mono">
+                          {format(apptDate, 'HH:mm')} – {appt.endAt ? format(new Date(appt.endAt), 'HH:mm') : '—'}
+                        </span>
+                        <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full ${s.bg} ${s.text}`}>
+                          <span className={`w-1 h-1 rounded-full ${s.dot}`} />
+                          {s.label}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[11px] text-white/70">
+                        <Scissors className="w-3 h-3 text-[#C8951E]" />
+                        <span className="font-semibold">{appt.service?.name}</span>
+                        {appt.service?.durationMin && <span className="text-white/30">({appt.service.durationMin} min)</span>}
+                      </div>
+                      <div className="flex items-center gap-4 text-[10px] text-white/40">
+                        <span className="flex items-center gap-1"><User className="w-3 h-3" />{appt.client?.firstName} {appt.client?.lastName}</span>
+                        {appt.employee && <span className="flex items-center gap-1">✂️ {appt.employee.firstName}</span>}
+                      </div>
+                    </div>
+
+                    {/* Amount + actions */}
+                    <div className="flex flex-col items-end gap-2 shrink-0">
+                      <span className="font-display font-black text-white text-sm">{appt.amount?.toLocaleString('fr-FR')} <span className="text-[9px] text-white/30 font-mono">FCFA</span></span>
+                      {appt.status === 'pending' && (
+                        <div className="flex gap-1.5">
+                          <button className="flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-xl hover:bg-emerald-500/20 transition cursor-pointer">
+                            <Check className="w-3 h-3" /> OK
+                          </button>
+                          <button className="flex items-center gap-1 text-[10px] font-bold text-red-400 bg-red-500/10 px-2.5 py-1 rounded-xl hover:bg-red-500/20 transition cursor-pointer">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </motion.div>
     </div>
-  )
+  );
 }

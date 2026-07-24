@@ -363,6 +363,7 @@ model Client {
   treatments         String          // Stringified JSON list of previous treatments
   consentHealthData  Boolean         @default(false)
   consentAt          DateTime?
+  avatar             String?
   notes              String?
   rfmScore           String?         // Stringified JSON containing Recency, Frequency, Monetary
   createdAt          DateTime        @default(now())

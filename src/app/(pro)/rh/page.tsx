@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { motion as m, AnimatePresence } from 'framer-motion'
 import { 
   Users, DollarSign, ShieldCheck, Printer, Calendar, 
-  Download, Eye, CheckCircle2, ChevronRight 
+  Download, Eye, CheckCircle2, ChevronRight, FileText, Gift 
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
@@ -37,9 +37,9 @@ export default function RhPage() {
   const { toast } = useToast()
   const [payrolls, setPayrolls] = useState<PayrollDetail[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedMonth, setSelectedMonth] = useState('7') // July by default
+  const [selectedMonth, setSelectedMonth] = useState('7')
   const [selectedYear, setSelectedYear] = useState('2026')
-  const [country, setCountry] = useState('CI') // CI or SN
+  const [country, setCountry] = useState('CI')
   const [showSlipModal, setShowSlipModal] = useState<PayrollDetail | null>(null)
   const [saving, setSaving] = useState(false)
 
@@ -87,8 +87,8 @@ export default function RhPage() {
       const data = await res.json()
       if (data.success) {
         toast({
-          title: "✅ Bulletins de paie clôturés",
-          description: `Les bulletins de salaire pour ${getMonthLabel(selectedMonth)} ${selectedYear} ont été enregistrés avec succès.`,
+          title: "✅ Bulletins clôturés",
+          description: `Paie validée avec succès.`,
         })
         fetchPayroll()
       } else {
@@ -114,292 +114,247 @@ export default function RhPage() {
     return months[mVal] || ''
   }
 
+  const totalMasseSalariale = payrolls.reduce((sum, p) => sum + p.grossSalary, 0)
+  const totalCnpsEmployer = payrolls.reduce((sum, p) => sum + p.cnpsEmployer, 0)
+  const totalIgr = payrolls.reduce((sum, p) => sum + p.igrTax, 0)
+
   return (
     <div className="space-y-6 max-w-5xl mx-auto text-white">
       {/* Header bar */}
-      <div className="bg-[#1A1410] border border-white/5 p-6 rounded-3xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <m.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold font-display text-gold-kene">Ressources Humaines & Paie</h1>
-            <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full flex items-center gap-1 font-sans">
-              <ShieldCheck className="w-3 h-3" /> 
-              {country === 'SN' ? 'Conforme IPRES & IPM (Sénégal)' : 'Conforme CNPS & IGR (Côte d\'Ivoire)'}
-            </span>
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-8 h-8 rounded-2xl bg-gradient-to-br from-[#8A1C14] to-[#C8951E] flex items-center justify-center">
+              <DollarSign className="w-4 h-4 text-white" />
+            </div>
+            <h1 className="text-2xl font-display font-black text-white tracking-tight">
+              Paie <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">& RH Premium</span>
+            </h1>
           </div>
-          <p className="text-xs text-white/50 font-sans mt-1">
-            Gérez les salaires, cotisations patronales/salariales et impôts sur salaires ({country === 'SN' ? 'Sénégal' : 'Côte d\'Ivoire'}).
-          </p>
+          <p className="text-white/40 text-xs ml-10">Conforme {country === 'SN' ? 'Sénégal (IPRES/IPM)' : 'Côte d\'Ivoire (CNPS/IGR)'}</p>
         </div>
 
-        <div className="flex gap-2">
-          {payrolls.some((p) => p.isSaved) && (
-            <div className="flex gap-2">
-              <Button
-                onClick={() => window.open(`/api/rh/declarations?month=${selectedMonth}&year=${selectedYear}&country=${country}`, '_blank')}
-                className="bg-transparent hover:bg-white/5 border border-white/10 text-white rounded-xl text-xs py-2.5 px-4 flex items-center gap-1.5 cursor-pointer"
-              >
-                <Download className="w-3.5 h-3.5 text-gold-kene" />
-                Déclaration {country === 'SN' ? 'IPRES/IPM' : 'e-CNPS (CSV)'}
-              </Button>
-              {country === 'CI' && (
-                <Button
-                  onClick={() => window.open(`/api/rh/declarations?month=${selectedMonth}&year=${selectedYear}&country=CI&format=xml`, '_blank')}
-                  className="bg-transparent hover:bg-white/5 border border-white/10 text-white rounded-xl text-xs py-2.5 px-4 flex items-center gap-1.5 cursor-pointer"
-                >
-                  <Download className="w-3.5 h-3.5 text-orange-400" />
-                  e-CNPS (XML)
-                </Button>
-              )}
-            </div>
-          )}
+        <div className="flex gap-2 flex-wrap">
+          <m.button
+            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+            onClick={() => window.open(`/api/rh/declarations?month=${selectedMonth}&year=${selectedYear}&country=${country}`, '_blank')}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/20 cursor-pointer"
+          >
+            <Download className="w-3.5 h-3.5" /> CSV Déclaration
+          </m.button>
 
           {payrolls.some((p) => !p.isSaved) && payrolls.length > 0 && (
-            <Button
+            <m.button
+              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               onClick={handleSavePayslips}
               disabled={saving}
-              className="bg-gold-kene hover:bg-gold-kene/90 text-[#1A1410] font-semibold rounded-xl text-xs py-2.5 px-4 flex items-center gap-1.5 cursor-pointer shadow-lg shadow-gold-kene/10"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-sm text-[#0F0A05] cursor-pointer"
+              style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)', boxShadow: '0 4px 20px rgba(200,149,30,0.3)' }}
             >
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              {saving ? 'Clôture...' : 'Clôturer la Période'}
-            </Button>
+              <CheckCircle2 className="w-4 h-4" /> {saving ? 'Clôture...' : 'Clôturer Période'}
+            </m.button>
           )}
         </div>
-      </div>
+      </m.div>
 
-      {/* Period Selector Panel */}
-      <div className="bg-[#1A1410] border border-white/5 p-5 rounded-3xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-2 text-gold-kene">
-          <Calendar className="w-5 h-5" />
-          <span className="text-xs font-bold uppercase tracking-wider font-display">Période & Pays de Calcul</span>
+      {/* Stats Bar */}
+      <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-[#1A1410] border border-white/5 rounded-3xl p-5 relative overflow-hidden">
+          <div className="absolute -right-6 -top-6 w-20 h-20 bg-[#C8951E]/10 rounded-full blur-2xl" />
+          <h4 className="text-xs text-white/40 font-bold uppercase tracking-wider mb-1">Masse Salariale</h4>
+          <div className="text-2xl font-display font-black text-[#C8951E]">{totalMasseSalariale.toLocaleString()} <span className="text-sm">FCFA</span></div>
         </div>
-
-        <div className="flex gap-3 w-full md:w-auto">
-          {/* Country Switcher */}
-          <select
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className="bg-[#241C16] border border-white/10 text-white text-xs rounded-xl px-4 py-2 outline-none focus:border-gold-kene transition flex-1 md:flex-none cursor-pointer"
-          >
-            <option value="CI">Côte d'Ivoire (XOF)</option>
-            <option value="SN">Sénégal (XOF)</option>
-          </select>
-
-          <select
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            className="bg-[#241C16] border border-white/10 text-white text-xs rounded-xl px-4 py-2 outline-none focus:border-gold-kene transition w-32 cursor-pointer"
-          >
-            {Array.from({ length: 12 }, (_, i) => String(i + 1)).map((mVal) => (
-              <option key={mVal} value={mVal}>{getMonthLabel(mVal)}</option>
-            ))}
-          </select>
-          
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
-            className="bg-[#241C16] border border-white/10 text-white text-xs rounded-xl px-4 py-2 outline-none focus:border-gold-kene transition w-24 cursor-pointer"
-          >
-            <option value="2026">2026</option>
-            <option value="2027">2027</option>
-          </select>
+        <div className="bg-[#1A1410] border border-white/5 rounded-3xl p-5 relative overflow-hidden">
+          <div className="absolute -right-6 -top-6 w-20 h-20 bg-blue-500/10 rounded-full blur-2xl" />
+          <h4 className="text-xs text-white/40 font-bold uppercase tracking-wider mb-1">CNPS Patronal</h4>
+          <div className="text-2xl font-display font-black text-blue-400">{totalCnpsEmployer.toLocaleString()} <span className="text-sm">FCFA</span></div>
         </div>
-      </div>
-
-      {/* Employee payroll lines */}
-      <div className="bg-[#1A1410] border border-white/5 rounded-3xl overflow-hidden shadow-lg">
-        <div className="p-5 border-b border-white/5">
-          <h3 className="font-display font-semibold text-sm uppercase text-gold-kene tracking-wider">État nominatif des salaires</h3>
+        <div className="bg-[#1A1410] border border-white/5 rounded-3xl p-5 relative overflow-hidden">
+          <div className="absolute -right-6 -top-6 w-20 h-20 bg-red-500/10 rounded-full blur-2xl" />
+          <h4 className="text-xs text-white/40 font-bold uppercase tracking-wider mb-1">Total IGR (Impôts)</h4>
+          <div className="text-2xl font-display font-black text-red-400">{totalIgr.toLocaleString()} <span className="text-sm">FCFA</span></div>
         </div>
+      </m.div>
 
+      {/* Period Selector Tabs */}
+      <m.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="flex flex-col md:flex-row gap-3">
+        <div className="flex bg-[#1A1410] border border-white/5 p-1 rounded-2xl w-full md:w-auto">
+          {['CI', 'SN'].map(c => (
+            <button
+              key={c}
+              onClick={() => setCountry(c)}
+              className={`flex-1 md:w-24 py-2 text-xs font-bold rounded-xl transition-all ${country === c ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/80'}`}
+            >
+              {c === 'CI' ? '🇨🇮 Côte d\'Ivoire' : '🇸🇳 Sénégal'}
+            </button>
+          ))}
+        </div>
+        
+        <div className="flex-1 flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+          {Array.from({ length: 12 }, (_, i) => String(i + 1)).map(mVal => (
+            <button
+              key={mVal}
+              onClick={() => setSelectedMonth(mVal)}
+              className={`px-4 py-2 text-xs font-bold rounded-2xl transition-all whitespace-nowrap border ${selectedMonth === mVal ? 'bg-[#C8951E]/20 border-[#C8951E]/50 text-[#F3E5AB]' : 'bg-[#1A1410] border-white/5 text-white/40 hover:text-white'}`}
+            >
+              {getMonthLabel(mVal)}
+            </button>
+          ))}
+        </div>
+      </m.div>
+
+      {/* Payslips Grid */}
+      <m.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
         {loading ? (
-          <div className="text-center py-16 text-white/40 text-xs">Calcul des fiches en cours...</div>
+          <div className="flex justify-center py-16"><div className="animate-spin h-6 w-6 border-2 border-[#C8951E] border-t-transparent rounded-full" /></div>
         ) : payrolls.length === 0 ? (
-          <div className="text-center py-16 text-white/30 text-xs italic">
-            Aucun salarié enregistré dans votre institut.
-          </div>
+          <div className="text-center py-16 text-white/20 text-xs"><div className="text-4xl mb-3">📄</div>Aucun salarié.</div>
         ) : (
-          <div className="divide-y divide-white/5">
-            {payrolls.map((pr) => (
-              <div key={pr.employee.id} className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-white/[0.01] transition">
-                <div className="space-y-1">
-                  <span className="text-xs text-white/40 font-semibold uppercase">{pr.employee.position}</span>
-                  <h4 className="font-bold text-sm text-white">{pr.employee.firstName} {pr.employee.lastName}</h4>
-                  <span className="text-[10px] text-white/30 font-mono block">Embauche : {new Date(pr.employee.hireDate).toLocaleDateString()}</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {payrolls.map((pr, i) => (
+              <m.div
+                key={pr.employee.id}
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+                className="group bg-[#1A1410] border border-white/5 rounded-3xl p-5 hover:border-[#C8951E]/30 transition-all cursor-pointer relative overflow-hidden"
+              >
+                {pr.isSaved && <div className="absolute top-0 right-0 w-16 h-16 bg-emerald-500/10 rounded-bl-full" />}
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center text-xl">
+                      👩🏽‍💼
+                    </div>
+                    <div>
+                      <h4 className="font-display font-bold text-base text-white">{pr.employee.firstName} {pr.employee.lastName}</h4>
+                      <p className="text-[10px] text-white/40 uppercase tracking-wider">{pr.employee.position}</p>
+                    </div>
+                  </div>
+                  {pr.isSaved ? (
+                    <span className="text-[10px] font-bold px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded-lg">Validé</span>
+                  ) : (
+                    <span className="text-[10px] font-bold px-2 py-1 bg-orange-500/10 text-orange-400 rounded-lg">Brouillon</span>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-xs w-full md:w-auto">
+                <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <span className="text-[10px] text-white/40 block">Salaire Base</span>
-                    <span className="font-mono font-bold text-white block mt-0.5">{pr.employee.baseSalary.toLocaleString()} F</span>
+                    <span className="text-[10px] text-white/40">Brut</span>
+                    <div className="font-mono text-sm text-white">{pr.grossSalary.toLocaleString()} F</div>
                   </div>
                   <div>
-                    <span className="text-[10px] text-white/40 block">{country === 'SN' ? 'IPRES/IPM (Sal.)' : 'CNPS (Sal.)'}</span>
-                    <span className="font-mono text-red-400 block mt-0.5">-{pr.cnpsEmployee.toLocaleString()} F</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-white/40 block">{country === 'SN' ? 'Impôt IR' : 'Impôt IGR'}</span>
-                    <span className="font-mono text-red-400 block mt-0.5">-{pr.igrTax.toLocaleString()} F</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-white/40 block">Net à Payer</span>
-                    <span className="font-mono font-bold text-emerald-400 block mt-0.5">{pr.netPay.toLocaleString()} FCFA</span>
+                    <span className="text-[10px] text-white/40">Net à payer</span>
+                    <div className="font-mono text-lg font-bold text-emerald-400">{pr.netPay.toLocaleString()} F</div>
                   </div>
                 </div>
 
-                <div className="flex gap-2 w-full md:w-auto justify-end border-t md:border-t-0 border-white/5 pt-3 md:pt-0 shrink-0">
-                  <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-lg flex items-center ${
-                    pr.isSaved ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
-                  }`}>
-                    {pr.isSaved ? 'Clôturé' : 'Brouillon'}
-                  </span>
-                  
-                  <Button
+                <div className="flex gap-2 border-t border-white/5 pt-4">
+                  <span className="text-[9px] px-2 py-1 bg-white/5 rounded text-white/60">CNPS: -{pr.cnpsEmployee.toLocaleString()}</span>
+                  {pr.igrTax > 0 && <span className="text-[9px] px-2 py-1 bg-red-500/10 text-red-400 rounded">IGR: -{pr.igrTax.toLocaleString()}</span>}
+                  <div className="flex-1" />
+                  <m.button 
+                    whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                     onClick={() => setShowSlipModal(pr)}
-                    className="bg-[#241C16]/50 hover:bg-[#241C16]/80 border border-white/10 text-white rounded-xl text-xs py-1 px-3 flex items-center gap-1 cursor-pointer"
+                    className="text-[10px] font-bold px-3 py-1.5 bg-[#C8951E]/10 text-[#F3E5AB] rounded-xl hover:bg-[#C8951E]/20 transition"
                   >
-                    <Eye className="w-3.5 h-3.5 text-gold-kene" />
-                    Bulletin
-                  </Button>
+                    Voir Bulletin
+                  </m.button>
                 </div>
-              </div>
+              </m.div>
             ))}
           </div>
         )}
-      </div>
+      </m.div>
 
-      {/* Payslip preview print modal */}
+      {/* Payslip Modal */}
       <AnimatePresence>
         {showSlipModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
             <m.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white text-black p-8 rounded-3xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl relative border-t-8 border-gold-kene"
+              className="bg-white text-black p-8 rounded-3xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl relative"
             >
-              {/* Header Slip info */}
-              <div className="flex justify-between items-start border-b border-gray-200 pb-4">
-                <div className="space-y-0.5">
-                  <h3 className="font-display font-bold text-base uppercase tracking-wide">KÈNÈ BEAUTÉ SAS</h3>
-                  <span className="text-[10px] text-gray-500 block">Abidjan, Cocody Mermoz</span>
-                  <span className="text-[10px] text-gray-500 block">
-                    {country === 'SN' ? 'Agrément IPM/IPRES N° 458-92831' : 'Agrément CNPS N° 349-10293'}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <h4 className="font-bold text-sm tracking-wider uppercase">BULLETIN DE PAIE</h4>
-                  <span className="text-[10px] text-gray-500 font-mono block">Période : {getMonthLabel(selectedMonth)} {selectedYear}</span>
-                </div>
-              </div>
-
-              {/* Employee & salary details */}
-              <div className="grid grid-cols-2 gap-4 py-4 text-[11px] border-b border-gray-100">
-                <div className="space-y-1">
-                  <span className="text-[9px] text-gray-400 uppercase font-semibold block">SALARIÉ</span>
-                  <span className="font-bold block text-gray-800">{showSlipModal.employee.firstName} {showSlipModal.employee.lastName}</span>
-                  <span className="text-gray-500 block">Poste : {showSlipModal.employee.position}</span>
-                  <span className="text-gray-500 block">Tél : {showSlipModal.employee.phone}</span>
-                </div>
-                <div className="space-y-1 text-right">
-                  <span className="text-[9px] text-gray-400 uppercase font-semibold block">CONTRAT</span>
-                  <span className="font-bold block text-gray-800">CDI (Temps plein)</span>
-                  <span className="text-gray-500 block font-mono">Embauche : {new Date(showSlipModal.employee.hireDate).toLocaleDateString()}</span>
-                </div>
-              </div>
-
-              {/* Payslip Lines Table */}
-              <table className="w-full text-left border-collapse text-[11px] font-sans mt-4">
-                <thead>
-                  <tr className="bg-gray-50 text-gray-400 uppercase text-[9px] tracking-wider border-b border-gray-200">
-                    <th className="py-2.5 px-2">Rubrique</th>
-                    <th className="py-2.5 px-2 text-right">Base / Gain</th>
-                    <th className="py-2.5 px-2 text-right">Part Salariale</th>
-                    <th className="py-2.5 px-2 text-right">Part Patronale</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 text-gray-700">
-                  {/* Base salary */}
-                  <tr>
-                    <td className="py-2.5 px-2 font-bold text-gray-900">Salaire de base</td>
-                    <td className="py-2.5 px-2 text-right font-mono">{showSlipModal.employee.baseSalary.toLocaleString()}</td>
-                    <td className="py-2.5 px-2 text-right font-mono">-</td>
-                    <td className="py-2.5 px-2 text-right font-mono">-</td>
-                  </tr>
-                  
-                  {/* Bonuses */}
-                  {showSlipModal.bonuses.map((b, i) => (
-                    <tr key={i}>
-                      <td className="py-2.5 px-2 text-gray-600">{b.name}</td>
-                      <td className="py-2.5 px-2 text-right font-mono text-emerald-600">+{b.amount.toLocaleString()}</td>
-                      <td className="py-2.5 px-2 text-right font-mono">-</td>
-                      <td className="py-2.5 px-2 text-right font-mono">-</td>
-                    </tr>
-                  ))}
-
-                  {/* CNPS deductions */}
-                  <tr>
-                    <td className="py-2.5 px-2 text-gray-600">
-                      {country === 'SN' ? 'Charges Sociales (IPRES Retraite & IPM)' : 'Cotisation Sociale CNPS (5.5% / 10.9%)'}
-                    </td>
-                    <td className="py-2.5 px-2 text-right font-mono">-</td>
-                    <td className="py-2.5 px-2 text-right font-mono text-red-500">-{showSlipModal.cnpsEmployee.toLocaleString()}</td>
-                    <td className="py-2.5 px-2 text-right font-mono text-gray-500">+{showSlipModal.cnpsEmployer.toLocaleString()}</td>
-                  </tr>
-
-                  {/* IGR taxes */}
-                  {showSlipModal.igrTax > 0 && (
-                    <tr>
-                      <td className="py-2.5 px-2 text-gray-600">
-                        {country === 'SN' ? 'Impôt sur le Revenu (IR Sénégal)' : 'Impôt Général sur le Revenu (IGR)'}
-                      </td>
-                      <td className="py-2.5 px-2 text-right font-mono">-</td>
-                      <td className="py-2.5 px-2 text-right font-mono text-red-500">-{showSlipModal.igrTax.toLocaleString()}</td>
-                      <td className="py-2.5 px-2 text-right font-mono">-</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-
-              {/* Total boxes */}
-              <div className="border-t border-gray-200 mt-6 pt-4 grid grid-cols-2 gap-4 text-xs font-sans">
-                <div className="space-y-1.5 text-gray-500">
-                  <div className="flex justify-between">
-                    <span>Brut Total :</span>
-                    <span className="font-mono text-gray-800 font-bold">{showSlipModal.grossSalary.toLocaleString()} F</span>
+              <div className="print-area">
+                <div className="flex justify-between items-start border-b-2 border-black pb-4 mb-6">
+                  <div>
+                    <h3 className="font-display font-black text-xl uppercase">KÈNÈ BEAUTÉ</h3>
+                    <p className="text-xs text-gray-600">Abidjan, Cocody Mermoz</p>
+                    <p className="text-xs text-gray-600 font-mono">N° Employeur: 458-92831</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Cotisations patronales :</span>
-                    <span className="font-mono text-gray-800">{showSlipModal.cnpsEmployer.toLocaleString()} F</span>
+                  <div className="text-right">
+                    <h2 className="font-bold text-lg">BULLETIN DE PAIE</h2>
+                    <p className="text-sm font-mono text-gray-500">{getMonthLabel(selectedMonth)} {selectedYear}</p>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-4 rounded-2xl flex flex-col justify-center items-end border border-gray-100">
-                  <span className="text-[9px] uppercase tracking-wider text-gray-400 font-semibold">Net à percevoir</span>
-                  <span className="text-base font-mono font-bold text-emerald-600 mt-0.5">{showSlipModal.netPay.toLocaleString()} FCFA</span>
+                <div className="grid grid-cols-2 gap-8 mb-6">
+                  <div className="border border-gray-200 p-3 rounded-xl">
+                    <p className="text-[10px] uppercase font-bold text-gray-400 mb-1">Employé</p>
+                    <p className="font-bold">{showSlipModal.employee.firstName} {showSlipModal.employee.lastName}</p>
+                    <p className="text-xs text-gray-600">Poste: {showSlipModal.employee.position}</p>
+                    <p className="text-xs text-gray-600">Embauche: {new Date(showSlipModal.employee.hireDate).toLocaleDateString()}</p>
+                  </div>
+                </div>
+
+                <table className="w-full text-sm mb-6 border-collapse">
+                  <thead>
+                    <tr className="border-b-2 border-black text-left">
+                      <th className="py-2">Désignation</th>
+                      <th className="py-2 text-right">Base</th>
+                      <th className="py-2 text-right text-red-600">Retenues</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2 font-medium">Salaire de Base</td>
+                      <td className="py-2 text-right font-mono">{showSlipModal.employee.baseSalary.toLocaleString()}</td>
+                      <td className="py-2 text-right font-mono">-</td>
+                    </tr>
+                    {showSlipModal.bonuses.map((b, i) => (
+                      <tr key={i} className="border-b border-gray-100">
+                        <td className="py-2">{b.name}</td>
+                        <td className="py-2 text-right font-mono">{b.amount.toLocaleString()}</td>
+                        <td className="py-2 text-right font-mono">-</td>
+                      </tr>
+                    ))}
+                    <tr className="border-b border-gray-100">
+                      <td className="py-2 text-gray-600">Cotisation CNPS</td>
+                      <td className="py-2 text-right font-mono">-</td>
+                      <td className="py-2 text-right font-mono text-red-600">{showSlipModal.cnpsEmployee.toLocaleString()}</td>
+                    </tr>
+                    {showSlipModal.igrTax > 0 && (
+                      <tr className="border-b border-gray-100">
+                        <td className="py-2 text-gray-600">Impôt IGR</td>
+                        <td className="py-2 text-right font-mono">-</td>
+                        <td className="py-2 text-right font-mono text-red-600">{showSlipModal.igrTax.toLocaleString()}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+
+                <div className="flex justify-end mt-8">
+                  <div className="border-2 border-black rounded-xl p-4 w-64">
+                    <p className="text-xs uppercase font-bold text-gray-500 mb-1">Net à Payer</p>
+                    <p className="text-2xl font-mono font-black">{showSlipModal.netPay.toLocaleString()} <span className="text-sm">XOF</span></p>
+                  </div>
                 </div>
               </div>
 
-              {/* Legal notification */}
-              <p className="text-[9px] text-gray-400 mt-6 leading-relaxed font-sans border-t border-gray-100 pt-4">
-                Pour vous aider à faire valoir ce que de droit, ce bulletin de salaire est édité par la plateforme Kènè Pro et tient lieu de justificatif de paiement et de déclaration sociale simplifiée CNPS UEMOA.
-              </p>
-
-              {/* Action buttons */}
-              <div className="flex gap-3 pt-6 border-t border-gray-100 mt-6">
-                <Button
-                  onClick={() => setShowSlipModal(null)}
-                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2.5 rounded-xl cursor-pointer"
-                >
-                  Fermer
-                </Button>
-                <Button
-                  onClick={() => window.print()}
-                  className="flex-1 bg-gold-kene hover:bg-gold-kene/90 text-[#1A1410] font-semibold py-2.5 rounded-xl cursor-pointer flex items-center justify-center gap-1.5"
-                >
-                  <Printer className="w-4 h-4" />
-                  Imprimer
+              <div className="flex gap-3 mt-8 no-print">
+                <Button onClick={() => setShowSlipModal(null)} className="flex-1 bg-gray-100 text-black hover:bg-gray-200">Fermer</Button>
+                <Button onClick={() => window.print()} className="flex-1 bg-black text-white hover:bg-gray-800">
+                  <Printer className="w-4 h-4 mr-2" /> Imprimer / PDF
                 </Button>
               </div>
+
+              <style dangerouslySetInnerHTML={{__html: `
+                @media print {
+                  body * { visibility: hidden; }
+                  .print-area, .print-area * { visibility: visible; }
+                  .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+                  .no-print { display: none; }
+                }
+              `}} />
             </m.div>
           </div>
         )}
