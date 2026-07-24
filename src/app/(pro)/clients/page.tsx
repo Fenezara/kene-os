@@ -37,6 +37,51 @@ export default function ProClientsPage() {
   const [isAiProcessing, setIsAiProcessing] = useState(false);
   const [isSavingImport, setIsSavingImport] = useState(false);
 
+  // Consultation & Cosmetic Ingredients State
+  const [isConsultationOpen, setIsConsultationOpen] = useState(false);
+  const [selectedClientForConsultation, setSelectedClientForConsultation] = useState<any>(null);
+  const [consultationType, setConsultationType] = useState('Contrôle Dermatologique');
+  const [consultationNotes, setConsultationNotes] = useState('');
+  const [consultationHydration, setConsultationHydration] = useState('82%');
+  const [consultationSebum, setConsultationSebum] = useState('Équilibré');
+  const [cosmeticIngredients, setCosmeticIngredients] = useState('Beurre de Karité brut, Huile de Baobab, Gel Aloe Vera 99%, Niacinamide 5%');
+  const [consultationsHistory, setConsultationsHistory] = useState<Record<string, any[]>>({});
+
+  const handleSaveConsultation = async (clientId: string) => {
+    try {
+      const newEntry = {
+        id: `cons-${Date.now()}`,
+        date: new Date().toLocaleDateString('fr-FR'),
+        type: consultationType,
+        notes: consultationNotes || 'Contrôle cutané & suivi de routine cosmétique.',
+        hydration: consultationHydration,
+        sebum: consultationSebum,
+        ingredients: cosmeticIngredients.split(',').map(i => i.trim()).filter(Boolean),
+      };
+
+      setConsultationsHistory(prev => ({
+        ...prev,
+        [clientId]: [newEntry, ...(prev[clientId] || [])]
+      }));
+
+      await fetch('/api/tenant/clients/consultations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId, ...newEntry })
+      });
+
+      toast({
+        title: "📋 Consultation Dermatologique Enregistrée",
+        description: "Bilan médical et ingrédients des produits cosmétiques sauvegardés.",
+      });
+      setIsConsultationOpen(false);
+      setConsultationNotes('');
+    } catch {
+      toast({ title: "Enregistré", description: "Consultation mise à jour localement." });
+      setIsConsultationOpen(false);
+    }
+  };
+
   const getLoyaltyTier = (clientId: string) => {
     const spent = clientId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) * 1500;
     if (spent > 200000) return { name: 'Platine', icon: '💎', color: '#E5E4E2' };
@@ -527,17 +572,112 @@ export default function ProClientsPage() {
                       animate={{ height: 'auto', opacity: 1 }}
                       className="bg-[#0A0603] p-4 border-t border-white/5 text-xs text-white/60 space-y-3"
                     >
-                      <h4 className="font-bold text-[#C8951E] text-[10px] uppercase tracking-widest flex items-center justify-between">
-                        <span>Dossier Dermo-Clinique & Historique</span>
-                        <a 
-                          href="/diagnostic/results/demo-diagnosis-01" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-emerald-400 hover:underline flex items-center gap-1 font-sans"
-                        >
-                          🔬 Voir Bilan Diagnostic IA 360°
-                        </a>
-                      </h4>
+                      <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                        <span className="font-bold text-[#C8951E] text-[10px] uppercase tracking-widest">
+                          Dossier Dermo-Clinique & Suivi Consultations
+                        </span>
+                        <Dialog open={isConsultationOpen && selectedClientForConsultation?.id === client.id} onOpenChange={(o) => {
+                          setIsConsultationOpen(o);
+                          if (o) setSelectedClientForConsultation(client);
+                        }}>
+                          <DialogTrigger asChild>
+                            <Button className="h-7 text-[10px] bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 hover:bg-[#C8951E]/30 rounded-xl font-bold cursor-pointer">
+                              + Nouvelle Consultation / Contrôle
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl max-w-lg p-6">
+                            <DialogHeader>
+                              <DialogTitle className="font-display text-lg text-white flex items-center gap-2">
+                                📋 Saisie Consultation & Ingrédients Cosmétiques
+                              </DialogTitle>
+                            </DialogHeader>
+
+                            <div className="space-y-3.5 text-xs my-2">
+                              <p className="text-white/60 text-[11px]">
+                                Enregistrez le contrôle médical dermatologique de {client.firstName} {client.lastName} et les ingrédients cosmétiques de ses produits.
+                              </p>
+
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                  <Label className="text-white/60 text-[10px]">Type de visite</Label>
+                                  <Select value={consultationType} onValueChange={setConsultationType}>
+                                    <SelectTrigger className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs"><SelectValue /></SelectTrigger>
+                                    <SelectContent className="bg-[#1A1410] text-white border-white/10">
+                                      <SelectItem value="Contrôle Dermatologique">Contrôle Dermatologique</SelectItem>
+                                      <SelectItem value="Consultation Initiale">Consultation Initiale</SelectItem>
+                                      <SelectItem value="Suivi Hyperpigmentation">Suivi Hyperpigmentation</SelectItem>
+                                      <SelectItem value="Ajustement Routine Cosmétique">Ajustement Routine Cosmétique</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="space-y-1">
+                                  <Label className="text-white/60 text-[10px]">Taux d'Hydratation (%)</Label>
+                                  <Input value={consultationHydration} onChange={(e) => setConsultationHydration(e.target.value)} className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs" />
+                                </div>
+                              </div>
+
+                              <div className="space-y-1">
+                                <Label className="text-white/60 text-[10px]">Ingrédients des Produits Cosmétiques Préscrits/Utilisés</Label>
+                                <textarea
+                                  rows={2}
+                                  value={cosmeticIngredients}
+                                  onChange={(e) => setCosmeticIngredients(e.target.value)}
+                                  placeholder="ex: Beurre de Karité pur, Huile de Baobab, Gel Aloe Vera 99%, Niacinamide 5%, Acide Kojique..."
+                                  className="w-full bg-[#1A1410] border border-white/10 text-white p-2.5 rounded-xl text-xs outline-none focus:border-[#C8951E]"
+                                />
+                              </div>
+
+                              <div className="space-y-1">
+                                <Label className="text-white/60 text-[10px]">Observations Médicales & Évolution Cutanée</Label>
+                                <textarea
+                                  rows={3}
+                                  value={consultationNotes}
+                                  onChange={(e) => setConsultationNotes(e.target.value)}
+                                  placeholder="Observations de la peau lors du contrôle (ex: Barrière cutanée restaurée, sébum régulé, taches éclaircies de 30%)..."
+                                  className="w-full bg-[#1A1410] border border-white/10 text-white p-2.5 rounded-xl text-xs outline-none focus:border-[#C8951E]"
+                                />
+                              </div>
+
+                              <Button
+                                onClick={() => handleSaveConsultation(client.id)}
+                                className="w-full h-10 bg-gradient-to-r from-[#C8951E] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-lg cursor-pointer mt-1"
+                              >
+                                Enregistrer la Consultation & Ingrédients
+                              </Button>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+
+                      {/* Display Consultation History Entries */}
+                      {(consultationsHistory[client.id] || []).length > 0 && (
+                        <div className="space-y-2 pt-1">
+                          <span className="text-[10px] font-bold text-[#F3E5AB] uppercase tracking-wider block">Historique des Contrôles Enregistrés ({consultationsHistory[client.id].length}) :</span>
+                          {consultationsHistory[client.id].map((entry, idx) => (
+                            <div key={idx} className="bg-[#1A1410] border border-[#C8951E]/20 p-3 rounded-xl space-y-1.5">
+                              <div className="flex items-center justify-between text-xs">
+                                <span className="font-bold text-white flex items-center gap-1.5">
+                                  <span>📋</span> {entry.type}
+                                </span>
+                                <span className="text-[10px] text-white/40 font-mono">{entry.date}</span>
+                              </div>
+                              <div className="flex gap-2 text-[9px] font-mono text-emerald-400">
+                                <span>💧 Hydratation : {entry.hydration}</span>
+                                <span>🌿 Sébum : {entry.sebum}</span>
+                              </div>
+                              <p className="text-[11px] text-white/70 font-sans italic">"{entry.notes}"</p>
+                              {entry.ingredients && entry.ingredients.length > 0 && (
+                                <div className="flex flex-wrap gap-1 pt-1">
+                                  <span className="text-[9px] text-white/40">Ingrédients :</span>
+                                  {entry.ingredients.map((ing: string, i: number) => (
+                                    <span key={i} className="text-[9px] px-2 py-0.5 rounded-full bg-[#2E5A36]/30 text-emerald-300 font-mono border border-[#2E5A36]/50">🌱 {ing}</span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                       <div className="space-y-2">
                         <div className="flex justify-between border-b border-white/5 pb-2">
                           <span>Dernier soin: Hydratation Karité & Massage Baobab</span>
