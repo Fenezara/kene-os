@@ -26,7 +26,9 @@ export const metadata: Metadata = {
   keywords: ["Kènè", "beauté mélanoderme", "diagnostic de peau", "cosmétiques botaniques", "baobab", "karité", "moringa", "PWA"],
   authors: [{ name: "Kènè Team" }],
   icons: {
-    icon: "/logo.svg",
+    icon: "/images/kene_logo.jpg",
+    shortcut: "/images/kene_logo.jpg",
+    apple: "/images/kene_logo.jpg",
   },
   manifest: "/manifest.json",
   openGraph: {
