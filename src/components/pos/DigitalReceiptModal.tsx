@@ -28,6 +28,20 @@ interface DigitalReceiptModalProps {
 export function DigitalReceiptModal({ isOpen, onClose, sale }: DigitalReceiptModalProps) {
   if (!sale) return null;
 
+  let tenantTitle = sale.tenantName || 'Salon Kènè Partner';
+  let rccmNum = sale.rccm || 'CI-ABJ-03-2026-B12-0094';
+
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('kene_tenant_settings');
+    if (saved) {
+      try {
+        const p = JSON.parse(saved);
+        if (p.identity?.commercialName) tenantTitle = p.identity.commercialName;
+        if (p.fiscal?.rccm) rccmNum = p.fiscal.rccm;
+      } catch (e) {}
+    }
+  }
+
   const handlePrint = () => {
     window.print();
   };
@@ -50,10 +64,10 @@ export function DigitalReceiptModal({ isOpen, onClose, sale }: DigitalReceiptMod
           {/* Header Salon */}
           <div className="text-center space-y-1 pb-3 border-b border-dashed border-[#362A21]">
             <h2 className="font-display font-bold text-base text-[var(--gold-kene)] uppercase tracking-wider">
-              {sale.tenantName || 'Salon Kènè Partner'}
+              {tenantTitle}
             </h2>
             <p className="text-[10px] text-karite/60">Institut de Beauté & Soins Cutanés</p>
-            <p className="text-[10px] text-karite/50 font-mono">RCCM : {sale.rccm || 'CI-ABJ-03-2026-B12-0094'}</p>
+            <p className="text-[10px] text-karite/50 font-mono">RCCM : {rccmNum}</p>
           </div>
 
           {/* Ticket Metadata */}

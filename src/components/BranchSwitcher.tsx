@@ -19,11 +19,36 @@ export function BranchSwitcher() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    // Check if logged in user has Super-Admin role
-    if (typeof document !== 'undefined') {
+    // Check if logged in user has Super-Admin role & load registered enterprise name
+    if (typeof window !== 'undefined') {
       const cookies = document.cookie;
       const isSuperAdminSession = cookies.includes('kene-session=admin-');
       setIsAdmin(isSuperAdminSession);
+
+      const savedTenant = localStorage.getItem('kene_tenant_settings');
+      const savedUser = localStorage.getItem('kene_user');
+      let customName = null;
+
+      if (savedTenant) {
+        try {
+          const parsed = JSON.parse(savedTenant);
+          if (parsed.identity?.commercialName) customName = parsed.identity.commercialName;
+        } catch (e) {}
+      }
+      if (!customName && savedUser) {
+        try {
+          const u = JSON.parse(savedUser);
+          if (u.salonName) customName = u.salonName;
+          else if (u.name && u.role === 'salon') customName = u.name;
+        } catch (e) {}
+      }
+
+      if (customName) {
+        setSelectedBranch(prev => ({
+          ...prev,
+          name: customName,
+        }));
+      }
     }
   }, []);
 

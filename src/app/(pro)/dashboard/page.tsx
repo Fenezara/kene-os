@@ -41,13 +41,39 @@ export default function ProDashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let customSalonName = '';
+    if (typeof window !== 'undefined') {
+      const savedTenant = localStorage.getItem('kene_tenant_settings');
+      const savedUser = localStorage.getItem('kene_user');
+
+      if (savedTenant) {
+        try {
+          const parsed = JSON.parse(savedTenant);
+          if (parsed.identity?.commercialName) customSalonName = parsed.identity.commercialName;
+        } catch (e) {}
+      }
+      if (!customSalonName && savedUser) {
+        try {
+          const u = JSON.parse(savedUser);
+          if (u.salonName) customSalonName = u.salonName;
+          else if (u.name && u.role === 'salon') customSalonName = u.name;
+        } catch (e) {}
+      }
+    }
+
+    if (customSalonName) {
+      setTenantName(customSalonName);
+    }
+
     const fetchStats = async () => {
       try {
         const res = await fetch('/api/tenant/stats');
         const data = await res.json();
         if (data.success) {
           setStats(data.stats);
-          setTenantName(data.tenantName);
+          if (!customSalonName && data.tenantName) {
+            setTenantName(data.tenantName);
+          }
         }
       } catch {
         toast({ title: "Erreur", description: "Impossible de charger les statistiques.", variant: "destructive" });

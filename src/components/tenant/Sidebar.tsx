@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -15,25 +16,44 @@ import {
 } from 'lucide-react';
 
 const MENU_ITEMS = [
-  { href: '/pro/dashboard', label: 'Tableau de Bord', icon: LayoutDashboard },
-  { href: '/pro/appointments', label: 'Agenda', icon: Calendar },
-  { href: '/pro/sales', label: 'Caisse (POS)', icon: ShoppingCart },
-  { href: '/pro/inventory', label: 'Stock', icon: Package },
-  { href: '/pro/clients', label: 'Fichier Clients', icon: Users },
-  { href: '/pro/team', label: 'Équipe & RH', icon: Briefcase },
+  { href: '/dashboard', label: 'Tableau de Bord', icon: LayoutDashboard },
+  { href: '/agenda', label: 'Agenda & RDV', icon: Calendar },
+  { href: '/pos', label: 'Caisse (POS)', icon: ShoppingCart },
+  { href: '/inventory', label: 'Stock & Produits', icon: Package },
+  { href: '/clients', label: 'Fichier Clients', icon: Users },
+  { href: '/employees', label: 'Équipe & RH', icon: Briefcase },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [salonName, setSalonName] = useState('Kènè Pro');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedTenant = localStorage.getItem('kene_tenant_settings');
+      const savedUser = localStorage.getItem('kene_user');
+      if (savedTenant) {
+        try {
+          const p = JSON.parse(savedTenant);
+          if (p.identity?.commercialName) setSalonName(p.identity.commercialName);
+        } catch (e) {}
+      } else if (savedUser) {
+        try {
+          const u = JSON.parse(savedUser);
+          if (u.salonName) setSalonName(u.salonName);
+        } catch (e) {}
+      }
+    }
+  }, []);
 
   return (
     <aside className="w-64 bg-[#1A1410] border-r border-white/10 h-screen flex flex-col hidden md:flex sticky top-0">
       <div className="p-6 border-b border-white/10">
         <div className="flex items-center gap-2 text-gold-kene">
-          <Sparkles className="w-6 h-6" />
-          <span className="font-display font-bold text-xl uppercase tracking-widest">Kènè Pro</span>
+          <Sparkles className="w-5 h-5 text-[#C8951E] shrink-0" />
+          <span className="font-display font-bold text-base uppercase tracking-wider text-[#F3E5AB] truncate">{salonName}</span>
         </div>
-        <p className="text-[10px] text-white/40 mt-1">Espace Gérant</p>
+        <p className="text-[10px] text-white/40 mt-1">Espace Gestion Entreprise</p>
       </div>
 
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
