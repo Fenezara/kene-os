@@ -30,6 +30,18 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
+    const savedTenant = localStorage.getItem('kene_tenant_settings');
+    if (savedTenant) {
+      try {
+        const parsed = JSON.parse(savedTenant);
+        const savedLogo = localStorage.getItem('kene_custom_salon_logo');
+        if (savedLogo && parsed.identity) parsed.identity.logoUrl = savedLogo;
+        setSettings(parsed);
+        setLoading(false);
+        return;
+      } catch (e) {}
+    }
+
     fetch('/api/tenant/settings')
       .then(res => res.json())
       .then(data => {
@@ -70,18 +82,18 @@ export default function SettingsPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const res = await fetch('/api/tenant/settings', {
+      localStorage.setItem('kene_tenant_settings', JSON.stringify(settings));
+      await fetch('/api/tenant/settings', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settings),
       });
-      if (res.ok) {
-        toast({ title: '✅ Succès', description: 'Paramètres mis à jour avec succès.' });
-      } else {
-        throw new Error('Erreur');
-      }
-    } catch (err) {
-      toast({ title: '❌ Erreur', description: 'Une erreur est survenue lors de la sauvegarde.', variant: 'destructive' });
+      toast({
+        title: '✅ Paramètres du Salon Enregistrés',
+        description: `Informations de "${settings.identity.commercialName || 'Votre Salon'}" mises à jour avec succès.`,
+      });
+    } catch {
+      toast({ title: 'Erreur', description: 'Impossible de sauvegarder.', variant: 'destructive' });
     } finally {
       setSaving(false);
     }

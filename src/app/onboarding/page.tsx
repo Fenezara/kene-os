@@ -36,11 +36,19 @@ export default function OnboardingPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const salonTitle = formData.salonName || 'Kènè Institut Beauté';
+    const tenantSettings = {
+      identity: { commercialName: salonTitle, legalName: salonTitle + ' SAS', type: 'Institut', logoUrl: null },
+      address: { street: 'Adresse Principale', phone: '+225 07 00 00 00', email: 'contact@salon.com' },
+      fiscal: { rccm: formData.rccm || 'CI-ABJ-2024-B-100', nif: '1098473A', vatRate: formData.tva || 18, country: formData.country || 'CI', currency: formData.currency || 'XOF' },
+      subscription: { plan: formData.plan || 'Pro', renewalDate: '2027-01-01' }
+    };
+    localStorage.setItem('kene_tenant_settings', JSON.stringify(tenantSettings));
     toast({
       title: "✅ Succès",
-      description: "Votre salon a été configuré avec succès !",
+      description: `Le salon "${salonTitle}" a été configuré avec succès !`,
     });
-    router.push('/');
+    router.push('/dashboard');
   };
 
   const plans = [

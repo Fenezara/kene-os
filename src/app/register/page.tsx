@@ -79,14 +79,29 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {
+      const salonTitle = proForm.salonName || 'Kènè Institut Beauté';
+      const tenantSettings = {
+        identity: { commercialName: salonTitle, legalName: salonTitle + ' SAS', type: proForm.salonType || 'Institut', logoUrl: null },
+        address: { street: 'Adresse Principale', phone: proForm.phone || '+225 07 00 00 00', email: proForm.email || 'contact@salon.com' },
+        fiscal: { rccm: 'CI-ABJ-2024-B-9988', nif: '1098473A', vatRate: 18, country: proForm.country || 'CI', currency: 'XOF' },
+        subscription: { plan: 'Pro', renewalDate: '2027-01-01' }
+      };
+      localStorage.setItem('kene_tenant_settings', JSON.stringify(tenantSettings));
+      localStorage.setItem('kene_user', JSON.stringify({
+        name: proForm.ownerName || 'Gérant Salon',
+        email: proForm.email,
+        phone: proForm.phone,
+        salonName: salonTitle,
+        role: 'salon',
+      }));
       document.cookie = `kene-session=admin-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
       setLoading(false);
       toast({
         title: '✂️ Espace Salon Créé avec Succès !',
-        description: `Votre salon "${proForm.salonName || 'Kènè Institut'}" est prêt.`,
+        description: `Bienvenue ! Votre salon "${salonTitle}" est configuré.`,
       });
-      router.push('/onboarding');
-    }, 1500);
+      router.push('/dashboard');
+    }, 1200);
   };
 
   return (
