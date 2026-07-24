@@ -39,6 +39,16 @@ export const metadata: Metadata = {
     shortcut: "/images/kene_logo.jpg",
     apple: "/images/kene_logo.jpg",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Kènè OS",
+  },
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: true,
+  },
   manifest: "/manifest.json",
   openGraph: {
     title: "Kènè — La beauté mélanoderme, révélée",
