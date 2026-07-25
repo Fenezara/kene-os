@@ -279,13 +279,52 @@ html.light-mode .text-\[\#D4AF37\] {
   font-weight: 800 !important;
 }
 
+/* 📸 HERO PHOTO CARDS PRESERVATION (Ensures background photos & dark overlays are never hidden in Light Mode) */
+.preserve-hero-image,
+.preserve-hero-image *,
+.preserve-hero-image div,
+.light-mode .preserve-hero-image,
+.light-mode .preserve-hero-image *,
+.light-mode .preserve-hero-image div,
+html.light-mode .preserve-hero-image,
+html.light-mode .preserve-hero-image *,
+html.light-mode .preserve-hero-image div {
+  background-color: transparent !important;
+}
+
+.preserve-hero-image img,
+.light-mode .preserve-hero-image img,
+html.light-mode .preserve-hero-image img {
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+.preserve-hero-image .absolute.inset-0,
+.light-mode .preserve-hero-image .absolute.inset-0,
+html.light-mode .preserve-hero-image .absolute.inset-0 {
+  background: linear-gradient(to top, rgba(15, 10, 5, 0.95) 0%, rgba(15, 10, 5, 0.6) 50%, transparent 100%) !important;
+}
+
 /* Preserve Image Overlays & Hero Banners with Photos */
 .preserve-dark-text,
-.preserve-dark-text *,
+.preserve-dark-text h1,
+.preserve-dark-text h2,
+.preserve-dark-text h3,
+.preserve-dark-text p,
+.preserve-dark-text span,
 .light-mode .preserve-dark-text,
-.light-mode .preserve-dark-text *,
+.light-mode .preserve-dark-text h1,
+.light-mode .preserve-dark-text h2,
+.light-mode .preserve-dark-text h3,
+.light-mode .preserve-dark-text p,
+.light-mode .preserve-dark-text span,
 html.light-mode .preserve-dark-text,
-html.light-mode .preserve-dark-text * {
+html.light-mode .preserve-dark-text h1,
+html.light-mode .preserve-dark-text h2,
+html.light-mode .preserve-dark-text h3,
+html.light-mode .preserve-dark-text p,
+html.light-mode .preserve-dark-text span {
   color: #FFFFFF !important;
 }
 

@@ -405,7 +405,7 @@ export default function ClientPortalPage() {
 
       {/* ── HERO VISUEL RITUEL BOTANIQUE AFRICAIN ── */}
       <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.05 }}>
-        <Card className="bg-[#1A1410] border border-[var(--gold-kene)]/30 shadow-2xl rounded-3xl overflow-hidden relative group">
+        <Card className="preserve-dark-text preserve-hero-image bg-[#1A1410] border border-[var(--gold-kene)]/30 shadow-2xl rounded-3xl overflow-hidden relative group">
           <div className="relative h-44 sm:h-52 w-full overflow-hidden">
             <img 
               src="/images/african_spa_ritual_hero.jpg" 
