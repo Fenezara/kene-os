@@ -41,8 +41,8 @@ export default function ClientLayout({
   return (
     <div className="min-h-screen bg-[#0F0A05] text-white flex flex-col font-sans selection:bg-[var(--gold-kene)] selection:text-[#0F0A05]">
       
-      {/* --- RESPONSIVE HEADER --- */}
-      <header className="h-16 bg-[#1A1410]/95 border-b border-white/10 px-4 md:px-8 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md w-full shadow-lg">
+      {/* --- RESPONSIVE HEADER (SCROLLS NATURALLY WITH PAGE INTERFACE) --- */}
+      <header className="h-16 bg-[#1A1410] border-b border-white/10 px-4 md:px-8 flex items-center justify-between w-full shadow-lg z-30">
         <div className="max-w-7xl w-full mx-auto flex items-center justify-between">
           
           {/* Left Logo & Back Button */}

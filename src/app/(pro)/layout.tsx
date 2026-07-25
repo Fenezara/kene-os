@@ -172,8 +172,8 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* ─── MOBILE HEADER + DRAWER ─── */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 bg-[#110D09]/90 backdrop-blur-xl border-b border-white/5">
+      {/* ─── MOBILE HEADER + DRAWER (SCROLLS NATURALLY WITH INTERFACE) ─── */}
+      <div className="md:hidden flex items-center justify-between px-4 h-14 bg-[#110D09] border-b border-white/5 w-full shrink-0 z-30">
         <div className="flex items-center gap-2">
           <button
             onClick={() => router.back()}
@@ -219,8 +219,8 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
         )}
       </AnimatePresence>
 
-      {/* ─── MAIN CONTENT ─── */}
-      <main className="relative z-10 flex-1 flex flex-col min-h-screen overflow-hidden">
+      {/* ─── MAIN CONTENT CONTAINER (SYNCHRONIZED SCROLL) ─── */}
+      <main className="relative z-10 flex-1 flex flex-col min-h-screen overflow-y-auto">
         {/* Top Navigation Header with Universal Back Button & Role Switcher */}
         <div className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-white/5 bg-[#110D09]/40 backdrop-blur-md">
           <BackButton fallbackUrl="/dashboard" />
@@ -238,7 +238,7 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto pt-14 md:pt-0 p-5 md:p-8">
+        <div className="flex-1 p-5 md:p-8">
           {children}
         </div>
       </main>
