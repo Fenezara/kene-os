@@ -224,6 +224,38 @@ html.light-mode [class*="from-[var(--gold-kene)]"] {
   color: #000000 !important;
 }
 
+/* High Contrast Input Fields in Light Mode */
+.light-mode input,
+.light-mode textarea,
+.light-mode select,
+html.light-mode input,
+html.light-mode textarea,
+html.light-mode select {
+  background-color: #FAF4E8 !important;
+  border-color: #E2D2B5 !important;
+  color: #1F140C !important;
+}
+
+.light-mode input::placeholder,
+.light-mode textarea::placeholder,
+html.light-mode input::placeholder,
+html.light-mode textarea::placeholder {
+  color: #8C7560 !important;
+}
+
+/* Table Rows & Headers in Light Mode */
+.light-mode tr:nth-child(even),
+html.light-mode tr:nth-child(even) {
+  background-color: #FAF4E8 !important;
+}
+
+.light-mode th,
+html.light-mode th {
+  background-color: #EFE4CE !important;
+  color: #1F140C !important;
+  font-weight: 800 !important;
+}
+
 /* Borders in Light Mode */
 .light-mode [class*="border-white\/5"],
 .light-mode [class*="border-white\/10"],
