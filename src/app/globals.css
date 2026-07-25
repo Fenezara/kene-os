@@ -137,19 +137,95 @@ html.light-mode div.min-h-screen {
   color: #2A1D13 !important;
 }
 
-/* Convert Dark Cards to Warm Honey-Gold & Alabaster Glass Gradients */
-.light-mode [class*="bg-[#"],
-.light-mode [class*="from-[#"],
-.light-mode [class*="via-[#"],
-.light-mode [class*="to-[#"],
-html.light-mode [class*="bg-[#"],
-html.light-mode [class*="from-[#"],
-html.light-mode [class*="via-[#"],
-html.light-mode [class*="to-[#"] {
+/* Convert ONLY Dark Cards to Warm Honey-Gold & Alabaster Glass Gradients (Preserves Colored Badges & Logos) */
+.light-mode [class*="bg-[#0F0A05]"],
+.light-mode [class*="bg-[#0A0603]"],
+.light-mode [class*="bg-[#1A1410]"],
+.light-mode [class*="bg-[#241C16]"],
+.light-mode [class*="bg-[#110D09]"],
+.light-mode [class*="bg-[#140E09]"],
+.light-mode [class*="bg-[#1E1610]"],
+.light-mode [class*="bg-[#362A21]"],
+.light-mode [class*="bg-[#1A1008]"],
+.light-mode [class*="bg-[#040D07]"],
+.light-mode [class*="from-[#0F0A05]"],
+.light-mode [class*="from-[#0A0603]"],
+.light-mode [class*="from-[#1A1410]"],
+.light-mode [class*="from-[#241C16]"],
+.light-mode [class*="from-[#110D09]"],
+.light-mode [class*="from-[#140E09]"],
+.light-mode [class*="from-[#1E1610]"],
+.light-mode [class*="from-[#362A21]"],
+.light-mode [class*="from-[#1A1008]"],
+.light-mode [class*="from-[#040D07]"],
+html.light-mode [class*="bg-[#0F0A05]"],
+html.light-mode [class*="bg-[#0A0603]"],
+html.light-mode [class*="bg-[#1A1410]"],
+html.light-mode [class*="bg-[#241C16]"],
+html.light-mode [class*="bg-[#110D09]"],
+html.light-mode [class*="bg-[#140E09]"],
+html.light-mode [class*="bg-[#1E1610]"],
+html.light-mode [class*="bg-[#362A21]"],
+html.light-mode [class*="bg-[#1A1008]"],
+html.light-mode [class*="bg-[#040D07]"],
+html.light-mode [class*="from-[#0F0A05]"],
+html.light-mode [class*="from-[#0A0603]"],
+html.light-mode [class*="from-[#1A1410]"],
+html.light-mode [class*="from-[#241C16]"],
+html.light-mode [class*="from-[#110D09]"],
+html.light-mode [class*="from-[#140E09]"],
+html.light-mode [class*="from-[#1E1610]"],
+html.light-mode [class*="from-[#362A21]"],
+html.light-mode [class*="from-[#1A1008]"],
+html.light-mode [class*="from-[#040D07]"] {
   background: linear-gradient(135deg, #FFFDF9 0%, #F7EFE2 50%, #EFE3CE 100%) !important;
   border-color: rgba(200, 149, 30, 0.35) !important;
   box-shadow: 0 12px 32px -8px rgba(138, 92, 10, 0.08) !important;
   color: #2A1D13 !important;
+}
+
+/* 📸 100% Protection for Photos, Logos, Images & SVG Symbols */
+.light-mode img,
+.light-mode picture,
+.light-mode [style*="url"],
+.light-mode [class*="bg-[url"],
+html.light-mode img,
+html.light-mode picture,
+html.light-mode [style*="url"],
+html.light-mode [class*="bg-[url"] {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* 🎨 100% Protection for Colored Badges, Icons & Logos (Gold, Red, Green, WhatsApp) */
+.light-mode [class*="bg-[#C8951E]"],
+.light-mode [class*="bg-[#8A1C14]"],
+.light-mode [class*="bg-[#2E5A36]"],
+.light-mode [class*="bg-[#25D366]"],
+.light-mode [class*="bg-[#4E9FD1]"],
+.light-mode [class*="bg-[#8A3B14]"],
+.light-mode [class*="from-[#C8951E]"],
+.light-mode [class*="from-[#25D366]"],
+html.light-mode [class*="bg-[#C8951E]"],
+html.light-mode [class*="bg-[#8A1C14]"],
+html.light-mode [class*="bg-[#2E5A36]"],
+html.light-mode [class*="bg-[#25D366]"],
+html.light-mode [class*="bg-[#4E9FD1]"],
+html.light-mode [class*="bg-[#8A3B14]"],
+html.light-mode [class*="from-[#C8951E]"],
+html.light-mode [class*="from-[#25D366]"] {
+  opacity: 1 !important;
+}
+
+.light-mode [class*="bg-[#C8951E]"] *,
+.light-mode [class*="bg-[#8A1C14]"] *,
+.light-mode [class*="bg-[#25D366]"] *,
+.light-mode [class*="bg-[#4E9FD1]"] *,
+html.light-mode [class*="bg-[#C8951E]"] *,
+html.light-mode [class*="bg-[#8A1C14]"] *,
+html.light-mode [class*="bg-[#25D366]"] *,
+html.light-mode [class*="bg-[#4E9FD1]"] * {
+  color: #FFFFFF !important;
 }
 
 /* Sub-cards, Modals & Translucent Pills */
