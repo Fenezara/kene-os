@@ -14,7 +14,6 @@ import { NotificationBell } from '@/components/NotificationBell'
 import { GlobalSearch } from '@/components/GlobalSearch'
 import { BranchSwitcher } from '@/components/BranchSwitcher'
 import { RoleSwitcher } from '@/components/RoleSwitcher'
-import { ThemeToggle } from '@/components/ThemeToggle'
 import { BackButton } from '@/components/ui/back-button'
 import { KeneLogo } from '@/components/ui/logo'
 
@@ -218,7 +217,6 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
           <BackButton fallbackUrl="/dashboard" />
 
           <div className="flex items-center gap-3">
-            <ThemeToggle />
             <RoleSwitcher />
             <div className="flex items-center gap-2 text-[10px] text-white/30 font-mono uppercase tracking-wider">
               <span>Espace Salon Pro</span>

@@ -7,7 +7,6 @@ import { Home, Calendar, ScanFace, Wallet, ShoppingBag, Sprout, Bell, User, Spar
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { RoleSwitcher } from '@/components/RoleSwitcher';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { BackButton } from '@/components/ui/back-button';
 import { KeneLogo } from '@/components/ui/logo';
 
@@ -75,7 +74,6 @@ export default function ClientLayout({
 
           {/* Right Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <ThemeToggle />
             <RoleSwitcher />
 
             <Link
