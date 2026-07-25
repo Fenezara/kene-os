@@ -137,64 +137,78 @@ html.light-mode div.min-h-screen {
   color: #2A1D13 !important;
 }
 
-/* Convert ONLY Dark Cards to Warm Honey-Gold & Alabaster Glass Gradients (Preserves Colored Badges & Logos) */
-.light-mode [class*="bg-[#0F0A05]"],
-.light-mode [class*="bg-[#0A0603]"],
-.light-mode [class*="bg-[#1A1410]"],
-.light-mode [class*="bg-[#241C16]"],
-.light-mode [class*="bg-[#110D09]"],
-.light-mode [class*="bg-[#140E09]"],
-.light-mode [class*="bg-[#1E1610]"],
-.light-mode [class*="bg-[#362A21]"],
-.light-mode [class*="bg-[#1A1008]"],
-.light-mode [class*="bg-[#040D07]"],
-.light-mode [class*="from-[#0F0A05]"],
-.light-mode [class*="from-[#0A0603]"],
-.light-mode [class*="from-[#1A1410]"],
-.light-mode [class*="from-[#241C16]"],
-.light-mode [class*="from-[#110D09]"],
-.light-mode [class*="from-[#140E09]"],
-.light-mode [class*="from-[#1E1610]"],
-.light-mode [class*="from-[#362A21]"],
-.light-mode [class*="from-[#1A1008]"],
-.light-mode [class*="from-[#040D07]"],
-html.light-mode [class*="bg-[#0F0A05]"],
-html.light-mode [class*="bg-[#0A0603]"],
-html.light-mode [class*="bg-[#1A1410]"],
-html.light-mode [class*="bg-[#241C16]"],
-html.light-mode [class*="bg-[#110D09]"],
-html.light-mode [class*="bg-[#140E09]"],
-html.light-mode [class*="bg-[#1E1610]"],
-html.light-mode [class*="bg-[#362A21]"],
-html.light-mode [class*="bg-[#1A1008]"],
-html.light-mode [class*="bg-[#040D07]"],
-html.light-mode [class*="from-[#0F0A05]"],
-html.light-mode [class*="from-[#0A0603]"],
-html.light-mode [class*="from-[#1A1410]"],
-html.light-mode [class*="from-[#241C16]"],
-html.light-mode [class*="from-[#110D09]"],
-html.light-mode [class*="from-[#140E09]"],
-html.light-mode [class*="from-[#1E1610]"],
-html.light-mode [class*="from-[#362A21]"],
-html.light-mode [class*="from-[#1A1008]"],
-html.light-mode [class*="from-[#040D07]"] {
+/* Convert ONLY Non-Image Dark Cards to Warm Honey-Gold Gradients */
+.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#0F0A05]"],
+.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#0A0603]"],
+.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1A1410]"],
+.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#241C16]"],
+.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#110D09]"],
+.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#140E09]"],
+.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1E1610]"],
+.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#362A21]"],
+.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1A1008]"],
+.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#040D07]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#0F0A05]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#0A0603]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1A1410]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#241C16]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#110D09]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#140E09]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1E1610]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#362A21]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1A1008]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#040D07]"] {
   background: linear-gradient(135deg, #FFFDF9 0%, #F7EFE2 50%, #EFE3CE 100%) !important;
   border-color: rgba(200, 149, 30, 0.35) !important;
   box-shadow: 0 12px 32px -8px rgba(138, 92, 10, 0.08) !important;
   color: #2A1D13 !important;
 }
 
-/* 📸 100% Protection for Photos, Logos, Images & SVG Symbols */
+/* 📸 UNIVERSAL PHOTO CARD PROTECTION ENGINE (Applies automatically across 100% of pages) */
+.light-mode div:has(img),
+.light-mode card:has(img),
+.light-mode section:has(img),
+.light-mode article:has(img),
+html.light-mode div:has(img),
+html.light-mode card:has(img),
+html.light-mode section:has(img),
+html.light-mode article:has(img) {
+  background-color: transparent !important;
+}
+
+/* Force 100% visibility for all image tags everywhere */
 .light-mode img,
-.light-mode picture,
-.light-mode [style*="url"],
-.light-mode [class*="bg-[url"],
-html.light-mode img,
-html.light-mode picture,
-html.light-mode [style*="url"],
-html.light-mode [class*="bg-[url"] {
+html.light-mode img {
   opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  z-index: 0 !important;
   filter: none !important;
+}
+
+/* Force dark gradient overlays on photo cards to remain dark so white titles remain bright white */
+.light-mode div:has(img) [class*="bg-gradient-"],
+.light-mode div:has(img) [class*="from-[#0F0A05]"],
+.light-mode div:has(img) [class*="from-black"],
+html.light-mode div:has(img) [class*="bg-gradient-"],
+html.light-mode div:has(img) [class*="from-[#0F0A05]"],
+html.light-mode div:has(img) [class*="from-black"] {
+  background: linear-gradient(to top, rgba(15, 10, 5, 0.95) 0%, rgba(15, 10, 5, 0.6) 50%, transparent 100%) !important;
+  z-index: 1 !important;
+}
+
+/* Force text inside any photo card to stay crisp white */
+.light-mode div:has(img) h1,
+.light-mode div:has(img) h2,
+.light-mode div:has(img) h3,
+.light-mode div:has(img) p,
+.light-mode div:has(img) span,
+html.light-mode div:has(img) h1,
+html.light-mode div:has(img) h2,
+html.light-mode div:has(img) h3,
+html.light-mode div:has(img) p,
+html.light-mode div:has(img) span {
+  color: #FFFFFF !important;
 }
 
 /* 🎨 100% Protection for Colored Badges, Icons & Logos (Gold, Red, Green, WhatsApp) */
