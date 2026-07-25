@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Calendar, ScanFace, Wallet, ShoppingBag, Sprout, Bell, User, Sparkles, ArrowLeft, LogOut, MapPin, Menu, X, MessageSquare, Stethoscope } from 'lucide-react';
+import { Home, Calendar, ScanFace, Wallet, ShoppingBag, Sprout, Bell, User, Sparkles, ArrowLeft, LogOut, MapPin, Menu, X, MessageSquare, Stethoscope, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { RoleSwitcher } from '@/components/RoleSwitcher';
@@ -28,13 +28,13 @@ export default function ClientLayout({
   const navLinks = [
     { href: '/portal', label: 'Accueil', icon: Home },
     { href: '/salons', label: 'Salons & Carte', icon: MapPin },
-    { href: '/chat?mode=dr_diallo', label: 'Dr. Dermatologue IA', icon: Stethoscope },
-    { href: '/diagnostic', label: 'Diagnostic IA', icon: ScanFace },
+    { href: '/chat?mode=dr_diallo', label: 'Dr. Dermatologie', icon: Stethoscope },
+    { href: '/diagnostic', label: 'Bilan Cutané', icon: ScanFace },
     { href: '/appointments', label: 'Mes RDV', icon: Calendar },
-    { href: '/portfolio', label: 'Résultats IA', icon: Sparkles },
-    { href: '/jardin', label: 'Jardin du Glow', icon: Sprout },
+    { href: '/portfolio', label: 'Rapports Cliniques', icon: FileText },
+    { href: '/jardin', label: 'Jardin Botanique', icon: Sprout },
     { href: '/boutique', label: 'Boutique', icon: ShoppingBag },
-    { href: '/client-wallet', label: 'Wallet', icon: Wallet },
+    { href: '/client-wallet', label: 'Portefeuille', icon: Wallet },
   ];
 
   return (

@@ -279,7 +279,7 @@ export default function ClientPortalPage() {
             <h1 className="text-2xl font-display font-bold text-white">
               Bonjour, <span className="text-[var(--gold-kene)]">{userProfile.firstName || 'Cliente'} {userProfile.lastName}</span>
             </h1>
-            <Sparkles className="w-5 h-5 text-[var(--gold-kene)] animate-pulse" />
+            <Sprout className="w-5 h-5 text-[var(--gold-kene)] animate-pulse" />
           </div>
           <div className="flex items-center gap-2 mt-1.5 flex-wrap text-xs text-white/60">
             {userProfile.phone && (
@@ -418,10 +418,10 @@ export default function ClientPortalPage() {
             <div className="absolute bottom-4 left-5 right-5 flex items-end justify-between">
               <div>
                 <Badge className="bg-[var(--gold-kene)] text-black font-bold text-[10px] uppercase tracking-widest mb-1.5 shadow-md">
-                  ✨ Expérience Holistique UEMOA
+                  🌿 Expérience Holistique UEMOA
                 </Badge>
                 <h2 className="font-display font-black text-xl sm:text-2xl text-white drop-shadow-md">
-                  L'Alliance de la Botanique Africaine & de l'IA
+                  L'Alliance de la Botanique Africaine & de la Dermatologie
                 </h2>
                 <p className="text-xs text-white/80 max-w-lg hidden sm:block mt-1">
                   Des rituels de soin dermatologiques personnalisés conçus pour sublimer la mélanine et préserver l'équilibre cutané.
@@ -604,7 +604,7 @@ export default function ClientPortalPage() {
                   <div className="flex items-center gap-2">
                     <span className="font-display font-bold text-sm text-white">Dr. Aïssatou Diallo</span>
                     <span className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">
-                      Dermatologue IA 24/7
+                      Dermatologie Clinique 24/7
                     </span>
                   </div>
                   <p className="text-xs text-white/60 font-sans mt-0.5">

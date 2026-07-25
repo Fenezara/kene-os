@@ -27,7 +27,7 @@ const navItems = [
   { name: 'Services & Tarifs', href: '/services', icon: Scissors, group: 'salon' },
   { name: 'Équipe & RH', href: '/employees', icon: UserCheck, group: 'salon' },
   { name: 'Stocks & Produits', href: '/inventory', icon: Package, group: 'salon' },
-  { name: 'Diagnostic IA Peau', href: '/diagnoses', icon: ScanFace, group: 'ia' },
+  { name: 'Bilan Cutané', href: '/diagnoses', icon: ScanFace, group: 'ia' },
   { name: 'Labo Sur-Mesure', href: '/lab', icon: FlaskConical, group: 'ia' },
   { name: 'Paie & CNPS', href: '/rh', icon: FileText, group: 'finance' },
   { name: 'Comptabilité SYSCOHADA', href: '/compta', icon: Calculator, group: 'finance' },
@@ -37,7 +37,7 @@ const groupLabels: Record<string, string> = {
   principal: 'Principal',
   crm: 'Clients & Marketing',
   salon: 'Gestion Salon',
-  ia: 'Intelligence Artificielle',
+  ia: 'Expertise Cutanée & Labo',
   finance: 'Finance & Paie',
 }
 
