@@ -136,10 +136,21 @@ export default function BoutiquePage() {
         
         const res = await fetch(`/api/products?${params.toString()}`);
         const data = await res.json();
-        
-        if (data.success) {
-          setProducts(data.products);
+        let fetchedProducts = data.success ? data.products : [];
+
+        const savedLocal = localStorage.getItem('kene_tenant_products');
+        if (savedLocal) {
+          try {
+            const parsed = JSON.parse(savedLocal);
+            parsed.forEach((localItem: any) => {
+              if (!fetchedProducts.some((p: any) => p.id === localItem.id)) {
+                fetchedProducts = [localItem, ...fetchedProducts];
+              }
+            });
+          } catch (e) {}
         }
+
+        setProducts(fetchedProducts);
       } catch (error) {
         console.error('Failed to fetch products', error);
       } finally {

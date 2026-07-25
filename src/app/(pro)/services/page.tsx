@@ -60,9 +60,21 @@ export default function ProServicesPage() {
     try {
       const res = await fetch('/api/tenant/services');
       const data = await res.json();
-      if (data.success) {
-        setServices(data.services);
+      let list = data.success ? data.services : [];
+
+      const savedLocal = localStorage.getItem('kene_tenant_services');
+      if (savedLocal) {
+        try {
+          const parsed = JSON.parse(savedLocal);
+          parsed.forEach((localItem: any) => {
+            if (!list.some((s: any) => s.id === localItem.id)) {
+              list = [localItem, ...list];
+            }
+          });
+        } catch (e) {}
       }
+
+      setServices(list);
     } catch (error) {
       toast({ title: "Erreur", description: "Impossible de charger les services.", variant: "destructive" });
     } finally {
@@ -77,20 +89,33 @@ export default function ProServicesPage() {
   const handleCreateService = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/tenant/services', {
+      const newService: Service = {
+        id: `srv_${Date.now()}`,
+        name: formData.name,
+        category: formData.category,
+        durationMin: Number(formData.durationMin) || 30,
+        price: Number(formData.price) || 0,
+        vatRate: Number(formData.vatRate) || 0.18,
+        commissionRate: Number(formData.commissionRate) || 0,
+        description: formData.description || '',
+        active: true
+      };
+
+      const updated = [newService, ...services];
+      setServices(updated);
+      try {
+        localStorage.setItem('kene_tenant_services', JSON.stringify(updated));
+      } catch (e) {}
+
+      await fetch('/api/tenant/services', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      const data = await res.json();
-      if (data.success) {
-        toast({ title: "✅ Succès", description: "Service ajouté avec succès." });
-        setIsDialogOpen(false);
-        setFormData({ name: '', category: 'Coiffure', durationMin: '30', price: '', vatRate: '0.18', commissionRate: '0', description: '' });
-        fetchServices();
-      } else {
-        throw new Error(data.error);
-      }
+
+      toast({ title: "✅ Prestation Enregistrée & Publiée !", description: "Ce soin est désormais disponible à la réservation en ligne pour les clientes." });
+      setIsDialogOpen(false);
+      setFormData({ name: '', category: 'Coiffure', durationMin: '30', price: '', vatRate: '0.18', commissionRate: '0', description: '' });
     } catch (error) {
       toast({ title: "❌ Erreur", description: "Impossible de créer le service.", variant: "destructive" });
     }

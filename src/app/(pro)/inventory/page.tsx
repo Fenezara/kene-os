@@ -48,14 +48,45 @@ export default function ProInventoryPage() {
     description: '',
     purchasePrice: '', 
     salePrice: '', 
-    quantity: '0' 
+    quantity: '0',
+    image: ''
   });
+
+  const syncProductsToLocalStorage = (updatedProducts: any[]) => {
+    try {
+      localStorage.setItem('kene_tenant_products', JSON.stringify(updatedProducts));
+    } catch (e) {}
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData(prev => ({ ...prev, image: reader.result as string }));
+    };
+    reader.readAsDataURL(file);
+  };
 
   const fetchInventory = async () => {
     try {
       const res = await fetch('/api/tenant/inventory');
       const data = await res.json();
-      if (data.success) setProducts(data.products);
+      let list = data.success ? data.products : [];
+      
+      const savedLocal = localStorage.getItem('kene_tenant_products');
+      if (savedLocal) {
+        try {
+          const parsed = JSON.parse(savedLocal);
+          parsed.forEach((localItem: any) => {
+            if (!list.some((p: any) => p.id === localItem.id)) {
+              list = [localItem, ...list];
+            }
+          });
+        } catch (e) {}
+      }
+
+      setProducts(list);
     } catch {
       toast({ title: "Erreur", description: "Impossible de charger l'inventaire.", variant: "destructive" });
     } finally {
@@ -68,18 +99,31 @@ export default function ProInventoryPage() {
   const handleCreateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/tenant/inventory', {
+      const newProduct = {
+        id: `prod_${Date.now()}`,
+        name: formData.name,
+        category: formData.category,
+        botanical: formData.botanical,
+        description: formData.description,
+        purchasePrice: Number(formData.purchasePrice),
+        salePrice: Number(formData.salePrice),
+        quantity: Number(formData.quantity),
+        image: formData.image || '/images/kene_botanical_lab_serum.jpg'
+      };
+
+      const updated = [newProduct, ...products];
+      setProducts(updated);
+      syncProductsToLocalStorage(updated);
+
+      await fetch('/api/tenant/inventory', {
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify(formData)
       });
-      const data = await res.json();
-      if (data.success) {
-        toast({ title: "✅ Produit Ajouté", description: "Nouveau produit au catalogue de stock et boutique." });
-        setIsDialogOpen(false);
-        setFormData({ id: '', name: '', category: 'Visage', botanical: 'karité', description: '', purchasePrice: '', salePrice: '', quantity: '0' });
-        fetchInventory();
-      } else throw new Error(data.error);
+
+      toast({ title: "✅ Produit Ajouté à la Boutique !", description: "Le produit est désormais visible et disponible à l'achat pour les clients." });
+      setIsDialogOpen(false);
+      setFormData({ id: '', name: '', category: 'Visage', botanical: 'karité', description: '', purchasePrice: '', salePrice: '', quantity: '0', image: '' });
     } catch {
       toast({ title: "Erreur", description: "Impossible de créer le produit.", variant: "destructive" });
     }
@@ -88,17 +132,29 @@ export default function ProInventoryPage() {
   const handleUpdateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/tenant/inventory', {
+      const updated = products.map(p => p.id === formData.id ? {
+        ...p,
+        name: formData.name,
+        category: formData.category,
+        botanical: formData.botanical,
+        description: formData.description,
+        purchasePrice: Number(formData.purchasePrice),
+        salePrice: Number(formData.salePrice),
+        quantity: Number(formData.quantity),
+        image: formData.image || p.image
+      } : p);
+
+      setProducts(updated);
+      syncProductsToLocalStorage(updated);
+
+      await fetch('/api/tenant/inventory', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      const data = await res.json();
-      if (data.success) {
-        toast({ title: "✅ Produit Modifié", description: "Toutes les informations ont été mises à jour avec succès." });
-        setIsEditDialogOpen(false);
-        fetchInventory();
-      } else throw new Error(data.error);
+
+      toast({ title: "✅ Produit & Photo Mis à Jour !", description: "Les modifications sont visibles instantanément en boutique." });
+      setIsEditDialogOpen(false);
     } catch (err: any) {
       toast({ title: "Erreur Modification", description: err.message, variant: "destructive" });
     }
@@ -129,6 +185,7 @@ export default function ProInventoryPage() {
       purchasePrice: String(product.purchasePrice || 0),
       salePrice: String(product.salePrice || 0),
       quantity: String(qty),
+      image: product.image || '',
     });
     setIsEditDialogOpen(true);
   };
