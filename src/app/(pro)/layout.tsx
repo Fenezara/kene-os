@@ -83,23 +83,15 @@ function SidebarContent({ pathname }: { pathname: string }) {
                   const Icon = item.icon
                   return (
                     <Link key={item.href} href={item.href}>
-                      <div className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[11px] font-semibold tracking-wide transition-all duration-200 cursor-pointer overflow-hidden ${
+                      <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[11px] tracking-wide transition-all duration-200 cursor-pointer ${
                         isActive
-                          ? 'text-[#0F0A05]'
-                          : 'text-white/50 hover:text-white/90 hover:bg-white/5'
+                          ? 'bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black shadow-lg shadow-[#C8951E]/30 border border-[#FFD700]'
+                          : 'text-white/70 hover:text-white hover:bg-white/10 font-semibold'
                       }`}>
-                        {/* Active gold bg */}
+                        <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-black font-bold' : 'text-white/40'}`} />
+                        <span className={`truncate ${isActive ? 'text-black font-black' : ''}`}>{item.name}</span>
                         {isActive && (
-                          <motion.div
-                            layoutId="activeNavBg"
-                            className="absolute inset-0 bg-gradient-to-r from-[#C8951E] to-[#D4AF37] rounded-xl"
-                            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                          />
-                        )}
-                        <Icon className={`relative z-10 w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isActive ? 'text-[#0F0A05]' : 'text-white/30 group-hover:text-white/70'}`} />
-                        <span className="relative z-10 truncate">{item.name}</span>
-                        {isActive && (
-                          <ChevronRight className="relative z-10 w-3 h-3 ml-auto text-[#0F0A05]/50 shrink-0" />
+                          <ChevronRight className="w-3 h-3 ml-auto text-black font-bold shrink-0" />
                         )}
                       </div>
                     </Link>

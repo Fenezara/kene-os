@@ -60,14 +60,14 @@ export default function ClientLayout({
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs transition-all ${
                     isActive
-                      ? 'bg-[var(--gold-kene)] text-[#0F0A05] shadow-md font-bold'
-                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                      ? 'bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black shadow-md border border-[#FFD700]'
+                      : 'text-white/80 hover:text-white hover:bg-white/10 font-semibold'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span>{link.label}</span>
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-black font-bold' : ''}`} />
+                  <span className={isActive ? 'text-black font-black' : ''}>{link.label}</span>
                 </Link>
               );
             })}
@@ -194,12 +194,12 @@ export default function ClientLayout({
             <Link
               key={link.href}
               href={link.href}
-              className={`flex flex-col items-center gap-1 px-2 py-1 rounded-xl transition ${
-                isActive ? 'text-[var(--gold-kene)]' : 'text-white/50 hover:text-white'
+              className={`flex flex-col items-center gap-1 px-3 py-1 rounded-xl transition ${
+                isActive ? 'text-[#FFD700] bg-white/10 border border-[#FFD700]/40 font-black shadow-lg scale-105' : 'text-white/60 hover:text-white font-medium'
               }`}
             >
-              <Icon className={`w-5 h-5 ${isActive ? 'scale-110' : ''}`} />
-              <span className={`text-[10px] ${isActive ? 'font-bold' : 'font-medium'}`}>
+              <Icon className={`w-5 h-5 ${isActive ? 'scale-110 text-[#FFD700]' : ''}`} />
+              <span className={`text-[10px] ${isActive ? 'font-black text-[#FFD700]' : 'font-medium'}`}>
                 {link.label}
               </span>
             </Link>
