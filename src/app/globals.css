@@ -107,7 +107,10 @@ button, a, [role="button"] {
 }
 
 /* ─── COMPREHENSIVE HIGH-CONTRAST LIGHT MODE ENGINE ─── */
-.light-mode {
+/* ─── UNIVERSAL HIGH-CONTRAST LIGHT MODE ENGINE ─── */
+.light-mode,
+html.light-mode,
+body.light-mode {
   --background: #FAF6EE !important;
   --foreground: #0F0A05 !important;
   --card: #FFFFFF !important;
@@ -118,79 +121,91 @@ button, a, [role="button"] {
   --input: #E2D5BE !important;
   --muted: #F2EAD8 !important;
   --muted-foreground: #4A3C2F !important;
-}
 
-/* Backgrounds in Light Mode */
-.light-mode,
-.light-mode body {
   background-color: #FAF6EE !important;
   color: #0F0A05 !important;
 }
 
-.light-mode [class*="bg-[#0A0603]"],
-.light-mode [class*="bg-[#0F0A05]"],
-.light-mode [class*="bg-[#110D09]"],
-.light-mode [class*="bg-[#140E0A]"],
-.light-mode [class*="bg-[#1E1610]"] {
-  background-color: #FAF6EE !important;
-  color: #0F0A05 !important;
-}
-
-.light-mode [class*="bg-[#1A1410]"],
-.light-mode [class*="bg-[#241C16]"],
-.light-mode [class*="bg-[#362A21]"],
-.light-mode [class*="from-[#241C16]"],
-.light-mode [class*="from-[#1A1410]"],
-.light-mode [class*="from-[#0A0603]"],
-.light-mode [class*="from-[#1A1008]"],
-.light-mode [class*="from-[#040D07]"] {
-  background: #FFFFFF !important;
+/* Force strip all dark background gradients in Light Mode */
+.light-mode [class*="bg-[#"],
+.light-mode [class*="from-[#"],
+.light-mode [class*="via-[#"],
+.light-mode [class*="to-[#"],
+html.light-mode [class*="bg-[#"],
+html.light-mode [class*="from-[#"],
+html.light-mode [class*="via-[#"],
+html.light-mode [class*="to-[#"] {
+  background-image: none !important;
   background-color: #FFFFFF !important;
   border-color: #E2D5BE !important;
   color: #0F0A05 !important;
 }
 
+/* Light Mode Page Canvas */
+.light-mode main,
+.light-mode div.min-h-screen,
+html.light-mode main,
+html.light-mode div.min-h-screen {
+  background-color: #FAF6EE !important;
+  color: #0F0A05 !important;
+}
+
+/* Sub-containers & Translucent Cards */
 .light-mode .bg-white\/5,
 .light-mode .bg-white\/8,
-.light-mode .bg-white\/10 {
+.light-mode .bg-white\/10,
+.light-mode .bg-white\/20,
+html.light-mode .bg-white\/5,
+html.light-mode .bg-white\/8,
+html.light-mode .bg-white\/10,
+html.light-mode .bg-white\/20 {
+  background-image: none !important;
   background-color: #F2EAD8 !important;
   color: #0F0A05 !important;
 }
 
-/* High Contrast Text Adjustments in Light Mode (Not inside image/dark overlays) */
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-white {
+/* High Contrast Text Adjustments in Light Mode */
+.light-mode .text-white,
+html.light-mode .text-white {
   color: #0F0A05 !important;
 }
 
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-white\/30,
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-white\/40,
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-white\/50,
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-white\/60,
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-white\/70,
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-white\/80,
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-gray-400,
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-gray-500,
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-karite\/50,
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-karite\/70 {
+.light-mode .text-white\/30,
+.light-mode .text-white\/40,
+.light-mode .text-white\/50,
+.light-mode .text-white\/60,
+.light-mode .text-white\/70,
+.light-mode .text-white\/80,
+.light-mode .text-gray-400,
+.light-mode .text-gray-500,
+html.light-mode .text-white\/30,
+html.light-mode .text-white\/40,
+html.light-mode .text-white\/50,
+html.light-mode .text-white\/60,
+html.light-mode .text-white\/70,
+html.light-mode .text-white\/80,
+html.light-mode .text-gray-400,
+html.light-mode .text-gray-500 {
   color: #4A3C2F !important;
 }
 
-/* Gold text in Light Mode -> Dark Bronze Gold for High Legibility */
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-\[\#F3E5AB\],
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-\[\#D4AF37\] {
-  color: #8A5C0A !important;
-  font-weight: 700 !important;
+/* Preserve Image Overlays & Hero Cards with Dark Backdrops */
+.preserve-dark-text,
+.preserve-dark-text *,
+.light-mode .preserve-dark-text,
+.light-mode .preserve-dark-text *,
+html.light-mode .preserve-dark-text,
+html.light-mode .preserve-dark-text * {
+  color: #FFFFFF !important;
 }
 
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-\[\#F8F1E4\],
-.light-mode :not(.preserve-dark-text, .preserve-dark-text *) .text-karite {
-  color: #0F0A05 !important;
-}
-
-/* Buttons with Gold Gradients ALWAYS retain Pure Black Font */
+/* Gold Gradient Buttons ALWAYS retain Pure Black Text */
 .light-mode [class*="from-[#FFD700]"],
 .light-mode [class*="from-[#F3E5AB]"],
-.light-mode [class*="from-[var(--gold-kene)]"] {
+.light-mode [class*="from-[var(--gold-kene)]"],
+html.light-mode [class*="from-[#FFD700]"],
+html.light-mode [class*="from-[#F3E5AB]"],
+html.light-mode [class*="from-[var(--gold-kene)]"] {
   color: #000000 !important;
 }
 
