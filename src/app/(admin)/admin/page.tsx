@@ -335,23 +335,23 @@ export default function AdminDashboardPage() {
             <select
               value={countryFilter}
               onChange={(e) => setCountryFilter(e.target.value)}
-              className="bg-[#241C16] border border-white/10 text-white text-xs rounded-xl px-3 py-2 cursor-pointer outline-none"
+              className="bg-[#241C16] border border-white/10 text-white text-xs rounded-xl px-3 py-2 cursor-pointer outline-none focus:border-[var(--gold-kene)]"
             >
-              <option value="ALL">Tous les Pays UEMOA</option>
-              <option value="CI">🇨🇮 Côte d'Ivoire (Abidjan / Korhogo)</option>
-              <option value="SN">🇸🇳 Sénégal (Dakar / Saint-Louis)</option>
-              <option value="ML">🇲🇱 Mali (Bamako / Sikasso)</option>
+              <option value="ALL" className="bg-[#1A1410] text-white py-1">Tous les Pays UEMOA</option>
+              <option value="CI" className="bg-[#1A1410] text-white py-1">🇨🇮 Côte d'Ivoire (Abidjan / Korhogo)</option>
+              <option value="SN" className="bg-[#1A1410] text-white py-1">🇸🇳 Sénégal (Dakar / Saint-Louis)</option>
+              <option value="ML" className="bg-[#1A1410] text-white py-1">🇲🇱 Mali (Bamako / Sikasso)</option>
             </select>
 
             <select
               value={tierFilter}
               onChange={(e) => setTierFilter(e.target.value)}
-              className="bg-[#241C16] border border-white/10 text-white text-xs rounded-xl px-3 py-2 cursor-pointer outline-none"
+              className="bg-[#241C16] border border-white/10 text-white text-xs rounded-xl px-3 py-2 cursor-pointer outline-none focus:border-[var(--gold-kene)]"
             >
-              <option value="ALL">Toutes Formules</option>
-              <option value="Essentiel">Formule Essentiel</option>
-              <option value="Pro">Formule Pro</option>
-              <option value="Chaîne">Formule Chaîne Multi-Salons</option>
+              <option value="ALL" className="bg-[#1A1410] text-white py-1">Toutes Formules</option>
+              <option value="Essentiel" className="bg-[#1A1410] text-white py-1">Formule Essentiel</option>
+              <option value="Pro" className="bg-[#1A1410] text-white py-1">Formule Pro</option>
+              <option value="Chaîne" className="bg-[#1A1410] text-white py-1">Formule Chaîne Multi-Salons</option>
             </select>
           </div>
         </div>

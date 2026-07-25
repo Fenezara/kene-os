@@ -240,10 +240,10 @@ export default function SettingsPage() {
                         onChange={e => handleChange('identity', 'type', e.target.value)}
                         className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#C8951E] transition-colors appearance-none"
                       >
-                        <option value="Institut">Institut de Beauté</option>
-                        <option value="Spa">Spa & Bien-être</option>
-                        <option value="Dermo">Dermo-cosmétique</option>
-                        <option value="Coiffure">Salon de Coiffure</option>
+                        <option value="Institut" className="bg-[#1A1410] text-white py-1.5">Institut de Beauté</option>
+                        <option value="Spa" className="bg-[#1A1410] text-white py-1.5">Spa & Bien-être</option>
+                        <option value="Dermo" className="bg-[#1A1410] text-white py-1.5">Dermo-cosmétique</option>
+                        <option value="Coiffure" className="bg-[#1A1410] text-white py-1.5">Salon de Coiffure</option>
                       </select>
                     </div>
                   </div>
@@ -315,14 +315,14 @@ export default function SettingsPage() {
                       <select 
                         value={settings.fiscal.country}
                         onChange={e => handleChange('fiscal', 'country', e.target.value)}
-                        className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#4CAF6E] transition-colors appearance-none"
+                        className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#4CAF6E] transition-colors cursor-pointer"
                       >
-                        <option value="CI">Côte d'Ivoire (CI)</option>
-                        <option value="SN">Sénégal (SN)</option>
-                        <option value="ML">Mali (ML)</option>
-                        <option value="BF">Burkina Faso (BF)</option>
-                        <option value="TG">Togo (TG)</option>
-                        <option value="BJ">Bénin (BJ)</option>
+                        <option value="CI" className="bg-[#1A1410] text-white py-1.5">Côte d'Ivoire (CI)</option>
+                        <option value="SN" className="bg-[#1A1410] text-white py-1.5">Sénégal (SN)</option>
+                        <option value="ML" className="bg-[#1A1410] text-white py-1.5">Mali (ML)</option>
+                        <option value="BF" className="bg-[#1A1410] text-white py-1.5">Burkina Faso (BF)</option>
+                        <option value="TG" className="bg-[#1A1410] text-white py-1.5">Togo (TG)</option>
+                        <option value="BJ" className="bg-[#1A1410] text-white py-1.5">Bénin (BJ)</option>
                       </select>
                     </div>
                     <div className="space-y-2">
@@ -330,12 +330,12 @@ export default function SettingsPage() {
                       <select 
                         value={settings.fiscal.currency}
                         onChange={e => handleChange('fiscal', 'currency', e.target.value)}
-                        className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#4CAF6E] transition-colors appearance-none"
+                        className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#4CAF6E] transition-colors cursor-pointer"
                       >
-                        <option value="XOF">FCFA (XOF)</option>
-                        <option value="XAF">FCFA (XAF)</option>
-                        <option value="USD">Dollar ($)</option>
-                        <option value="EUR">Euro (€)</option>
+                        <option value="XOF" className="bg-[#1A1410] text-white py-1.5">Franc CFA UEMOA (XOF)</option>
+                        <option value="XAF" className="bg-[#1A1410] text-white py-1.5">Franc CFA CEMAC (XAF)</option>
+                        <option value="EUR" className="bg-[#1A1410] text-white py-1.5">Euro (€)</option>
+                        <option value="USD" className="bg-[#1A1410] text-white py-1.5">Dollar ($)</option>
                       </select>
                     </div>
                     <div className="space-y-2">
