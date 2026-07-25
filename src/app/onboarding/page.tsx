@@ -8,6 +8,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Building2, Globe, FileText, Check, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+import { registerNewTenant } from '@/lib/sync-engine';
+
 export default function OnboardingPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -43,6 +45,16 @@ export default function OnboardingPage() {
       fiscal: { rccm: formData.rccm || 'CI-ABJ-2024-B-100', nif: '1098473A', vatRate: formData.tva || 18, country: formData.country || 'CI', currency: formData.currency || 'XOF' },
       subscription: { plan: formData.plan || 'Pro', renewalDate: '2027-01-01' }
     };
+    
+    // Synchronize into global tenant directory for Super Admin
+    registerNewTenant({
+      name: salonTitle,
+      type: 'Institut & Spa Botanique',
+      subscriptionTier: formData.plan === 'chaine' ? 'Chaîne' : formData.plan === 'pro' ? 'Pro' : 'Essentiel',
+      country: { code: formData.country || 'CI', name: formData.country === 'SN' ? 'Sénégal' : 'Côte d\'Ivoire' },
+      ownerName: 'Gérant Fondateur'
+    });
+
     localStorage.setItem('kene_tenant_settings', JSON.stringify(tenantSettings));
     toast({
       title: "✅ Succès",

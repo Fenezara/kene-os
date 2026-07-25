@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { KeneLogo } from '@/components/ui/logo';
 
+import { registerNewClient, registerNewTenant } from '@/lib/sync-engine';
+
 const tabs = [
   { key: 'client', label: 'Client 🌸', icon: '👤' },
   { key: 'salon', label: 'Mon Salon ✂️', icon: '🏬' },
@@ -101,18 +103,33 @@ export default function LoginPage() {
           points: 1250,
         };
 
+        // Synchronize into global client directory
+        registerNewClient(clientUserData);
+
         localStorage.setItem('kene_user', JSON.stringify(clientUserData));
         document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
       } else {
         const isSuperAdmin = role === 'Super Admin' || role === 'admin';
         const sessionRole = isSuperAdmin ? 'admin' : 'gerant';
         document.cookie = `kene-session=${sessionRole}-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
-        
-        localStorage.setItem('kene_user', JSON.stringify({
+
+        const userObj = {
           name: isSuperAdmin ? 'Super-Admin SaaS Kènè' : displayName,
           email: userEmailOrName || (isSuperAdmin ? 'admin@kene.africa' : 'contact@salon.com'),
           role: sessionRole,
-        }));
+        };
+
+        if (sessionRole === 'gerant') {
+          registerNewTenant({
+            name: displayName.endsWith('Salon') ? displayName : `Salon ${displayName}`,
+            email: userObj.email,
+            phone: '+225 07 00 11 22 33',
+            type: 'Institut & Spa Botanique',
+            subscriptionTier: 'Pro'
+          });
+        }
+        
+        localStorage.setItem('kene_user', JSON.stringify(userObj));
       }
 
       setLoading(false);
