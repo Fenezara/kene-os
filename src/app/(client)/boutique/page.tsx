@@ -248,7 +248,7 @@ export default function BoutiquePage() {
         ) : (
           <>
             {/* Banner */}
-            <div className="relative rounded-3xl p-6 overflow-hidden bg-gradient-to-r from-[#241C16] via-[#1A1410] to-[#0A0603] border border-[#C8951E]/30 shadow-2xl">
+            <div className="relative rounded-3xl p-6 overflow-hidden bg-[#1A1410] border border-[#C8951E]/30 shadow-2xl">
               <div className="relative z-10 space-y-2 max-w-xl">
                 <span className="text-xs font-bold text-[#C8951E] uppercase tracking-widest font-display flex items-center gap-1.5 bg-[#C8951E]/10 border border-[#C8951E]/30 px-3 py-0.5 rounded-full w-fit">
                   <Sparkles className="w-3.5 h-3.5 text-[#C8951E]" /> Boutique Officielle : {selectedSalon.name}

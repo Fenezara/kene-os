@@ -138,7 +138,13 @@ button, a, [role="button"] {
 
 .light-mode [class*="bg-[#1A1410]"],
 .light-mode [class*="bg-[#241C16]"],
-.light-mode [class*="bg-[#362A21]"] {
+.light-mode [class*="bg-[#362A21]"],
+.light-mode [class*="from-[#241C16]"],
+.light-mode [class*="from-[#1A1410]"],
+.light-mode [class*="from-[#0A0603]"],
+.light-mode [class*="from-[#1A1008]"],
+.light-mode [class*="from-[#040D07]"] {
+  background: #FFFFFF !important;
   background-color: #FFFFFF !important;
   border-color: #E2D5BE !important;
   color: #0F0A05 !important;
