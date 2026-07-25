@@ -69,6 +69,8 @@ html, body {
   -webkit-text-size-adjust: 100%;
   max-width: 100vw;
   overflow-x: hidden;
+  background-color: #0F0A05;
+  color: #F8F1E4;
 }
 
 button, a, [role="button"] {
@@ -106,331 +108,12 @@ button, a, [role="button"] {
   --ring: #C8951E;
 }
 
-/* ─── COMPREHENSIVE HIGH-CONTRAST LIGHT MODE ENGINE ─── */
-/* ─── 🏛️ LUXURY AFRO-BOTANICAL LIGHT MODE SYSTEM ("Ivoire, Sable & Or Miel") ─── */
-.light-mode,
-html.light-mode,
-body.light-mode {
-  --background: #FBF8F2 !important;
-  --foreground: #2A1D13 !important;
-  --card: #FFFDF9 !important;
-  --card-foreground: #2A1D13 !important;
-  --popover: #FFFDF9 !important;
-  --popover-foreground: #2A1D13 !important;
-  --border: #E8DCC4 !important;
-  --input: #E8DCC4 !important;
-  --muted: #F5ECCB !important;
-  --muted-foreground: #6B543E !important;
-
-  background-color: #FBF8F2 !important;
-  color: #2A1D13 !important;
-}
-
-/* Light Mode Canvas & Main Sections */
-.light-mode main,
-.light-mode body,
-.light-mode div.min-h-screen,
-html.light-mode main,
-html.light-mode body,
-html.light-mode div.min-h-screen {
-  background-color: #FBF8F2 !important;
-  color: #2A1D13 !important;
-}
-
-/* Convert ONLY Non-Image Dark Cards to Warm Honey-Gold Gradients */
-.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#0F0A05]"],
-.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#0A0603]"],
-.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1A1410]"],
-.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#241C16]"],
-.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#110D09]"],
-.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#140E09]"],
-.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1E1610]"],
-.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#362A21]"],
-.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1A1008]"],
-.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#040D07]"],
-html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#0F0A05]"],
-html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#0A0603]"],
-html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1A1410]"],
-html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#241C16]"],
-html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#110D09]"],
-html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#140E09]"],
-html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1E1610]"],
-html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#362A21]"],
-html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1A1008]"],
-html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#040D07]"] {
-  background: linear-gradient(135deg, #FFFDF9 0%, #F7EFE2 50%, #EFE3CE 100%) !important;
-  border-color: rgba(200, 149, 30, 0.35) !important;
-  box-shadow: 0 12px 32px -8px rgba(138, 92, 10, 0.08) !important;
-  color: #2A1D13 !important;
-}
-
-/* 📸 UNIVERSAL PHOTO CARD PROTECTION ENGINE (Applies automatically across 100% of pages) */
-.light-mode div:has(img),
-.light-mode card:has(img),
-.light-mode section:has(img),
-.light-mode article:has(img),
-html.light-mode div:has(img),
-html.light-mode card:has(img),
-html.light-mode section:has(img),
-html.light-mode article:has(img) {
-  background-color: transparent !important;
-}
-
-/* Force 100% visibility for all image tags everywhere */
-.light-mode img,
-html.light-mode img {
-  opacity: 1 !important;
-  display: block !important;
-  visibility: visible !important;
-  z-index: 0 !important;
-  filter: none !important;
-}
-
-/* Force dark gradient overlays on photo cards to remain dark so white titles remain bright white */
-.light-mode div:has(img) [class*="bg-gradient-"],
-.light-mode div:has(img) [class*="from-[#0F0A05]"],
-.light-mode div:has(img) [class*="from-black"],
-html.light-mode div:has(img) [class*="bg-gradient-"],
-html.light-mode div:has(img) [class*="from-[#0F0A05]"],
-html.light-mode div:has(img) [class*="from-black"] {
-  background: linear-gradient(to top, rgba(15, 10, 5, 0.95) 0%, rgba(15, 10, 5, 0.6) 50%, transparent 100%) !important;
-  z-index: 1 !important;
-}
-
-/* Force text inside any photo card to stay crisp white */
-.light-mode div:has(img) h1,
-.light-mode div:has(img) h2,
-.light-mode div:has(img) h3,
-.light-mode div:has(img) p,
-.light-mode div:has(img) span,
-html.light-mode div:has(img) h1,
-html.light-mode div:has(img) h2,
-html.light-mode div:has(img) h3,
-html.light-mode div:has(img) p,
-html.light-mode div:has(img) span {
-  color: #FFFFFF !important;
-}
-
-/* 🎨 100% Protection for Colored Badges, Icons & Logos (Gold, Red, Green, WhatsApp) */
-.light-mode [class*="bg-[#C8951E]"],
-.light-mode [class*="bg-[#8A1C14]"],
-.light-mode [class*="bg-[#2E5A36]"],
-.light-mode [class*="bg-[#25D366]"],
-.light-mode [class*="bg-[#4E9FD1]"],
-.light-mode [class*="bg-[#8A3B14]"],
-.light-mode [class*="from-[#C8951E]"],
-.light-mode [class*="from-[#25D366]"],
-html.light-mode [class*="bg-[#C8951E]"],
-html.light-mode [class*="bg-[#8A1C14]"],
-html.light-mode [class*="bg-[#2E5A36]"],
-html.light-mode [class*="bg-[#25D366]"],
-html.light-mode [class*="bg-[#4E9FD1]"],
-html.light-mode [class*="bg-[#8A3B14]"],
-html.light-mode [class*="from-[#C8951E]"],
-html.light-mode [class*="from-[#25D366]"] {
-  opacity: 1 !important;
-}
-
-.light-mode [class*="bg-[#C8951E]"] *,
-.light-mode [class*="bg-[#8A1C14]"] *,
-.light-mode [class*="bg-[#25D366]"] *,
-.light-mode [class*="bg-[#4E9FD1]"] *,
-html.light-mode [class*="bg-[#C8951E]"] *,
-html.light-mode [class*="bg-[#8A1C14]"] *,
-html.light-mode [class*="bg-[#25D366]"] *,
-html.light-mode [class*="bg-[#4E9FD1]"] * {
-  color: #FFFFFF !important;
-}
-
-/* Sub-cards, Modals & Translucent Pills */
-.light-mode .bg-white\/5,
-.light-mode .bg-white\/8,
-.light-mode .bg-white\/10,
-.light-mode .bg-white\/20,
-html.light-mode .bg-white\/5,
-html.light-mode .bg-white\/8,
-html.light-mode .bg-white\/10,
-html.light-mode .bg-white\/20 {
-  background: #F4EAD7 !important;
-  border-color: rgba(200, 149, 30, 0.25) !important;
-  color: #2A1D13 !important;
-}
-
-/* Elegant Espresso & Warm Amber Typography */
-.light-mode .text-white,
-html.light-mode .text-white {
-  color: #2A1D13 !important;
-  font-weight: 700 !important;
-}
-
-.light-mode .text-white\/30,
-.light-mode .text-white\/40,
-.light-mode .text-white\/50,
-.light-mode .text-white\/60,
-.light-mode .text-white\/70,
-.light-mode .text-white\/80,
-.light-mode .text-gray-400,
-.light-mode .text-gray-500,
-html.light-mode .text-white\/30,
-html.light-mode .text-white\/40,
-html.light-mode .text-white\/50,
-html.light-mode .text-white\/60,
-html.light-mode .text-white\/70,
-html.light-mode .text-white\/80,
-html.light-mode .text-gray-400,
-html.light-mode .text-gray-500 {
-  color: #6B543E !important;
-}
-
-/* Gold Accents & Badges in Light Mode */
-.light-mode .text-\[\#C8951E\],
-.light-mode .text-\[\#F3E5AB\],
-.light-mode .text-\[\#D4AF37\],
-html.light-mode .text-\[\#C8951E\],
-html.light-mode .text-\[\#F3E5AB\],
-html.light-mode .text-\[\#D4AF37\] {
-  color: #A36F12 !important;
-  font-weight: 800 !important;
-}
-
-/* 📸 HERO PHOTO CARDS PRESERVATION (Ensures background photos & dark overlays are never hidden in Light Mode) */
-.preserve-hero-image,
-.preserve-hero-image *,
-.preserve-hero-image div,
-.light-mode .preserve-hero-image,
-.light-mode .preserve-hero-image *,
-.light-mode .preserve-hero-image div,
-html.light-mode .preserve-hero-image,
-html.light-mode .preserve-hero-image *,
-html.light-mode .preserve-hero-image div {
-  background-color: transparent !important;
-}
-
-.preserve-hero-image img,
-.light-mode .preserve-hero-image img,
-html.light-mode .preserve-hero-image img {
-  opacity: 1 !important;
-  display: block !important;
-  visibility: visible !important;
-}
-
-.preserve-hero-image .absolute.inset-0,
-.light-mode .preserve-hero-image .absolute.inset-0,
-html.light-mode .preserve-hero-image .absolute.inset-0 {
-  background: linear-gradient(to top, rgba(15, 10, 5, 0.95) 0%, rgba(15, 10, 5, 0.6) 50%, transparent 100%) !important;
-}
-
-/* Preserve Image Overlays & Hero Banners with Photos */
-.preserve-dark-text,
-.preserve-dark-text h1,
-.preserve-dark-text h2,
-.preserve-dark-text h3,
-.preserve-dark-text p,
-.preserve-dark-text span,
-.light-mode .preserve-dark-text,
-.light-mode .preserve-dark-text h1,
-.light-mode .preserve-dark-text h2,
-.light-mode .preserve-dark-text h3,
-.light-mode .preserve-dark-text p,
-.light-mode .preserve-dark-text span,
-html.light-mode .preserve-dark-text,
-html.light-mode .preserve-dark-text h1,
-html.light-mode .preserve-dark-text h2,
-html.light-mode .preserve-dark-text h3,
-html.light-mode .preserve-dark-text p,
-html.light-mode .preserve-dark-text span {
-  color: #FFFFFF !important;
-}
-
-/* Gold Metallic Buttons keep Pure Black High-Contrast Font */
-.light-mode [class*="from-[#FFD700]"],
-.light-mode [class*="from-[#F3E5AB]"],
-.light-mode [class*="from-[var(--gold-kene)]"],
-html.light-mode [class*="from-[#FFD700]"],
-html.light-mode [class*="from-[#F3E5AB]"],
-html.light-mode [class*="from-[var(--gold-kene)]"] {
-  background: linear-gradient(135deg, #FFD700 0%, #C8951E 50%, #D4AF37 100%) !important;
-  color: #000000 !important;
-}
-
-.light-mode [class*="from-[#FFD700]"] *,
-.light-mode [class*="from-[#F3E5AB]"] *,
-.light-mode [class*="from-[var(--gold-kene)]"] *,
-html.light-mode [class*="from-[#FFD700]"] *,
-html.light-mode [class*="from-[#F3E5AB]"] *,
-html.light-mode [class*="from-[var(--gold-kene)]"] * {
-  color: #000000 !important;
-  font-weight: 900 !important;
-}
-
-/* Navigation Bars & Header Buttons in Light Mode */
-.light-mode header,
-.light-mode nav,
-html.light-mode header,
-html.light-mode nav {
-  background-color: #FFFDF9 !important;
-  border-color: #E2D5BE !important;
-}
-
-.light-mode nav a:not([class*="from-"]),
-.light-mode header a:not([class*="from-"]),
-html.light-mode nav a:not([class*="from-"]),
-html.light-mode header a:not([class*="from-"]) {
-  color: #2A1D13 !important;
-}
-
-/* High Contrast Input Fields in Light Mode */
-.light-mode input,
-.light-mode textarea,
-.light-mode select,
-html.light-mode input,
-html.light-mode textarea,
-html.light-mode select {
-  background-color: #FAF4E8 !important;
-  border-color: #E2D2B5 !important;
-  color: #1F140C !important;
-}
-
-.light-mode input::placeholder,
-.light-mode textarea::placeholder,
-html.light-mode input::placeholder,
-html.light-mode textarea::placeholder {
-  color: #8C7560 !important;
-}
-
-/* Table Rows & Headers in Light Mode */
-.light-mode tr:nth-child(even),
-html.light-mode tr:nth-child(even) {
-  background-color: #FAF4E8 !important;
-}
-
-.light-mode th,
-html.light-mode th {
-  background-color: #EFE4CE !important;
-  color: #1F140C !important;
-  font-weight: 800 !important;
-}
-
-/* Borders in Light Mode */
-.light-mode [class*="border-white\/5"],
-.light-mode [class*="border-white\/10"],
-.light-mode [class*="border-white\/20"],
-.light-mode [class*="border-white\/30"] {
-  border-color: #E2D5BE !important;
-}
-
-.light-mode [class*="border-\[\#C8951E\]\/20"],
-.light-mode [class*="border-\[\#C8951E\]\/30"],
-.light-mode [class*="border-\[\#C8951E\]\/40"] {
-  border-color: #C8951E !important;
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans selection:bg-[#C8951E] selection:text-[#0F0A05];
+    @apply bg-[#0F0A05] text-[#F8F1E4] font-sans selection:bg-[#C8951E] selection:text-[#0F0A05];
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
@@ -439,13 +122,13 @@ html.light-mode th {
 
 /* Custom Afro-Futuristic Aesthetic Utilities */
 .gold-gradient-text {
-  background: linear-gradient(135deg, #C8951E 0%, #8A5C0A 50%, #8A3B14 100%);
+  background: linear-gradient(135deg, #FFD700 0%, #C8951E 50%, #D4AF37 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gold-gradient-bg {
-  background: linear-gradient(135deg, #C8951E 0%, #D4AF37 50%, #F3E5AB 100%);
+  background: linear-gradient(135deg, #FFD700 0%, #C8951E 50%, #D4AF37 100%);
 }
 
 .gold-border-glow {
@@ -454,10 +137,10 @@ html.light-mode th {
 }
 
 .glass-card-afro {
-  background: rgba(26, 20, 16, 0.75);
+  background: rgba(26, 20, 16, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(200, 149, 30, 0.2);
+  border: 1px solid rgba(200, 149, 30, 0.25);
 }
 
 .glass-card-hover {

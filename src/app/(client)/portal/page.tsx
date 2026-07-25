@@ -405,7 +405,7 @@ export default function ClientPortalPage() {
 
       {/* ── HERO VISUEL RITUEL BOTANIQUE AFRICAIN ── */}
       <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.05 }}>
-        <Card className="preserve-dark-text preserve-hero-image bg-[#1A1410] border border-[var(--gold-kene)]/30 shadow-2xl rounded-3xl overflow-hidden relative group">
+        <Card className="bg-[#1A1410] border border-[var(--gold-kene)]/30 shadow-2xl rounded-3xl overflow-hidden relative group">
           <div className="relative h-44 sm:h-52 w-full overflow-hidden">
             <img 
               src="/images/african_spa_ritual_hero.jpg" 
@@ -594,7 +594,7 @@ export default function ClientPortalPage() {
       {/* --- CONSULTATION DIRECTE DR. DERMATOLOGUE IA (DR. DIALLO) --- */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
         <a href="/chat?mode=dr_diallo" className="block">
-          <Card className="preserve-dark-text bg-gradient-to-r from-emerald-950 via-[#1A1410] to-[#241C16] border border-emerald-500/40 text-white shadow-xl overflow-hidden relative rounded-2xl cursor-pointer hover:border-emerald-400 transition-all">
+          <Card className="bg-gradient-to-r from-emerald-950/80 via-[#1A1410] to-[#241C16] border border-emerald-500/40 text-white shadow-xl overflow-hidden relative rounded-2xl cursor-pointer hover:border-emerald-400 transition-all">
             <CardContent className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3.5">
                 <div className="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl shadow-inner shrink-0">
