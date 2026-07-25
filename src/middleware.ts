@@ -15,11 +15,15 @@ const SECURITY_HEADERS = {
   'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https:;",
 };
 
-const PROTECTED_ROUTES = [
+const PRO_ROUTES = [
   '/dashboard', '/pos', '/agenda', '/clients', '/inventory', 
   '/reviews', '/employees', '/marketing', '/rh', '/lab',
   '/compta', '/services', '/settings', '/reports', '/referral', 
-  '/caisse', '/admin'
+  '/caisse'
+];
+
+const CLIENT_ROUTES = [
+  '/portal', '/customizer', '/chat', '/diagnostic', '/client-wallet'
 ];
 
 export function middleware(request: NextRequest) {
@@ -33,22 +37,54 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // 1. Check if route requires authentication
-  const isProtected = PROTECTED_ROUTES.some(p => pathname.startsWith(p));
+  // 1. Strict Pro Route Protection: Block Clients from Enterprise Account
+  const isProRoute = PRO_ROUTES.some(p => pathname.startsWith(p));
+  if (isProRoute) {
+    if (!session) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      const response = NextResponse.redirect(loginUrl);
+      applySecurityHeaders(response);
+      return response;
+    }
 
-  if (isProtected && !session) {
-    const targetRedirect = pathname.startsWith('/admin') ? '/admin/login' : '/login';
-    const loginUrl = new URL(targetRedirect, request.url);
-    const safeRedirect = pathname.startsWith('/') ? pathname : '/dashboard';
-    loginUrl.searchParams.set('redirect', safeRedirect);
-    
-    const response = NextResponse.redirect(loginUrl);
-    applySecurityHeaders(response);
-    return response;
+    const isClientSession = session.value.startsWith('client-') || session.value.startsWith('user-');
+    if (isClientSession) {
+      const portalUrl = new URL('/portal', request.url);
+      const response = NextResponse.redirect(portalUrl);
+      applySecurityHeaders(response);
+      return response;
+    }
   }
 
-  // 2. Strict Super-Admin Route Protection: Only 'admin' role can access /admin routes
-  if (pathname.startsWith('/admin') && session) {
+  // 2. Strict Client Route Protection: Block Enterprise / Pro Users from Client Account
+  const isClientRoute = CLIENT_ROUTES.some(p => pathname.startsWith(p));
+  if (isClientRoute) {
+    if (!session) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      const response = NextResponse.redirect(loginUrl);
+      applySecurityHeaders(response);
+      return response;
+    }
+
+    const isProSession = session.value.startsWith('gerant-') || session.value.startsWith('pro-') || session.value.startsWith('tenant-') || session.value.startsWith('salon-');
+    if (isProSession) {
+      const dashboardUrl = new URL('/dashboard', request.url);
+      const response = NextResponse.redirect(dashboardUrl);
+      applySecurityHeaders(response);
+      return response;
+    }
+  }
+
+  // 3. Strict Super-Admin Route Protection: Only 'admin' role can access /admin routes
+  if (pathname.startsWith('/admin')) {
+    if (!session) {
+      const loginUrl = new URL('/admin/login', request.url);
+      const response = NextResponse.redirect(loginUrl);
+      applySecurityHeaders(response);
+      return response;
+    }
     const isSuperAdmin = session.value.startsWith('admin-');
     if (!isSuperAdmin) {
       const loginUrl = new URL('/admin/login', request.url);
