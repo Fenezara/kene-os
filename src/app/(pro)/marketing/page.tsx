@@ -259,7 +259,65 @@ export default function ProMarketingPage() {
         </div>
       </motion.div>
 
-      {/* ── CAMPAIGN HISTORY ── */}
+      {/* ── 🤖 KÈNÈ AUTOPILOT ENGINE ── */}
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
+        <div className="rounded-3xl border border-[#C8951E]/30 bg-gradient-to-br from-[#1A1410] via-[#241C16] to-[#0F0A05] p-5 shadow-2xl space-y-4 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-[#FFD700] via-[#C8951E] to-[#D4AF37]" />
+          
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pl-2">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Zap className="w-5 h-5 text-[var(--gold-kene)] animate-pulse" />
+                <h3 className="font-display font-black text-lg text-white">Kènè Autopilot Engine 1.0</h3>
+                <span className="text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                  ● Mode Autopilote Actif
+                </span>
+              </div>
+              <p className="text-xs text-white/50">Automatisez la fidélisation, les rappels de RDV et la clôture comptable sans intervention humaine.</p>
+            </div>
+
+            <Button
+              onClick={async () => {
+                try {
+                  toast({ title: "⚡ Autopilote en cours...", description: "Exécution des tâches automatisées..." });
+                  const res = await fetch('/api/cron/autopilot', { method: 'POST' });
+                  const json = await res.json();
+                  if (json.success) {
+                    toast({
+                      title: "🚀 Autopilote Exécuté avec Succès !",
+                      description: `${json.summary.remindersSent} rappels WhatsApp envoyés, ${json.summary.marketingOffersSent} offres transmises, caisse clôturée (${json.summary.totalRevenueClosed}).`,
+                    });
+                  }
+                } catch (e) {
+                  toast({ title: "Erreur Autopilote", description: "Échec de l'exécution automatique.", variant: "destructive" });
+                }
+              }}
+              className="bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-xl hover:scale-105 transition h-10 px-4 shrink-0 cursor-pointer"
+            >
+              <Zap className="w-4 h-4 mr-1.5" /> Exécuter l'Autopilote Maintenant
+            </Button>
+          </div>
+
+          {/* Autopilot Modules Toggles Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+            {[
+              { title: '📲 Rappels RDV WhatsApp', desc: 'Rappels automatiques 24h & 2h avant le soin', status: 'Actif (24/7)', color: 'border-emerald-500/30 text-emerald-400' },
+              { title: '🎂 Offres & Relances 45j', desc: 'Anniversaires & relance des clientes inactives', status: 'Actif (9h00)', color: 'border-amber-500/30 text-amber-400' },
+              { title: '📑 Clôture Caisse SYSCOHADA', desc: 'Rapport quotidien & écritures de caisse à 21h', status: 'Actif (21h00)', color: 'border-blue-500/30 text-blue-400' },
+            ].map((mod, idx) => (
+              <div key={idx} className="bg-[#140E09] border border-white/10 rounded-2xl p-3 space-y-1 relative">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-xs text-white leading-tight">{mod.title}</span>
+                  <span className={`text-[9px] font-mono font-bold border px-1.5 py-0.5 rounded-md ${mod.color}`}>
+                    {mod.status}
+                  </span>
+                </div>
+                <p className="text-[10px] text-white/40 leading-tight">{mod.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
         <div className="rounded-3xl border border-white/5 bg-[#1A1410] overflow-hidden">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 p-5 border-b border-white/5">
