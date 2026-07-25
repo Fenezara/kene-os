@@ -56,7 +56,10 @@ export default function LoginPage() {
         displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
       }
 
-      if (role === 'client') {
+      // 🔐 ÉTAPE 1 : Effacer toute ancienne session avant d'en créer une nouvelle
+      document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
+
+      if (role === 'Client') {
         let cleanFirstName = 'Awa';
         let cleanLastName = 'Koné';
         let cleanEmail = 'awa.kone@example.com';
@@ -107,21 +110,24 @@ export default function LoginPage() {
         registerNewClient(clientUserData);
 
         localStorage.setItem('kene_user', JSON.stringify(clientUserData));
+        // 🔐 ÉTAPE 2 : Créer la session CLIENT avec préfixe strict
         document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
       } else {
         const isSuperAdmin = role === 'Super Admin' || role === 'admin';
         const sessionRole = isSuperAdmin ? 'admin' : 'gerant';
+        // 🔐 ÉTAPE 2 : Créer la session GÉRANT ou ADMIN avec préfixe strict
         document.cookie = `kene-session=${sessionRole}-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
 
         const userObj = {
           name: isSuperAdmin ? 'Super-Admin SaaS Kènè' : displayName,
           email: userEmailOrName || (isSuperAdmin ? 'admin@kene.africa' : 'contact@salon.com'),
           role: sessionRole,
+          salonName: sessionRole === 'gerant' ? `Institut ${displayName}` : undefined,
         };
 
         if (sessionRole === 'gerant') {
           registerNewTenant({
-            name: displayName.endsWith('Salon') ? displayName : `Salon ${displayName}`,
+            name: displayName.endsWith('Salon') ? displayName : `Institut ${displayName}`,
             email: userObj.email,
             phone: '+225 07 00 11 22 33',
             type: 'Institut & Spa Botanique',
@@ -132,9 +138,12 @@ export default function LoginPage() {
         localStorage.setItem('kene_user', JSON.stringify(userObj));
       }
 
-      setLoading(false);
-      toast({ title: '✨ Connexion Sécurisée (HttpOnly & HSTS)', description: `Bienvenue dans votre espace ${role}.` });
-      router.push(targetPath);
+      toast({ title: 'Connexion Sécurisée', description: `Bienvenue dans votre espace ${role}.` });
+      
+      // 🔐 ÉTAPE 3 : Navigation HTTP complète pour que le middleware lise le bon cookie
+      // Ne PAS utiliser router.push() car le middleware côté serveur ne verra pas le cookie
+      // tant qu'une vraie requête HTTP n'est pas émise avec le nouveau cookie
+      window.location.href = targetPath;
     } catch {
       setLoading(false);
       toast({ title: 'Erreur', description: 'Échec de connexion.', variant: 'destructive' });
