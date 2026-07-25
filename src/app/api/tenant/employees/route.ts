@@ -1,30 +1,25 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { DEMO_EMPLOYEES } from '@/lib/demo-data';
 
 export async function GET() {
   try {
+    const { db } = await import('@/lib/db');
     const firstTenant = await db.tenant.findFirst();
-    if (!firstTenant) {
-      return NextResponse.json({ success: false, error: 'No tenant found' }, { status: 404 });
+    if (firstTenant) {
+      const employees = await db.employee.findMany({
+        where: { tenantId: firstTenant.id },
+        orderBy: { createdAt: 'desc' },
+      });
+      if (employees.length > 0) return NextResponse.json({ success: true, employees });
     }
+  } catch { /* DB not ready — use demo data */ }
 
-    const employees = await db.employee.findMany({
-      where: { tenantId: firstTenant.id },
-      orderBy: { createdAt: 'desc' }
-    });
-
-    return NextResponse.json({ success: true, employees });
-  } catch (error) {
-    console.error('Failed to fetch employees:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch employees' },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json({ success: true, employees: DEMO_EMPLOYEES, _demo: true });
 }
 
 export async function POST(req: Request) {
   try {
+    const { db } = await import('@/lib/db');
     const firstTenant = await db.tenant.findFirst({
       include: { sites: true }
     });

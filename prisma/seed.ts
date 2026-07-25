@@ -1,341 +1,234 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const db = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting Kènè Pro database seeding...');
+  console.log('🌱 Seeding Kènè OS demo database...');
 
-  // 1. Countries
-  const countryCI = await prisma.country.upsert({
-    where: { code: 'CI' },
-    update: {},
+  // 1. Créer le tenant de démonstration
+  const tenant = await db.tenant.upsert({
+    where: { id: 'demo-salon-001' },
     create: {
-      code: 'CI',
-      name: "Côte d'Ivoire",
-      currencyCode: 'XOF',
-      language: 'fr-CI',
-      ohada: true,
-      active: true,
-      config: JSON.stringify({ vatRate: 0.18, cnpsRate: 0.055, cnpsEmployerRate: 0.109 }),
+      id: 'demo-salon-001',
+      name: 'Institut Beauté Kènè',
+      email: 'contact@kene.africa',
+      phone: '+225 07 00 11 22 33',
+      type: 'Institut & Spa Botanique',
+      subscriptionTier: 'Pro',
+      country: 'CI',
+      city: 'Abidjan',
+      address: 'Cocody Riviera 3, Abidjan, Côte d\'Ivoire',
+      rccm: 'CI-ABJ-2024-B-0012345',
+      nif: '2024 12345 M',
+    },
+    update: {
+      name: 'Institut Beauté Kènè',
     },
   });
 
-  const countrySN = await prisma.country.upsert({
-    where: { code: 'SN' },
-    update: {},
-    create: {
-      code: 'SN',
-      name: 'Sénégal',
-      currencyCode: 'XOF',
-      language: 'fr-SN',
-      ohada: true,
-      active: true,
-      config: JSON.stringify({ vatRate: 0.18, ipresRate: 0.056, ipresEmployerRate: 0.084 }),
-    },
-  });
+  console.log(`✅ Tenant créé : ${tenant.name}`);
 
-  // 2. Currencies
-  await prisma.currency.upsert({
-    where: { code: 'XOF' },
-    update: {},
-    create: { code: 'XOF', name: 'Franc CFA UEMOA', symbol: 'FCFA', decimals: 0 },
-  });
+  // 2. Créer des clientes de démonstration
+  const clients = await Promise.all([
+    db.client.upsert({
+      where: { id: 'client-001' },
+      create: {
+        id: 'client-001',
+        tenantId: tenant.id,
+        firstName: 'Awa',
+        lastName: 'Koné',
+        phone: '+225 07 89 45 12 30',
+        email: 'awa.kone@gmail.com',
+        skinType: 'Mixte à tendance déshydratée',
+        fitzpatrickType: 'V',
+        allergies: '["Parabènes", "Sulfates"]',
+        treatments: '["Soin Karité", "Peeling Enzymatique"]',
+        consentHealthData: true,
+      },
+      update: {},
+    }),
+    db.client.upsert({
+      where: { id: 'client-002' },
+      create: {
+        id: 'client-002',
+        tenantId: tenant.id,
+        firstName: 'Fatoumata',
+        lastName: 'Diallo',
+        phone: '+225 05 34 67 89 00',
+        email: 'fatoumata.diallo@yahoo.fr',
+        skinType: 'Grasse à pores dilatés',
+        fitzpatrickType: 'VI',
+        allergies: '[]',
+        treatments: '["Soin Régulateur Huile de Neem"]',
+        consentHealthData: true,
+      },
+      update: {},
+    }),
+    db.client.upsert({
+      where: { id: 'client-003' },
+      create: {
+        id: 'client-003',
+        tenantId: tenant.id,
+        firstName: 'Mariama',
+        lastName: 'Traoré',
+        phone: '+225 01 23 45 67 89',
+        email: 'mariama.traore@outlook.com',
+        skinType: 'Sèche à tendance eczémateuse',
+        fitzpatrickType: 'IV',
+        allergies: '["Alcool"]',
+        treatments: '["Hydratation Intensive Baobab"]',
+        consentHealthData: true,
+      },
+      update: {},
+    }),
+  ]);
 
-  await prisma.currency.upsert({
-    where: { code: 'XAF' },
-    update: {},
-    create: { code: 'XAF', name: 'Franc CFA CEMAC', symbol: 'FCFA', decimals: 0 },
-  });
+  console.log(`✅ ${clients.length} clientes créées`);
 
-  // 3. MoMo Operators
-  await prisma.moMoOperator.upsert({
-    where: { code: 'WAVE' },
-    update: {},
-    create: {
-      name: 'Wave Mobile Money',
-      code: 'WAVE',
-      countries: JSON.stringify(['CI', 'SN', 'BF']),
-      commissionRate: 0.01,
-      active: true,
-    },
-  });
+  // 3. Créer des employées de démonstration
+  const employees = await Promise.all([
+    db.employee.upsert({
+      where: { id: 'emp-001' },
+      create: {
+        id: 'emp-001',
+        tenantId: tenant.id,
+        firstName: 'Adjoua',
+        lastName: 'Yao',
+        role: 'Esthéticienne Certifiée',
+        email: 'adjoua@kene.africa',
+        phone: '+225 07 11 22 33 44',
+        status: 'active',
+        salary: 280000,
+        commission: 8,
+      },
+      update: { status: 'active' },
+    }),
+    db.employee.upsert({
+      where: { id: 'emp-002' },
+      create: {
+        id: 'emp-002',
+        tenantId: tenant.id,
+        firstName: 'Bintou',
+        lastName: 'Coulibaly',
+        role: 'Dermo-Cosméticienne',
+        email: 'bintou@kene.africa',
+        phone: '+225 05 99 88 77 66',
+        status: 'active',
+        salary: 320000,
+        commission: 10,
+      },
+      update: { status: 'active' },
+    }),
+    db.employee.upsert({
+      where: { id: 'emp-003' },
+      create: {
+        id: 'emp-003',
+        tenantId: tenant.id,
+        firstName: 'Reine',
+        lastName: 'Assemian',
+        role: 'Responsable Labo',
+        email: 'reine@kene.africa',
+        phone: '+225 01 55 44 33 22',
+        status: 'active',
+        salary: 380000,
+        commission: 12,
+      },
+      update: { status: 'active' },
+    }),
+  ]);
 
-  await prisma.moMoOperator.upsert({
-    where: { code: 'ORANGE' },
-    update: {},
-    create: {
-      name: 'Orange Money',
-      code: 'ORANGE',
-      countries: JSON.stringify(['CI', 'SN', 'ML', 'BF']),
-      commissionRate: 0.015,
-      active: true,
-    },
-  });
+  console.log(`✅ ${employees.length} employées créées`);
 
-  // 4. Demo Tenant (Salon Kènè Dakar)
-  const tenant = await prisma.tenant.upsert({
-    where: { id: 'tenant-demo-dakar' },
-    update: {},
-    create: {
-      id: 'tenant-demo-dakar',
-      name: 'Salon Kènè Dakar',
-      legalName: 'Kènè Beauté Sénégal SARL',
-      type: 'institut',
-      countryCode: 'SN',
-      currencyCode: 'XOF',
-      rccm: 'SN-DKR-2024-B-14920',
-      taxId: '009284192',
-      vatRate: 0.18,
-      address: JSON.stringify({ street: 'Almadies, Route des Almadies', city: 'Dakar', country: 'Sénégal' }),
-      subscriptionTier: 'pro',
-      subscriptionStatus: 'active',
-    },
-  });
+  // 4. Créer des rendez-vous pour aujourd'hui
+  const today = new Date();
+  const rdvHours = [9, 10, 11, 14, 15, 16, 17, 18];
+  
+  for (let i = 0; i < rdvHours.length; i++) {
+    const startAt = new Date(today);
+    startAt.setHours(rdvHours[i], 0, 0, 0);
+    const endAt = new Date(startAt);
+    endAt.setHours(rdvHours[i] + 1, 0, 0, 0);
 
-  // 5. Site / Branch
-  const site = await prisma.site.upsert({
-    where: { id: 'site-dakar-main' },
-    update: {},
-    create: {
-      id: 'site-dakar-main',
-      tenantId: tenant.id,
-      name: 'Siège Dakar Almadies',
-      address: JSON.stringify({ street: 'Route des Almadies', city: 'Dakar' }),
-      phone: '+221 33 820 00 00',
-    },
-  });
+    await db.appointment.upsert({
+      where: { id: `appt-today-${i}` },
+      create: {
+        id: `appt-today-${i}`,
+        tenantId: tenant.id,
+        clientId: clients[i % clients.length].id,
+        employeeId: employees[i % employees.length].id,
+        service: ['Soin Visage Karité', 'Peeling Enzymatique', 'Massage Cranien', 'Soin Corps Beurre de Cacao'][i % 4],
+        startAt,
+        endAt,
+        status: i < 3 ? 'completed' : 'scheduled',
+        price: [25000, 35000, 20000, 40000][i % 4],
+        notes: 'Protocole dermo-botanique personnalisé',
+      },
+      update: {},
+    });
+  }
 
-  // 6. User Manager
-  const user = await prisma.user.upsert({
-    where: { phone: '+221770000000' },
-    update: {},
-    create: {
-      phone: '+221770000000',
-      email: 'manager@kene.africa',
-      firstName: 'Awa',
-      lastName: 'Diop',
-      language: 'fr-SN',
-      status: 'active',
-    },
-  });
+  console.log(`✅ ${rdvHours.length} rendez-vous du jour créés`);
 
-  // Role
-  await prisma.userRole.upsert({
-    where: { userId_tenantId_role: { userId: user.id, tenantId: tenant.id, role: 'gerant' } },
-    update: {},
-    create: {
-      userId: user.id,
-      tenantId: tenant.id,
-      role: 'gerant',
-      permissions: JSON.stringify(['all']),
-    },
-  });
+  // 5. Créer des ventes de démonstration
+  for (let i = 0; i < 12; i++) {
+    const saleDate = new Date();
+    saleDate.setDate(saleDate.getDate() - i);
 
-  // 7. Employees
-  const employee1 = await prisma.employee.upsert({
-    where: { id: 'emp-fatou-sarr' },
-    update: {},
-    create: {
-      id: 'emp-fatou-sarr',
-      tenantId: tenant.id,
-      siteId: site.id,
-      firstName: 'Fatou',
-      lastName: 'Sarr',
-      birthDate: new Date('1995-04-12'),
-      gender: 'F',
-      phone: '+221771112233',
-      email: 'fatou.sarr@kene.africa',
-      address: JSON.stringify({ city: 'Dakar' }),
-      hireDate: new Date('2023-01-15'),
-      contractType: 'CDI',
-      position: 'Master Coiffeuse & Styliste',
-      baseSalary: 250000,
-      documents: JSON.stringify([]),
-      status: 'active',
-    },
-  });
+    await db.sale.upsert({
+      where: { id: `sale-${i}` },
+      create: {
+        id: `sale-${i}`,
+        tenantId: tenant.id,
+        clientId: clients[i % clients.length].id,
+        total: [45000, 72000, 38000, 95000, 55000][i % 5],
+        paymentMethod: ['momo', 'cash', 'card', 'wave'][i % 4],
+        status: 'completed',
+        date: saleDate,
+        items: JSON.stringify([
+          { label: 'Soin Visage Premium', qty: 1, price: [45000, 72000, 38000, 95000, 55000][i % 5] }
+        ]),
+      },
+      update: {},
+    });
+  }
 
-  const employee2 = await prisma.employee.upsert({
-    where: { id: 'emp-aminata-diallo' },
-    update: {},
-    create: {
-      id: 'emp-aminata-diallo',
-      tenantId: tenant.id,
-      siteId: site.id,
-      firstName: 'Aminata',
-      lastName: 'Diallo',
-      birthDate: new Date('1998-08-22'),
-      gender: 'F',
-      phone: '+221772223344',
-      email: 'aminata.diallo@kene.africa',
-      address: JSON.stringify({ city: 'Dakar' }),
-      hireDate: new Date('2023-06-01'),
-      contractType: 'CDI',
-      position: 'Esthéticienne & Dermo-Praticienne',
-      baseSalary: 220000,
-      documents: JSON.stringify([]),
-      status: 'active',
-    },
-  });
+  console.log(`✅ 12 ventes de démonstration créées`);
 
-  // 8. Clients
-  const client1 = await prisma.client.upsert({
-    where: { id: 'client-ndeye-konate' },
-    update: {},
-    create: {
-      id: 'client-ndeye-konate',
-      tenantId: tenant.id,
-      firstName: 'Ndeye',
-      lastName: 'Konaté',
-      phone: '+221774445566',
-      email: 'ndeye.konate@gmail.com',
-      fitzpatrickType: 'VI',
-      skinType: 'mixte',
-      allergies: JSON.stringify(['Arachide']),
-      treatments: JSON.stringify(['Soin Visage Hydratant au Karité']),
-      consentHealthData: true,
-      notes: 'Préfère les tresses Knotless moyennes.',
-    },
-  });
+  // 6. Créer des services de démonstration
+  const services = [
+    { name: 'Soin Visage Karité', price: 25000, duration: 60, category: 'Soin Visage' },
+    { name: 'Peeling Enzymatique Papaye', price: 35000, duration: 75, category: 'Exfoliation' },
+    { name: 'Massage Crânien Huile Coco', price: 20000, duration: 45, category: 'Massage' },
+    { name: 'Soin Corps Beurre Cacao', price: 40000, duration: 90, category: 'Soin Corps' },
+    { name: 'Diagnostic Dermo-Cutané', price: 15000, duration: 30, category: 'Diagnostic' },
+    { name: 'Hydratation Intensive Baobab', price: 30000, duration: 60, category: 'Soin Visage' },
+  ];
 
-  const client2 = await prisma.client.upsert({
-    where: { id: 'client-mariam-coulibaly' },
-    update: {},
-    create: {
-      id: 'client-mariam-coulibaly',
-      tenantId: tenant.id,
-      firstName: 'Mariam',
-      lastName: 'Coulibaly',
-      phone: '+221775556677',
-      email: 'mariam.c@gmail.com',
-      fitzpatrickType: 'V',
-      skinType: 'seche',
-      allergies: JSON.stringify([]),
-      treatments: JSON.stringify(['Massage Relaxant à l\'Huile de Baobab']),
-      consentHealthData: true,
-      notes: 'Fidèle depuis 2 ans.',
-    },
-  });
+  for (const svc of services) {
+    await db.service.upsert({
+      where: { id: `svc-${svc.name.toLowerCase().replace(/\s+/g, '-')}` },
+      create: {
+        id: `svc-${svc.name.toLowerCase().replace(/\s+/g, '-')}`,
+        tenantId: tenant.id,
+        ...svc,
+        active: true,
+      },
+      update: {},
+    });
+  }
 
-  // 9. Services
-  const service1 = await prisma.service.upsert({
-    where: { id: 'srv-tresse-knotless' },
-    update: {},
-    create: {
-      id: 'srv-tresse-knotless',
-      tenantId: tenant.id,
-      name: 'Tresses Knotless Braids Premium',
-      description: 'Coiffure de tresses légères sans nœud pour préserver le cuir chevelu.',
-      category: 'Coiffure',
-      durationMin: 180,
-      price: 35000,
-      vatRate: 0.18,
-      commissionRate: 15.0,
-      resourcesRequired: JSON.stringify(['Fauteuil Coiffure']),
-      active: true,
-    },
-  });
+  console.log(`✅ ${services.length} services créés`);
 
-  const service2 = await prisma.service.upsert({
-    where: { id: 'srv-soin-visage-karite' },
-    update: {},
-    create: {
-      id: 'srv-soin-visage-karite',
-      tenantId: tenant.id,
-      name: 'Soin Visage Hydratant au Karité Pur',
-      description: 'Soin nourrissant et réparateur pour peaux mélanodermes (Phototypes V & VI).',
-      category: 'Soin Visage',
-      durationMin: 60,
-      price: 25000,
-      vatRate: 0.18,
-      commissionRate: 10.0,
-      resourcesRequired: JSON.stringify(['Cabine Soin']),
-      active: true,
-    },
-  });
-
-  // 10. Products & Stock
-  const product1 = await prisma.product.upsert({
-    where: { id: 'prod-beurre-karite-250g' },
-    update: {},
-    create: {
-      id: 'prod-beurre-karite-250g',
-      tenantId: tenant.id,
-      sku: 'KAR-250G',
-      name: 'Beurre de Karité Pur Bio (250g)',
-      description: 'Beurre brut pressé à froid certifié équitable.',
-      category: 'Soins Botaniques',
-      botanical: 'Karité',
-      purchasePrice: 4000,
-      salePrice: 10000,
-      vatRate: 0.18,
-      threshold: 5,
-      active: true,
-    },
-  });
-
-  await prisma.inventoryItem.upsert({
-    where: { siteId_productId: { siteId: site.id, productId: product1.id } },
-    update: { quantity: 24 },
-    create: {
-      tenantId: tenant.id,
-      siteId: site.id,
-      productId: product1.id,
-      quantity: 24,
-    },
-  });
-
-  // 11. Appointments
-  await prisma.appointment.upsert({
-    where: { id: 'apt-demo-1' },
-    update: {},
-    create: {
-      id: 'apt-demo-1',
-      tenantId: tenant.id,
-      siteId: site.id,
-      clientId: client1.id,
-      serviceId: service1.id,
-      employeeId: employee1.id,
-      startAt: new Date(Date.now() + 86400000),
-      endAt: new Date(Date.now() + 86400000 + 10800000),
-      status: 'confirmed',
-      amount: 35000,
-      depositAmount: 10000,
-      source: 'online',
-      notes: 'Demande mèches couleur #30.',
-    },
-  });
-
-  // 12. Accounting Entries (SYSCOHADA)
-  await prisma.accountingEntry.upsert({
-    where: { id: 'entry-ventes-aug-01' },
-    update: {},
-    create: {
-      id: 'entry-ventes-aug-01',
-      tenantId: tenant.id,
-      entryNumber: 'ECR-2026-0801',
-      journal: 'ventes',
-      entryDate: new Date(),
-      reference: 'FAC-2026-0048',
-      description: 'Vente Prestation Soin Visage Karité & Beurre 250g',
-      status: 'posted',
-      lines: JSON.stringify([
-        { accountNumber: '5711', accountName: 'Caisse Principale', debit: 35000, credit: 0 },
-        { accountNumber: '706', accountName: 'Prestations de Soins', debit: 0, credit: 25000 },
-        { accountNumber: '701', accountName: 'Ventes de Cosmétiques', debit: 0, credit: 5339 },
-        { accountNumber: '4431', accountName: 'État, TVA Collectée (18%)', debit: 0, credit: 4661 },
-      ]),
-    },
-  });
-
-  console.log('✅ Kènè Pro database seeding complete!');
+  console.log('\n🎉 Base de données Kènè OS initialisée avec succès !');
+  console.log(`   Salon : ${tenant.name}`);
+  console.log(`   ${clients.length} clientes | ${employees.length} employées | ${rdvHours.length} RDV aujourd'hui | 12 ventes | ${services.length} services`);
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Seeding error:', e);
+    console.error('❌ Erreur lors du seed :', e);
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await db.$disconnect();
   });

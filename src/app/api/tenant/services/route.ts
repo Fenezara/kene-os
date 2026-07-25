@@ -1,31 +1,25 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { DEMO_SERVICES } from '@/lib/demo-data';
 
 export async function GET() {
   try {
-    // Dans une vraie application, récupérer le tenantId depuis la session
+    const { db } = await import('@/lib/db');
     const firstTenant = await db.tenant.findFirst();
-    if (!firstTenant) {
-      return NextResponse.json({ success: false, error: 'No tenant found' }, { status: 404 });
+    if (firstTenant) {
+      const services = await db.service.findMany({
+        where: { tenantId: firstTenant.id },
+        orderBy: { createdAt: 'desc' },
+      });
+      if (services.length > 0) return NextResponse.json({ success: true, services });
     }
+  } catch { /* DB not ready — use demo data */ }
 
-    const services = await db.service.findMany({
-      where: { tenantId: firstTenant.id },
-      orderBy: { createdAt: 'desc' }
-    });
-
-    return NextResponse.json({ success: true, services });
-  } catch (error) {
-    console.error('Failed to fetch services:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch services' },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json({ success: true, services: DEMO_SERVICES, _demo: true });
 }
 
 export async function POST(req: Request) {
   try {
+    const { db } = await import('@/lib/db');
     const firstTenant = await db.tenant.findFirst();
     if (!firstTenant) {
       return NextResponse.json({ success: false, error: 'No tenant found' }, { status: 404 });
@@ -48,16 +42,13 @@ export async function POST(req: Request) {
         price: parseFloat(price),
         vatRate: vatRate ? parseFloat(vatRate) : 0.18,
         commissionRate: commissionRate ? parseFloat(commissionRate) : 0,
-        resourcesRequired: '[]' // Valeur par défaut requise par le schéma
-      }
+        resourcesRequired: '[]',
+      },
     });
 
     return NextResponse.json({ success: true, service });
   } catch (error) {
     console.error('Failed to create service:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to create service' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Failed to create service' }, { status: 500 });
   }
 }
