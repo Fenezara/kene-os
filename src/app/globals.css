@@ -6,9 +6,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-questrial);
-  --font-display: var(--font-ojuju);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+  --font-display: var(--font-ojuju), var(--font-cinzel), serif;
+  --font-serif: var(--font-cinzel), Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
   
   /* Custom Afro-Futuristic colors */
   --color-gold-kene: #C8951E;
@@ -256,4 +257,26 @@ button, a, [role="button"] {
 
 .animate-pulse-glow {
   animation: pulseGlow 4s infinite ease-in-out;
+}
+
+/* ─── KÈNÈ INNOVATIVE TYPOGRAPHY UTILITIES ─── */
+.font-gold-gradient {
+  background: linear-gradient(135deg, #FFD700 0%, #C8951E 50%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.font-luxury-serif {
+  font-family: var(--font-cinzel), Georgia, serif;
+  letter-spacing: 0.04em;
+}
+
+.font-mono-currency {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-glow-gold {
+  text-shadow: 0 0 20px rgba(200, 149, 30, 0.4);
 }
