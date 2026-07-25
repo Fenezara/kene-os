@@ -12,6 +12,7 @@ import { KeneLogo } from '@/components/ui/logo';
 const tabs = [
   { key: 'client', label: 'Client 🌸', icon: '👤' },
   { key: 'salon', label: 'Mon Salon ✂️', icon: '🏬' },
+  { key: 'admin', label: 'Super Admin 🛡️', icon: '👑' },
 ];
 
 // Floating Kente pattern decoration
