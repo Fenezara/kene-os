@@ -224,3 +224,21 @@ export function registerNewClient(newClient: Partial<RegisteredClient>): Registe
   }
   return client;
 }
+
+export function deleteTenant(tenantId: string): RegisteredTenant[] {
+  const current = getRegisteredTenants();
+  const updated = current.filter(t => t.id !== tenantId);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('kene_all_tenants', JSON.stringify(updated));
+  }
+  return updated;
+}
+
+export function deleteClient(clientId: string): RegisteredClient[] {
+  const current = getRegisteredClients();
+  const updated = current.filter(c => c.id !== clientId);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('kene_all_clients', JSON.stringify(updated));
+  }
+  return updated;
+}

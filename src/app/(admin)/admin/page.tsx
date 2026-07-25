@@ -6,7 +6,7 @@ import {
   Building2, Users, Calendar, DollarSign, Activity, Briefcase,
   MoreVertical, Check, ShieldAlert, Phone, Mail, Sparkles, RefreshCw,
   TrendingUp, Globe, Store, FileText, Download, Printer, Search,
-  Filter, ShieldCheck, Zap, AlertCircle, Eye, ArrowUpRight, Cpu, Sprout, ShoppingBag
+  Filter, ShieldCheck, Zap, AlertCircle, Eye, ArrowUpRight, Cpu, Sprout, ShoppingBag, Trash2
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,7 +25,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
 } from '@/components/ui/dialog';
 
-import { getRegisteredTenants, getRegisteredClients, RegisteredTenant, RegisteredClient } from '@/lib/sync-engine';
+import { getRegisteredTenants, getRegisteredClients, deleteTenant, deleteClient, RegisteredTenant, RegisteredClient } from '@/lib/sync-engine';
 
 export default function AdminDashboardPage() {
   const { toast } = useToast();
@@ -84,6 +84,30 @@ export default function AdminDashboardPage() {
       localStorage.setItem('kene_all_tenants', JSON.stringify(updated));
     }
     toast({ title: "Formule mise à jour", description: `Abonnement passé en formule "${newTier}".` });
+  };
+
+  const handleDeleteTenant = (tenantId: string, tenantName: string) => {
+    if (confirm(`⚠️ ATTENTION SUPER-ADMIN :\n\nVoulez-vous vraiment SUPPRIMER DÉFINITIVEMENT le salon "${tenantName}" ?\nCette action supprimera toutes ses données et accès.`)) {
+      const updated = deleteTenant(tenantId);
+      setTenants(updated);
+      toast({
+        title: "🗑️ Salon Supprimé",
+        description: `Le salon "${tenantName}" a été définitivement supprimé.`,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteClient = (clientId: string, clientName: string) => {
+    if (confirm(`⚠️ ATTENTION SUPER-ADMIN :\n\nVoulez-vous vraiment SUPPRIMER le compte de la cliente "${clientName}" ?`)) {
+      const updated = deleteClient(clientId);
+      setClients(updated);
+      toast({
+        title: "🗑️ Compte Client Supprimé",
+        description: `Le compte de "${clientName}" a été supprimé.`,
+        variant: "destructive"
+      });
+    }
   };
 
   const handleExportCSV = () => {
@@ -444,6 +468,10 @@ export default function AdminDashboardPage() {
                                     Mettre en formule {tier}
                                   </DropdownMenuItem>
                                 ))}
+                                <DropdownMenuSeparator className="bg-white/10" />
+                                <DropdownMenuItem onClick={() => handleDeleteTenant(tenant.id, tenant.name)} className="cursor-pointer text-red-400 hover:bg-red-950/40 focus:bg-red-950/40 font-bold flex items-center gap-1.5">
+                                  <Trash2 className="w-3.5 h-3.5" /> Supprimer le Salon
+                                </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </div>
@@ -485,6 +513,7 @@ export default function AdminDashboardPage() {
                       <TableHead className="text-white/70">Adresse Email</TableHead>
                       <TableHead className="text-white/70">Profil Cutané Fitzpatrick</TableHead>
                       <TableHead className="text-white/70">Points Kènè</TableHead>
+                      <TableHead className="text-right text-white/70">Action Admin</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -517,6 +546,16 @@ export default function AdminDashboardPage() {
                           <Badge className="bg-[var(--gold-kene)]/20 text-[var(--gold-kene)] font-mono font-bold text-xs">
                             ✨ {client.points || 1250} Pts
                           </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            onClick={() => handleDeleteClient(client.id, client.name || `${client.firstName} ${client.lastName}`)}
+                            size="sm"
+                            className="bg-red-950/40 hover:bg-red-900/60 text-red-300 text-[11px] h-7 rounded-lg border border-red-500/30 flex items-center gap-1 cursor-pointer ml-auto"
+                          >
+                            <Trash2 className="w-3 h-3 text-red-400" />
+                            <span>Supprimer</span>
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
