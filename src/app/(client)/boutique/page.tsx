@@ -46,7 +46,8 @@ export default function BoutiquePage() {
   const router = useRouter();
   const { toast } = useToast();
   
-  const [selectedSalon, setSelectedSalon] = useState(SALONS_STORES[0]);
+  const [salonsList, setSalonsList] = useState<any[]>(SALONS_STORES);
+  const [selectedSalon, setSelectedSalon] = useState<any>(SALONS_STORES[0]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -54,6 +55,50 @@ export default function BoutiquePage() {
   const [activeBotanical, setActiveBotanical] = useState<string | null>(null);
   
   const [cart, setCart] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    // Scan all registered enterprises from localStorage (Cabinet La Dermo, etc.)
+    const localStores: any[] = [];
+    const savedTenant = localStorage.getItem('kene_tenant_settings');
+    if (savedTenant) {
+      try {
+        const tenantObj = JSON.parse(savedTenant);
+        const name = tenantObj?.identity?.commercialName || tenantObj?.identity?.legalName;
+        if (name) {
+          localStores.push({
+            id: 'local-store-registered',
+            name: `${name} (Votre Entreprise)`,
+            city: tenantObj.address?.street || 'Abidjan 🇨🇮',
+            active: true,
+            badge: 'Boutique Officielle'
+          });
+        }
+      } catch (e) {}
+    }
+
+    const savedUser = localStorage.getItem('kene_user');
+    if (savedUser) {
+      try {
+        const u = JSON.parse(savedUser);
+        const sName = u.salonName || (u.role === 'gerant' ? u.name : null);
+        if (sName && !localStores.some(s => s.name.toLowerCase().includes(sName.toLowerCase()))) {
+          localStores.push({
+            id: 'local-user-salon-store',
+            name: sName,
+            city: 'Abidjan 🇨🇮',
+            active: true,
+            badge: 'Boutique Inscrite'
+          });
+        }
+      } catch (e) {}
+    }
+
+    if (localStores.length > 0) {
+      const merged = [...localStores, ...SALONS_STORES];
+      setSalonsList(merged);
+      setSelectedSalon(merged[0]);
+    }
+  }, []);
 
   useEffect(() => {
     const savedCart = localStorage.getItem('kene_cart');
@@ -128,7 +173,7 @@ export default function BoutiquePage() {
     
     toast({
       title: "🛒 Produit Ajouté au Panier",
-      description: `${product.name} a été ajouté à votre commande chez ${selectedSalon.name}.`,
+      description: `${product.name} a été ajouté à votre commande auprès de l'établissement ${selectedSalon.name}.`,
     });
   };
 
@@ -136,23 +181,17 @@ export default function BoutiquePage() {
 
   return (
     <div className="min-h-screen bg-[#0A0603] text-white pb-28 font-sans">
-      {/* Header */}
+      {/* Header (Client Storefront - No Vendor Admin Links) */}
       <header className="sticky top-0 z-40 bg-[#1A1410]/95 backdrop-blur-md border-b border-white/10 p-4 flex items-center justify-between shadow-xl">
         <div className="flex items-center gap-3">
           <BackButton fallbackUrl="/portal" />
           <div>
             <h1 className="text-lg font-display text-white font-black flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-[#C8951E]" /> Boutiques des Salons Kènè
+              <ShoppingBag className="w-5 h-5 text-[#C8951E]" /> Boutiques des Instituts & Salons Partners
             </h1>
-            <p className="text-[10px] text-white/50 font-mono">Découvrez et achetez les soins de votre institut favori</p>
+            <p className="text-[10px] text-white/50 font-mono">Achetez vos soins certifiés directement auprès des entreprises partenaires</p>
           </div>
         </div>
-
-        <Link href="/inventory" className="hidden sm:flex">
-          <Button variant="outline" className="border-[#C8951E]/40 text-[#C8951E] hover:bg-[#C8951E]/10 text-xs font-bold rounded-xl cursor-pointer">
-            <Store className="w-3.5 h-3.5 mr-1.5" /> Gérer mes Stocks Salon
-          </Button>
-        </Link>
       </header>
 
       <main className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
@@ -162,7 +201,7 @@ export default function BoutiquePage() {
             <MapPin className="w-4 h-4 text-[#C8951E]" /> Choisir la Boutique d'un Établissement Partner :
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-            {SALONS_STORES.map((salon) => (
+            {salonsList.map((salon) => (
               <button
                 key={salon.id}
                 onClick={() => setSelectedSalon(salon)}
