@@ -145,10 +145,12 @@ export default function ProDashboardPage() {
           <div className="h-full bg-gradient-to-r from-[#C8951E] via-[#8A3B14] via-[#2E5A36] via-[#1E3A5F] to-[#C8951E]" />
         </div>
 
-        <motion.div variants={itemVariants} className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+        <motion.div variants={itemVariants} className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative z-10">
           <div className="space-y-2">
-            <div className="text-[10px] sm:text-xs font-mono tracking-[0.2em] uppercase text-[#C8951E]/70 font-bold">
-              {now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+            <div className="text-[10px] sm:text-xs font-mono tracking-[0.2em] uppercase text-[#C8951E]/70 font-bold flex items-center gap-2">
+              <span>{now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+              <span>•</span>
+              <span className="text-emerald-400 font-mono">Système Opérationnel 100%</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-display font-black text-white tracking-tight leading-tight">
               {greeting}, <br />
@@ -156,13 +158,13 @@ export default function ProDashboardPage() {
                 {tenantName || 'Salon Kènè'}
               </span> ✨
             </h1>
-            <p className="text-xs sm:text-sm text-white/50 font-sans">
+            <p className="text-xs sm:text-sm text-white/60 font-sans">
               Votre OS Afro-Beauté & Dermo-Cosmétique — Tout sous contrôle.
             </p>
-            <div className="mt-3 inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-2xl p-2 sm:px-3 sm:py-1.5 backdrop-blur-md max-w-full">
+            <div className="mt-3 inline-flex items-center gap-2 bg-[#0F0A05]/70 border border-[#C8951E]/30 rounded-2xl p-2 sm:px-3 sm:py-1.5 backdrop-blur-md max-w-full">
               <span className="text-sm shrink-0">💡</span>
               <span className="text-[10px] sm:text-[11px] font-medium text-white/80 leading-tight">
-                <strong className="text-[#C8951E]">Humidité 85% à Abidjan</strong> — Recommandez les Soins Scellants au Karité aujourd'hui !
+                <strong className="text-[#C8951E]">Humidité 85% à Abidjan</strong> — Recommandez les Soins Scellants au Karité & Sérum Baobab aujourd'hui !
               </span>
             </div>
           </div>

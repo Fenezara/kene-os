@@ -403,24 +403,95 @@ export default function ClientPortalPage() {
         </div>
       </motion.div>
 
-      {/* Rebook Express Card */}
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.05 }}>
-        <Card className="bg-gradient-to-r from-[#1A1410] to-[#241C16] border border-[var(--gold-kene)]/20 shadow-lg rounded-2xl overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-2 h-full bg-[var(--gold-kene)]" />
-          <CardContent className="p-4 flex items-center justify-between pl-6">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Sprout className="w-4 h-4 text-emerald-400" />
-                    <span className="text-emerald-400 font-bold text-xs uppercase tracking-wider font-display">Mon Jardin du Glow</span>
+      {/* ── HERO VISUEL RITUEL BOTANIQUE AFRICAIN ── */}
+      <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.05 }}>
+        <Card className="bg-[#1A1410] border border-[var(--gold-kene)]/30 shadow-2xl rounded-3xl overflow-hidden relative group">
+          <div className="relative h-44 sm:h-52 w-full overflow-hidden">
+            <img 
+              src="/images/african_spa_ritual_hero.jpg" 
+              alt="Rituel Botanique Kènè" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0F0A05] via-[#0F0A05]/60 to-transparent" />
+            
+            {/* Overlay Content */}
+            <div className="absolute bottom-4 left-5 right-5 flex items-end justify-between">
+              <div>
+                <Badge className="bg-[var(--gold-kene)] text-black font-bold text-[10px] uppercase tracking-widest mb-1.5 shadow-md">
+                  ✨ Expérience Holistique UEMOA
+                </Badge>
+                <h2 className="font-display font-black text-xl sm:text-2xl text-white drop-shadow-md">
+                  L'Alliance de la Botanique Africaine & de l'IA
+                </h2>
+                <p className="text-xs text-white/80 max-w-lg hidden sm:block mt-1">
+                  Des rituels de soin dermatologiques personnalisés conçus pour sublimer la mélanine et préserver l'équilibre cutané.
+                </p>
+              </div>
+              <a href="/boutique" className="shrink-0">
+                <Button className="bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-xl hover:scale-105 transition">
+                  🌱 Explorer la Gamme
+                </Button>
+              </a>
+            </div>
+          </div>
+        </Card>
+      </motion.div>
+
+      {/* ── GALERIE INGRÉDIENTS BOTANIQUES SUR-MESURE ── */}
+      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
+        <Card className="bg-[#241C16] border border-white/10 rounded-3xl overflow-hidden shadow-xl">
+          <CardContent className="p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-display font-bold text-base text-white flex items-center gap-2">
+                  <Sprout className="w-5 h-5 text-emerald-400" />
+                  Matières Premières Botaniques d'Afrique de l'Ouest
+                </h3>
+                <p className="text-xs text-white/50">Extraits purs certifiés bio de Korhogo, Tambacounda & Sikasso</p>
+              </div>
+              <a href="/traceability" className="text-xs text-[var(--gold-kene)] font-bold hover:underline">
+                Traçabilité 100%
+              </a>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+              <div className="md:col-span-1 rounded-2xl overflow-hidden border border-white/10 h-36 relative group">
+                <img 
+                  src="/images/botanical_ingredients_flatlay.jpg" 
+                  alt="Ingrédients Botaniques" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
+                  <span className="text-[10px] font-bold text-[var(--gold-kene)] font-mono">
+                    🌿 Formulations 100% Naturelles
+                  </span>
+                </div>
+              </div>
+
+              <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {[
+                  { name: 'Beurre de Karité Brut', region: 'Korhogo 🇨🇮', icon: '🥜', desc: 'Hydratation profonde & barrière lipidique' },
+                  { name: 'Huile Pure de Baobab', region: 'Tambacounda 🇸🇳', icon: '🌳', desc: 'Régénération épidermique & élasticité' },
+                  { name: 'Fleurs d\'Hibiscus (Bissap)', region: 'Sikasso 🇲🇱', icon: '🌺', desc: 'AHA naturels & éclat du teint' },
+                  { name: 'Poudre de Chébé', region: 'Sahel 🇹🇩', icon: '🌾', desc: 'Scellage fortifiant cuir chevelu' },
+                  { name: 'Gel d\'Aloe Vera Bio', region: 'Dakar 🇸🇳', icon: '🌱', desc: 'Apaisement PIH & anti-inflammation' },
+                  { name: 'Extrait de Neem & Moringa', region: 'Ferkessédougou 🇨🇮', icon: '🌿', desc: 'Purification séborrhique & pores' },
+                ].map((ing, i) => (
+                  <div key={i} className="bg-[#1A1410] border border-white/10 rounded-2xl p-2.5 space-y-1 hover:border-[var(--gold-kene)]/40 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <span className="text-base">{ing.icon}</span>
+                      <span className="text-[9px] font-mono text-[var(--gold-kene)] bg-[var(--gold-kene)]/10 px-1.5 py-0.5 rounded-full">
+                        {ing.region}
+                      </span>
+                    </div>
+                    <div className="font-bold text-xs text-white leading-tight">{ing.name}</div>
+                    <p className="text-[9px] text-white/50 leading-tight">{ing.desc}</p>
                   </div>
-                  <div className="text-lg font-bold text-white font-display">Mon Baobab Virtuel</div>
-                  <p className="text-xs text-white/50">Prochain cadeau débloqué au Niveau 3</p>
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-xs">
-                  Niv 2
-                </div>
-              </CardContent>
-            </Card>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </motion.div>
 
       {/* --- TABLEAU DE SANTÉ DE LA PEAU & MÉTÉO UV EN DIRECT --- */}
