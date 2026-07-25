@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, ScanFace, ChevronRight, Wallet, Activity, ArrowRight, Camera, User, Check, Sparkles, Sprout, Clock, Store, MapPin, Phone, Send, MessageSquare, Building2, Loader2 } from 'lucide-react';
+import { Calendar, ScanFace, ChevronRight, Wallet, Activity, ArrowRight, Camera, User, Check, Sparkles, Sprout, Clock, Store, MapPin, Phone, Mail, Send, MessageSquare, Building2, Loader2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -50,15 +50,21 @@ export default function ClientPortalPage() {
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
+        let rawFirstName = parsed.firstName || parsed.name || '';
+        if (rawFirstName.includes('(') || rawFirstName.match(/\d{5,}/)) {
+          rawFirstName = rawFirstName.replace(/\(.*\)/, '').replace(/\d+/g, '').replace(/Cliente/g, '').trim();
+        }
+        if (!rawFirstName) rawFirstName = 'Cliente';
+
         setUserProfile({
-          firstName: parsed.firstName || parsed.name || 'Cliente',
-          lastName: parsed.lastName || '',
+          firstName: rawFirstName,
+          lastName: (parsed.lastName || '').replace(/\d+/g, '').trim(),
           phone: parsed.phone || '',
           email: parsed.email || '',
           skinType: parsed.skinType || 'mixte',
           fitzpatrickType: parsed.fitzpatrickType || 'V'
         });
-        setClientContactName(parsed.firstName || parsed.name || '');
+        setClientContactName(rawFirstName);
         setClientContactPhone(parsed.phone || '');
       } catch (e) {}
     }
@@ -275,8 +281,17 @@ export default function ClientPortalPage() {
             </h1>
             <Sparkles className="w-5 h-5 text-[var(--gold-kene)] animate-pulse" />
           </div>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-white/60 text-xs">{userProfile.phone || userProfile.email || 'Membre Kènè'}</span>
+          <div className="flex items-center gap-2 mt-1.5 flex-wrap text-xs text-white/60">
+            {userProfile.phone && (
+              <span className="flex items-center gap-1 font-mono text-[11px] bg-white/5 border border-white/10 px-2 py-0.5 rounded-lg">
+                <Phone className="w-3 h-3 text-[var(--gold-kene)]" /> {userProfile.phone}
+              </span>
+            )}
+            {userProfile.email && (
+              <span className="flex items-center gap-1 text-[11px] bg-white/5 border border-white/10 px-2 py-0.5 rounded-lg">
+                <Mail className="w-3 h-3 text-[var(--gold-kene)]" /> {userProfile.email}
+              </span>
+            )}
             <Dialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
               <DialogTrigger asChild>
                 <button className="text-[10px] font-bold text-[var(--gold-kene)] underline hover:text-[var(--gold-kene)]/80 cursor-pointer flex items-center gap-1">

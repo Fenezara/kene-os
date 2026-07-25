@@ -55,13 +55,28 @@ export default function LoginPage() {
       }
 
       if (role === 'client') {
-        const clientNameVal = clientPhone ? `Cliente (${clientPhone})` : displayName;
+        let cleanFirstName = 'Cliente';
+        let cleanEmail = '';
+        let cleanPhone = clientPhone ? clientPhone.trim() : '';
+
+        if (userEmailOrName && userEmailOrName.includes('@')) {
+          cleanEmail = userEmailOrName.trim();
+          const namePart = userEmailOrName.split('@')[0].replace(/[^a-zA-Z]/g, ' ');
+          if (namePart.trim()) {
+            cleanFirstName = namePart.trim().charAt(0).toUpperCase() + namePart.trim().slice(1);
+          }
+        } else if (userEmailOrName && !userEmailOrName.includes('@') && isNaN(Number(userEmailOrName.replace(/\+|\s/g, '')))) {
+          cleanFirstName = userEmailOrName.trim();
+        } else if (userEmailOrName && !clientPhone) {
+          cleanPhone = userEmailOrName.trim();
+        }
+
         localStorage.setItem('kene_user', JSON.stringify({
-          firstName: clientNameVal,
+          firstName: cleanFirstName,
           lastName: '',
-          name: clientNameVal,
-          phone: clientPhone || '',
-          email: userEmailOrName || '',
+          name: cleanFirstName,
+          phone: cleanPhone,
+          email: cleanEmail,
           role: 'client',
         }));
         document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
