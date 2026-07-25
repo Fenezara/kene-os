@@ -107,26 +107,37 @@ button, a, [role="button"] {
 }
 
 /* ─── COMPREHENSIVE HIGH-CONTRAST LIGHT MODE ENGINE ─── */
-/* ─── UNIVERSAL HIGH-CONTRAST LIGHT MODE ENGINE ─── */
+/* ─── 🏛️ LUXURY AFRO-BOTANICAL LIGHT MODE SYSTEM ("Ivoire, Sable & Or Miel") ─── */
 .light-mode,
 html.light-mode,
 body.light-mode {
-  --background: #FAF6EE !important;
-  --foreground: #0F0A05 !important;
-  --card: #FFFFFF !important;
-  --card-foreground: #0F0A05 !important;
-  --popover: #FFFFFF !important;
-  --popover-foreground: #0F0A05 !important;
-  --border: #E2D5BE !important;
-  --input: #E2D5BE !important;
-  --muted: #F2EAD8 !important;
-  --muted-foreground: #4A3C2F !important;
+  --background: #FBF8F2 !important;
+  --foreground: #2A1D13 !important;
+  --card: #FFFDF9 !important;
+  --card-foreground: #2A1D13 !important;
+  --popover: #FFFDF9 !important;
+  --popover-foreground: #2A1D13 !important;
+  --border: #E8DCC4 !important;
+  --input: #E8DCC4 !important;
+  --muted: #F5ECCB !important;
+  --muted-foreground: #6B543E !important;
 
-  background-color: #FAF6EE !important;
-  color: #0F0A05 !important;
+  background-color: #FBF8F2 !important;
+  color: #2A1D13 !important;
 }
 
-/* Force strip all dark background gradients in Light Mode */
+/* Light Mode Canvas & Main Sections */
+.light-mode main,
+.light-mode body,
+.light-mode div.min-h-screen,
+html.light-mode main,
+html.light-mode body,
+html.light-mode div.min-h-screen {
+  background-color: #FBF8F2 !important;
+  color: #2A1D13 !important;
+}
+
+/* Convert Dark Cards to Warm Honey-Gold & Alabaster Glass Gradients */
 .light-mode [class*="bg-[#"],
 .light-mode [class*="from-[#"],
 .light-mode [class*="via-[#"],
@@ -135,22 +146,13 @@ html.light-mode [class*="bg-[#"],
 html.light-mode [class*="from-[#"],
 html.light-mode [class*="via-[#"],
 html.light-mode [class*="to-[#"] {
-  background-image: none !important;
-  background-color: #FFFFFF !important;
-  border-color: #E2D5BE !important;
-  color: #0F0A05 !important;
+  background: linear-gradient(135deg, #FFFDF9 0%, #F7EFE2 50%, #EFE3CE 100%) !important;
+  border-color: rgba(200, 149, 30, 0.35) !important;
+  box-shadow: 0 12px 32px -8px rgba(138, 92, 10, 0.08) !important;
+  color: #2A1D13 !important;
 }
 
-/* Light Mode Page Canvas */
-.light-mode main,
-.light-mode div.min-h-screen,
-html.light-mode main,
-html.light-mode div.min-h-screen {
-  background-color: #FAF6EE !important;
-  color: #0F0A05 !important;
-}
-
-/* Sub-containers & Translucent Cards */
+/* Sub-cards, Modals & Translucent Pills */
 .light-mode .bg-white\/5,
 .light-mode .bg-white\/8,
 .light-mode .bg-white\/10,
@@ -159,15 +161,16 @@ html.light-mode .bg-white\/5,
 html.light-mode .bg-white\/8,
 html.light-mode .bg-white\/10,
 html.light-mode .bg-white\/20 {
-  background-image: none !important;
-  background-color: #F2EAD8 !important;
-  color: #0F0A05 !important;
+  background: #F4EAD7 !important;
+  border-color: rgba(200, 149, 30, 0.25) !important;
+  color: #2A1D13 !important;
 }
 
-/* High Contrast Text Adjustments in Light Mode */
+/* Elegant Espresso & Warm Amber Typography */
 .light-mode .text-white,
 html.light-mode .text-white {
-  color: #0F0A05 !important;
+  color: #2A1D13 !important;
+  font-weight: 700 !important;
 }
 
 .light-mode .text-white\/30,
@@ -186,10 +189,21 @@ html.light-mode .text-white\/70,
 html.light-mode .text-white\/80,
 html.light-mode .text-gray-400,
 html.light-mode .text-gray-500 {
-  color: #4A3C2F !important;
+  color: #6B543E !important;
 }
 
-/* Preserve Image Overlays & Hero Cards with Dark Backdrops */
+/* Gold Accents & Badges in Light Mode */
+.light-mode .text-\[\#C8951E\],
+.light-mode .text-\[\#F3E5AB\],
+.light-mode .text-\[\#D4AF37\],
+html.light-mode .text-\[\#C8951E\],
+html.light-mode .text-\[\#F3E5AB\],
+html.light-mode .text-\[\#D4AF37\] {
+  color: #A36F12 !important;
+  font-weight: 800 !important;
+}
+
+/* Preserve Image Overlays & Hero Banners with Photos */
 .preserve-dark-text,
 .preserve-dark-text *,
 .light-mode .preserve-dark-text,
@@ -199,13 +213,14 @@ html.light-mode .preserve-dark-text * {
   color: #FFFFFF !important;
 }
 
-/* Gold Gradient Buttons ALWAYS retain Pure Black Text */
+/* Gold Metallic Buttons keep Pure Black High-Contrast Font */
 .light-mode [class*="from-[#FFD700]"],
 .light-mode [class*="from-[#F3E5AB]"],
 .light-mode [class*="from-[var(--gold-kene)]"],
 html.light-mode [class*="from-[#FFD700]"],
 html.light-mode [class*="from-[#F3E5AB]"],
 html.light-mode [class*="from-[var(--gold-kene)]"] {
+  background: linear-gradient(135deg, #FFD700 0%, #C8951E 50%, #D4AF37 100%) !important;
   color: #000000 !important;
 }
 
