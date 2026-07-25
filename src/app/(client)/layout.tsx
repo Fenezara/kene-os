@@ -195,11 +195,13 @@ export default function ClientLayout({
               key={link.href}
               href={link.href}
               className={`flex flex-col items-center gap-1 px-3 py-1 rounded-xl transition ${
-                isActive ? 'text-[#FFD700] bg-white/10 border border-[#FFD700]/40 font-black shadow-lg scale-105' : 'text-white/60 hover:text-white font-medium'
+                isActive
+                  ? 'bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black shadow-lg scale-105 border border-[#FFD700]'
+                  : 'text-white/70 hover:text-white font-semibold'
               }`}
             >
-              <Icon className={`w-5 h-5 ${isActive ? 'scale-110 text-[#FFD700]' : ''}`} />
-              <span className={`text-[10px] ${isActive ? 'font-black text-[#FFD700]' : 'font-medium'}`}>
+              <Icon className={`w-4 h-4 ${isActive ? 'scale-110 text-black font-black' : ''}`} />
+              <span className={`text-[10px] ${isActive ? 'font-black text-black' : 'font-semibold'}`}>
                 {link.label}
               </span>
             </Link>

@@ -353,6 +353,32 @@ html.light-mode [class*="from-[var(--gold-kene)]"] {
   color: #000000 !important;
 }
 
+.light-mode [class*="from-[#FFD700]"] *,
+.light-mode [class*="from-[#F3E5AB]"] *,
+.light-mode [class*="from-[var(--gold-kene)]"] *,
+html.light-mode [class*="from-[#FFD700]"] *,
+html.light-mode [class*="from-[#F3E5AB]"] *,
+html.light-mode [class*="from-[var(--gold-kene)]"] * {
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+/* Navigation Bars & Header Buttons in Light Mode */
+.light-mode header,
+.light-mode nav,
+html.light-mode header,
+html.light-mode nav {
+  background-color: #FFFDF9 !important;
+  border-color: #E2D5BE !important;
+}
+
+.light-mode nav a:not([class*="from-"]),
+.light-mode header a:not([class*="from-"]),
+html.light-mode nav a:not([class*="from-"]),
+html.light-mode header a:not([class*="from-"]) {
+  color: #2A1D13 !important;
+}
+
 /* High Contrast Input Fields in Light Mode */
 .light-mode input,
 .light-mode textarea,

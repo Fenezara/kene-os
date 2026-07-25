@@ -594,7 +594,7 @@ export default function ClientPortalPage() {
       {/* --- CONSULTATION DIRECTE DR. DERMATOLOGUE IA (DR. DIALLO) --- */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
         <a href="/chat?mode=dr_diallo" className="block">
-          <Card className="bg-gradient-to-r from-emerald-950/50 via-[#1A1410] to-[#241C16] border border-emerald-500/30 text-white shadow-xl overflow-hidden relative rounded-2xl cursor-pointer hover:border-emerald-400 transition-all">
+          <Card className="preserve-dark-text bg-gradient-to-r from-emerald-950 via-[#1A1410] to-[#241C16] border border-emerald-500/40 text-white shadow-xl overflow-hidden relative rounded-2xl cursor-pointer hover:border-emerald-400 transition-all">
             <CardContent className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3.5">
                 <div className="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl shadow-inner shrink-0">
