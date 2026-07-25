@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Building2, ShoppingBag, ShieldCheck, UserPlus, Crown, Menu, X, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { KeneLogo } from '@/components/ui/logo';
 
 export default function AdminLayout({
   children,
@@ -46,17 +47,7 @@ export default function AdminLayout({
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
-          <Link href="/admin" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#8A1C14] via-[#C8951E] to-[#D4AF37] flex items-center justify-center font-bold text-black shadow-md border border-[var(--gold-kene)]/40">
-              <Crown className="w-5 h-5 text-black" />
-            </div>
-            <div>
-              <span className="font-display font-black text-base text-white block leading-none">
-                Console Super-Admin <span className="text-[var(--gold-kene)]">Kènè SaaS</span>
-              </span>
-              <span className="text-[10px] text-white/50 font-mono">Gouvernance UEMOA & Sécurité</span>
-            </div>
-          </Link>
+          <KeneLogo href="/admin" subtitle="ADMIN" size="md" />
         </div>
 
         {/* Desktop Header Stats */}
