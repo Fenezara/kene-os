@@ -194,3 +194,118 @@ button, a, [role="button"] {
 .text-glow-gold {
   text-shadow: 0 0 20px rgba(200, 149, 30, 0.4);
 }
+
+/* ─── ☀️ PRISTINE 100% BUG-FREE LIGHT MODE ENGINE ─── */
+html.light-mode,
+body.light-mode,
+.light-mode {
+  --background: #FAF6EE !important;
+  --foreground: #1F140C !important;
+  --card: #FFFFFF !important;
+  --card-foreground: #1F140C !important;
+  --border: #E2D5BE !important;
+  --input: #FAF4E8 !important;
+  --muted: #F2EAD8 !important;
+  --muted-foreground: #5A4D3E !important;
+
+  background-color: #FAF6EE !important;
+  color: #1F140C !important;
+}
+
+html.light-mode body,
+html.light-mode main,
+html.light-mode div.min-h-screen {
+  background-color: #FAF6EE !important;
+  color: #1F140C !important;
+}
+
+/* NON-PHOTO CARDS: Ivory Alabaster Cards with Crisp Espresso Text */
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#0F0A05]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#1A1410]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#241C16]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="bg-[#362A21]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="from-[#0F0A05]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="from-[#1A1410]"],
+html.light-mode :not(:has(img), :has(picture), :has([style*="url"]))[class*="from-[#241C16]"] {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  border-color: #E2D5BE !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  color: #1F140C !important;
+}
+
+/* 📸 PHOTO CARDS & IMAGE CONTAINERS: 100% PRESERVED PHOTO + DARK OVERLAY + WHITE TEXT */
+html.light-mode div:has(img),
+html.light-mode section:has(img),
+html.light-mode article:has(img),
+html.light-mode figure:has(img) {
+  background-color: transparent !important;
+}
+
+html.light-mode img,
+html.light-mode picture,
+html.light-mode [style*="url"],
+html.light-mode [class*="bg-[url"] {
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  filter: none !important;
+}
+
+/* Force dark gradient overlays on photo cards to remain dark so white titles remain bright white */
+html.light-mode div:has(img) [class*="bg-gradient-"],
+html.light-mode div:has(img) [class*="from-[#0F0A05]"],
+html.light-mode div:has(img) [class*="from-black"] {
+  background: linear-gradient(to top, rgba(15, 10, 5, 0.95) 0%, rgba(15, 10, 5, 0.6) 50%, transparent 100%) !important;
+}
+
+/* Force text inside any photo card to stay crisp white */
+html.light-mode div:has(img) h1,
+html.light-mode div:has(img) h2,
+html.light-mode div:has(img) h3,
+html.light-mode div:has(img) p,
+html.light-mode div:has(img) span {
+  color: #FFFFFF !important;
+}
+
+/* 🔘 NAVIGATION BARS & BUTTONS IN LIGHT MODE */
+html.light-mode header,
+html.light-mode nav {
+  background-color: #FFFFFF !important;
+  border-color: #E2D5BE !important;
+}
+
+html.light-mode nav a:not([class*="from-"]),
+html.light-mode header a:not([class*="from-"]) {
+  color: #1F140C !important;
+  font-weight: 600 !important;
+}
+
+/* Gold Gradient Buttons ALWAYS retain Pure Black Font */
+html.light-mode [class*="from-[#FFD700]"],
+html.light-mode [class*="from-[#F3E5AB]"],
+html.light-mode [class*="from-[var(--gold-kene)]"] {
+  background: linear-gradient(135deg, #FFD700 0%, #C8951E 50%, #D4AF37 100%) !important;
+  color: #000000 !important;
+}
+
+html.light-mode [class*="from-[#FFD700]"] *,
+html.light-mode [class*="from-[#F3E5AB]"] *,
+html.light-mode [class*="from-[var(--gold-kene)]"] * {
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+/* 📝 FORM INPUT FIELDS IN LIGHT MODE */
+html.light-mode input,
+html.light-mode textarea,
+html.light-mode select {
+  background-color: #FAF4E8 !important;
+  border-color: #E2D2B5 !important;
+  color: #1F140C !important;
+}
+
+html.light-mode input::placeholder,
+html.light-mode textarea::placeholder {
+  color: #8C7560 !important;
+}
