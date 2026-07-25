@@ -33,12 +33,12 @@ export default function ClientPortalPage() {
 
   // Logged In Client User Profile State
   const [userProfile, setUserProfile] = useState<any>({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    skinType: 'mixte',
-    fitzpatrickType: 'V'
+    firstName: 'Awa',
+    lastName: 'Koné',
+    phone: '+225 07 89 45 12 30',
+    email: 'awa.kone@example.com',
+    skinType: 'Mixte à tendance déshydratée',
+    fitzpatrickType: 'Phototype V'
   });
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
@@ -50,22 +50,22 @@ export default function ClientPortalPage() {
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
-        let rawFirstName = parsed.firstName || parsed.name || '';
+        let rawFirstName = parsed.firstName || parsed.name || 'Awa';
         if (rawFirstName.includes('(') || rawFirstName.match(/\d{5,}/)) {
           rawFirstName = rawFirstName.replace(/\(.*\)/, '').replace(/\d+/g, '').replace(/Cliente/g, '').trim();
         }
-        if (!rawFirstName) rawFirstName = 'Cliente';
+        if (!rawFirstName) rawFirstName = 'Awa';
 
         setUserProfile({
           firstName: rawFirstName,
-          lastName: (parsed.lastName || '').replace(/\d+/g, '').trim(),
-          phone: parsed.phone || '',
-          email: parsed.email || '',
-          skinType: parsed.skinType || 'mixte',
-          fitzpatrickType: parsed.fitzpatrickType || 'V'
+          lastName: (parsed.lastName || 'Koné').replace(/\d+/g, '').trim(),
+          phone: parsed.phone || '+225 07 89 45 12 30',
+          email: parsed.email || 'awa.kone@example.com',
+          skinType: parsed.skinType || 'Mixte à tendance déshydratée',
+          fitzpatrickType: parsed.fitzpatrickType || 'Phototype V'
         });
         setClientContactName(rawFirstName);
-        setClientContactPhone(parsed.phone || '');
+        setClientContactPhone(parsed.phone || '+225 07 89 45 12 30');
       } catch (e) {}
     }
 

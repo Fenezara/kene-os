@@ -55,30 +55,53 @@ export default function LoginPage() {
       }
 
       if (role === 'client') {
-        let cleanFirstName = 'Cliente';
-        let cleanEmail = '';
-        let cleanPhone = clientPhone ? clientPhone.trim() : '';
+        let cleanFirstName = 'Awa';
+        let cleanLastName = 'Koné';
+        let cleanEmail = 'awa.kone@example.com';
+        let cleanPhone = '+225 07 89 45 12 30';
 
-        if (userEmailOrName && userEmailOrName.includes('@')) {
-          cleanEmail = userEmailOrName.trim();
-          const namePart = userEmailOrName.split('@')[0].replace(/[^a-zA-Z]/g, ' ');
-          if (namePart.trim()) {
-            cleanFirstName = namePart.trim().charAt(0).toUpperCase() + namePart.trim().slice(1);
+        const inputVal = userEmailOrName ? userEmailOrName.trim() : '';
+
+        if (inputVal.includes('@')) {
+          cleanEmail = inputVal;
+          const namePart = inputVal.split('@')[0].replace(/[^a-zA-Z._-]/g, ' ').replace(/[._-]/g, ' ');
+          const parts = namePart.trim().split(/\s+/);
+          if (parts.length > 0 && parts[0]) {
+            cleanFirstName = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
           }
-        } else if (userEmailOrName && !userEmailOrName.includes('@') && isNaN(Number(userEmailOrName.replace(/\+|\s/g, '')))) {
-          cleanFirstName = userEmailOrName.trim();
-        } else if (userEmailOrName && !clientPhone) {
-          cleanPhone = userEmailOrName.trim();
+          if (parts.length > 1 && parts[1]) {
+            cleanLastName = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
+          }
+        } else if (inputVal && isNaN(Number(inputVal.replace(/\+|\s/g, '')))) {
+          const parts = inputVal.split(/\s+/);
+          if (parts.length > 0 && parts[0]) {
+            cleanFirstName = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+          }
+          if (parts.length > 1) {
+            cleanLastName = parts.slice(1).join(' ');
+          }
+        } else if (inputVal) {
+          cleanPhone = inputVal;
         }
 
-        localStorage.setItem('kene_user', JSON.stringify({
+        if (clientPhone && clientPhone.trim()) {
+          cleanPhone = clientPhone.trim();
+        }
+
+        const clientUserData = {
           firstName: cleanFirstName,
-          lastName: '',
-          name: cleanFirstName,
+          lastName: cleanLastName,
+          name: `${cleanFirstName} ${cleanLastName}`.trim(),
           phone: cleanPhone,
           email: cleanEmail,
           role: 'client',
-        }));
+          skinType: 'Mixte à tendance déshydratée',
+          fitzpatrickType: 'Phototype V',
+          memberSince: '2024',
+          points: 1250,
+        };
+
+        localStorage.setItem('kene_user', JSON.stringify(clientUserData));
         document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
       } else {
         const isSuperAdmin = role === 'Super Admin' || role === 'admin';
