@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Building2, Users, Calendar, DollarSign, Activity, Briefcase,
-  MoreVertical, Check, ShieldAlert, Phone, Mail, Sparkles, RefreshCw,
+  MoreVertical, Check, ShieldAlert, Phone, Mail, Award, RefreshCw,
   TrendingUp, Globe, Store, FileText, Download, Printer, Search,
   Filter, ShieldCheck, Zap, AlertCircle, Eye, ArrowUpRight, Cpu, Sprout, ShoppingBag, Trash2
 } from 'lucide-react';
@@ -544,7 +544,7 @@ export default function AdminDashboardPage() {
                         </TableCell>
                         <TableCell>
                           <Badge className="bg-[var(--gold-kene)]/20 text-[var(--gold-kene)] font-mono font-bold text-xs">
-                            ✨ {client.points || 1250} Pts
+                            🌿 {client.points || 1250} Pts
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
