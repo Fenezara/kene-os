@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
       });
 
       // Set admin session cookie & localStorage
-      document.cookie = `kene-session=admin-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      document.cookie = `kene-session=admin-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       localStorage.setItem('kene_user', JSON.stringify({
         name: 'Super-Admin SaaS Kènè',
         email,

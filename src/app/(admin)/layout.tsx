@@ -15,13 +15,6 @@ export default function AdminLayout({
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    // Ensure active admin session cookie is set for smooth super-admin navigation
-    if (!document.cookie.includes('kene-session')) {
-      document.cookie = 'kene-session=admin-active; path=/; max-age=86400; SameSite=Lax';
-    }
-  }, []);
-
   // Don't render admin header/sidebar on the isolated admin login page
   if (pathname === '/admin/login') {
     return <>{children}</>;

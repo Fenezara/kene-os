@@ -37,7 +37,7 @@ export function RoleSwitcher() {
 
     if (targetRole === 'client') {
       document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
-      document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       toast({
         title: '🌸 Mode Cliente Activé',
         description: 'Vous êtes maintenant dans votre espace personnel (soins, bilans & points fidélité).',
@@ -45,7 +45,7 @@ export function RoleSwitcher() {
       window.location.href = '/portal';
     } else {
       document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
-      document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       toast({
         title: '✂️ Mode Praticienne Pro Activé',
         description: 'Vous êtes maintenant dans votre espace de travail salon (Agenda, Caisse & Diagnostiques).',

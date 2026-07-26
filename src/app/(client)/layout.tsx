@@ -19,12 +19,6 @@ export default function ClientLayout({
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  React.useEffect(() => {
-    if (!document.cookie.includes('kene-session')) {
-      document.cookie = 'kene-session=client-active; path=/; max-age=86400; SameSite=Lax';
-    }
-  }, []);
-
   const navLinks = [
     { href: '/portal', label: 'Accueil', icon: Home },
     { href: '/salons', label: 'Salons & Carte', icon: MapPin },

@@ -114,9 +114,9 @@ export default function LoginPage() {
 
         registerNewClient(clientUserData);
         localStorage.setItem('kene_user', JSON.stringify(clientUserData));
-        document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+        document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       } else {
-        document.cookie = `kene-session=${sessionRole}-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+        document.cookie = `kene-session=${sessionRole}-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
 
         const userObj = {
           name: isSuperAdmin ? 'Super-Admin SaaS Kènè' : displayName,

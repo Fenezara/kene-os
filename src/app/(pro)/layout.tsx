@@ -133,15 +133,8 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  React.useEffect(() => {
-    // Ensure active pro session cookie is set for smooth pro navigation
-    if (!document.cookie.includes('kene-session')) {
-      document.cookie = 'kene-session=gerant-active; path=/; max-age=86400; SameSite=Lax';
-    }
-  }, []);
-
   return (
-    <div className="min-h-screen bg-[#0F0A05] flex font-sans">
+    <div className="min-h-screen bg-[#0F0A05] flex flex-col md:flex-row font-sans w-full overflow-x-hidden">
       <GlobalSearch />
       {/* Subtle global bg pattern */}
       <div
@@ -164,7 +157,7 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* ─── MOBILE HEADER + DRAWER (SCROLLS NATURALLY WITH INTERFACE) ─── */}
-      <div className="md:hidden flex items-center justify-between px-4 h-14 bg-[#110D09] border-b border-white/5 w-full shrink-0 z-30">
+      <div className="md:hidden flex items-center justify-between px-4 h-14 bg-[#110D09] border-b border-white/5 w-full shrink-0 z-30 sticky top-0">
         <div className="flex items-center gap-2">
           <button
             onClick={() => router.back()}
@@ -211,7 +204,7 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
 
       {/* ─── MAIN CONTENT CONTAINER (SYNCHRONIZED SCROLL) ─── */}
-      <main className="relative z-10 flex-1 flex flex-col min-h-screen overflow-y-auto">
+      <main className="relative z-10 flex-1 flex flex-col min-h-screen w-full overflow-y-auto">
         {/* Top Navigation Header with Universal Back Button & Role Switcher */}
         <div className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-white/5 bg-[#110D09]/40 backdrop-blur-md">
           <BackButton fallbackUrl="/dashboard" />
@@ -228,7 +221,7 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
 
-        <div className="flex-1 p-5 md:p-8">
+        <div className="flex-1 p-4 sm:p-6 md:p-8 w-full max-w-full">
           {children}
         </div>
       </main>

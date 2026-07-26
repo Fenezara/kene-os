@@ -65,7 +65,7 @@ export default function RegisterPage() {
         role: 'client',
       };
       localStorage.setItem('kene_user', JSON.stringify(user));
-      document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       setLoading(false);
       toast({
         title: '✨ Compte Cliente Créé avec Succès !',
@@ -94,7 +94,7 @@ export default function RegisterPage() {
         salonName: salonTitle,
         role: 'salon',
       }));
-      document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       setLoading(false);
       toast({
         title: '✂️ Espace Salon Créé avec Succès !',
