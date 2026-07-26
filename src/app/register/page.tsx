@@ -52,12 +52,25 @@ export default function RegisterPage() {
     password: '',
   });
 
-  const handleRegisterClient = (e: React.FormEvent) => {
+  const handleRegisterClient = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          role: 'client',
+          firstName: clientForm.firstName,
+          lastName: clientForm.lastName,
+          phone: clientForm.phone,
+          email: clientForm.email,
+        }),
+      });
+      const data = await res.json();
+
       const user = {
-        id: `usr_${Date.now()}`,
+        id: data.account?.id || `usr_${Date.now()}`,
         firstName: clientForm.firstName || 'Cliente',
         lastName: clientForm.lastName || 'Kènè',
         phone: clientForm.phone,
@@ -69,17 +82,33 @@ export default function RegisterPage() {
       setLoading(false);
       toast({
         title: '✨ Compte Cliente Créé avec Succès !',
-        description: `Bienvenue ${user.firstName} sur Kènè Pro.`,
+        description: `Bienvenue ${user.firstName} sur Kènè OS. Votre compte est sécurisé.`,
       });
-      router.push('/portal');
-    }, 1500);
+      window.location.href = '/portal';
+    } catch {
+      setLoading(false);
+      toast({ title: 'Erreur', description: 'Échec de la création de compte.', variant: 'destructive' });
+    }
   };
 
-  const handleRegisterPro = (e: React.FormEvent) => {
+  const handleRegisterPro = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    try {
       const salonTitle = proForm.salonName || 'Kènè Institut Beauté';
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          role: 'gerant',
+          salonName: salonTitle,
+          name: proForm.ownerName,
+          phone: proForm.phone,
+          email: proForm.email,
+        }),
+      });
+      const data = await res.json();
+
       const tenantSettings = {
         identity: { commercialName: salonTitle, legalName: salonTitle + ' SAS', type: proForm.salonType || 'Institut', logoUrl: null },
         address: { street: 'Adresse Principale', phone: proForm.phone || '+225 07 00 00 00', email: proForm.email || 'contact@salon.com' },
@@ -92,16 +121,19 @@ export default function RegisterPage() {
         email: proForm.email,
         phone: proForm.phone,
         salonName: salonTitle,
-        role: 'salon',
+        role: 'gerant',
       }));
       document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       setLoading(false);
       toast({
         title: '✂️ Espace Salon Créé avec Succès !',
-        description: `Bienvenue sur Kènè OS, ${proForm.salonName || 'votre salon'}.`,
+        description: `Bienvenue sur Kènè OS, ${proForm.salonName || 'votre salon'}. Votre compte entreprise est validé.`,
       });
-      window.location.href = '/dashboard';
-    }, 1200);
+      window.location.href = data.targetPath || '/dashboard';
+    } catch {
+      setLoading(false);
+      toast({ title: 'Erreur', description: 'Échec de la création du compte salon.', variant: 'destructive' });
+    }
   };
 
   return (

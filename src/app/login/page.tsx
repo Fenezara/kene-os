@@ -40,9 +40,13 @@ export default function LoginPage() {
   const [adminEmail, setAdminEmail] = useState('admin@kene.africa');
   const [adminPassword, setAdminPassword] = useState('');
 
+  const [loginError, setLoginError] = useState<string | null>(null);
+
   const handleLogin = (role: string, targetPath: string, userEmailOrName?: string) => async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setLoginError(null);
+
     try {
       const authRes = await fetch('/api/auth/login', {
         method: 'POST',
@@ -51,7 +55,20 @@ export default function LoginPage() {
       });
       const authData = await authRes.json();
 
-      let displayName = userEmailOrName || 'Utilisateur Kènè';
+      // 🔒 SECURITY CHECK: Reject login if account is not registered
+      if (!authRes.ok || !authData.success) {
+        setLoading(false);
+        const errMsg = authData.error || 'Compte introuvable. Veuillez créer un compte pour vous connecter.';
+        setLoginError(errMsg);
+        toast({
+          title: '🔒 Accès Refusé — Compte Introuvable',
+          description: 'Aucun compte enregistré ne correspond à cet identifiant.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      let displayName = authData.user?.name || userEmailOrName || 'Utilisateur Kènè';
       if (userEmailOrName && userEmailOrName.includes('@')) {
         displayName = userEmailOrName.split('@')[0].replace('.', ' ');
         displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
@@ -249,6 +266,32 @@ export default function LoginPage() {
                 </button>
               ))}
             </div>
+
+            {/* ── SECURITY ALERT ERROR BANNER ── */}
+            {loginError && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 bg-red-500/10 border border-red-500/30 rounded-2xl p-4 text-xs text-red-200 space-y-2 font-sans"
+              >
+                <div className="flex items-start gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                  <div className="leading-relaxed">
+                    <strong className="text-red-300 block font-bold">Sécurité — Accès Refusé :</strong>
+                    {loginError}
+                  </div>
+                </div>
+                <div className="pt-2 flex justify-end border-t border-red-500/20">
+                  <a
+                    href="/register"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-[#C8951E] hover:underline"
+                  >
+                    <span>Créer un compte maintenant</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </motion.div>
+            )}
 
             {/* ── FORM CONTENT ── */}
             <AnimatePresence mode="wait">
