@@ -44,11 +44,12 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await fetch('/api/auth/login', {
+      const authRes = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role, email: userEmailOrName })
       });
+      const authData = await authRes.json();
 
       let displayName = userEmailOrName || 'Utilisateur Kènè';
       if (userEmailOrName && userEmailOrName.includes('@')) {
@@ -56,10 +57,15 @@ export default function LoginPage() {
         displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
       }
 
+      const roleLower = String(role).toLowerCase();
+      const isClient = roleLower.includes('client');
+      const isSuperAdmin = roleLower.includes('admin') || roleLower.includes('super');
+      const sessionRole = isClient ? 'client' : isSuperAdmin ? 'admin' : 'gerant';
+
       // 🔐 ÉTAPE 1 : Effacer toute ancienne session avant d'en créer une nouvelle
       document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
 
-      if (role === 'Client') {
+      if (isClient) {
         let cleanFirstName = 'Awa';
         let cleanLastName = 'Koné';
         let cleanEmail = 'awa.kone@example.com';
@@ -106,16 +112,10 @@ export default function LoginPage() {
           points: 1250,
         };
 
-        // Synchronize into global client directory
         registerNewClient(clientUserData);
-
         localStorage.setItem('kene_user', JSON.stringify(clientUserData));
-        // 🔐 ÉTAPE 2 : Créer la session CLIENT avec préfixe strict
         document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
       } else {
-        const isSuperAdmin = role === 'Super Admin' || role === 'admin';
-        const sessionRole = isSuperAdmin ? 'admin' : 'gerant';
-        // 🔐 ÉTAPE 2 : Créer la session GÉRANT ou ADMIN avec préfixe strict
         document.cookie = `kene-session=${sessionRole}-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
 
         const userObj = {
@@ -138,12 +138,10 @@ export default function LoginPage() {
         localStorage.setItem('kene_user', JSON.stringify(userObj));
       }
 
-      toast({ title: 'Connexion Sécurisée', description: `Bienvenue dans votre espace ${role}.` });
+      const destination = authData?.targetPath || targetPath;
+      toast({ title: 'Connexion Sécurisée', description: `Bienvenue dans votre espace.` });
       
-      // 🔐 ÉTAPE 3 : Navigation HTTP complète pour que le middleware lise le bon cookie
-      // Ne PAS utiliser router.push() car le middleware côté serveur ne verra pas le cookie
-      // tant qu'une vraie requête HTTP n'est pas émise avec le nouveau cookie
-      window.location.href = targetPath;
+      window.location.href = destination;
     } catch {
       setLoading(false);
       toast({ title: 'Erreur', description: 'Échec de connexion.', variant: 'destructive' });

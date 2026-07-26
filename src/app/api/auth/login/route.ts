@@ -1,23 +1,34 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
   try {
-    const { role, email, password, pin } = await request.json();
+    const body = await request.json();
+    const { role, email } = body;
 
     if (!role) {
       return NextResponse.json({ success: false, error: 'Rôle manquant' }, { status: 400 });
     }
 
-    // Determine normalized role prefix
+    const roleLower = String(role).toLowerCase();
+
+    // Determine normalized role prefix and target path
     let sessionRole = 'client';
     let targetPath = '/portal';
 
-    if (role === 'salon' || role === 'gerant') {
+    if (
+      roleLower.includes('salon') ||
+      roleLower.includes('gerant') ||
+      roleLower.includes('gérant') ||
+      roleLower.includes('pro') ||
+      roleLower.includes('entreprise')
+    ) {
       sessionRole = 'gerant';
       targetPath = '/dashboard';
-    } else if (role === 'admin' || role === 'Super Admin') {
+    } else if (
+      roleLower.includes('admin') ||
+      roleLower.includes('super')
+    ) {
       sessionRole = 'admin';
       targetPath = '/admin';
     }

@@ -68,7 +68,7 @@ export function middleware(request: NextRequest) {
       return response;
     }
 
-    const isProSession = session.value.startsWith('gerant-') || session.value.startsWith('pro-') || session.value.startsWith('tenant-') || session.value.startsWith('salon-');
+    const isProSession = session.value.startsWith('gerant-') || session.value.startsWith('pro-') || session.value.startsWith('tenant-') || session.value.startsWith('salon-') || session.value.startsWith('employee-');
     if (isProSession) {
       const dashboardUrl = new URL('/dashboard', request.url);
       const response = NextResponse.redirect(dashboardUrl);

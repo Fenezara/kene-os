@@ -36,19 +36,21 @@ export function RoleSwitcher() {
     setIsOpen(false);
 
     if (targetRole === 'client') {
+      document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
       document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
       toast({
         title: '🌸 Mode Cliente Activé',
         description: 'Vous êtes maintenant dans votre espace personnel (soins, bilans & points fidélité).',
       });
-      router.push('/portal');
+      window.location.href = '/portal';
     } else {
-      document.cookie = `kene-session=employee-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
+      document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
       toast({
         title: '✂️ Mode Praticienne Pro Activé',
         description: 'Vous êtes maintenant dans votre espace de travail salon (Agenda, Caisse & Diagnostiques).',
       });
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
     }
   };
 

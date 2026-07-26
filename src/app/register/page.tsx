@@ -94,13 +94,13 @@ export default function RegisterPage() {
         salonName: salonTitle,
         role: 'salon',
       }));
-      document.cookie = `kene-session=admin-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
       setLoading(false);
       toast({
         title: '✂️ Espace Salon Créé avec Succès !',
-        description: `Bienvenue ! Votre salon "${salonTitle}" est configuré.`,
+        description: `Bienvenue sur Kènè OS, ${proForm.salonName || 'votre salon'}.`,
       });
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
     }, 1200);
   };
 
