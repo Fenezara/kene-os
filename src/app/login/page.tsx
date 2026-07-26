@@ -68,10 +68,14 @@ export default function LoginPage() {
         return;
       }
 
-      let displayName = authData.user?.name || userEmailOrName || 'Utilisateur Kènè';
-      if (userEmailOrName && userEmailOrName.includes('@')) {
-        displayName = userEmailOrName.split('@')[0].replace('.', ' ');
-        displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+      let displayName = authData.user?.name;
+      if (!displayName || /^[\+\d\s\-\.\(\)]+$/.test(displayName)) {
+        if (userEmailOrName && userEmailOrName.includes('@')) {
+          const parts = userEmailOrName.split('@')[0].replace(/[\._\-]/g, ' ').split(' ');
+          displayName = parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+        } else {
+          displayName = 'Kènè Institut & Spa';
+        }
       }
 
       const roleLower = String(role).toLowerCase();
@@ -119,7 +123,7 @@ export default function LoginPage() {
         const clientUserData = {
           firstName: cleanFirstName,
           lastName: cleanLastName,
-          name: `${cleanFirstName} ${cleanLastName}`.trim(),
+          name: authData.user?.name || `${cleanFirstName} ${cleanLastName}`.trim(),
           phone: cleanPhone,
           email: cleanEmail,
           role: 'client',
@@ -139,12 +143,12 @@ export default function LoginPage() {
           name: isSuperAdmin ? 'Super-Admin SaaS Kènè' : displayName,
           email: userEmailOrName || (isSuperAdmin ? 'admin@kene.africa' : 'contact@salon.com'),
           role: sessionRole,
-          salonName: sessionRole === 'gerant' ? `Institut ${displayName}` : undefined,
+          salonName: sessionRole === 'gerant' ? (displayName.startsWith('Institut') ? displayName : `Institut ${displayName}`) : undefined,
         };
 
         if (sessionRole === 'gerant') {
           registerNewTenant({
-            name: displayName.endsWith('Salon') ? displayName : `Institut ${displayName}`,
+            name: userObj.salonName,
             email: userObj.email,
             phone: '+225 07 00 11 22 33',
             type: 'Institut & Spa Botanique',
