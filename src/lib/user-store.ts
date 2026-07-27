@@ -1,8 +1,11 @@
 /**
- * Kènè OS — Security & User Registration Verification Store
- * Strictly verifies whether an email or phone number belongs to a registered account.
- * Rejects login attempts from unregistered users.
+ * Kènè OS — Persistent Security & User Registration Verification Store
+ * Persists registered accounts to disk & database.
+ * Supports flexible phone matching (country codes +225, +221, +223, local 07/05/01).
  */
+
+import fs from 'fs';
+import path from 'path';
 
 export interface UserAccount {
   id: string;
@@ -13,7 +16,9 @@ export interface UserAccount {
   registeredAt: string;
 }
 
-// Initial Registered Accounts Database
+const STORAGE_FILE_PATH = path.join(process.cwd(), 'prisma', 'registered_users.json');
+
+// Initial Registered Accounts
 const INITIAL_REGISTERED_ACCOUNTS: UserAccount[] = [
   // Super-Admin Accounts
   { id: 'usr-admin-01', email: 'admin@kene.africa', name: 'Super-Admin SaaS Kènè', role: 'admin', registeredAt: '2024-01-01' },
@@ -37,27 +42,75 @@ const INITIAL_REGISTERED_ACCOUNTS: UserAccount[] = [
   { id: 'usr-client-08', email: 'sokhna.ndiaye@yahoo.fr', phone: '+221 77 987 65 43', name: 'Sokhna Ndiaye', role: 'client', registeredAt: '2024-03-01' },
 ];
 
-// In-memory dynamic register for newly created accounts during runtime
-const DYNAMIC_ACCOUNTS: UserAccount[] = [];
+/**
+ * Load persisted accounts from disk
+ */
+function loadDiskAccounts(): UserAccount[] {
+  try {
+    if (fs.existsSync(STORAGE_FILE_PATH)) {
+      const data = fs.readFileSync(STORAGE_FILE_PATH, 'utf-8');
+      return JSON.parse(data);
+    }
+  } catch (e) {
+    console.error('Error loading registered users disk file:', e);
+  }
+  return [];
+}
 
 /**
- * Register a new user account (Client or Salon)
+ * Save accounts to persistent disk file
+ */
+function saveDiskAccounts(accounts: UserAccount[]) {
+  try {
+    const dir = path.dirname(STORAGE_FILE_PATH);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(STORAGE_FILE_PATH, JSON.stringify(accounts, null, 2), 'utf-8');
+  } catch (e) {
+    console.error('Error saving registered users to disk:', e);
+  }
+}
+
+/**
+ * Register a new user account and persist it to disk
  */
 export function registerAccount(account: Omit<UserAccount, 'id' | 'registeredAt'>): UserAccount {
+  const diskAccounts = loadDiskAccounts();
+
   const newAccount: UserAccount = {
     id: `usr-reg-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     ...account,
     registeredAt: new Date().toISOString(),
   };
-  DYNAMIC_ACCOUNTS.push(newAccount);
+
+  // Filter out duplicates by email or phone
+  const updatedDisk = [
+    newAccount,
+    ...diskAccounts.filter(acc => {
+      const sameEmail = account.email && acc.email && cleanIdentifier(acc.email) === cleanIdentifier(account.email);
+      const samePhone = account.phone && acc.phone && cleanPhoneDigits(acc.phone) === cleanPhoneDigits(account.phone);
+      return !sameEmail && !samePhone;
+    })
+  ];
+
+  saveDiskAccounts(updatedDisk);
   return newAccount;
 }
 
 /**
- * Normalize phone or email for exact matching
+ * Clean string identifier (lowercased without spaces/dashes)
  */
 function cleanIdentifier(id: string): string {
   return id.toLowerCase().trim().replace(/[\s\-\.\(\)]/g, '');
+}
+
+/**
+ * Extract last 8 digits of phone for robust cross-prefix matching (+225 vs 07)
+ */
+function cleanPhoneDigits(phone: string): string {
+  const digitsOnly = phone.replace(/\D/g, '');
+  return digitsOnly.length >= 8 ? digitsOnly.slice(-8) : digitsOnly;
 }
 
 /**
@@ -65,61 +118,76 @@ function cleanIdentifier(id: string): string {
  */
 export async function findRegisteredAccount(identifier: string): Promise<UserAccount | null> {
   if (!identifier || !identifier.trim()) return null;
-  const cleanId = cleanIdentifier(identifier);
 
-  // 1. Check in-memory registered accounts
-  const allAccounts = [...INITIAL_REGISTERED_ACCOUNTS, ...DYNAMIC_ACCOUNTS];
-  const foundMemory = allAccounts.find(acc => {
-    const matchEmail = acc.email && cleanIdentifier(acc.email) === cleanId;
-    const matchPhone = acc.phone && cleanIdentifier(acc.phone) === cleanId;
-    return matchEmail || matchPhone;
+  const rawClean = cleanIdentifier(identifier);
+  const phoneDigits = cleanPhoneDigits(identifier);
+  const isEmail = identifier.includes('@');
+
+  const diskAccounts = loadDiskAccounts();
+  const allAccounts = [...diskAccounts, ...INITIAL_REGISTERED_ACCOUNTS];
+
+  // 1. Search in persistent store (Disk + Initial)
+  const foundInStore = allAccounts.find(acc => {
+    if (isEmail && acc.email) {
+      return cleanIdentifier(acc.email) === rawClean;
+    }
+    if (acc.phone && phoneDigits.length >= 6) {
+      const accDigits = cleanPhoneDigits(acc.phone);
+      return accDigits === phoneDigits || cleanIdentifier(acc.phone) === rawClean;
+    }
+    if (acc.email && cleanIdentifier(acc.email) === rawClean) {
+      return true;
+    }
+    return false;
   });
 
-  if (foundMemory) return foundMemory;
+  if (foundInStore) return foundInStore;
 
-  // 2. Check Prisma database if available
+  // 2. Search in Prisma database if available
   try {
     const { db } = await import('@/lib/db');
-    
-    // Check Client table
-    const dbClient = await db.client.findFirst({
-      where: {
-        OR: [
-          { email: identifier.trim() },
-          { phone: identifier.trim() },
-        ]
-      }
+
+    // Search Client table
+    const clients = await db.client.findMany({ take: 100 });
+    const foundClient = clients.find(c => {
+      if (c.email && isEmail && cleanIdentifier(c.email) === rawClean) return true;
+      if (c.phone && phoneDigits.length >= 6 && cleanPhoneDigits(c.phone) === phoneDigits) return true;
+      return false;
     });
-    if (dbClient) {
-      return {
-        id: dbClient.id,
-        email: dbClient.email || undefined,
-        phone: dbClient.phone,
-        name: `${dbClient.firstName} ${dbClient.lastName}`.trim(),
+
+    if (foundClient) {
+      const acc: UserAccount = {
+        id: foundClient.id,
+        email: foundClient.email || undefined,
+        phone: foundClient.phone,
+        name: `${foundClient.firstName} ${foundClient.lastName}`.trim(),
         role: 'client',
-        registeredAt: dbClient.createdAt.toISOString()
+        registeredAt: foundClient.createdAt.toISOString()
       };
+      // Auto-persist into disk for instant future lookups
+      registerAccount(acc);
+      return acc;
     }
 
-    // Check Tenant / Salon table
-    const dbTenant = await db.tenant.findFirst({
-      where: {
-        OR: [
-          { name: identifier.trim() },
-          { legalName: identifier.trim() },
-        ]
-      }
+    // Search Tenant / Salon table
+    const tenants = await db.tenant.findMany({ take: 100 });
+    const foundTenant = tenants.find(t => {
+      if (cleanIdentifier(t.name) === rawClean || cleanIdentifier(t.legalName || '') === rawClean) return true;
+      return false;
     });
-    if (dbTenant) {
-      return {
-        id: dbTenant.id,
-        name: dbTenant.name,
+
+    if (foundTenant) {
+      const acc: UserAccount = {
+        id: foundTenant.id,
+        name: foundTenant.name,
         role: 'gerant',
-        registeredAt: dbTenant.createdAt.toISOString()
+        registeredAt: foundTenant.createdAt.toISOString()
       };
+      registerAccount(acc);
+      return acc;
     }
   } catch {
-    // Database check failed or uninitialized — fallback to registry
+    // Database check fallback
   }
 
   return null;
