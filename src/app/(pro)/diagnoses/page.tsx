@@ -123,11 +123,14 @@ export default function ProDiagnosesPage() {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const dataUrl = canvas.toDataURL('image/jpeg');
         setCapturedPhoto(dataUrl);
+        if (typeof window !== 'undefined') localStorage.setItem('kene_latest_client_photo', dataUrl);
         toast({ title: "📸 Photo Capturée !", description: "Photo du visage de la cliente enregistrée pour l'analyse." });
       }
     } else {
       // Fallback demo photo
-      setCapturedPhoto('/images/afro_beauty_hero_woman.jpg');
+      const fallbackUrl = '/images/afro_beauty_hero_woman.jpg';
+      setCapturedPhoto(fallbackUrl);
+      if (typeof window !== 'undefined') localStorage.setItem('kene_latest_client_photo', fallbackUrl);
       toast({ title: "📸 Photo Prise avec Succès !", description: "Visage capturé pour l'analyse dermo-biométrique." });
     }
   };
@@ -138,7 +141,9 @@ export default function ProDiagnosesPage() {
     if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
-      setCapturedPhoto(reader.result as string);
+      const dataUrl = reader.result as string;
+      setCapturedPhoto(dataUrl);
+      if (typeof window !== 'undefined') localStorage.setItem('kene_latest_client_photo', dataUrl);
       toast({ title: "📥 Photo Téléchargée !", description: "Image chargée depuis la galerie pour l'analyse." });
     };
     reader.readAsDataURL(file);

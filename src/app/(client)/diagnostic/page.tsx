@@ -169,6 +169,11 @@ export default function DiagnosticPage() {
     setLoading(true);
 
     try {
+      if (typeof window !== 'undefined' && photos.length > 0) {
+        localStorage.setItem('kene_latest_client_photo', photos[0]);
+        localStorage.setItem('kene_latest_client_photos', JSON.stringify(photos));
+      }
+
       const user = localStorage.getItem('kene_user');
       const userId = user ? JSON.parse(user).id : null;
 

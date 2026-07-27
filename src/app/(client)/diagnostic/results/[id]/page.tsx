@@ -59,6 +59,19 @@ export default function ResultsPage() {
     color: '#C8951E'
   })
 
+  const [clientPhoto, setClientPhoto] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedPhoto = localStorage.getItem('kene_latest_client_photo');
+      if (savedPhoto) setClientPhoto(savedPhoto);
+    }
+  }, []);
+
+  const displayPhoto = (data?.photos && data.photos.length > 0 && data.photos[0] && !data.photos[0].includes('skin_sample'))
+    ? data.photos[0]
+    : (clientPhoto || '/images/afro_skin_spectral_scanner.jpg');
+
   useEffect(() => {
     const fetchResults = async () => {
       try {
@@ -206,7 +219,7 @@ export default function ResultsPage() {
             
             <div className="w-full aspect-square rounded-2xl overflow-hidden border border-white/5 bg-black relative">
               <img
-                src={data.photos && data.photos.length > 0 && data.photos[0] && !data.photos[0].includes('skin_sample') ? data.photos[0] : '/images/afro_skin_spectral_scanner.jpg'}
+                src={displayPhoto}
                 alt="Capture Diagnostic"
                 className={`w-full h-full object-cover transition-all duration-300 ${getSpectralFilter()}`}
               />
@@ -389,7 +402,7 @@ export default function ResultsPage() {
                 <div key={idx} className="bg-[#1A1410] border border-white/5 p-2 rounded-xl text-center space-y-1 group hover:border-gold-kene/40 transition relative">
                   <div className="relative w-full h-20 rounded-lg overflow-hidden bg-black/60 flex items-center justify-center">
                     <img 
-                      src={data.photos && data.photos.length > 0 && data.photos[0] && !data.photos[0].includes('skin_sample') ? data.photos[0] : '/images/afro_skin_spectral_scanner.jpg'} 
+                      src={displayPhoto} 
                       alt={item.name} 
                       className={`w-full h-full object-cover transition-all duration-300 ${item.filter}`}
                       style={{ opacity: 0.4 + (dermalDepth / 160) }}
