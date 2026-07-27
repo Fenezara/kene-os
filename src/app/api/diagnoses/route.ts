@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import ZAI from 'z-ai-web-dev-sdk'
+import { saveDiagnosisRecord } from '@/lib/diagnosis-store'
 
 export async function POST(request: Request) {
   try {
@@ -199,13 +200,13 @@ Analyse l'image du visage fournie et retourne obligatoirement un objet JSON cont
       }
     }
 
-    // 4. Save to Database with Graceful Fallback
+    // 4. Save to Persistent Store & Database
     let diagnosisId = `diag-${Date.now()}`;
     try {
       const newDiagnosis = await db.diagnosis.create({
         data: {
           clientId: finalUserId,
-          photos: JSON.stringify([photo]),
+          photos: JSON.stringify(Array.isArray(photos) && photos.length > 0 ? photos : [photo]),
           scoreGlobal: parsedAnalysis.scoreGlobal,
           subScores: JSON.stringify(parsedAnalysis.subScores),
           indicators: JSON.stringify(parsedAnalysis.indicators),
@@ -220,10 +221,27 @@ Analyse l'image du visage fournie et retourne obligatoirement un objet JSON cont
       console.warn('[KÈNÈ DIAGNOSTIC DB FALLBACK] DB Save bypassed:', dbErr);
     }
 
+    // Always persist to disk store so client can view real photos & results later
+    const savedRecord = saveDiagnosisRecord({
+      id: diagnosisId,
+      clientId: finalUserId,
+      photos: Array.isArray(photos) && photos.length > 0 ? photos : [photo],
+      scoreGlobal: parsedAnalysis.scoreGlobal,
+      subScores: parsedAnalysis.subScores,
+      indicators: parsedAnalysis.indicators,
+      recommendations: parsedAnalysis.recommendations,
+      dermatoReferral: parsedAnalysis.dermatoReferral,
+      referralReason: parsedAnalysis.referralReason,
+    });
+
     return NextResponse.json({
       success: true,
       diagnosis_id: diagnosisId,
-      diagnosis: parsedAnalysis,
+      diagnosis: {
+        ...parsedAnalysis,
+        id: diagnosisId,
+        photos: savedRecord.photos,
+      },
     })
   } catch (error: any) {
     console.error('[DIAGNOSES API ERROR]', error);

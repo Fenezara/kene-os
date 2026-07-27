@@ -93,17 +93,33 @@ const FALLBACK_DIAGNOSIS = {
   createdAt: new Date().toISOString(),
 }
 
+import { getDiagnosisById } from '@/lib/diagnosis-store'
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
+
+    // 1. Check persistent disk store first
+    const diskRecord = getDiagnosisById(id)
+    const dynamicHotspots = generateDynamicHotspots(id || 'demo-diagnosis-01')
+
+    if (diskRecord) {
+      return NextResponse.json({
+        success: true,
+        diagnosis: {
+          ...diskRecord,
+          aiHotspots: dynamicHotspots,
+        },
+      })
+    }
+
+    // 2. Check Database
     const diagnosis = await db.diagnosis.findUnique({
       where: { id },
     })
-
-    const dynamicHotspots = generateDynamicHotspots(id || 'demo-diagnosis-01')
 
     if (!diagnosis) {
       // Return realistic demo diagnosis fallback for seamless testing

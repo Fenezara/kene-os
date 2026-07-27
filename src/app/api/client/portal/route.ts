@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { getAllDiagnoses } from '@/lib/diagnosis-store';
 
 export async function GET() {
   try {
@@ -49,15 +50,19 @@ export async function GET() {
       upcomingAppointments = [];
     }
 
-    // Récupérer le dernier diagnostic
-    let latestDiagnosis: any = null;
-    try {
-      latestDiagnosis = await db.diagnosis.findFirst({
-        where: { clientId },
-        orderBy: { createdAt: 'desc' }
-      });
-    } catch (e) {
-      latestDiagnosis = null;
+    // Récupérer le dernier diagnostic et tous les diagnostics sauvegardés
+    let allSavedDiagnoses = getAllDiagnoses();
+    let latestDiagnosis: any = allSavedDiagnoses.length > 0 ? allSavedDiagnoses[0] : null;
+
+    if (!latestDiagnosis) {
+      try {
+        latestDiagnosis = await db.diagnosis.findFirst({
+          where: { clientId },
+          orderBy: { createdAt: 'desc' }
+        });
+      } catch (e) {
+        latestDiagnosis = null;
+      }
     }
 
     // Récupérer les informations du wallet
@@ -78,6 +83,7 @@ export async function GET() {
         client,
         upcomingAppointments,
         latestDiagnosis,
+        diagnosesHistory: allSavedDiagnoses,
         walletBalance: wallet?.balance || 25000
       }
     });

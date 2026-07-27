@@ -553,7 +553,7 @@ export default function ClientPortalPage() {
             <div className="pt-3 border-t border-white/5 space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold font-display text-[var(--gold-kene)] flex items-center gap-1.5 uppercase tracking-wider">
-                  <ScanFace className="w-4 h-4 text-[var(--gold-kene)]" /> Historique de Mes Anciens Résultats & Bilans (3 Scans)
+                  <ScanFace className="w-4 h-4 text-[var(--gold-kene)]" /> Historique de Mes Anciens Résultats & Bilans ({((data?.diagnosesHistory?.length || 0) > 0 ? data.diagnosesHistory.length : 3)} Scans)
                 </h4>
                 <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
                   Progression : +17% Hydratation
@@ -561,76 +561,95 @@ export default function ClientPortalPage() {
               </div>
 
               <div className="space-y-2">
-                {[
+                {((data?.diagnosesHistory && data.diagnosesHistory.length > 0) ? data.diagnosesHistory : [
                   {
-                    date: '22 Mai 2024',
-                    title: 'Bilan de Suivi Soin Saison Chromatique',
-                    phototype: 'Phototype V',
+                    id: 'demo-diagnosis-01',
+                    createdAt: '2026-07-27',
+                    date: 'Aujourd\'hui',
+                    title: 'Bilan Diagnostic Récent & Dermo-IA',
+                    phototype: userProfile.fitzpatrickType || 'Phototype V',
                     hydration: '82%',
                     formula: 'Sérum Baobab & Aloe Vera Bio',
                     status: 'Résultat Optimal ✨',
-                    score: 82,
+                    scoreGlobal: 82,
+                    photos: [typeof window !== 'undefined' ? localStorage.getItem('kene_latest_client_photo') : null].filter(Boolean),
                     badgeColor: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
                   },
                   {
+                    id: 'diag-demo-02',
+                    createdAt: '2024-03-10',
                     date: '10 Mars 2024',
                     title: 'Bilan de Suivi Hydratation Karité',
                     phototype: 'Phototype V',
                     hydration: '74%',
                     formula: 'Masque Karité Brut & Neem',
                     status: 'En Net Progrès 📈',
-                    score: 74,
+                    scoreGlobal: 74,
+                    photos: ['/images/afro_beauty_hero_woman.jpg'],
                     badgeColor: 'bg-[var(--gold-kene)]/15 text-[var(--gold-kene)] border-[var(--gold-kene)]/30'
                   },
                   {
+                    id: 'diag-demo-03',
+                    createdAt: '2024-01-15',
                     date: '15 Janvier 2024',
                     title: 'Bilan Diagnostic Initial & Dermo-IA',
                     phototype: 'Phototype V',
                     hydration: '65%',
                     formula: 'Ordonnance Botanique Initiale',
                     status: 'Bilan Initial 📋',
-                    score: 65,
+                    scoreGlobal: 65,
+                    photos: ['/images/afro_man_dermo_care.jpg'],
                     badgeColor: 'bg-blue-500/15 text-blue-400 border-blue-500/30'
                   },
-                ].map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3 rounded-2xl bg-[#1A1410] border border-white/5 hover:border-[var(--gold-kene)]/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--gold-kene)]/20 to-[#8A3B14]/20 border border-[var(--gold-kene)]/30 flex items-center justify-center font-bold text-xs text-[var(--gold-kene)] shrink-0 mt-0.5">
-                        #{3 - idx}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs font-bold text-white font-display">{item.title}</span>
-                          <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border ${item.badgeColor}`}>
-                            {item.status}
-                          </span>
-                        </div>
-                        <div className="text-[10px] text-white/50 font-sans mt-0.5 flex items-center gap-2 flex-wrap">
-                          <span>📅 {item.date}</span>
-                          <span>•</span>
-                          <span>🧪 Formule : {item.formula}</span>
-                          <span>•</span>
-                          <span className="text-[var(--gold-kene)] font-semibold">{item.phototype}</span>
-                        </div>
-                      </div>
-                    </div>
+                ]).map((item: any, idx: number) => {
+                  const itemPhoto = (item.photos && item.photos.length > 0 && item.photos[0])
+                    ? item.photos[0]
+                    : (typeof window !== 'undefined' ? localStorage.getItem('kene_latest_client_photo') : null) || '/images/afro_skin_spectral_scanner.jpg';
 
-                    <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
-                      <div className="text-right font-mono">
-                        <div className="text-xs font-bold text-emerald-400">{item.hydration}</div>
-                        <div className="text-[9px] text-white/40">Score : {item.score}/100</div>
+                  return (
+                    <div
+                      key={item.id || idx}
+                      className="p-3 rounded-2xl bg-[#1A1410] border border-white/5 hover:border-[var(--gold-kene)]/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="w-12 h-12 rounded-xl overflow-hidden border border-[var(--gold-kene)]/30 shrink-0 mt-0.5 bg-black relative">
+                          <img 
+                            src={itemPhoto} 
+                            alt="Cliché Client" 
+                            className="w-full h-full object-cover" 
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-xs font-bold text-white font-display">{item.title || `Bilan Diagnostic #${item.id?.substring(0, 8)}`}</span>
+                            <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border ${item.badgeColor || 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'}`}>
+                              {item.status || 'Résultat Enregistré ✨'}
+                            </span>
+                          </div>
+                          <div className="text-[10px] text-white/50 font-sans mt-0.5 flex items-center gap-2 flex-wrap">
+                            <span>📅 {item.date || safeFormat(item.createdAt, 'dd MMMM yyyy') || 'Récemment'}</span>
+                            <span>•</span>
+                            <span>🧪 Formule : {item.formula || 'Ordonnance Kènè Bio'}</span>
+                            <span>•</span>
+                            <span className="text-[var(--gold-kene)] font-semibold">{item.phototype || item.fitzpatrickType || 'Phototype V'}</span>
+                          </div>
+                        </div>
                       </div>
-                      <a href="/diagnostic/results/demo-diagnosis-01">
-                        <Button className="h-7 text-[10px] bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl px-2.5 cursor-pointer">
-                          Consulter 👁️
-                        </Button>
-                      </a>
+
+                      <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
+                        <div className="text-right font-mono">
+                          <div className="text-xs font-bold text-emerald-400">{item.subScores?.hydratation || item.subScores?.hydration || item.hydration || '82'}%</div>
+                          <div className="text-[9px] text-white/40">Score : {item.scoreGlobal || item.score || 78}/100</div>
+                        </div>
+                        <a href={`/diagnostic/results/${item.id || 'demo-diagnosis-01'}`}>
+                          <Button className="h-7 text-[10px] bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold border-none rounded-xl px-3 cursor-pointer shadow-md">
+                            Consulter 👁️
+                          </Button>
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </CardContent>
