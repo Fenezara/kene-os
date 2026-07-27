@@ -66,7 +66,16 @@ const PEAK_HOURS = [
 
 function sanitizeName(raw?: string): string {
   if (!raw || !raw.trim()) return 'Institut Beauté Kènè';
-  const clean = raw.trim();
+  let clean = raw.trim();
+
+  // Strip raw phone numbers in parentheses like (0748894270)
+  clean = clean.replace(/\s*\([\+\d\s\-\.]+\)/g, '').trim();
+
+  // Replace auto-generated client names with elegant salon commercial name
+  if (clean.toLowerCase().includes('cliente kènè') || clean.toLowerCase().includes('cliente kene')) {
+    clean = 'Institut Beauté Kènè';
+  }
+
   if (/^[\+\d\s\-\.\(\)]+$/.test(clean)) {
     return 'Institut Beauté Kènè';
   }
@@ -74,7 +83,7 @@ function sanitizeName(raw?: string): string {
     const stripped = clean.replace(/[\+\d\s]{8,}/g, '').trim();
     if (stripped.length > 2) return stripped;
   }
-  return clean;
+  return clean || 'Institut Beauté Kènè';
 }
 
 export default function ProDashboardPage() {
@@ -104,7 +113,7 @@ export default function ProDashboardPage() {
         try {
           const u = JSON.parse(savedUser);
           if (u.salonName) customSalonName = u.salonName;
-          else if (u.name && !/^[\+\d\s\-\.\(\)]+$/.test(u.name)) customOwnerName = u.name;
+          if (u.name && !/^[\+\d\s\-\.\(\)]+$/.test(u.name)) customOwnerName = u.name;
         } catch (e) {}
       }
       if (!customSalonName && savedAllTenants) {
@@ -219,18 +228,18 @@ export default function ProDashboardPage() {
               </span>
             </div>
 
-            {/* High-Visibility Company Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-[#C8951E]/20 border border-[#C8951E]/40 text-[#F3E5AB] text-xs font-bold font-display shadow-md mb-1">
+            {/* Clean Professional Establishment Badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-[#C8951E]/15 border border-[#C8951E]/30 text-[#F3E5AB] text-xs font-bold font-display shadow-md">
               <Building2 className="w-4 h-4 text-[#C8951E]" />
-              <span>Entreprise Active : <strong className="text-white underline decoration-[#C8951E]">{tenantName}</strong></span>
+              <span>Établissement : <strong className="text-white font-black">{tenantName}</strong> • Abidjan 🇨🇮</span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-display font-black text-white tracking-tight leading-tight">
-              {greeting}{ownerName ? `, ${ownerName}` : ''} <br />
-              <span className="bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#C8951E] bg-clip-text text-transparent">
-                {tenantName}
-              </span>
+              {greeting}{ownerName ? `, ${ownerName} 👋` : ' 👋'}
             </h1>
+            <p className="text-xs sm:text-sm text-white/60 font-sans max-w-xl">
+              Tableau de bord de pilotage dermo-cosmétique & gestion intégrée de votre salon.
+            </p>
             <p className="text-xs sm:text-sm text-white/60 font-sans max-w-xl">
               Tableau de bord de pilotage dermo-cosmétique & gestion intégrée de votre salon.
             </p>
