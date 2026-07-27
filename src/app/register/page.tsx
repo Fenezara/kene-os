@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { ShieldCheck, User, Store, ArrowRight, ArrowLeft, Loader2, Sparkles, Phone, Mail, Lock, Building2, MapPin, CheckCircle } from 'lucide-react';
@@ -51,6 +51,22 @@ export default function RegisterPage() {
     country: 'CI',
     password: '',
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const identifier = params.get('identifier') || params.get('phone') || params.get('email');
+      if (identifier) {
+        if (identifier.includes('@')) {
+          setClientForm(prev => ({ ...prev, email: identifier }));
+          setProForm(prev => ({ ...prev, email: identifier }));
+        } else {
+          setClientForm(prev => ({ ...prev, phone: identifier }));
+          setProForm(prev => ({ ...prev, phone: identifier }));
+        }
+      }
+    }
+  }, []);
 
   const handleRegisterClient = async (e: React.FormEvent) => {
     e.preventDefault();

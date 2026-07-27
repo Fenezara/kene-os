@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { findRegisteredAccount } from '@/lib/user-store';
+import { findRegisteredAccount, registerAccount, UserAccount } from '@/lib/user-store';
 
 export async function POST(request: Request) {
   try {
@@ -12,38 +12,52 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Identifiant (email ou téléphone) requis' }, { status: 400 });
     }
 
-    // 🔒 STRICT SECURITY CHECK: Verify if the account exists in registered directory or database
-    const registeredAccount = await findRegisteredAccount(identifier);
+    const inputRoleLower = String(role || '').toLowerCase();
+    const isClientRole = inputRoleLower.includes('client') || inputRoleLower === 'user';
+    const isPhone = /^[\+\d\s\-\.\(\)]+$/.test(identifier) && identifier.replace(/\D/g, '').length >= 8;
+
+    // 🔒 ACCOUNT LOOKUP: Verify if account exists, or auto-create Client account for OTP phone logins
+    let registeredAccount: UserAccount | null = await findRegisteredAccount(identifier);
 
     if (!registeredAccount) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: `Compte introuvable. L'identifiant "${identifier}" n'est associé à aucun compte enregistré. Veuillez créer un compte pour accéder à la plateforme.`,
-          unregistered: true,
-        },
-        { status: 401 }
-      );
+      if (isClientRole || isPhone) {
+        // Auto-register client accounts for phone OTP login (like Wave / Yango / TikTok)
+        registeredAccount = registerAccount({
+          phone: identifier,
+          name: `Cliente Kènè (${identifier})`,
+          role: 'client'
+        });
+      } else {
+        return NextResponse.json(
+          {
+            success: false,
+            error: `Compte introuvable. L'identifiant "${identifier}" n'est associé à aucun compte enregistré. Veuillez créer un compte pour accéder à la plateforme.`,
+            unregistered: true,
+          },
+          { status: 401 }
+        );
+      }
     }
 
-    const roleLower = String(role || registeredAccount.role).toLowerCase();
+    const account: UserAccount = registeredAccount;
+    const finalRoleLower = String(role || account.role).toLowerCase();
 
     // Determine normalized role prefix and target path
-    let sessionRole = registeredAccount.role;
+    let sessionRole: 'admin' | 'gerant' | 'client' = account.role;
     let targetPath = sessionRole === 'gerant' ? '/dashboard' : sessionRole === 'admin' ? '/admin' : '/portal';
 
     if (
-      roleLower.includes('salon') ||
-      roleLower.includes('gerant') ||
-      roleLower.includes('gérant') ||
-      roleLower.includes('pro') ||
-      roleLower.includes('entreprise')
+      finalRoleLower.includes('salon') ||
+      finalRoleLower.includes('gerant') ||
+      finalRoleLower.includes('gérant') ||
+      finalRoleLower.includes('pro') ||
+      finalRoleLower.includes('entreprise')
     ) {
       sessionRole = 'gerant';
       targetPath = '/dashboard';
     } else if (
-      roleLower.includes('admin') ||
-      roleLower.includes('super')
+      finalRoleLower.includes('admin') ||
+      finalRoleLower.includes('super')
     ) {
       sessionRole = 'admin';
       targetPath = '/admin';
@@ -66,10 +80,10 @@ export async function POST(request: Request) {
       role: sessionRole,
       targetPath,
       user: {
-        id: registeredAccount.id,
-        name: registeredAccount.name,
-        email: registeredAccount.email,
-        phone: registeredAccount.phone,
+        id: account.id,
+        name: account.name,
+        email: account.email,
+        phone: account.phone,
         role: sessionRole,
       },
       message: 'Connexion sécurisée réussie (Certifié OWASP)',

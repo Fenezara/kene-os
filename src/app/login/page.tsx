@@ -276,19 +276,20 @@ export default function LoginPage() {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-6 bg-red-500/10 border border-red-500/30 rounded-2xl p-4 text-xs text-red-200 space-y-2 font-sans"
+                className="mb-6 bg-red-500/10 border border-red-500/30 rounded-2xl p-4 text-xs text-red-200 space-y-2.5 font-sans"
               >
                 <div className="flex items-start gap-2.5">
                   <ShieldCheck className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
                   <div className="leading-relaxed">
-                    <strong className="text-red-300 block font-bold">Sécurité — Accès Refusé :</strong>
+                    <strong className="text-red-300 block font-bold mb-0.5">Sécurité — Compte non enregistré :</strong>
                     {loginError}
                   </div>
                 </div>
-                <div className="pt-2 flex justify-end border-t border-red-500/20">
+                <div className="pt-2 flex items-center justify-between border-t border-red-500/20">
+                  <span className="text-[10px] text-white/50">Inscription gratuite en 30 secondes</span>
                   <a
-                    href="/register"
-                    className="inline-flex items-center gap-1 text-xs font-bold text-[#C8951E] hover:underline"
+                    href={`/register?identifier=${encodeURIComponent(clientPhone || salonEmail || '')}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#C8951E] hover:underline bg-[#C8951E]/10 border border-[#C8951E]/30 px-3 py-1.5 rounded-xl transition-all"
                   >
                     <span>Créer un compte maintenant</span>
                     <ArrowRight className="w-3.5 h-3.5" />

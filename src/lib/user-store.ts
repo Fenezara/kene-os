@@ -40,6 +40,7 @@ const INITIAL_REGISTERED_ACCOUNTS: UserAccount[] = [
   { id: 'usr-client-06', email: 'nafi.coulibaly@gmail.com', phone: '+225 01 99 88 77 66', name: 'Nafi Coulibaly', role: 'client', registeredAt: '2024-06-12' },
   { id: 'usr-client-07', email: 'mariam.diallo@gmail.com', phone: '+221 78 456 78 90', name: 'Mariam Diallo', role: 'client', registeredAt: '2024-02-14' },
   { id: 'usr-client-08', email: 'sokhna.ndiaye@yahoo.fr', phone: '+221 77 987 65 43', name: 'Sokhna Ndiaye', role: 'client', registeredAt: '2024-03-01' },
+  { id: 'usr-client-09', email: 'client.kene@gmail.com', phone: '+225 07 48 89 42 70', name: 'Cliente Kènè (0748894270)', role: 'client', registeredAt: '2024-07-27' },
 ];
 
 /**
