@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, Calendar, ShoppingCart, Users, Scissors,
   UserCheck, Package, ScanFace, FileText, Calculator,
-  MessageSquare, Star, LogOut, ChevronRight, Sparkles, Menu, X, Search, ArrowLeft, FlaskConical, Building2
+  MessageSquare, Star, LogOut, ChevronRight, Sparkles, Menu, X, Search, ArrowLeft, FlaskConical, Building2, User
 } from 'lucide-react'
 
 import { NotificationBell } from '@/components/NotificationBell'
@@ -103,26 +103,18 @@ function SidebarContent({ pathname }: { pathname: string }) {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 pb-6 pt-4 border-t border-white/5">
-        {/* Motif Kente decorative strip */}
-        <div className="h-1 rounded-full mb-4 overflow-hidden bg-[#241C16]">
-          <div className="h-full w-full bg-gradient-to-r from-[#C8951E] via-[#8A3B14] to-[#2E5A36] opacity-60" />
-        </div>
-
+      <div className="p-3 border-t border-white/5 flex items-center justify-between text-xs text-white/40">
+        <span className="text-[10px] font-mono">v2.4 • PRO</span>
         <button
           onClick={() => {
-            document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
-            localStorage.removeItem('kene_user');
-            window.location.href = '/login';
+            document.cookie = 'kene-session=; path=/; max-age=0'
+            window.location.href = '/login'
           }}
-          className="flex items-center gap-2 text-[11px] text-red-400/80 hover:text-red-400 transition-colors cursor-pointer w-full text-left font-semibold"
+          className="p-1.5 hover:text-red-400 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+          title="Déconnexion"
         >
-          <LogOut className="w-3.5 h-3.5" />
-          <span>Se Déconnecter</span>
+          <LogOut className="w-4 h-4" />
         </button>
-        <div className="mt-2 text-[9px] text-white/15 font-mono">
-          Kènè OS v2.0 · OHADA · UEMOA · CNPS
-        </div>
       </div>
     </div>
   )
@@ -133,6 +125,8 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [companyName, setCompanyName] = useState<string>('Institut Beauté Kènè')
+  const [userName, setUserName] = useState<string>('Aminata Coulibaly')
+  const [userRole, setUserRole] = useState<string>('Gérante')
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -147,11 +141,14 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
           if (parsed.identity?.commercialName) name = parsed.identity.commercialName
         } catch (e) {}
       }
-      if (!name && savedUser) {
+      if (savedUser) {
         try {
           const u = JSON.parse(savedUser)
-          if (u.salonName) name = u.salonName
-          else if (u.name && u.role === 'salon') name = u.name
+          if (!name && u.salonName) name = u.salonName
+          else if (!name && u.name && u.role === 'salon') name = u.name
+
+          if (u.name && !/^[\+\d\s\-\.\(\)]+$/.test(u.name)) setUserName(u.name)
+          if (u.role) setUserRole(u.role === 'admin' ? 'Super-Admin' : u.role === 'client' ? 'Cliente' : 'Gérante Salon')
         } catch (e) {}
       }
       if (!name && savedAllTenants) {
@@ -199,7 +196,7 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
           <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#F3E5AB] to-[#C8951E] flex items-center justify-center font-display font-black text-[#0F0A05] text-sm shrink-0">K</div>
           <div className="min-w-0">
             <span className="font-display font-bold text-[#C8951E] text-xs block leading-tight truncate">{companyName}</span>
-            <span className="text-[9px] text-white/40 block truncate">Compte Entreprise Pro</span>
+            <span className="text-[9px] text-white/40 block truncate">Session : {userName}</span>
           </div>
         </div>
         <button onClick={() => setMobileOpen(true)} className="p-2 text-white/60 hover:text-white shrink-0">
@@ -239,14 +236,22 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
 
       {/* ─── MAIN CONTENT CONTAINER (SYNCHRONIZED SCROLL) ─── */}
       <main className="relative z-10 flex-1 flex flex-col min-h-screen w-full overflow-y-auto">
-        {/* Top Navigation Header with Universal Back Button, Company Name Badge & Role Switcher */}
+        {/* Top Navigation Header with Universal Back Button, Company Name Badge, Logged-in User Badge & Role Switcher */}
         <div className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-white/5 bg-[#110D09]/40 backdrop-blur-md">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <BackButton fallbackUrl="/dashboard" />
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/30 text-white text-xs font-bold font-display shadow-sm">
               <Building2 className="w-4 h-4 text-[#C8951E]" />
               <span className="text-white/70 font-sans font-normal text-[11px]">Entreprise :</span>
               <span className="text-[#F3E5AB] font-bold">{companyName}</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs font-medium shadow-sm">
+              <User className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-white/60 text-[11px]">Connecté(e) :</span>
+              <span className="text-white font-bold">{userName}</span>
+              <span className="text-[9px] bg-emerald-500/20 text-emerald-400 font-mono font-bold px-1.5 py-0.5 rounded-md border border-emerald-500/30">
+                {userRole}
+              </span>
             </div>
           </div>
 
