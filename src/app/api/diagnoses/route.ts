@@ -5,7 +5,8 @@ import { saveDiagnosisRecord } from '@/lib/diagnosis-store'
 
 export async function POST(request: Request) {
   try {
-    const { photo, userId, zone } = await request.json()
+    const { photo, photos: inputPhotos, userId, zone } = await request.json()
+    const photos = Array.isArray(inputPhotos) && inputPhotos.length > 0 ? inputPhotos : (photo ? [photo] : [])
 
     if (!photo) {
       return NextResponse.json(
