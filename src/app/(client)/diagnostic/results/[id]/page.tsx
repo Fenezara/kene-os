@@ -68,9 +68,16 @@ export default function ResultsPage() {
     }
   }, []);
 
-  const displayPhoto = (data?.photos && data.photos.length > 0 && data.photos[0] && !data.photos[0].includes('skin_sample'))
+  const isDemoPhoto = (url?: string | null) => {
+    if (!url) return true;
+    return url.includes('skin_sample') || url.includes('afro_skin_spectral_scanner') || url.includes('dicebear');
+  };
+
+  const displayPhoto = (data?.photos && data.photos.length > 0 && !isDemoPhoto(data.photos[0]))
     ? data.photos[0]
-    : (clientPhoto || '/images/afro_skin_spectral_scanner.jpg');
+    : (clientPhoto && !isDemoPhoto(clientPhoto)
+        ? clientPhoto
+        : (clientPhoto || data?.photos?.[0] || '/images/afro_skin_spectral_scanner.jpg'));
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -79,6 +86,13 @@ export default function ResultsPage() {
         if (!res.ok) throw new Error("Impossible de charger les résultats.")
         const json = await res.json()
         setData(json.diagnosis)
+
+        if (json.diagnosis?.photos && json.diagnosis.photos.length > 0 && !isDemoPhoto(json.diagnosis.photos[0])) {
+          setClientPhoto(json.diagnosis.photos[0]);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('kene_latest_client_photo', json.diagnosis.photos[0]);
+          }
+        }
       } catch (err) {
         console.error(err)
       } finally {

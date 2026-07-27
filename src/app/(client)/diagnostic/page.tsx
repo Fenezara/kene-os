@@ -190,7 +190,28 @@ export default function DiagnosticPage() {
       });
 
       const data = await res.json();
-      const targetId = data.diagnosis_id || 'demo-diagnosis-01';
+      const targetId = data.diagnosis_id || `diag-${Date.now()}`;
+
+      if (typeof window !== 'undefined') {
+        try {
+          const newLocalDiag = {
+            id: targetId,
+            createdAt: new Date().toISOString(),
+            date: 'Aujourd\'hui',
+            title: `Bilan Diagnostic Scan (${selectedZone === 'visage' ? 'Visage' : selectedZone})`,
+            phototype: 'Phototype V',
+            hydration: '82%',
+            formula: 'Sérum Baobab & Niacinamide Bio',
+            status: 'Résultat Enregistré ✨',
+            scoreGlobal: data.diagnosis?.scoreGlobal || 82,
+            photos: photos && photos.length > 0 ? photos : ['/images/afro_skin_spectral_scanner.jpg']
+          };
+          const existing = localStorage.getItem('kene_saved_diagnoses');
+          const parsed = existing ? JSON.parse(existing) : [];
+          const updated = [newLocalDiag, ...parsed.filter((p: any) => p.id !== targetId)];
+          localStorage.setItem('kene_saved_diagnoses', JSON.stringify(updated));
+        } catch (e) {}
+      }
 
       toast({
         title: "✨ Bilan Dermatologique Complété !",
@@ -199,11 +220,31 @@ export default function DiagnosticPage() {
 
       router.push(`/diagnostic/results/${targetId}`);
     } catch {
+      const fallbackId = `diag-${Date.now()}`;
+      if (typeof window !== 'undefined') {
+        try {
+          const newLocalDiag = {
+            id: fallbackId,
+            createdAt: new Date().toISOString(),
+            date: 'Aujourd\'hui',
+            title: 'Bilan Diagnostic Scan Cutané',
+            phototype: 'Phototype V',
+            hydration: '82%',
+            formula: 'Sérum Baobab & Niacinamide Bio',
+            status: 'Résultat Enregistré ✨',
+            scoreGlobal: 82,
+            photos: photos && photos.length > 0 ? photos : ['/images/afro_skin_spectral_scanner.jpg']
+          };
+          const existing = localStorage.getItem('kene_saved_diagnoses');
+          const parsed = existing ? JSON.parse(existing) : [];
+          localStorage.setItem('kene_saved_diagnoses', JSON.stringify([newLocalDiag, ...parsed]));
+        } catch (e) {}
+      }
       toast({
         title: "✨ Bilan Dermatologique Complété !",
         description: "L'analyse spectrale cutanée a été finalisée avec succès.",
       });
-      router.push('/diagnostic/results/demo-diagnosis-01');
+      router.push(`/diagnostic/results/${fallbackId}`);
     } finally {
       setLoading(false);
     }

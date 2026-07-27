@@ -20,6 +20,7 @@ export default function ClientPortalPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [localDiagnoses, setLocalDiagnoses] = useState<any[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Registered Salons & Contact Modal State
@@ -45,6 +46,11 @@ export default function ClientPortalPage() {
   useEffect(() => {
     const savedAvatar = localStorage.getItem('kene_user_avatar');
     if (savedAvatar) setAvatarUrl(savedAvatar);
+
+    const savedDiagnoses = localStorage.getItem('kene_saved_diagnoses');
+    if (savedDiagnoses) {
+      try { setLocalDiagnoses(JSON.parse(savedDiagnoses)); } catch (e) {}
+    }
 
     const savedUser = localStorage.getItem('kene_user');
     if (savedUser) {
@@ -561,7 +567,7 @@ export default function ClientPortalPage() {
               </div>
 
               <div className="space-y-2">
-                {((data?.diagnosesHistory && data.diagnosesHistory.length > 0) ? data.diagnosesHistory : [
+                {(localDiagnoses.length > 0 ? localDiagnoses : (data?.diagnosesHistory && data.diagnosesHistory.length > 0 ? data.diagnosesHistory : [
                   {
                     id: 'demo-diagnosis-01',
                     createdAt: '2026-07-27',
@@ -601,7 +607,7 @@ export default function ClientPortalPage() {
                     photos: ['/images/afro_man_dermo_care.jpg'],
                     badgeColor: 'bg-blue-500/15 text-blue-400 border-blue-500/30'
                   },
-                ]).map((item: any, idx: number) => {
+                ])).map((item: any, idx: number) => {
                   const itemPhoto = (item.photos && item.photos.length > 0 && item.photos[0])
                     ? item.photos[0]
                     : (typeof window !== 'undefined' ? localStorage.getItem('kene_latest_client_photo') : null) || '/images/afro_skin_spectral_scanner.jpg';
