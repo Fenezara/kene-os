@@ -548,6 +548,91 @@ export default function ClientPortalPage() {
                 </div>
               ))}
             </div>
+
+            {/* 📜 HISTORIQUE DES ANCIENS RÉSULTATS & BILANS CUTANÉS DU CLIENT */}
+            <div className="pt-3 border-t border-white/5 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold font-display text-[var(--gold-kene)] flex items-center gap-1.5 uppercase tracking-wider">
+                  <ScanFace className="w-4 h-4 text-[var(--gold-kene)]" /> Historique de Mes Anciens Résultats & Bilans (3 Scans)
+                </h4>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                  Progression : +17% Hydratation
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {[
+                  {
+                    date: '22 Mai 2024',
+                    title: 'Bilan de Suivi Soin Saison Chromatique',
+                    phototype: 'Phototype V',
+                    hydration: '82%',
+                    formula: 'Sérum Baobab & Aloe Vera Bio',
+                    status: 'Résultat Optimal ✨',
+                    score: 82,
+                    badgeColor: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                  },
+                  {
+                    date: '10 Mars 2024',
+                    title: 'Bilan de Suivi Hydratation Karité',
+                    phototype: 'Phototype V',
+                    hydration: '74%',
+                    formula: 'Masque Karité Brut & Neem',
+                    status: 'En Net Progrès 📈',
+                    score: 74,
+                    badgeColor: 'bg-[var(--gold-kene)]/15 text-[var(--gold-kene)] border-[var(--gold-kene)]/30'
+                  },
+                  {
+                    date: '15 Janvier 2024',
+                    title: 'Bilan Diagnostic Initial & Dermo-IA',
+                    phototype: 'Phototype V',
+                    hydration: '65%',
+                    formula: 'Ordonnance Botanique Initiale',
+                    status: 'Bilan Initial 📋',
+                    score: 65,
+                    badgeColor: 'bg-blue-500/15 text-blue-400 border-blue-500/30'
+                  },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3 rounded-2xl bg-[#1A1410] border border-white/5 hover:border-[var(--gold-kene)]/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--gold-kene)]/20 to-[#8A3B14]/20 border border-[var(--gold-kene)]/30 flex items-center justify-center font-bold text-xs text-[var(--gold-kene)] shrink-0 mt-0.5">
+                        #{3 - idx}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-bold text-white font-display">{item.title}</span>
+                          <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border ${item.badgeColor}`}>
+                            {item.status}
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-white/50 font-sans mt-0.5 flex items-center gap-2 flex-wrap">
+                          <span>📅 {item.date}</span>
+                          <span>•</span>
+                          <span>🧪 Formule : {item.formula}</span>
+                          <span>•</span>
+                          <span className="text-[var(--gold-kene)] font-semibold">{item.phototype}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
+                      <div className="text-right font-mono">
+                        <div className="text-xs font-bold text-emerald-400">{item.hydration}</div>
+                        <div className="text-[9px] text-white/40">Score : {item.score}/100</div>
+                      </div>
+                      <a href="/diagnostic/results/demo-diagnosis-01">
+                        <Button className="h-7 text-[10px] bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl px-2.5 cursor-pointer">
+                          Consulter 👁️
+                        </Button>
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
