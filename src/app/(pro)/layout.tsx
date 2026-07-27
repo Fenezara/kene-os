@@ -175,17 +175,17 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
         }}
       />
 
-      {/* ─── DESKTOP SIDEBAR ─── */}
-      <aside className="hidden md:flex flex-col w-60 shrink-0 relative z-10 border-r border-white/5">
+      {/* ─── DESKTOP SIDEBAR (FIXED STICKY LEFT) ─── */}
+      <aside className="hidden md:flex flex-col w-60 shrink-0 sticky top-0 h-screen z-20 border-r border-white/5">
         {/* Glass bg */}
-        <div className="absolute inset-0 bg-[#110D09]/80 backdrop-blur-xl" />
-        <div className="relative z-10 h-full">
+        <div className="absolute inset-0 bg-[#110D09]/90 backdrop-blur-xl" />
+        <div className="relative z-10 h-full overflow-hidden">
           <SidebarContent pathname={pathname} />
         </div>
       </aside>
 
       {/* ─── MOBILE HEADER + DRAWER (SCROLLS NATURALLY WITH INTERFACE) ─── */}
-      <div className="md:hidden flex items-center justify-between px-4 h-14 bg-[#110D09] border-b border-white/5 w-full shrink-0 z-30 sticky top-0">
+      <div className="md:hidden flex items-center justify-between px-4 h-14 bg-[#110D09]/95 backdrop-blur-xl border-b border-white/5 w-full shrink-0 z-30 sticky top-0">
         <div className="flex items-center gap-2 min-w-0">
           <button
             onClick={() => router.back()}
@@ -234,10 +234,10 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
         )}
       </AnimatePresence>
 
-      {/* ─── MAIN CONTENT CONTAINER (SYNCHRONIZED SCROLL) ─── */}
-      <main className="relative z-10 flex-1 flex flex-col min-h-screen w-full overflow-y-auto">
-        {/* Top Navigation Header with Universal Back Button, Company Name Badge, Logged-in User Badge & Role Switcher */}
-        <div className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-white/5 bg-[#110D09]/40 backdrop-blur-md">
+      {/* ─── MAIN CONTENT CONTAINER ─── */}
+      <main className="relative z-10 flex-1 flex flex-col min-h-screen w-full min-w-0">
+        {/* Top Navigation Header (FIXED STICKY TOP) with Universal Back Button, Company Name Badge, Logged-in User Badge & Role Switcher */}
+        <div className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-white/10 bg-[#110D09]/90 backdrop-blur-xl sticky top-0 z-30">
           <div className="flex items-center gap-3">
             <BackButton fallbackUrl="/dashboard" />
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/30 text-white text-xs font-bold font-display shadow-sm">
