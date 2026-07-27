@@ -7,7 +7,7 @@ import {
   ArrowUpRight, Zap, ShoppingCart, Package, Star,
   ArrowRight, Activity, FlaskConical, ScanFace, Plus,
   BarChart3, PieChart, Clock, Award, ShieldCheck, Sparkles,
-  ChevronRight, Filter, Info, Layers, RefreshCw
+  ChevronRight, Filter, Info, Layers, RefreshCw, Building2
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -65,14 +65,14 @@ const PEAK_HOURS = [
 ];
 
 function sanitizeName(raw?: string): string {
-  if (!raw) return 'Institut Beauté Kènè';
+  if (!raw || !raw.trim()) return 'Institut Beauté Kènè';
   const clean = raw.trim();
-  if (/^[\+\d\s\-\.\(\)]+$/.test(clean) || clean.replace(/\D/g, '').length >= 8) {
+  if (/^[\+\d\s\-\.\(\)]+$/.test(clean)) {
     return 'Institut Beauté Kènè';
   }
   if (clean.includes('+225') || clean.includes('+221') || clean.includes('+223')) {
     const stripped = clean.replace(/[\+\d\s]{8,}/g, '').trim();
-    return stripped.length > 2 ? stripped : 'Institut Beauté Kènè';
+    if (stripped.length > 2) return stripped;
   }
   return clean;
 }
@@ -92,6 +92,7 @@ export default function ProDashboardPage() {
     if (typeof window !== 'undefined') {
       const savedTenant = localStorage.getItem('kene_tenant_settings');
       const savedUser = localStorage.getItem('kene_user');
+      const savedAllTenants = localStorage.getItem('kene_all_tenants');
 
       if (savedTenant) {
         try {
@@ -103,7 +104,15 @@ export default function ProDashboardPage() {
         try {
           const u = JSON.parse(savedUser);
           if (u.salonName) customSalonName = u.salonName;
-          if (u.name && !/^[\+\d\s\-\.\(\)]+$/.test(u.name)) customOwnerName = u.name;
+          else if (u.name && !/^[\+\d\s\-\.\(\)]+$/.test(u.name)) customOwnerName = u.name;
+        } catch (e) {}
+      }
+      if (!customSalonName && savedAllTenants) {
+        try {
+          const list = JSON.parse(savedAllTenants);
+          if (Array.isArray(list) && list.length > 0 && list[0].name) {
+            customSalonName = list[0].name;
+          }
         } catch (e) {}
       }
     }
@@ -208,6 +217,12 @@ export default function ProDashboardPage() {
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 Certifié OHADA & UEMOA
               </span>
+            </div>
+
+            {/* High-Visibility Company Badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-[#C8951E]/20 border border-[#C8951E]/40 text-[#F3E5AB] text-xs font-bold font-display shadow-md mb-1">
+              <Building2 className="w-4 h-4 text-[#C8951E]" />
+              <span>Entreprise Active : <strong className="text-white underline decoration-[#C8951E]">{tenantName}</strong></span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-display font-black text-white tracking-tight leading-tight">

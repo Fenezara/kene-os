@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, Calendar, ShoppingCart, Users, Scissors,
   UserCheck, Package, ScanFace, FileText, Calculator,
-  MessageSquare, Star, LogOut, ChevronRight, Sparkles, Menu, X, Search, ArrowLeft, FlaskConical
+  MessageSquare, Star, LogOut, ChevronRight, Sparkles, Menu, X, Search, ArrowLeft, FlaskConical, Building2
 } from 'lucide-react'
 
 import { NotificationBell } from '@/components/NotificationBell'
@@ -132,6 +132,37 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [companyName, setCompanyName] = useState<string>('Institut Beauté Kènè')
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedTenant = localStorage.getItem('kene_tenant_settings')
+      const savedUser = localStorage.getItem('kene_user')
+      const savedAllTenants = localStorage.getItem('kene_all_tenants')
+      let name = ''
+
+      if (savedTenant) {
+        try {
+          const parsed = JSON.parse(savedTenant)
+          if (parsed.identity?.commercialName) name = parsed.identity.commercialName
+        } catch (e) {}
+      }
+      if (!name && savedUser) {
+        try {
+          const u = JSON.parse(savedUser)
+          if (u.salonName) name = u.salonName
+          else if (u.name && u.role === 'salon') name = u.name
+        } catch (e) {}
+      }
+      if (!name && savedAllTenants) {
+        try {
+          const list = JSON.parse(savedAllTenants)
+          if (Array.isArray(list) && list.length > 0 && list[0].name) name = list[0].name
+        } catch (e) {}
+      }
+      if (name) setCompanyName(name)
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-[#0F0A05] flex flex-col md:flex-row font-sans w-full overflow-x-hidden">
@@ -158,17 +189,20 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
 
       {/* ─── MOBILE HEADER + DRAWER (SCROLLS NATURALLY WITH INTERFACE) ─── */}
       <div className="md:hidden flex items-center justify-between px-4 h-14 bg-[#110D09] border-b border-white/5 w-full shrink-0 z-30 sticky top-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <button
             onClick={() => router.back()}
-            className="p-1.5 text-white/60 hover:text-white flex items-center gap-1 text-xs"
+            className="p-1.5 text-white/60 hover:text-white flex items-center gap-1 text-xs shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#F3E5AB] to-[#C8951E] flex items-center justify-center font-display font-black text-[#0F0A05] text-sm">K</div>
-          <span className="font-display font-bold text-[#C8951E] text-base">Kènè Pro</span>
+          <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#F3E5AB] to-[#C8951E] flex items-center justify-center font-display font-black text-[#0F0A05] text-sm shrink-0">K</div>
+          <div className="min-w-0">
+            <span className="font-display font-bold text-[#C8951E] text-xs block leading-tight truncate">{companyName}</span>
+            <span className="text-[9px] text-white/40 block truncate">Compte Entreprise Pro</span>
+          </div>
         </div>
-        <button onClick={() => setMobileOpen(true)} className="p-2 text-white/60 hover:text-white">
+        <button onClick={() => setMobileOpen(true)} className="p-2 text-white/60 hover:text-white shrink-0">
           <Menu className="w-5 h-5" />
         </button>
       </div>
@@ -205,9 +239,16 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
 
       {/* ─── MAIN CONTENT CONTAINER (SYNCHRONIZED SCROLL) ─── */}
       <main className="relative z-10 flex-1 flex flex-col min-h-screen w-full overflow-y-auto">
-        {/* Top Navigation Header with Universal Back Button & Role Switcher */}
+        {/* Top Navigation Header with Universal Back Button, Company Name Badge & Role Switcher */}
         <div className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-white/5 bg-[#110D09]/40 backdrop-blur-md">
-          <BackButton fallbackUrl="/dashboard" />
+          <div className="flex items-center gap-4">
+            <BackButton fallbackUrl="/dashboard" />
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/30 text-white text-xs font-bold font-display shadow-sm">
+              <Building2 className="w-4 h-4 text-[#C8951E]" />
+              <span className="text-white/70 font-sans font-normal text-[11px]">Entreprise :</span>
+              <span className="text-[#F3E5AB] font-bold">{companyName}</span>
+            </div>
+          </div>
 
           <div className="flex items-center gap-3">
             <RoleSwitcher />
