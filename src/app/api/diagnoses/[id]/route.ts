@@ -61,7 +61,7 @@ function generateDynamicHotspots(seedStr: string) {
 
 const FALLBACK_DIAGNOSIS = {
   id: 'demo-diagnosis-01',
-  photos: ['/images/skin_sample.jpg'],
+  photos: ['/images/afro_skin_spectral_scanner.jpg', '/images/afro_beauty_hero_woman.jpg', '/images/afro_man_dermo_care.jpg'],
   scoreGlobal: 78,
   subScores: {
     hydratation: 82,
