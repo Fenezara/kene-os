@@ -1,8 +1,6 @@
-'use client';
-
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ShieldCheck, User, Store, ArrowRight, ArrowLeft, Loader2, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -28,8 +26,10 @@ function KenteOrb({ color, size, x, y, delay }: { color: string; size: number; x
   )
 }
 
-export default function LoginPage() {
+function LoginFormContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams ? searchParams.get('redirect') : null;
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('salon');
@@ -41,6 +41,33 @@ export default function LoginPage() {
   const [adminPassword, setAdminPassword] = useState('');
 
   const [loginError, setLoginError] = useState<string | null>(null);
+
+  // 📱 AUTO-RESTORE SESSION ON MOBILE / TAB REOPEN
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedUser = localStorage.getItem('kene_user');
+      if (savedUser) {
+        try {
+          const user = JSON.parse(savedUser);
+          const role = user.role || 'client';
+          const sessionVal = `${role}-${Date.now()}`;
+          
+          // Re-write persistent 1-year cookie
+          document.cookie = `kene-session=${sessionVal}; path=/; max-age=31536000; SameSite=Lax`;
+
+          // Refresh server HttpOnly session
+          fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ role, email: user.email || user.phone })
+          }).catch(() => {});
+
+          const target = redirectUrl || (role === 'client' ? '/portal' : role === 'admin' ? '/admin' : '/dashboard');
+          router.replace(target);
+        } catch (e) {}
+      }
+    }
+  }, [redirectUrl, router]);
 
   const handleLogin = (role: string, targetPath: string, userEmailOrName?: string) => async (e: React.FormEvent) => {
     e.preventDefault();
@@ -494,5 +521,13 @@ function SubmitButton({ loading, label }: { loading: boolean; label: string }) {
         </>
       )}
     </motion.button>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0F0A05]" />}>
+      <LoginFormContent />
+    </Suspense>
   );
 }

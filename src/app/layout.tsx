@@ -72,6 +72,7 @@ export const metadata: Metadata = {
 };
 
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { SessionPreserver } from "@/components/SessionPreserver";
 
 export default function RootLayout({
   children,
@@ -84,6 +85,7 @@ export default function RootLayout({
         className={`${ojuju.variable} ${plusJakartaSans.variable} ${cinzel.variable} ${jetbrainsMono.variable} antialiased bg-[#0F0A05] text-[#F8F1E4]`}
       >
         <AuthProvider>
+          <SessionPreserver />
           {children}
           <Toaster />
         </AuthProvider>
