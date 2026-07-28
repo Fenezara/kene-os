@@ -704,7 +704,7 @@ export default function ProDiagnosesPage() {
                 <KeneLogo variant="full" size="md" />
                 <div className="text-right">
                   <span className="text-xs font-mono font-bold text-[#C8951E] bg-[#C8951E]/10 border border-[#C8951E]/30 px-3 py-1 rounded-full inline-block">
-                    Rapport Clinique & Ordonnance
+                    Bilan Cutané & Prescription Botanique
                   </span>
                   <p className="text-[10px] text-white/40 font-mono mt-1">
                     Émis le {format(new Date(viewingReport.createdAt), 'dd MMMM yyyy à HH:mm')}
@@ -901,7 +901,7 @@ export default function ProDiagnosesPage() {
                         onClick={() => setViewingReport(diag)}
                         className="text-xs font-bold text-[#F3E5AB] bg-[#C8951E]/20 border border-[#C8951E]/40 hover:bg-[#C8951E] hover:text-[#0F0A05] transition px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1"
                       >
-                        <span>Voir rapport clinique</span> <ChevronRight className="w-3.5 h-3.5" />
+                        <span>Voir bilan cutané</span> <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </motion.div>
