@@ -57,8 +57,10 @@ export default function ResultsPage() {
     y: '65%',
     title: 'Zone Hyperpigmentée PIH (27%)',
     color: '#C8951E'
-  })
+  });
 
+  const [isCompareMode, setIsCompareMode] = useState<boolean>(false);
+  const [compareSliderPos, setCompareSliderPos] = useState<number>(50);
   const [clientPhoto, setClientPhoto] = useState<string | null>(null);
 
   useEffect(() => {
@@ -225,54 +227,128 @@ export default function ResultsPage() {
             </p>
           </div>
 
-          {/* VISIA-like Spectral Photo View */}
+          {/* VISIA-like Spectral Photo View & Interactive Before/After Comparison */}
           <div className="bg-[#241C16]/40 border border-white/5 rounded-3xl p-5 space-y-4 flex flex-col justify-between">
-            <h3 className="text-xs font-semibold text-karite/40 tracking-wider uppercase flex items-center gap-1.5">
-              <Eye className="w-4 h-4" /> Analyse Spectrale Clinique
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-semibold text-karite/40 tracking-wider uppercase flex items-center gap-1.5 font-display">
+                <Eye className="w-4 h-4 text-gold-kene" /> {isCompareMode ? 'Comparatif Clinique Avant / Après' : 'Analyse Spectrale Clinique'}
+              </h3>
+              <button
+                onClick={() => setIsCompareMode(!isCompareMode)}
+                className={`text-[10px] font-bold px-2.5 py-1 rounded-xl border transition cursor-pointer flex items-center gap-1 ${
+                  isCompareMode 
+                    ? 'bg-gold-kene text-[#1A1410] border-gold-kene font-black' 
+                    : 'bg-white/5 text-karite/70 border-white/10 hover:text-white'
+                }`}
+              >
+                <span>🔀</span> {isCompareMode ? 'Vue Spectrale' : 'Mode Avant/Après'}
+              </button>
+            </div>
             
-            <div className="w-full aspect-square rounded-2xl overflow-hidden border border-white/5 bg-black relative">
-              <img
-                src={displayPhoto}
-                alt="Capture Diagnostic"
-                className={`w-full h-full object-cover transition-all duration-300 ${getSpectralFilter()}`}
-              />
+            <div className="w-full aspect-square rounded-2xl overflow-hidden border border-white/5 bg-black relative select-none">
+              {!isCompareMode ? (
+                <>
+                  <img
+                    src={displayPhoto}
+                    alt="Capture Diagnostic"
+                    className={`w-full h-full object-cover transition-all duration-300 ${getSpectralFilter()}`}
+                  />
+                  {spectralMode === 'melanin' && (
+                    <div className="absolute inset-0 bg-gold-kene/5 pointer-events-none mix-blend-color-dodge"></div>
+                  )}
+                </>
+              ) : (
+                /* Interactive Split Screen Before / After Comparison Slider */
+                <div 
+                  className="relative w-full h-full cursor-ew-resize overflow-hidden"
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+                    setCompareSliderPos((x / rect.width) * 100);
+                  }}
+                  onTouchMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const touch = e.touches[0];
+                    if (touch) {
+                      const x = Math.max(0, Math.min(touch.clientX - rect.left, rect.width));
+                      setCompareSliderPos((x / rect.width) * 100);
+                    }
+                  }}
+                >
+                  {/* Before Image (Left Side) */}
+                  <img
+                    src="/images/afro_beauty_hero_woman.jpg"
+                    alt="Bilan Initial (Avant)"
+                    className="absolute inset-0 w-full h-full object-cover filter contrast-125 brightness-90"
+                  />
+                  <div className="absolute top-3 left-3 bg-black/80 text-white border border-white/20 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full z-10">
+                    🔴 AVANT (Bilan Initial 65%)
+                  </div>
 
-              {/* Filter labels overlays */}
-              {spectralMode === 'melanin' && (
-                <div className="absolute inset-0 bg-gold-kene/5 pointer-events-none mix-blend-color-dodge"></div>
+                  {/* After Image (Right Side Clipped) */}
+                  <div 
+                    className="absolute inset-y-0 right-0 overflow-hidden"
+                    style={{ left: `${compareSliderPos}%` }}
+                  >
+                    <img
+                      src={displayPhoto}
+                      alt="Bilan Actuel (Après)"
+                      className="absolute inset-y-0 right-0 w-full h-full object-cover max-w-none"
+                      style={{ width: '100%', minWidth: '100%' }}
+                    />
+                    <div className="absolute top-3 right-3 bg-emerald-500/90 text-black font-black text-[9px] font-mono px-2 py-0.5 rounded-full z-10">
+                      🟢 APRÈS (Soin Karité 82%)
+                    </div>
+                  </div>
+
+                  {/* Divider Handle Bar */}
+                  <div 
+                    className="absolute inset-y-0 w-1 bg-gold-kene z-20 shadow-[0_0_12px_#C8951E]"
+                    style={{ left: `${compareSliderPos}%` }}
+                  >
+                    <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-gold-kene text-[#1A1410] flex items-center justify-center font-bold text-xs shadow-lg border border-white">
+                      ↔️
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
 
             {/* Filter controls tabs */}
-            <div className="grid grid-cols-5 gap-1 bg-[#1A1410] p-1.5 rounded-xl text-center">
-              {(['standard', 'melanin', 'vascular', 'wood_uv', 'cross_polarized'] as const).map((mode) => (
-                <button
-                  key={mode}
-                  onClick={() => {
-                    setSpectralMode(mode);
-                    if (mode === 'melanin') {
-                      setActiveTargetPos({ x: '48%', y: '65%', title: 'Hyperpigmentation PIH (27%)', color: '#C8951E' });
-                    } else if (mode === 'wood_uv') {
-                      setActiveTargetPos({ x: '45%', y: '45%', title: 'Dilatation Sébacée Zone-T', color: '#00F0FF' });
-                    } else if (mode === 'vascular') {
-                      setActiveTargetPos({ x: '42%', y: '55%', title: 'Érythème & Congestion', color: '#FF3333' });
-                    } else if (mode === 'cross_polarized') {
-                      setActiveTargetPos({ x: '68%', y: '32%', title: 'Ridule Péri-Orbitaire', color: '#00FF66' });
-                    } else {
-                      setActiveTargetPos({ x: '50%', y: '50%', title: 'Vue Globale Derme', color: '#FFFFFF' });
-                    }
-                  }}
-                  className={`text-[9px] py-1.5 rounded-lg font-semibold transition cursor-pointer ${
-                    spectralMode === mode 
-                      ? 'bg-gold-kene text-[#1A1410] shadow-md font-bold' 
-                      : 'text-karite/50 hover:text-karite bg-white/5'
-                  }`}
-                >
-                  {mode === 'standard' ? 'Naturel' : mode === 'melanin' ? 'Mélanine' : mode === 'vascular' ? 'Vasculaire' : mode === 'wood_uv' ? 'Lumière UV' : '3D Relief'}
-                </button>
-              ))}
-            </div>
+            {!isCompareMode ? (
+              <div className="grid grid-cols-5 gap-1 bg-[#1A1410] p-1.5 rounded-xl text-center">
+                {(['standard', 'melanin', 'vascular', 'wood_uv', 'cross_polarized'] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => {
+                      setSpectralMode(mode);
+                      if (mode === 'melanin') {
+                        setActiveTargetPos({ x: '48%', y: '65%', title: 'Hyperpigmentation PIH (27%)', color: '#C8951E' });
+                      } else if (mode === 'wood_uv') {
+                        setActiveTargetPos({ x: '45%', y: '45%', title: 'Dilatation Sébacée Zone-T', color: '#00F0FF' });
+                      } else if (mode === 'vascular') {
+                        setActiveTargetPos({ x: '42%', y: '55%', title: 'Érythème & Congestion', color: '#FF3333' });
+                      } else if (mode === 'cross_polarized') {
+                        setActiveTargetPos({ x: '68%', y: '32%', title: 'Ridule Péri-Orbitaire', color: '#00FF66' });
+                      } else {
+                        setActiveTargetPos({ x: '50%', y: '50%', title: 'Vue Globale Derme', color: '#FFFFFF' });
+                      }
+                    }}
+                    className={`text-[9px] py-1.5 rounded-lg font-semibold transition cursor-pointer ${
+                      spectralMode === mode 
+                        ? 'bg-gold-kene text-[#1A1410] shadow-md font-bold' 
+                        : 'text-karite/50 hover:text-karite bg-white/5'
+                    }`}
+                  >
+                    {mode === 'standard' ? 'Naturel' : mode === 'melanin' ? 'Mélanine' : mode === 'vascular' ? 'Vasculaire' : mode === 'wood_uv' ? 'Lumière UV' : '3D Relief'}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-[#1A1410] p-2 rounded-xl text-center text-[10px] text-karite/70 font-sans">
+                💡 Glissez le curseur doré de gauche à droite pour observer l'évolution de la texture et la disparition des taches PIH.
+              </div>
+            )}
           </div>
 
           {/* --- 1. HORLOGE BIO-MÉLANIQUE & ÂGE CUTANÉ SPECTRAL --- */}

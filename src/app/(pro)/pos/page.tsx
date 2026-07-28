@@ -35,6 +35,7 @@ export default function ProPOSPage() {
 
   const [selectedReceipt, setSelectedReceipt] = useState<any>(null);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
+  const [isZReportOpen, setIsZReportOpen] = useState(false);
 
   const [formData, setFormData] = useState({ clientId: '', appointmentId: '', subtotal: '', method: 'cash' });
 
@@ -136,17 +137,25 @@ export default function ProPOSPage() {
           <p className="text-white/40 text-xs">Encaissez les prestations, gérez les acomptes MoMo et émettez des reçus certifiés.</p>
         </div>
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm text-[#0F0A05] cursor-pointer"
-              style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)', boxShadow: '0 4px 20px rgba(200,149,30,0.3)' }}
-            >
-              <Zap className="w-4 h-4" /> Encaisser une Vente
-            </motion.button>
-          </DialogTrigger>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsZReportOpen(true)}
+            className="flex items-center gap-2 px-4 py-3 rounded-2xl font-bold text-xs bg-white/5 hover:bg-white/10 text-white border border-white/10 cursor-pointer transition"
+          >
+            <Receipt className="w-4 h-4 text-[#C8951E]" /> Rapport Z Clôture
+          </button>
+
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm text-[#0F0A05] cursor-pointer"
+                style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)', boxShadow: '0 4px 20px rgba(200,149,30,0.3)' }}
+              >
+                <Zap className="w-4 h-4" /> Encaisser une Vente
+              </motion.button>
+            </DialogTrigger>
           <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/20 text-white rounded-3xl max-w-md" style={{ boxShadow: '0 32px 64px rgba(0,0,0,0.7)' }}>
             <div className="h-0.5 bg-gradient-to-r from-transparent via-[#C8951E] to-transparent -mt-[1px] mx-6 rounded-full" />
             <DialogHeader className="pt-2">
@@ -288,6 +297,7 @@ export default function ProPOSPage() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </motion.div>
 
       {/* ── KPI TOP BAR ── */}
@@ -388,6 +398,77 @@ export default function ProPOSPage() {
       </motion.div>
 
       <DigitalReceiptModal isOpen={isReceiptOpen} onClose={() => setIsReceiptOpen(false)} sale={selectedReceipt} />
+
+      {/* 🧾 MODAL RAPPORT Z FIN DE JOURNÉE & CLÔTURE CAISSE */}
+      <Dialog open={isZReportOpen} onOpenChange={setIsZReportOpen}>
+        <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/40 text-white rounded-3xl max-w-md p-6 shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="font-display text-xl text-white flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <Receipt className="w-5 h-5 text-[#C8951E]" /> Rapport Z — Clôture Caisse
+              </span>
+              <Badge className="bg-[#C8951E]/15 text-[#F3E5AB] border border-[#C8951E]/30 text-[10px] font-mono font-bold">
+                {format(new Date(), 'dd/MM/yyyy')}
+              </Badge>
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 my-2 text-xs">
+            {/* Total Today */}
+            <div className="bg-gradient-to-br from-[#1A1410] to-[#0A0603] border border-[#C8951E]/30 p-4 rounded-2xl flex items-center justify-between">
+              <div>
+                <span className="text-white/50 text-[10px] font-mono uppercase block">Chiffre d'Affaires Encaissé Aujourd'hui</span>
+                <span className="font-display font-black text-2xl text-[#F3E5AB]">{todayRevenue.toLocaleString('fr-FR')} FCFA</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] text-emerald-400 font-mono font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                  {sales.filter(s => new Date(s.createdAt).toDateString() === new Date().toDateString()).length} Vente(s)
+                </span>
+              </div>
+            </div>
+
+            {/* Breakdown by Payment Method */}
+            <div className="space-y-2">
+              <h4 className="text-[10px] font-bold text-white/50 uppercase tracking-wider font-mono">Ventilation par Mode de Paiement</h4>
+              <div className="space-y-1.5">
+                {PAYMENT_METHODS.map(m => {
+                  const mTotal = sales.filter(s => {
+                    const d = new Date(s.createdAt);
+                    const now = new Date();
+                    const sMethod = s.payments?.[0]?.method || 'cash';
+                    return d.toDateString() === now.toDateString() && sMethod === m.value;
+                  }).reduce((sum, s) => sum + s.total, 0);
+
+                  return (
+                    <div key={m.value} className="flex justify-between items-center bg-[#1A1410] p-2.5 rounded-xl border border-white/5">
+                      <span className="flex items-center gap-2 font-bold text-white">
+                        <span>{m.icon}</span> {m.label}
+                      </span>
+                      <span className="font-mono font-bold text-white">{mTotal.toLocaleString('fr-FR')} FCFA</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Fiscal VAT Summary */}
+            <div className="bg-[#1A1410] border border-white/10 p-3 rounded-xl flex justify-between items-center text-xs">
+              <span className="text-white/60 font-sans">TVA Collectée (Taux 18% UEMOA) :</span>
+              <span className="font-mono font-bold text-[#C8951E]">{Math.round(todayRevenue * 0.18).toLocaleString('fr-FR')} FCFA</span>
+            </div>
+
+            <Button
+              onClick={() => {
+                toast({ title: "🖨️ Rapport Z Généré !", description: "Impression du ticket de clôture caisse en cours..." });
+                setTimeout(() => window.print(), 500);
+              }}
+              className="w-full h-11 bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] text-[#0F0A05] font-black text-xs rounded-xl shadow-lg cursor-pointer flex items-center justify-center gap-2 mt-2"
+            >
+              <Printer className="w-4 h-4" /> Imprimer & Valider le Rapport Z du Jour
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
