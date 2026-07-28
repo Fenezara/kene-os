@@ -25,7 +25,6 @@ export default function ClientLayout({
     { href: '/chat?mode=dr_diallo', label: 'Dr. Dermatologie', icon: Stethoscope },
     { href: '/diagnostic', label: 'Bilan Cutané', icon: ScanFace },
     { href: '/appointments', label: 'Mes RDV', icon: Calendar },
-    { href: '/portfolio', label: 'Rapports Cliniques', icon: FileText },
     { href: '/jardin', label: 'Jardin Botanique', icon: Sprout },
     { href: '/boutique', label: 'Boutique', icon: ShoppingBag },
     { href: '/client-wallet', label: 'Portefeuille', icon: Wallet },
