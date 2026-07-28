@@ -892,7 +892,36 @@ export default function ResultsPage() {
           </p>
         </div>
 
+        {/* --- INNOVATION 4 & 5: ORDONNANCE BOTANIQUE OFFICIELLE AVEC QR CODE --- */}
+        <div className="bg-[#1A1410] border-2 border-dashed border-gold-kene/40 rounded-3xl p-6 space-y-4 relative overflow-hidden">
+          <div className="flex justify-between items-start">
+            <div>
+              <span className="text-[10px] font-bold text-gold-kene uppercase tracking-widest block font-display">
+                📜 Ordonnance Clinique Botanique Kènè Pro
+              </span>
+              <h4 className="font-display font-bold text-white text-base mt-0.5">
+                Prescription N° KENE-2026-{data.id.substring(0, 6).toUpperCase()}
+              </h4>
+            </div>
+            <div className="w-14 h-14 bg-white p-1 rounded-xl flex items-center justify-center shadow-lg">
+              {/* QR Code SVG */}
+              <svg className="w-full h-full" viewBox="0 0 100 100">
+                <rect width="100" height="100" fill="#FFFFFF" />
+                <path d="M 10,10 L 40,10 L 40,40 L 10,40 Z M 20,20 L 30,20 L 30,30 L 20,30 Z" fill="#000000" />
+                <path d="M 60,10 L 90,10 L 90,40 L 60,40 Z M 70,20 L 80,20 L 80,30 L 70,30 Z" fill="#000000" />
+                <path d="M 10,60 L 40,60 L 40,90 L 10,90 Z M 20,70 L 30,70 L 30,80 L 20,80 Z" fill="#000000" />
+                <rect x="50" y="50" width="15" height="15" fill="#000000" />
+                <rect x="70" y="65" width="20" height="10" fill="#000000" />
+              </svg>
+            </div>
+          </div>
 
+          <div className="text-xs text-white/70 space-y-1 font-sans border-t border-white/10 pt-3">
+            <p><strong>Bénéficiaire :</strong> Client Kènè Pro · Phototype V (Afro-Subsaharien)</p>
+            <p><strong>Institut Partenaire :</strong> Kènè Dermo-Aesthetic Spa & Institut</p>
+            <p><strong>Validité Mobile Money :</strong> Retrait immédiat ou livraison express via Wave / Orange Money</p>
+          </div>
+        </div>
 
         {/* Recommendations Routine block */}
         <div className="bg-[#241C16]/40 border border-white/5 rounded-3xl p-6 space-y-5">

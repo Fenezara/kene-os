@@ -645,7 +645,7 @@ export default function ClientPortalPage() {
                           <div className="text-[10px] text-white/50 font-sans mt-0.5 flex items-center gap-2 flex-wrap">
                             <span>📅 {item.date || safeFormat(item.createdAt, 'dd MMMM yyyy') || 'Récemment'}</span>
                             <span>•</span>
-                            <span>🧪 Routine : {item.formula || 'Soin Botanique Kènè Bio'}</span>
+                            <span>🧪 Formule : {item.formula || 'Ordonnance Kènè Bio'}</span>
                             <span>•</span>
                             <span className="text-[var(--gold-kene)] font-semibold">{item.phototype || item.fitzpatrickType || 'Phototype V'}</span>
                           </div>
