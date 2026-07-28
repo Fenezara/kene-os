@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { format } from 'date-fns';
 import { KeneLogo } from '@/components/ui/logo';
+import { BeforeAfterGalleryModal } from '@/components/BeforeAfterGalleryModal';
 
 // Score gauge component
 function ScoreGauge({ score, size = 120 }: { score: number; size?: number }) {
@@ -151,6 +152,7 @@ export default function ProDiagnosesPage() {
 
   // Detailed Report Modal State
   const [viewingReport, setViewingReport] = useState<any | null>(null);
+  const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
 
   const SCAN_STEPS = [
     'Intégration du Questionnaire Anamnèse Clinique…',
@@ -304,16 +306,24 @@ export default function ProDiagnosesPage() {
           <p className="text-white/50 text-xs ml-11">Questionnaire clinique · Analyse biométrique cutanée · Phototypes Fitzpatrick I-VI</p>
         </div>
 
-        <Dialog open={isDialogOpen} onOpenChange={(o) => { setIsDialogOpen(o); if (!o) resetModal(); }}>
-          <DialogTrigger asChild>
-            <motion.button
-              whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-xs text-[#0F0A05] cursor-pointer shadow-lg"
-              style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)' }}
-            >
-              <Sparkles className="w-4 h-4" /> Nouveau Diagnostic (Anamnèse + Scan)
-            </motion.button>
-          </DialogTrigger>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsGalleryModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs bg-white/5 hover:bg-white/10 text-white border border-white/10 transition cursor-pointer"
+          >
+            <span>🖼️</span> Galerie Avant / Après (Évolution)
+          </button>
+
+          <Dialog open={isDialogOpen} onOpenChange={(o) => { setIsDialogOpen(o); if (!o) resetModal(); }}>
+            <DialogTrigger asChild>
+              <motion.button
+                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-xs text-[#0F0A05] cursor-pointer shadow-lg"
+                style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)' }}
+              >
+                <Sparkles className="w-4 h-4" /> Nouveau Diagnostic (Anamnèse + Scan)
+              </motion.button>
+            </DialogTrigger>
           <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl p-6">
             <DialogHeader>
               <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
@@ -681,6 +691,7 @@ export default function ProDiagnosesPage() {
             )}
           </DialogContent>
         </Dialog>
+        </div>
       </motion.div>
 
       {/* ── DETAILED CLINICAL REPORT MODAL (WITH QUESTIONNAIRE DATA) ── */}
@@ -900,6 +911,12 @@ export default function ProDiagnosesPage() {
           )}
         </div>
       </motion.div>
+
+      <BeforeAfterGalleryModal
+        isOpen={isGalleryModalOpen}
+        onClose={() => setIsGalleryModalOpen(false)}
+        clientPhoto={typeof window !== 'undefined' ? localStorage.getItem('kene_latest_client_photo') : null}
+      />
     </div>
   );
 }
