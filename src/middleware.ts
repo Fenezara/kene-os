@@ -30,6 +30,15 @@ export function middleware(request: NextRequest) {
   const session = request.cookies.get('kene-session');
   const { pathname } = request.nextUrl;
 
+  // 0. Direct Root Redirect: Force Vercel Edge Server to redirect / directly to /portal or /dashboard
+  if (pathname === '/') {
+    const isPro = session && (session.value.startsWith('gerant-') || session.value.startsWith('pro-') || session.value.startsWith('tenant-') || session.value.startsWith('salon-'));
+    const targetUrl = isPro ? new URL('/dashboard', request.url) : new URL('/portal', request.url);
+    const response = NextResponse.redirect(targetUrl);
+    applySecurityHeaders(response);
+    return response;
+  }
+
   // Allow /admin/login to pass through without session check
   if (pathname === '/admin/login') {
     const response = NextResponse.next();
