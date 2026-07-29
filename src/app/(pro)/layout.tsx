@@ -16,6 +16,7 @@ import { BranchSwitcher } from '@/components/BranchSwitcher'
 import { RoleSwitcher } from '@/components/RoleSwitcher'
 import { BackButton } from '@/components/ui/back-button'
 import { KeneLogo } from '@/components/ui/logo'
+import { handleLogout } from '@/lib/logout'
 
 const navItems = [
   { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard, group: 'principal' },
@@ -106,10 +107,7 @@ function SidebarContent({ pathname }: { pathname: string }) {
       <div className="p-3 border-t border-white/5 flex items-center justify-between text-xs text-white/40">
         <span className="text-[10px] font-mono">v2.4 • PRO</span>
         <button
-          onClick={() => {
-            document.cookie = 'kene-session=; path=/; max-age=0'
-            window.location.href = '/login'
-          }}
+          onClick={handleLogout}
           className="p-1.5 hover:text-red-400 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
           title="Déconnexion"
         >

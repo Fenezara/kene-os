@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { RoleSwitcher } from '@/components/RoleSwitcher';
 import { BackButton } from '@/components/ui/back-button';
 import { KeneLogo } from '@/components/ui/logo';
+import { handleLogout } from '@/lib/logout';
 
 export default function ClientLayout({
   children,
@@ -88,11 +89,7 @@ export default function ClientLayout({
             </button>
 
             <button
-              onClick={() => {
-                document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
-                localStorage.removeItem('kene_user');
-                window.location.href = '/login';
-              }}
+              onClick={handleLogout}
               className="hidden md:flex p-2 rounded-xl bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-400 transition cursor-pointer items-center gap-1 text-xs font-bold"
               title="Déconnexion"
             >
@@ -155,12 +152,8 @@ export default function ClientLayout({
 
               <div className="pt-6 border-t border-white/10 mt-6">
                 <button
-                  onClick={() => {
-                    document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
-                    localStorage.removeItem('kene_user');
-                    window.location.href = '/login';
-                  }}
-                  className="w-full py-3 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 font-bold text-xs flex items-center justify-center gap-2"
+                  onClick={handleLogout}
+                  className="w-full py-3 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Se Déconnecter</span>

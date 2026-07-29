@@ -44,8 +44,21 @@ export function SessionPreserver() {
       }
     };
 
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        const savedUser = localStorage.getItem('kene_user');
+        const hasSessionCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
+        if (!savedUser || !hasSessionCookie) {
+          window.location.replace('/login');
+        } else {
+          preserveSession();
+        }
+      }
+    };
+
     window.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', preserveSession);
+    window.addEventListener('pageshow', handlePageShow);
 
     // 3. Periodic heartbeat check every 10 seconds
     const interval = setInterval(preserveSession, 10000);
@@ -53,6 +66,7 @@ export function SessionPreserver() {
     return () => {
       window.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', preserveSession);
+      window.removeEventListener('pageshow', handlePageShow);
       clearInterval(interval);
     };
   }, []);
