@@ -22,6 +22,6 @@ export function handleLogout() {
     console.error('[KÈNÈ LOGOUT] Error clearing session:', e);
   } finally {
     // 4. Force replace browser history entry so back button cannot re-enter
-    window.location.replace('/login');
+    window.location.replace('/login?logged_out=true');
   }
 }

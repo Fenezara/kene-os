@@ -128,8 +128,15 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
+      const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
+      const savedUser = localStorage.getItem('kene_user');
+
+      if (!hasCookie || !savedUser) {
+        window.location.replace('/login?logged_out=true');
+        return;
+      }
+
       const savedTenant = localStorage.getItem('kene_tenant_settings')
-      const savedUser = localStorage.getItem('kene_user')
       const savedAllTenants = localStorage.getItem('kene_all_tenants')
       let name = ''
 

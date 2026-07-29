@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Home, Calendar, ScanFace, Wallet, ShoppingBag, Sprout, Bell, User, Sparkles, ArrowLeft, LogOut, MapPin, Menu, X, MessageSquare, Stethoscope, FileText } from 'lucide-react';
@@ -19,6 +19,17 @@ export default function ClientLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
+      const savedUser = localStorage.getItem('kene_user');
+
+      if (!hasCookie || !savedUser) {
+        window.location.replace('/login?logged_out=true');
+      }
+    }
+  }, []);
 
   const navLinks = [
     { href: '/portal', label: 'Accueil', icon: Home },

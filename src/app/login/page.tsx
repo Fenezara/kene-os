@@ -45,29 +45,38 @@ function LoginFormContent() {
   // 📱 AUTO-RESTORE SESSION ON MOBILE / TAB REOPEN
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const isLoggedOut = searchParams ? searchParams.get('logged_out') : null;
+      if (isLoggedOut) {
+        localStorage.removeItem('kene_user');
+        document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
+        return;
+      }
+
       const savedUser = localStorage.getItem('kene_user');
-      if (savedUser) {
+      const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
+
+      if (savedUser && hasCookie) {
         try {
           const user = JSON.parse(savedUser);
           const role = user.role || 'client';
-          const sessionVal = `${role}-${Date.now()}`;
-          
-          // Re-write persistent 1-year cookie
-          document.cookie = `kene-session=${sessionVal}; path=/; max-age=31536000; SameSite=Lax`;
-
-          // Refresh server HttpOnly session
-          fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ role, email: user.email || user.phone })
-          }).catch(() => {});
-
           const target = redirectUrl || (role === 'client' ? '/portal' : role === 'admin' ? '/admin' : '/dashboard');
           router.replace(target);
         } catch (e) {}
       }
     }
-  }, [redirectUrl, router]);
+  }, [redirectUrl, router, searchParams]);
+
+  // 🔒 HISTORY TRAP: Prevent back button from leaving login page after logout
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.history.pushState(null, '', window.location.href);
+      const handlePopState = () => {
+        window.history.pushState(null, '', window.location.href);
+      };
+      window.addEventListener('popstate', handlePopState);
+      return () => window.removeEventListener('popstate', handlePopState);
+    }
+  }, []);
 
   const handleLogin = (role: string, targetPath: string, userEmailOrName?: string) => async (e: React.FormEvent) => {
     e.preventDefault();
