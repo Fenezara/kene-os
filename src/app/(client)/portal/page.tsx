@@ -45,6 +45,24 @@ export default function ClientPortalPage() {
   });
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
+  // Daily Botanical Ritual Checklist State
+  const [dailySteps, setDailySteps] = useState<Record<string, boolean>>({
+    morning_cleanser: true,
+    hydration_serum: true,
+    lipids_seal: false
+  });
+
+  const toggleDailyStep = (id: string) => {
+    setDailySteps(prev => {
+      const next = { ...prev, [id]: !prev[id] };
+      toast({
+        title: next[id] ? "✨ Étape du Rituel Validée !" : "Rituel mis à jour",
+        description: next[id] ? "Bravo pour la régularité de votre soin botanique." : "Étape décochée.",
+      });
+      return next;
+    });
+  };
+
   useEffect(() => {
     const savedAvatar = localStorage.getItem('kene_user_avatar');
     if (savedAvatar) setAvatarUrl(savedAvatar);
@@ -497,6 +515,61 @@ export default function ClientPortalPage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* ── RITUEL DU JOUR & CHECKLIST SKINCARE INTERACTIVE ── */}
+      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
+        <Card className="bg-[#1A1410] border border-[var(--gold-kene)]/30 rounded-3xl overflow-hidden shadow-xl">
+          <CardContent className="p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono font-bold mb-1">
+                  ☀️ Mon Rituel Botanique du Jour
+                </Badge>
+                <h3 className="font-display font-bold text-base text-white flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[var(--gold-kene)]" /> Checklist Quotidienne Peau Éclatante
+                </h3>
+              </div>
+              <span className="text-xs font-mono font-bold text-[var(--gold-kene)] bg-[var(--gold-kene)]/10 px-3 py-1 rounded-full border border-[var(--gold-kene)]/20">
+                85% Humidité · Abidjan 🇨🇮
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+              {[
+                { id: 'morning_cleanser', title: '1. Nettoyage Doux', desc: 'Gel Moringa & Neem (Matin)', icon: '🌿' },
+                { id: 'hydration_serum', title: '2. Sérum Hydratant', desc: 'Sérum Baobab 10% Niacinamide', icon: '🧪' },
+                { id: 'lipids_seal', title: '3. Scellage Lipidique', desc: 'Beurre de Karité Brut Korhogo', icon: '🥜' },
+              ].map((step) => {
+                const isChecked = Boolean(dailySteps[step.id]);
+                return (
+                  <div
+                    key={step.id}
+                    onClick={() => toggleDailyStep(step.id)}
+                    className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
+                      isChecked
+                        ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
+                        : 'bg-[#241C16] border-white/10 hover:border-[var(--gold-kene)]/40 text-white'
+                    }`}
+                  >
+                    <div className={`w-5 h-5 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                      isChecked ? 'bg-emerald-500 text-black font-bold' : 'border border-white/20'
+                    }`}>
+                      {isChecked && <Check className="w-3.5 h-3.5" />}
+                    </div>
+                    <div>
+                      <div className="font-bold text-xs flex items-center gap-1.5">
+                        <span>{step.icon}</span>
+                        <span className={isChecked ? 'line-through text-emerald-400' : 'text-white'}>{step.title}</span>
+                      </div>
+                      <p className="text-[10px] text-white/50 mt-0.5 leading-tight">{step.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
