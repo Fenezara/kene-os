@@ -19,7 +19,7 @@ const PRO_ROUTES = [
   '/dashboard', '/pos', '/agenda', '/clients', '/inventory', 
   '/reviews', '/employees', '/marketing', '/rh', '/lab',
   '/compta', '/services', '/settings', '/reports', '/referral', 
-  '/caisse'
+  '/caisse', '/marketplace', '/security', '/admin'
 ];
 
 const CLIENT_ROUTES = [
