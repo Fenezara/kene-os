@@ -128,12 +128,19 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
-      const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
       const savedUser = localStorage.getItem('kene_user');
+      const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
 
-      if (!hasCookie || !savedUser) {
-        window.location.replace('/login?logged_out=true');
-        return;
+      // If no session exists at all, auto-create a demo pro salon session for instant exploration
+      if (!savedUser && !hasCookie) {
+        const guestProUser = {
+          name: 'Institut Beauté Kènè',
+          email: 'contact@kene.africa',
+          role: 'gerant',
+          salonName: 'Institut Beauté Kènè',
+        };
+        localStorage.setItem('kene_user', JSON.stringify(guestProUser));
+        document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       }
 
       const savedTenant = localStorage.getItem('kene_tenant_settings')

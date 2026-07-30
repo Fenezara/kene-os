@@ -62,14 +62,14 @@ export async function POST(request: Request) {
 
     const sessionId = `${sessionRole}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
-    // Create HttpOnly Secure Cookie (OWASP Security Standard)
+    // Create Persistent Cookie readable by both Server & Client JS
     const cookieStore = await cookies();
     cookieStore.set('kene-session', sessionId, {
-      httpOnly: true, // Prevents XSS token extraction
+      httpOnly: false, // Allows client JS to validate session without triggering logout redirects
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 60 * 24 * 365, // 1 year persistent session (Facebook/TikTok standard)
+      maxAge: 60 * 60 * 24 * 365, // 1 year persistent session
     });
 
     return NextResponse.json({
