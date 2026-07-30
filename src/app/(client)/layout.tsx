@@ -65,7 +65,7 @@ export default function ClientLayout({
           
           {/* Left Logo & Back Button */}
           <div className="flex items-center gap-2">
-            <BackButton fallbackUrl="/portal" />
+            {pathname !== '/portal' && <BackButton fallbackUrl="/portal" />}
             <KeneLogo href="/portal" subtitle="CLIENT" size="sm" />
           </div>
 

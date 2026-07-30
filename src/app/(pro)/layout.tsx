@@ -199,12 +199,15 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
       {/* ─── MOBILE HEADER + DRAWER (SCROLLS NATURALLY WITH INTERFACE) ─── */}
       <div className="md:hidden flex items-center justify-between px-4 h-14 bg-[#110D09]/95 backdrop-blur-xl border-b border-white/5 w-full shrink-0 z-30 sticky top-0">
         <div className="flex items-center gap-2 min-w-0">
-          <button
-            onClick={() => router.back()}
-            className="p-1.5 text-white/60 hover:text-white flex items-center gap-1 text-xs shrink-0"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
+          {pathname !== '/dashboard' && (
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="p-1.5 text-white/60 hover:text-white flex items-center gap-1 text-xs shrink-0"
+              title="Retour au Tableau de Bord"
+            >
+              <ArrowLeft className="w-4 h-4 text-[#C8951E]" />
+            </button>
+          )}
           <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#F3E5AB] to-[#C8951E] flex items-center justify-center font-display font-black text-[#0F0A05] text-sm shrink-0">K</div>
           <div className="min-w-0">
             <span className="font-display font-bold text-[#C8951E] text-xs block leading-tight truncate">{companyName}</span>
