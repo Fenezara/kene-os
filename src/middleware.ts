@@ -44,7 +44,7 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // 1. Strict Pro Route Protection: Block Clients from Enterprise Account
+  // 1. Pro Route Protection: Allow authenticated users to view Pro Dashboard
   const isProRoute = PRO_ROUTES.some(p => pathname.startsWith(p));
   if (isProRoute) {
     if (!session) {
@@ -54,17 +54,9 @@ export function middleware(request: NextRequest) {
       applySecurityHeaders(response);
       return response;
     }
-
-    const isClientSession = session.value.startsWith('client-') || session.value.startsWith('user-');
-    if (isClientSession) {
-      const portalUrl = new URL('/portal', request.url);
-      const response = NextResponse.redirect(portalUrl);
-      applySecurityHeaders(response);
-      return response;
-    }
   }
 
-  // 2. Strict Client Route Protection: Block Enterprise / Pro Users from Client Account
+  // 2. Client Route Protection: Allow authenticated users to view Client Portal
   const isClientRoute = CLIENT_ROUTES.some(p => pathname.startsWith(p));
   if (isClientRoute) {
     if (!session) {
@@ -74,18 +66,10 @@ export function middleware(request: NextRequest) {
       applySecurityHeaders(response);
       return response;
     }
-
-    const isProSession = session.value.startsWith('gerant-') || session.value.startsWith('pro-') || session.value.startsWith('tenant-') || session.value.startsWith('salon-') || session.value.startsWith('employee-');
-    if (isProSession) {
-      const dashboardUrl = new URL('/dashboard', request.url);
-      const response = NextResponse.redirect(dashboardUrl);
-      applySecurityHeaders(response);
-      return response;
-    }
   }
 
-  // 3. Strict Super-Admin Route Protection: Only 'admin' role can access /admin routes
-  if (pathname.startsWith('/admin')) {
+  // 3. Super-Admin Route Protection: Only 'admin' role can access /admin routes
+  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
     if (!session) {
       const loginUrl = new URL('/admin/login', request.url);
       const response = NextResponse.redirect(loginUrl);

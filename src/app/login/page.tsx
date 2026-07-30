@@ -44,29 +44,16 @@ function LoginFormContent() {
 
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  // 📱 AUTO-RESTORE SESSION ON MOBILE / TAB REOPEN
+  // 📱 CLEAN LOGOUT HANDLING ON LOGIN PAGE VISIT
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const isLoggedOut = searchParams ? searchParams.get('logged_out') : null;
       if (isLoggedOut) {
         localStorage.removeItem('kene_user');
         document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
-        return;
-      }
-
-      const savedUser = localStorage.getItem('kene_user');
-      const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
-
-      if (savedUser && hasCookie) {
-        try {
-          const user = JSON.parse(savedUser);
-          const role = user.role || 'client';
-          const target = redirectUrl || (role === 'client' ? '/portal' : role === 'admin' ? '/admin' : '/dashboard');
-          router.replace(target);
-        } catch (e) {}
       }
     }
-  }, [redirectUrl, router, searchParams]);
+  }, [searchParams]);
 
   // 🔒 HISTORY TRAP: Prevent back button from leaving login page after logout
   useEffect(() => {
