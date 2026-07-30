@@ -20,7 +20,7 @@ const ONBOARDING_SLIDES = [
     title: "L'Alliance Sublimée du Savoir-Faire & de la Botanique",
     subtitle: "Rituels au Beurre de Karité pur de Korhogo, Baobab de Tambacounda & Poudre de Chebe.",
     description: "Une plateforme conçue spécifiquement pour célébrer les besoins uniques des peaux mélanodermes et des cheveux crépus, frisés et bouclés.",
-    image: '/images/afro_beauty_hero_woman_1784684703577.jpg',
+    image: '/images/afro_beauty_hero_woman.jpg',
     features: [
       { icon: Sprout, text: 'Laboratoire Botanique Sur-Mesure' },
       { icon: Star, text: 'Formulations 100% Naturelles & Certifiées' },
@@ -36,7 +36,7 @@ const ONBOARDING_SLIDES = [
     title: 'Diagnostic Cutané IA de Haute Précision',
     subtitle: "Scannez le phototype (Fitzpatrick IV à VI), mesurez l'hydratation et le sébum en cabine.",
     description: "L'IA Kènè Pro-VLM génère instantanément la recette de soin sur-mesure adaptée à chaque cliente et édite son passeport beauté.",
-    image: '/images/afro_skin_spectral_scanner_1784941604401.jpg',
+    image: '/images/afro_skin_spectral_scanner.jpg',
     features: [
       { icon: ScanFace, text: 'Analyse Spectrale Phototypes IV, V & VI' },
       { icon: Eye, text: "Cartographie des Zones d'Hyperpigmentation" },
@@ -52,7 +52,7 @@ const ONBOARDING_SLIDES = [
     title: 'Caisse Tactile Mobile Money & Suivi 360°',
     subtitle: 'Wave, Orange Money, Agenda Cabines, Paie CNPS & Clôture Z Automatique.',
     description: "Offrez à votre établissement une suite SaaS complète conforme aux directives financières SYSCOHADA et optimisée pour l'Afrique de l'Ouest.",
-    image: '/images/african_spa_ritual_hero_1784941628398.jpg',
+    image: '/images/african_spa_ritual_hero.jpg',
     features: [
       { icon: ShoppingCart, text: 'Paiement Instantané Wave & Orange Money' },
       { icon: CheckCircle2, text: 'Conformité Fiscale SYSCOHADA & CNPS' },
@@ -116,9 +116,15 @@ export function Onboarding3DExperience({ onComplete }: Onboarding3DExperiencePro
         <SankofaIcon className="w-80 h-80 text-[#C8951E]" />
       </div>
 
-      {/* TOP NAVBAR */}
+      {/* TOP NAVBAR WITH GLOWING XP-3D IMMERSIVE BADGE */}
       <header className="relative z-30 max-w-7xl w-full mx-auto flex items-center justify-between py-1 shrink-0">
-        <KeneLogo href="/" subtitle="AFRICA" size="sm" />
+        <div className="flex items-center gap-3">
+          <KeneLogo href="/" subtitle="AFRICA" size="sm" />
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#C8951E]/20 border border-[#C8951E]/50 text-[#F3E5AB] font-mono text-[10px] font-bold shadow-md">
+            <span className="w-2 h-2 rounded-full bg-[#C8951E] animate-ping" />
+            <span>XP-3D IMMERSIVE</span>
+          </div>
+        </div>
 
         {/* Step Indicator Dots & Skip */}
         <div className="flex items-center gap-3">
@@ -145,7 +151,7 @@ export function Onboarding3DExperience({ onComplete }: Onboarding3DExperiencePro
         </div>
       </header>
 
-      {/* MAIN DISPLAY AREA (FITS MOBILE 100% WITHOUT SCROLL) */}
+      {/* MAIN DISPLAY AREA */}
       <main className="relative z-20 max-w-6xl w-full mx-auto my-auto overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -159,13 +165,21 @@ export function Onboarding3DExperience({ onComplete }: Onboarding3DExperiencePro
             
             {/* TEXT STORYTELLING */}
             <div className="lg:col-span-7 space-y-3 sm:space-y-5">
-              <Badge 
-                style={{ backgroundColor: `${currentSlide.badgeColor}20`, color: currentSlide.badgeColor, borderColor: `${currentSlide.badgeColor}40` }}
-                className="border font-mono text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-lg"
-              >
-                <Sparkles className="w-3 h-3 mr-1 inline" />
-                {currentSlide.badge}
-              </Badge>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge 
+                  style={{ backgroundColor: `${currentSlide.badgeColor}20`, color: currentSlide.badgeColor, borderColor: `${currentSlide.badgeColor}40` }}
+                  className="border font-mono text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-lg"
+                >
+                  <Sparkles className="w-3 h-3 mr-1 inline" />
+                  {currentSlide.badge}
+                </Badge>
+
+                {/* Mobile XP-3D Badge */}
+                <div className="sm:hidden flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#C8951E]/20 border border-[#C8951E]/50 text-[#F3E5AB] font-mono text-[9px] font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C8951E] animate-ping" />
+                  <span>XP-3D IMMERSIVE</span>
+                </div>
+              </div>
 
               <h1 className="text-xl sm:text-4xl font-display font-black text-white leading-tight tracking-tight">
                 {currentSlide.title}
@@ -200,17 +214,26 @@ export function Onboarding3DExperience({ onComplete }: Onboarding3DExperiencePro
               </div>
             </div>
 
-            {/* VISUAL IMAGE (COMPACT ON MOBILE) */}
+            {/* VISUAL IMAGE WITH GLOWING XP-3D IMMERSIVE OVERLAY */}
             <div className="lg:col-span-5 flex justify-center">
               <div 
-                className="relative w-full max-w-[240px] sm:max-w-md aspect-[16/9] sm:aspect-[4/5] rounded-2xl overflow-hidden border border-white/15 bg-black/40 shadow-2xl group transition-transform duration-300"
+                className="relative w-full max-w-[260px] sm:max-w-md aspect-[4/3] sm:aspect-[4/5] rounded-2xl overflow-hidden border-2 border-white/20 bg-black/60 shadow-2xl group transition-transform duration-300"
               >
                 <img 
                   src={currentSlide.image} 
                   alt={currentSlide.title} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0603] via-transparent to-transparent opacity-70" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0603] via-transparent to-transparent opacity-80" />
+
+                {/* 🌟 GLOWING XP-3D IMMERSIVE BADGE ON IMAGE */}
+                <div className="absolute bottom-2.5 left-2.5 right-2.5 p-2 rounded-xl bg-black/80 border border-[#C8951E]/50 backdrop-blur-md flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-mono font-bold text-[#F3E5AB]">
+                    <span className="w-2 h-2 rounded-full bg-[#C8951E] animate-ping" />
+                    <span>XP-3D IMMERSIVE</span>
+                  </div>
+                  <span className="text-[9px] font-mono text-white/60">60 FPS</span>
+                </div>
               </div>
             </div>
 
@@ -218,7 +241,7 @@ export function Onboarding3DExperience({ onComplete }: Onboarding3DExperiencePro
         </AnimatePresence>
       </main>
 
-      {/* FOOTER NAVIGATION CONTROLS (ALWAYS VISIBLE & PINNED AT BOTTOM) */}
+      {/* FOOTER NAVIGATION CONTROLS */}
       <footer className="relative z-30 max-w-7xl w-full mx-auto flex items-center justify-between py-2 border-t border-white/10 shrink-0">
         
         {/* Previous Button */}
