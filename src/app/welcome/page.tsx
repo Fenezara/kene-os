@@ -1,5 +1,5 @@
-import { InteractiveShowroom } from "@/components/experience/InteractiveShowroom";
+import { ExperienceOrchestrator } from "@/components/experience/ExperienceOrchestrator";
 
 export default function WelcomePage() {
-  return <InteractiveShowroom />;
+  return <ExperienceOrchestrator />;
 }

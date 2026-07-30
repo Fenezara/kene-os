@@ -30,15 +30,8 @@ export function middleware(request: NextRequest) {
   const session = request.cookies.get('kene-session');
   const { pathname } = request.nextUrl;
 
-  // 0. Root Route Handler: Redirect logged in users to their portal, or display WelcomeScreen for new visitors
+  // 0. Root Route Handler: Always allow root route / to display 3D Brand Experience
   if (pathname === '/') {
-    if (session) {
-      const isPro = session.value.startsWith('gerant-') || session.value.startsWith('pro-') || session.value.startsWith('tenant-') || session.value.startsWith('salon-');
-      const targetUrl = isPro ? new URL('/dashboard', request.url) : new URL('/portal', request.url);
-      const response = NextResponse.redirect(targetUrl);
-      applySecurityHeaders(response);
-      return response;
-    }
     const response = NextResponse.next();
     applySecurityHeaders(response);
     return response;
