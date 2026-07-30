@@ -1,3 +1,5 @@
+'use client';
+
 import { WelcomeScreen } from "@/components/experience/WelcomeScreen";
 
 export default function WelcomePage() {
