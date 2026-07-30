@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ScanFace, ShoppingCart, ArrowRight, ArrowLeft, ChevronRight, CheckCircle2, ShieldCheck, Sprout, Star, Eye } from 'lucide-react';
 import { KeneLogo } from '@/components/ui/logo';
@@ -70,7 +70,6 @@ export function Onboarding3DExperience({ onComplete }: Onboarding3DExperiencePro
 
   const currentSlide = ONBOARDING_SLIDES[currentSlideIndex];
 
-  // Mouse Parallax movement
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
@@ -97,10 +96,10 @@ export function Onboarding3DExperience({ onComplete }: Onboarding3DExperiencePro
     <div 
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="min-h-screen bg-[#0A0603] text-[#F8F1E4] selection:bg-[#C8951E] selection:text-[#0F0A05] relative overflow-hidden font-sans flex flex-col justify-between p-4 sm:p-8"
+      className="h-[100dvh] max-h-screen bg-[#0A0603] text-[#F8F1E4] selection:bg-[#C8951E] selection:text-[#0F0A05] relative overflow-hidden font-sans flex flex-col justify-between p-3 sm:p-6 select-none"
       style={{ perspective: '1200px' }}
     >
-      {/* Dynamic Background Glow */}
+      {/* Background Glow */}
       <motion.div
         animate={{
           background: `radial-gradient(circle at ${50 + mousePos.x * 30}% ${50 + mousePos.y * 30}%, ${currentSlide.badgeColor}25, transparent 70%)`,
@@ -110,34 +109,28 @@ export function Onboarding3DExperience({ onComplete }: Onboarding3DExperiencePro
       />
 
       {/* Floating Background Adinkra Watermarks */}
-      <div 
-        className="absolute top-10 left-10 opacity-[0.03] pointer-events-none transition-transform duration-300"
-        style={{ transform: `translate3d(${mousePos.x * -40}px, ${mousePos.y * -40}px, 0)` }}
-      >
-        <GyeNyameIcon className="w-96 h-96 text-[#C8951E]" />
+      <div className="absolute top-10 left-10 opacity-[0.03] pointer-events-none hidden sm:block">
+        <GyeNyameIcon className="w-80 h-80 text-[#C8951E]" />
       </div>
-      <div 
-        className="absolute bottom-10 right-10 opacity-[0.03] pointer-events-none transition-transform duration-300"
-        style={{ transform: `translate3d(${mousePos.x * 40}px, ${mousePos.y * 40}px, 0)` }}
-      >
-        <SankofaIcon className="w-96 h-96 text-[#C8951E]" />
+      <div className="absolute bottom-10 right-10 opacity-[0.03] pointer-events-none hidden sm:block">
+        <SankofaIcon className="w-80 h-80 text-[#C8951E]" />
       </div>
 
       {/* TOP NAVBAR */}
-      <header className="relative z-30 max-w-7xl w-full mx-auto flex items-center justify-between py-2">
-        <KeneLogo href="/" subtitle="AFRICA" size="md" />
+      <header className="relative z-30 max-w-7xl w-full mx-auto flex items-center justify-between py-1 shrink-0">
+        <KeneLogo href="/" subtitle="AFRICA" size="sm" />
 
         {/* Step Indicator Dots & Skip */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 px-3 py-1.5 rounded-full">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 bg-black/40 border border-white/10 px-2.5 py-1 rounded-full">
             {ONBOARDING_SLIDES.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentSlideIndex(idx)}
-                className={`h-2 rounded-full transition-all duration-300 ${
+                className={`h-1.5 rounded-full transition-all duration-300 ${
                   idx === currentSlideIndex 
-                    ? 'w-6 bg-[#C8951E]' 
-                    : 'w-2 bg-white/20 hover:bg-white/40'
+                    ? 'w-5 bg-[#C8951E]' 
+                    : 'w-1.5 bg-white/20 hover:bg-white/40'
                 }`}
               />
             ))}
@@ -145,105 +138,79 @@ export function Onboarding3DExperience({ onComplete }: Onboarding3DExperiencePro
 
           <button
             onClick={onComplete}
-            className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-white/70 hover:text-white hover:bg-white/10 hover:border-white/20 transition cursor-pointer"
+            className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-mono text-white/70 hover:text-white hover:bg-white/10 transition cursor-pointer"
           >
             Passer
           </button>
         </div>
       </header>
 
-      {/* MAIN 3D DISPLAY AREA */}
-      <main className="relative z-20 max-w-6xl w-full mx-auto py-6 sm:py-10 my-auto">
+      {/* MAIN DISPLAY AREA (FITS MOBILE 100% WITHOUT SCROLL) */}
+      <main className="relative z-20 max-w-6xl w-full mx-auto my-auto overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide.id}
-            initial={{ opacity: 0, rotateY: 15, scale: 0.95, z: -100 }}
-            animate={{ 
-              opacity: 1, 
-              rotateY: mousePos.x * 12, 
-              rotateX: mousePos.y * -12, 
-              scale: 1, 
-              z: 0 
-            }}
-            exit={{ opacity: 0, rotateY: -15, scale: 0.95, z: -100 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
-            style={{ transformStyle: 'preserve-3d' }}
+            initial={{ opacity: 0, rotateY: 15, scale: 0.95 }}
+            animate={{ opacity: 1, rotateY: mousePos.x * 10, rotateX: mousePos.y * -10, scale: 1 }}
+            exit={{ opacity: 0, rotateY: -15, scale: 0.95 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center"
           >
             
-            {/* LEFT COLUMN: TEXT STORYTELLING */}
-            <div className="lg:col-span-7 space-y-6">
+            {/* TEXT STORYTELLING */}
+            <div className="lg:col-span-7 space-y-3 sm:space-y-5">
               <Badge 
                 style={{ backgroundColor: `${currentSlide.badgeColor}20`, color: currentSlide.badgeColor, borderColor: `${currentSlide.badgeColor}40` }}
-                className="border font-mono text-xs font-bold px-3.5 py-1.5 rounded-full shadow-lg"
+                className="border font-mono text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full shadow-lg"
               >
-                <Sparkles className="w-3.5 h-3.5 mr-1.5 inline" />
+                <Sparkles className="w-3 h-3 mr-1 inline" />
                 {currentSlide.badge}
               </Badge>
 
-              <h1 className="text-3xl sm:text-5xl font-display font-black text-white leading-tight tracking-tight">
+              <h1 className="text-xl sm:text-4xl font-display font-black text-white leading-tight tracking-tight">
                 {currentSlide.title}
               </h1>
 
-              <p className="text-base sm:text-lg text-[#F3E5AB] font-medium leading-relaxed">
+              <p className="text-xs sm:text-base text-[#F3E5AB] font-medium leading-snug">
                 {currentSlide.subtitle}
               </p>
 
-              <p className="text-xs sm:text-sm text-white/70 font-sans leading-relaxed">
+              <p className="text-[11px] sm:text-xs text-white/70 font-sans leading-relaxed hidden sm:block">
                 {currentSlide.description}
               </p>
 
               {/* Feature Highlights */}
-              <div className="space-y-3 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
                 {currentSlide.features.map((feat, idx) => {
                   const Icon = feat.icon;
                   return (
-                    <motion.div
+                    <div
                       key={idx}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 + idx * 0.1 }}
-                      className="flex items-center gap-3 bg-white/5 border border-white/10 p-3 rounded-2xl backdrop-blur-md hover:border-[#C8951E]/50 transition"
+                      className="flex items-center gap-2 bg-white/5 border border-white/10 p-2 sm:p-2.5 rounded-xl backdrop-blur-md"
                     >
-                      <div className="w-9 h-9 rounded-xl bg-[#C8951E]/20 border border-[#C8951E]/40 flex items-center justify-center text-[#F3E5AB]">
-                        <Icon className="w-4 h-4 text-[#C8951E]" />
+                      <div className="w-7 h-7 rounded-lg bg-[#C8951E]/20 border border-[#C8951E]/40 flex items-center justify-center text-[#F3E5AB] shrink-0">
+                        <Icon className="w-3.5 h-3.5 text-[#C8951E]" />
                       </div>
-                      <span className="text-xs sm:text-sm font-semibold text-white/90">
+                      <span className="text-[10px] sm:text-xs font-semibold text-white/90 truncate">
                         {feat.text}
                       </span>
-                    </motion.div>
+                    </div>
                   );
                 })}
               </div>
             </div>
 
-            {/* RIGHT COLUMN: 3D FLOATING IMAGE CARD */}
+            {/* VISUAL IMAGE (COMPACT ON MOBILE) */}
             <div className="lg:col-span-5 flex justify-center">
               <div 
-                className="relative w-full max-w-md aspect-[4/5] rounded-3xl overflow-hidden border-2 border-white/15 bg-gradient-to-b from-white/10 to-black/40 backdrop-blur-2xl shadow-2xl group transition-transform duration-300"
-                style={{
-                  transform: `translate3d(${mousePos.x * 20}px, ${mousePos.y * 20}px, 40px)`,
-                  boxShadow: `0 25px 50px -12px ${currentSlide.badgeColor}30`,
-                }}
+                className="relative w-full max-w-[240px] sm:max-w-md aspect-[16/9] sm:aspect-[4/5] rounded-2xl overflow-hidden border border-white/15 bg-black/40 shadow-2xl group transition-transform duration-300"
               >
-                {/* Visual Image */}
                 <img 
                   src={currentSlide.image} 
                   alt={currentSlide.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0603] via-transparent to-transparent opacity-80" />
-
-                {/* Floating Micro Badge */}
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-black/60 border border-white/15 backdrop-blur-md flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs font-mono text-[#F3E5AB]">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                    <span>XP-3D IMMERSIVE</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-white/50">SLIDE {currentSlideIndex + 1}/3</span>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0603] via-transparent to-transparent opacity-70" />
               </div>
             </div>
 
@@ -251,31 +218,31 @@ export function Onboarding3DExperience({ onComplete }: Onboarding3DExperiencePro
         </AnimatePresence>
       </main>
 
-      {/* FOOTER NAVIGATION CONTROLS */}
-      <footer className="relative z-30 max-w-7xl w-full mx-auto flex items-center justify-between py-4 border-t border-white/10">
+      {/* FOOTER NAVIGATION CONTROLS (ALWAYS VISIBLE & PINNED AT BOTTOM) */}
+      <footer className="relative z-30 max-w-7xl w-full mx-auto flex items-center justify-between py-2 border-t border-white/10 shrink-0">
         
         {/* Previous Button */}
         <Button
           onClick={handlePrev}
           disabled={currentSlideIndex === 0}
           variant="outline"
-          className="border-white/10 text-white/70 hover:text-white hover:bg-white/5 disabled:opacity-30 rounded-2xl h-11 px-5 font-mono text-xs cursor-pointer flex items-center gap-2"
+          className="border-white/10 text-white/80 hover:text-white hover:bg-white/5 disabled:opacity-20 rounded-xl h-10 px-4 font-mono text-xs cursor-pointer flex items-center gap-1.5"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Précédent</span>
         </Button>
 
         {/* Slide Counter */}
-        <span className="text-xs font-mono text-white/50 hidden sm:inline">
-          Étape {currentSlideIndex + 1} sur {ONBOARDING_SLIDES.length}
+        <span className="text-[11px] font-mono text-white/50">
+          {currentSlideIndex + 1} / {ONBOARDING_SLIDES.length}
         </span>
 
         {/* Next / Complete Button */}
         <Button
           onClick={handleNext}
-          className={`bg-gradient-to-r ${currentSlide.accent} text-[#0F0A05] font-black text-xs rounded-2xl h-11 px-6 shadow-lg hover:scale-105 transition cursor-pointer flex items-center gap-2`}
+          className={`bg-gradient-to-r ${currentSlide.accent} text-[#0F0A05] font-black text-xs rounded-xl h-10 px-5 shadow-lg hover:scale-105 transition cursor-pointer flex items-center gap-1.5`}
         >
-          <span>{currentSlideIndex === ONBOARDING_SLIDES.length - 1 ? 'Accéder à l\'Expérience Kènè' : 'Suivant'}</span>
+          <span>{currentSlideIndex === ONBOARDING_SLIDES.length - 1 ? 'Accéder' : 'Suivant'}</span>
           {currentSlideIndex === ONBOARDING_SLIDES.length - 1 ? (
             <ChevronRight className="w-4 h-4 text-[#0F0A05]" />
           ) : (

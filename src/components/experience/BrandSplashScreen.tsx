@@ -78,17 +78,17 @@ export function BrandSplashScreen({ onComplete }: BrandSplashScreenProps) {
           </p>
         </motion.div>
 
-        {/* Progress Bar / Loader */}
+        {/* Progress Bar / Loader tuned for 3.8s */}
         <motion.div
           initial={{ width: 0, opacity: 0 }}
-          animate={{ width: '220px', opacity: 1 }}
-          transition={{ delay: 0.8, duration: 1 }}
-          className="relative h-1 bg-white/10 rounded-full overflow-hidden"
+          animate={{ width: '260px', opacity: 1 }}
+          transition={{ delay: 0.4, duration: 1 }}
+          className="relative h-1.5 bg-white/10 rounded-full overflow-hidden"
         >
           <motion.div
             initial={{ x: '-100%' }}
             animate={{ x: '0%' }}
-            transition={{ delay: 0.8, duration: 1.2, ease: 'easeInOut' }}
+            transition={{ delay: 0.4, duration: 3.2, ease: 'easeInOut' }}
             className="absolute inset-0 bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#C8951E]"
           />
         </motion.div>

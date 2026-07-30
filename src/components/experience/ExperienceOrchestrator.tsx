@@ -11,12 +11,12 @@ type ExperienceStep = 'splash' | 'onboarding' | 'welcome';
 export function ExperienceOrchestrator() {
   const [step, setStep] = useState<ExperienceStep>('splash');
 
-  // Auto transition from Splash to Onboarding after 2.2 seconds
+  // Auto transition from Splash to Onboarding after 3.8 seconds (generous logo visibility)
   useEffect(() => {
     if (step === 'splash') {
       const timer = setTimeout(() => {
         setStep('onboarding');
-      }, 2200);
+      }, 3800);
       return () => clearTimeout(timer);
     }
   }, [step]);
