@@ -15,6 +15,7 @@ import {
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { BeforeAfterGalleryModal } from '@/components/BeforeAfterGalleryModal';
+import { BeautyPassportModal } from '@/components/BeautyPassportModal';
 
 export default function ClientPortalPage() {
   const { toast } = useToast();
@@ -23,6 +24,7 @@ export default function ClientPortalPage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [localDiagnoses, setLocalDiagnoses] = useState<any[]>([]);
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
+  const [isPassportModalOpen, setIsPassportModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Registered Salons & Contact Modal State
@@ -322,6 +324,7 @@ export default function ClientPortalPage() {
                   <User className="w-3 h-3" /> Modifier mon profil
                 </button>
               </DialogTrigger>
+
               <DialogContent className="bg-[#0F0A05] border border-[var(--gold-kene)]/30 text-white rounded-3xl max-w-md p-6">
                 <DialogHeader>
                   <DialogTitle className="font-display text-lg text-white flex items-center gap-2">
@@ -401,6 +404,14 @@ export default function ClientPortalPage() {
                 </div>
               </DialogContent>
             </Dialog>
+
+            <button
+              onClick={() => setIsPassportModalOpen(true)}
+              className="px-2.5 py-1 rounded-xl bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#C8951E] text-black font-black text-[10px] flex items-center gap-1 shadow-md hover:scale-105 transition cursor-pointer"
+            >
+              <FileText className="w-3 h-3" />
+              <span>Passeport Beauté PDF</span>
+            </button>
           </div>
         </div>
 
@@ -1002,6 +1013,13 @@ export default function ClientPortalPage() {
         isOpen={isGalleryModalOpen}
         onClose={() => setIsGalleryModalOpen(false)}
         clientPhoto={typeof window !== 'undefined' ? localStorage.getItem('kene_latest_client_photo') : null}
+      />
+
+      <BeautyPassportModal
+        isOpen={isPassportModalOpen}
+        onClose={() => setIsPassportModalOpen(false)}
+        userProfile={userProfile}
+        diagnoses={localDiagnoses}
       />
     </div>
   );

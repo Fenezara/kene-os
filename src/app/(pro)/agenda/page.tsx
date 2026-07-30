@@ -285,16 +285,35 @@ export default function ProAgendaPage() {
                     {/* Amount + actions */}
                     <div className="flex flex-col items-end gap-2 shrink-0">
                       <span className="font-display font-black text-white text-sm">{appt.amount?.toLocaleString('fr-FR')} <span className="text-[9px] text-white/30 font-mono">FCFA</span></span>
-                      {appt.status === 'pending' && (
-                        <div className="flex gap-1.5">
-                          <button className="flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-xl hover:bg-emerald-500/20 transition cursor-pointer">
-                            <Check className="w-3 h-3" /> OK
-                          </button>
-                          <button className="flex items-center gap-1 text-[10px] font-bold text-red-400 bg-red-500/10 px-2.5 py-1 rounded-xl hover:bg-red-500/20 transition cursor-pointer">
-                            <X className="w-3 h-3" />
-                          </button>
-                        </div>
-                      )}
+                      
+                      <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                        {/* WhatsApp 2H Pre-Appointment Reminder Button */}
+                        <button
+                          onClick={() => {
+                            const clientPhone = (appt.client?.phone || '+22507000000').replace(/\D/g, '');
+                            const msg = encodeURIComponent(`Bonjour ${appt.client?.firstName || 'Chère Cliente'}, votre rendez-vous chez Institut Beauté Kènè pour "${appt.service?.name}" est prévu à ${format(apptDate, 'HH:mm')}. Merci de répondre OUI pour me confirmer votre présence ! 🌿`);
+                            if (typeof window !== 'undefined') {
+                              window.open(`https://wa.me/${clientPhone}?text=${msg}`, '_blank');
+                              toast({ title: "📲 Rappel WhatsApp Envoyé !", description: `Message de confirmation 2h avant transmis à ${appt.client?.firstName || 'la cliente'}.` });
+                            }
+                          }}
+                          className="flex items-center gap-1 text-[10px] font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2 py-1 rounded-xl hover:bg-emerald-500/30 transition cursor-pointer shadow-sm"
+                          title="Envoyer un rappel de confirmation WhatsApp 2h avant le RDV"
+                        >
+                          <span>📲 Rappel 2H</span>
+                        </button>
+
+                        {appt.status === 'pending' && (
+                          <>
+                            <button className="flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-xl hover:bg-emerald-500/20 transition cursor-pointer">
+                              <Check className="w-3 h-3" /> OK
+                            </button>
+                            <button className="flex items-center gap-1 text-[10px] font-bold text-red-400 bg-red-500/10 px-2 py-1 rounded-xl hover:bg-red-500/20 transition cursor-pointer">
+                              <X className="w-3 h-3" />
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </motion.div>
                 )
