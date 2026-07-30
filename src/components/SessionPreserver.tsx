@@ -2,6 +2,11 @@
 
 import { useEffect } from 'react';
 
+/**
+ * Kènè OS — SessionPreserver
+ * Silently preserves session cookies & local storage state across PWA & mobile tabs.
+ * Never performs forced redirects to /login.
+ */
 export function SessionPreserver() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -9,25 +14,26 @@ export function SessionPreserver() {
     const preserveSession = () => {
       try {
         const savedUser = localStorage.getItem('kene_user');
-        if (!savedUser) return;
-
-        const user = JSON.parse(savedUser);
-        const role = user.role || 'client';
 
         // Check if kene-session cookie exists
         const hasSessionCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
 
-        if (!hasSessionCookie) {
-          const sessionVal = `${role}-${Date.now()}`;
-          // Set persistent 1-year cookie for mobile devices & PWAs
-          document.cookie = `kene-session=${sessionVal}; path=/; max-age=31536000; SameSite=Lax`;
-          
-          // Silently refresh server HttpOnly cookie
-          fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ role: user.role, email: user.email || user.phone })
-          }).catch(() => {});
+        if (!hasSessionCookie && savedUser) {
+          try {
+            const user = JSON.parse(savedUser);
+            const role = user.role || 'client';
+            const sessionVal = `${role}-${Date.now()}`;
+
+            // Set client cookie
+            document.cookie = `kene-session=${sessionVal}; path=/; max-age=31536000; SameSite=Lax`;
+
+            // Silently sync with server session API
+            fetch('/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ role: user.role, email: user.email || user.phone || 'user' }),
+            }).catch(() => {});
+          } catch (e) {}
         }
       } catch (e) {
         console.warn('[KÈNÈ SESSION PRESERVER] Error preserving session:', e);
@@ -44,29 +50,15 @@ export function SessionPreserver() {
       }
     };
 
-    const handlePageShow = (e: PageTransitionEvent) => {
-      if (e.persisted) {
-        const savedUser = localStorage.getItem('kene_user');
-        const hasSessionCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
-        if (!savedUser || !hasSessionCookie) {
-          window.location.replace('/login');
-        } else {
-          preserveSession();
-        }
-      }
-    };
-
     window.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', preserveSession);
-    window.addEventListener('pageshow', handlePageShow);
 
-    // 3. Periodic heartbeat check every 10 seconds
-    const interval = setInterval(preserveSession, 10000);
+    // 3. Periodic heartbeat check every 30 seconds
+    const interval = setInterval(preserveSession, 30000);
 
     return () => {
       window.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', preserveSession);
-      window.removeEventListener('pageshow', handlePageShow);
       clearInterval(interval);
     };
   }, []);
