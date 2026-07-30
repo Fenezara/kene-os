@@ -35,7 +35,7 @@ export function Canvas3DScene({ color = '#C8951E', speed = 0.005 }: Canvas3DScen
       roughness: 0.1,
       wireframe: false,
       emissive: new THREE.Color('#8A3B14'),
-      emissiveIntensity: 0.2,
+      emissiveIntensity: 0.25,
     });
     const crystalMesh = new THREE.Mesh(geometry, material);
     scene.add(crystalMesh);
@@ -46,22 +46,20 @@ export function Canvas3DScene({ color = '#C8951E', speed = 0.005 }: Canvas3DScen
       color: new THREE.Color('#C8951E'),
       wireframe: true,
       transparent: true,
-      opacity: 0.25,
+      opacity: 0.3,
     });
     const outerOrb = new THREE.Mesh(outerGeo, outerMat);
     scene.add(outerOrb);
 
     // 2. Gold Particle Constellation / Dust
-    const particleCount = 400;
+    const particleCount = 450;
     const particleGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
-    const scales = new Float32Array(particleCount);
 
     for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 15;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 15;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 15;
-      scales[i] = Math.random() * 0.05 + 0.01;
+      positions[i * 3] = (Math.random() - 0.5) * 16;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 16;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 16;
     }
 
     particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -70,34 +68,58 @@ export function Canvas3DScene({ color = '#C8951E', speed = 0.005 }: Canvas3DScen
       color: new THREE.Color('#F3E5AB'),
       size: 0.05,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.75,
     });
 
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
 
     // 3. Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0xffd700, 3, 50);
+    const pointLight = new THREE.PointLight(0xffd700, 3.5, 50);
     pointLight.position.set(5, 5, 5);
     scene.add(pointLight);
 
-    const pointLight2 = new THREE.PointLight(0x2e5a36, 2, 50);
+    const pointLight2 = new THREE.PointLight(0x2e5a36, 2.5, 50);
     pointLight2.position.set(-5, -5, 5);
     scene.add(pointLight2);
 
-    // Mouse Interaction
+    // 🌟 INTERACTIVE FINGER & MOUSE DRAG ROTATION FOR 3D GEM
+    let isDragging = false;
+    let previousPointerPosition = { x: 0, y: 0 };
     let mouseX = 0;
     let mouseY = 0;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    const onPointerDown = (e: PointerEvent) => {
+      isDragging = true;
+      previousPointerPosition = { x: e.clientX, y: e.clientY };
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    const onPointerMove = (e: PointerEvent) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+
+      if (!isDragging) return;
+
+      const deltaX = e.clientX - previousPointerPosition.x;
+      const deltaY = e.clientY - previousPointerPosition.y;
+
+      crystalMesh.rotation.y += deltaX * 0.01;
+      crystalMesh.rotation.x += deltaY * 0.01;
+      outerOrb.rotation.y -= deltaX * 0.008;
+
+      previousPointerPosition = { x: e.clientX, y: e.clientY };
+    };
+
+    const onPointerUp = () => {
+      isDragging = false;
+    };
+
+    window.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
 
     // Resize Handler
     const handleResize = () => {
@@ -117,16 +139,16 @@ export function Canvas3DScene({ color = '#C8951E', speed = 0.005 }: Canvas3DScen
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      // Rotate 3D Crystal
-      crystalMesh.rotation.x += speed * 1.5;
-      crystalMesh.rotation.y += speed * 2;
-
-      outerOrb.rotation.x -= speed * 0.8;
-      outerOrb.rotation.y -= speed * 1.2;
+      if (!isDragging) {
+        crystalMesh.rotation.x += speed * 1.5;
+        crystalMesh.rotation.y += speed * 2;
+        outerOrb.rotation.x -= speed * 0.8;
+        outerOrb.rotation.y -= speed * 1.2;
+      }
 
       particles.rotation.y += speed * 0.5;
 
-      // Smooth Mouse Reactivity
+      // Smooth Camera Reactivity
       camera.position.x += (mouseX * 0.8 - camera.position.x) * 0.05;
       camera.position.y += (-mouseY * 0.8 - camera.position.y) * 0.05;
       camera.lookAt(scene.position);
@@ -138,7 +160,9 @@ export function Canvas3DScene({ color = '#C8951E', speed = 0.005 }: Canvas3DScen
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('resize', handleResize);
       if (mountRef.current && renderer.domElement) {
         mountRef.current.removeChild(renderer.domElement);
@@ -153,5 +177,5 @@ export function Canvas3DScene({ color = '#C8951E', speed = 0.005 }: Canvas3DScen
     };
   }, [color, speed]);
 
-  return <div ref={mountRef} className="w-full h-full absolute inset-0 pointer-events-none z-0" />;
+  return <div ref={mountRef} className="w-full h-full absolute inset-0 pointer-events-auto cursor-grab active:cursor-grabbing z-0" />;
 }
