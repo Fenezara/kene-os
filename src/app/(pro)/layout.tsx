@@ -254,7 +254,7 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
         {/* Top Navigation Header (FIXED STICKY TOP) with Universal Back Button, Company Name Badge, Logged-in User Badge & Role Switcher */}
         <div className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-white/10 bg-[#110D09]/90 backdrop-blur-xl sticky top-0 z-30">
           <div className="flex items-center gap-3">
-            <BackButton fallbackUrl="/dashboard" />
+            {pathname !== '/dashboard' && <BackButton fallbackUrl="/dashboard" />}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/30 text-white text-xs font-bold font-display shadow-sm">
               <Building2 className="w-4 h-4 text-[#C8951E]" />
               <span className="text-white/70 font-sans font-normal text-[11px]">Entreprise :</span>
