@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { WelcomeScreen } from '@/components/experience/WelcomeScreen';
+import { ExperienceOrchestrator } from '@/components/experience/ExperienceOrchestrator';
 
 export default function Home() {
   const router = useRouter();
@@ -41,6 +41,6 @@ export default function Home() {
     );
   }
 
-  // Render Universal Welcome Screen for New Visitors (Option B)
-  return <WelcomeScreen />;
+  // Render Full 3D Brand & Onboarding Experience Flow (Splash -> Onboarding -> Gateway)
+  return <ExperienceOrchestrator />;
 }

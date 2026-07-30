@@ -9,7 +9,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SankofaIcon, GyeNyameIcon } from '@/components/ui/adinkra-icons';
 
-export function WelcomeScreen() {
+interface WelcomeScreenProps {
+  onReplayIntro?: () => void;
+}
+
+export function WelcomeScreen({ onReplayIntro }: WelcomeScreenProps) {
   const [hoveredCard, setHoveredCard] = useState<'client' | 'salon' | null>(null);
 
   return (
@@ -29,8 +33,18 @@ export function WelcomeScreen() {
       <header className="relative z-20 max-w-7xl w-full mx-auto flex items-center justify-between py-2">
         <KeneLogo href="/" subtitle="AFRICA" size="md" />
 
-        {/* Region & Language Selector + Login */}
+        {/* Region & Language Selector + Replay Intro + Login */}
         <div className="flex items-center gap-2 sm:gap-4">
+          {onReplayIntro && (
+            <button
+              onClick={onReplayIntro}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-[#C8951E]/20 hover:border-[#C8951E] text-[11px] text-[#F3E5AB] font-mono transition cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#C8951E]" />
+              <span>Revoir l'Intro 3D</span>
+            </button>
+          )}
+
           <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] text-white/70 font-mono">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>Abidjan 🇨🇮 · Dakar 🇸🇳 · Bamako 🇲🇱</span>
