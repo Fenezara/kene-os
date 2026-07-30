@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, ShieldCheck, LogIn, ScanFace, ShoppingCart, Calendar, Sprout, Building2, ChevronRight, Zap, Star, Play, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, ArrowRight, ShieldCheck, LogIn, ScanFace, ShoppingCart, Calendar, Sprout, Building2, ChevronRight, Zap, Star, Play, CheckCircle2, Eye, Sliders } from 'lucide-react';
 import Link from 'next/link';
 import { KeneLogo } from '@/components/ui/logo';
 import { Button } from '@/components/ui/button';
@@ -14,9 +14,55 @@ interface WelcomeScreenProps {
   onReplayIntro?: () => void;
 }
 
+const SHOWCASE_MODES = [
+  {
+    id: 'dermo',
+    label: 'Analyse Dermo-IA 3D',
+    icon: ScanFace,
+    badge: 'XP-3D IMMERSIVE · DERMO IA',
+    color: '#C8951E',
+    image: '/images/afro_skin_spectral_scanner_1784941604401.jpg',
+    title: 'Scanner Cutané Spectrale Phototype IV-VI',
+    desc: 'Analyse en temps réel de l\'hydratation, du sébum et des hyperpigmentations pour peaux mélanodermes.',
+    tag: 'Précision IA 99.4%',
+  },
+  {
+    id: 'botanical',
+    label: 'Laboratoire Botanique 3D',
+    icon: Sprout,
+    badge: 'XP-3D IMMERSIVE · BOTANIQUE',
+    color: '#8A3B14',
+    image: '/images/botanical_ingredients_flatlay_1784941588610.jpg',
+    title: 'Formulation Sur-Mesure Karité & Baobab',
+    desc: 'Assemblage moléculaire d\'ingrédients naturels d\'Afrique de l\'Ouest pour ordonnance beauté.',
+    tag: '100% Naturel & Bio',
+  },
+  {
+    id: 'pos',
+    label: 'Caisse Tactile POS 3D',
+    icon: ShoppingCart,
+    badge: 'XP-3D IMMERSIVE · CAISSE UEMOA',
+    color: '#2E5A36',
+    image: '/images/african_spa_ritual_hero_1784941628398.jpg',
+    title: 'Encaissement Wave & Orange Money',
+    desc: 'Gestion des ventes cabine, impression du ticket Z et synchronisation comptable SYSCOHADA.',
+    tag: 'Conforme UEMOA',
+  },
+];
+
 export function WelcomeScreen({ onReplayIntro }: WelcomeScreenProps) {
   const [activeTab, setActiveTab] = useState<'all' | 'client' | 'salon'>('all');
-  const [hoveredCard, setHoveredCard] = useState<'client' | 'salon' | null>(null);
+  const [showcaseMode, setShowcaseMode] = useState<'dermo' | 'botanical' | 'pos'>('dermo');
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const currentMode = SHOWCASE_MODES.find(m => m.id === showcaseMode) || SHOWCASE_MODES[0];
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMousePos({ x, y });
+  };
 
   return (
     <div className="min-h-screen bg-[#070402] text-[#F8F1E4] selection:bg-[#C8951E] selection:text-[#0F0A05] relative overflow-hidden font-sans flex flex-col justify-between p-4 sm:p-8">
@@ -65,7 +111,7 @@ export function WelcomeScreen({ onReplayIntro }: WelcomeScreenProps) {
       </header>
 
       {/* MAIN CONTENT AREA */}
-      <main className="relative z-20 max-w-6xl w-full mx-auto py-6 sm:py-10 space-y-8 sm:space-y-10 my-auto">
+      <main className="relative z-20 max-w-6xl w-full mx-auto py-6 sm:py-10 space-y-10 my-auto">
         
         {/* Title Block */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">
@@ -98,190 +144,235 @@ export function WelcomeScreen({ onReplayIntro }: WelcomeScreenProps) {
           >
             Accédez directement à l'espace dédié à vos besoins.
           </motion.p>
+        </div>
 
-          {/* Quick Category Filter Pills */}
-          <div className="flex items-center justify-center gap-2 pt-2">
-            <button
-              onClick={() => setActiveTab('all')}
-              className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold transition cursor-pointer border ${
-                activeTab === 'all'
-                  ? 'bg-[#C8951E] text-black border-[#C8951E] shadow-md'
-                  : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/10'
-              }`}
-            >
-              Tous les Espaces
-            </button>
-            <button
-              onClick={() => setActiveTab('client')}
-              className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold transition cursor-pointer border ${
-                activeTab === 'client'
-                  ? 'bg-[#C8951E] text-black border-[#C8951E] shadow-md'
-                  : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/10'
-              }`}
-            >
-              🌸 Espace Cliente (Particulier)
-            </button>
-            <button
-              onClick={() => setActiveTab('salon')}
-              className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold transition cursor-pointer border ${
-                activeTab === 'salon'
-                  ? 'bg-emerald-500 text-black border-emerald-500 shadow-md'
-                  : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/10'
-              }`}
-            >
-              🏬 Espace Salon (Professionnel)
-            </button>
+        {/* 🌟 PROMINENT XP-3D IMMERSIVE SHOWCASE STAGE */}
+        <div 
+          onMouseMove={handleMouseMove}
+          className="relative max-w-4xl mx-auto rounded-3xl p-6 sm:p-8 border-2 border-[#C8951E]/40 bg-gradient-to-b from-[#1A1410]/95 via-[#0F0A05]/90 to-[#070402] backdrop-blur-2xl shadow-2xl shadow-[#C8951E]/20 overflow-hidden"
+          style={{ perspective: '1000px' }}
+        >
+          {/* Top Mode Selector Tabs */}
+          <div className="flex items-center justify-between gap-2 pb-6 border-b border-white/10 flex-wrap">
+            <div className="flex items-center gap-2 font-mono text-xs font-bold text-[#F3E5AB]">
+              <Sparkles className="w-4 h-4 text-[#C8951E] animate-spin" />
+              <span>DÉMONSTRATION 3D INTERACTIVE</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {SHOWCASE_MODES.map((mode) => {
+                const Icon = mode.icon;
+                const isSelected = showcaseMode === mode.id;
+                return (
+                  <button
+                    key={mode.id}
+                    onClick={() => setShowcaseMode(mode.id as any)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono transition cursor-pointer border ${
+                      isSelected
+                        ? 'bg-[#C8951E] text-black border-[#C8951E] font-bold shadow-md'
+                        : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/10'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{mode.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Interactive 3D Card Content */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center pt-6">
+            
+            {/* Left Info */}
+            <div className="md:col-span-7 space-y-4">
+              <Badge className="bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 font-mono text-[10px] font-bold px-3 py-1">
+                {currentMode.tag}
+              </Badge>
+
+              <h2 className="text-xl sm:text-3xl font-display font-black text-white leading-tight">
+                {currentMode.title}
+              </h2>
+
+              <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-sans">
+                {currentMode.desc}
+              </p>
+
+              <div className="pt-2 flex items-center gap-3">
+                <Link href={showcaseMode === 'pos' ? '/dashboard' : '/portal'}>
+                  <Button className="bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#C8951E] text-black font-black text-xs rounded-xl h-9 px-4 shadow-md hover:scale-105 transition cursor-pointer flex items-center gap-2">
+                    <span>Tester le Module</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right 3D Tilt Frame with XP-3D IMMERSIVE BADGE */}
+            <div className="md:col-span-5 flex justify-center">
+              <div 
+                className="relative w-full max-w-xs aspect-[4/3] rounded-2xl overflow-hidden border border-white/20 bg-black/60 shadow-2xl transition-transform duration-200 group"
+                style={{
+                  transform: `rotateY(${mousePos.x * 16}deg) rotateX(${mousePos.y * -16}deg) translateZ(20px)`,
+                  transformStyle: 'preserve-3d',
+                }}
+              >
+                <img 
+                  src={currentMode.image} 
+                  alt={currentMode.title} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+
+                {/* 🌟 GLOWING XP-3D IMMERSIVE BADGE */}
+                <div className="absolute bottom-3 left-3 right-3 p-2.5 rounded-xl bg-black/80 border border-[#C8951E]/50 backdrop-blur-md flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-[#F3E5AB]">
+                    <span className="w-2 h-2 rounded-full bg-[#C8951E] animate-ping" />
+                    <span>XP-3D IMMERSIVE</span>
+                  </div>
+                  <span className="text-[9px] font-mono text-white/60">60 FPS</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        {/* DUAL PERSONA GATEWAY CARDS WITH 3D GLASS EFFECT */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
+        {/* DUAL PERSONA GATEWAY CARDS */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto pt-4">
           
           {/* CARD 1: CLIENTE */}
-          {(activeTab === 'all' || activeTab === 'client') && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              onMouseEnter={() => setHoveredCard('client')}
-              onMouseLeave={() => setHoveredCard(null)}
-              className="h-full"
-            >
-              <Link href="/portal">
-                <div className="group relative rounded-3xl p-6 sm:p-8 border border-white/15 bg-gradient-to-b from-white/10 via-[#1A1410]/90 to-[#0A0603] backdrop-blur-xl hover:border-[#C8951E] transition-all duration-500 cursor-pointer shadow-2xl h-full flex flex-col justify-between overflow-hidden">
-                  
-                  {/* Background Image Ambient Glow */}
-                  <div className="absolute inset-0 opacity-25 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none">
-                    <img 
-                      src="/images/afro_beauty_hero_woman_1784684703577.jpg" 
-                      alt="Portail Cliente Kènè" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0603] via-[#1A1410]/80 to-transparent" />
-                  </div>
-
-                  <div className="space-y-6 relative z-10">
-                    <div className="flex items-center justify-between">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#F3E5AB]/20 to-[#C8951E]/30 border border-[#C8951E]/50 flex items-center justify-center text-3xl shadow-lg group-hover:scale-110 transition-transform">
-                        🌸
-                      </div>
-                      <Badge className="bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 font-mono text-[10px] font-bold px-3 py-1 shadow-md">
-                        PORTAIL CLIENTE
-                      </Badge>
-                    </div>
-
-                    <div className="space-y-2">
-                      <h3 className="font-display font-black text-2xl sm:text-3xl text-white group-hover:text-[#F3E5AB] transition-colors">
-                        Espace Particulier & Soins
-                      </h3>
-                      <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-sans">
-                        Bilan dermo-IA de votre peau mélanoderme, suivi des rituels botaniques sur-mesure et prise de rendez-vous en 1 clic dans votre salon.
-                      </p>
-                    </div>
-
-                    {/* Features Badges */}
-                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] font-semibold text-white/90">
-                      <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
-                        <ScanFace className="w-4 h-4 text-[#C8951E]" /> Diagnostic Dermo-IA
-                      </div>
-                      <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
-                        <Calendar className="w-4 h-4 text-[#C8951E]" /> Réservation Express
-                      </div>
-                      <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
-                        <Sprout className="w-4 h-4 text-[#C8951E]" /> Ordonnance Botanique
-                      </div>
-                      <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
-                        <Star className="w-4 h-4 text-[#C8951E]" /> Wallet & Privilèges
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between text-xs font-bold text-[#F3E5AB] group-hover:text-white transition-colors relative z-10">
-                    <span className="flex items-center gap-1.5">
-                      Accéder à mon Espace Beauté <ChevronRight className="w-4 h-4 text-[#C8951E]" />
-                    </span>
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#C8951E] text-black font-bold flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                      <ArrowRight className="w-5 h-5 text-black" />
-                    </div>
-                  </div>
-
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Link href="/portal">
+              <div className="group relative rounded-3xl p-6 sm:p-8 border border-white/15 bg-gradient-to-b from-white/10 via-[#1A1410]/90 to-[#0A0603] backdrop-blur-xl hover:border-[#C8951E] transition-all duration-500 cursor-pointer shadow-2xl h-full flex flex-col justify-between overflow-hidden">
+                
+                <div className="absolute inset-0 opacity-25 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none">
+                  <img 
+                    src="/images/afro_beauty_hero_woman_1784684703577.jpg" 
+                    alt="Portail Cliente Kènè" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0603] via-[#1A1410]/80 to-transparent" />
                 </div>
-              </Link>
-            </motion.div>
-          )}
+
+                <div className="space-y-6 relative z-10">
+                  <div className="flex items-center justify-between">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#F3E5AB]/20 to-[#C8951E]/30 border border-[#C8951E]/50 flex items-center justify-center text-3xl shadow-lg group-hover:scale-110 transition-transform">
+                      🌸
+                    </div>
+                    <Badge className="bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 font-mono text-[10px] font-bold px-3 py-1 shadow-md">
+                      PORTAIL CLIENTE
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-display font-black text-2xl sm:text-3xl text-white group-hover:text-[#F3E5AB] transition-colors">
+                      Espace Particulier & Soins
+                    </h3>
+                    <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-sans">
+                      Bilan dermo-IA de votre peau mélanoderme, suivi des rituels botaniques sur-mesure et prise de rendez-vous en 1 clic dans votre salon.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] font-semibold text-white/90">
+                    <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
+                      <ScanFace className="w-4 h-4 text-[#C8951E]" /> Diagnostic Dermo-IA
+                    </div>
+                    <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
+                      <Calendar className="w-4 h-4 text-[#C8951E]" /> Réservation Express
+                    </div>
+                    <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
+                      <Sprout className="w-4 h-4 text-[#C8951E]" /> Ordonnance Botanique
+                    </div>
+                    <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
+                      <Star className="w-4 h-4 text-[#C8951E]" /> Wallet & Privilèges
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between text-xs font-bold text-[#F3E5AB] group-hover:text-white transition-colors relative z-10">
+                  <span className="flex items-center gap-1.5">
+                    Accéder à mon Espace Beauté <ChevronRight className="w-4 h-4 text-[#C8951E]" />
+                  </span>
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#C8951E] text-black font-bold flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <ArrowRight className="w-5 h-5 text-black" />
+                  </div>
+                </div>
+
+              </div>
+            </Link>
+          </motion.div>
 
           {/* CARD 2: SALON / INSTITUT PRO */}
-          {(activeTab === 'all' || activeTab === 'salon') && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.25 }}
-              onMouseEnter={() => setHoveredCard('salon')}
-              onMouseLeave={() => setHoveredCard(null)}
-              className="h-full"
-            >
-              <Link href="/dashboard">
-                <div className="group relative rounded-3xl p-6 sm:p-8 border border-white/15 bg-gradient-to-b from-white/10 via-[#0A1A10]/90 to-[#0A0603] backdrop-blur-xl hover:border-emerald-500 transition-all duration-500 cursor-pointer shadow-2xl h-full flex flex-col justify-between overflow-hidden">
-                  
-                  {/* Background Image Ambient Glow */}
-                  <div className="absolute inset-0 opacity-25 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none">
-                    <img 
-                      src="/images/african_spa_ritual_hero_1784941628398.jpg" 
-                      alt="Portail Salon Pro Kènè" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0603] via-[#0A1A10]/80 to-transparent" />
-                  </div>
-
-                  <div className="space-y-6 relative z-10">
-                    <div className="flex items-center justify-between">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-700/30 border border-emerald-500/50 flex items-center justify-center text-3xl shadow-lg group-hover:scale-110 transition-transform">
-                        🏬
-                      </div>
-                      <Badge className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-[10px] font-bold px-3 py-1 shadow-md">
-                        PORTAIL PROFESSIONNEL
-                      </Badge>
-                    </div>
-
-                    <div className="space-y-2">
-                      <h3 className="font-display font-black text-2xl sm:text-3xl text-white group-hover:text-emerald-300 transition-colors">
-                        Espace Salon & Institut Pro
-                      </h3>
-                      <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-sans">
-                        Caisse tactile Wave & Orange Money, gestion d'agenda, bulletins de paie CNPS et comptabilité SYSCOHADA clé en main.
-                      </p>
-                    </div>
-
-                    {/* Features Badges */}
-                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] font-semibold text-white/90">
-                      <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
-                        <ShoppingCart className="w-4 h-4 text-emerald-400" /> Caisse POS Wave/OM
-                      </div>
-                      <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
-                        <Building2 className="w-4 h-4 text-emerald-400" /> Clôture Z & Rapport
-                      </div>
-                      <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
-                        <Zap className="w-4 h-4 text-emerald-400" /> Paie CNPS & Compta
-                      </div>
-                      <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
-                        <ScanFace className="w-4 h-4 text-emerald-400" /> Scanner Cabine IA
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between text-xs font-bold text-emerald-400 group-hover:text-white transition-colors relative z-10">
-                    <span className="flex items-center gap-1.5">
-                      Accéder au Back-Office Salon <ChevronRight className="w-4 h-4 text-emerald-400" />
-                    </span>
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-bold flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                      <ArrowRight className="w-5 h-5 text-black" />
-                    </div>
-                  </div>
-
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.25 }}
+          >
+            <Link href="/dashboard">
+              <div className="group relative rounded-3xl p-6 sm:p-8 border border-white/15 bg-gradient-to-b from-white/10 via-[#0A1A10]/90 to-[#0A0603] backdrop-blur-xl hover:border-emerald-500 transition-all duration-500 cursor-pointer shadow-2xl h-full flex flex-col justify-between overflow-hidden">
+                
+                <div className="absolute inset-0 opacity-25 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none">
+                  <img 
+                    src="/images/african_spa_ritual_hero_1784941628398.jpg" 
+                    alt="Portail Salon Pro Kènè" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0603] via-[#0A1A10]/80 to-transparent" />
                 </div>
-              </Link>
-            </motion.div>
-          )}
+
+                <div className="space-y-6 relative z-10">
+                  <div className="flex items-center justify-between">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-700/30 border border-emerald-500/50 flex items-center justify-center text-3xl shadow-lg group-hover:scale-110 transition-transform">
+                      🏬
+                    </div>
+                    <Badge className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-[10px] font-bold px-3 py-1 shadow-md">
+                      PORTAIL PROFESSIONNEL
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-display font-black text-2xl sm:text-3xl text-white group-hover:text-emerald-300 transition-colors">
+                      Espace Salon & Institut Pro
+                    </h3>
+                    <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-sans">
+                      Caisse tactile Wave & Orange Money, gestion d'agenda, bulletins de paie CNPS et comptabilité SYSCOHADA clé en main.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] font-semibold text-white/90">
+                    <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
+                      <ShoppingCart className="w-4 h-4 text-emerald-400" /> Caisse POS Wave/OM
+                    </div>
+                    <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
+                      <Building2 className="w-4 h-4 text-emerald-400" /> Clôture Z & Rapport
+                    </div>
+                    <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
+                      <Zap className="w-4 h-4 text-emerald-400" /> Paie CNPS & Compta
+                    </div>
+                    <div className="flex items-center gap-2 bg-black/60 border border-white/10 px-3 py-2 rounded-xl backdrop-blur-md">
+                      <ScanFace className="w-4 h-4 text-emerald-400" /> Scanner Cabine IA
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between text-xs font-bold text-emerald-400 group-hover:text-white transition-colors relative z-10">
+                  <span className="flex items-center gap-1.5">
+                    Accéder au Back-Office Salon <ChevronRight className="w-4 h-4 text-emerald-400" />
+                  </span>
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-bold flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <ArrowRight className="w-5 h-5 text-black" />
+                  </div>
+                </div>
+
+              </div>
+            </Link>
+          </motion.div>
 
         </div>
       </main>
