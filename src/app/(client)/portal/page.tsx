@@ -36,12 +36,12 @@ export default function ClientPortalPage() {
 
   // Logged In Client User Profile State
   const [userProfile, setUserProfile] = useState<any>({
-    firstName: 'Awa',
-    lastName: 'Koné',
-    phone: '+225 07 89 45 12 30',
-    email: 'awa.kone@example.com',
-    skinType: 'Mixte à tendance déshydratée',
-    fitzpatrickType: 'Phototype V'
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    skinType: 'Non spécifié',
+    fitzpatrickType: 'Phototype IV - VI'
   });
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
@@ -76,22 +76,20 @@ export default function ClientPortalPage() {
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
-        let rawFirstName = parsed.firstName || parsed.name || 'Awa';
-        if (rawFirstName.includes('(') || rawFirstName.match(/\d{5,}/)) {
-          rawFirstName = rawFirstName.replace(/\(.*\)/, '').replace(/\d+/g, '').replace(/Cliente/g, '').trim();
-        }
-        if (!rawFirstName) rawFirstName = 'Awa';
+        const fullName = (parsed.name || '').trim();
+        const fname = (parsed.firstName || (fullName ? fullName.split(' ')[0] : '')).replace(/\d+/g, '').replace(/Cliente/g, '').trim();
+        const lname = (parsed.lastName || (fullName ? fullName.split(' ').slice(1).join(' ') : '')).replace(/\d+/g, '').trim();
 
         setUserProfile({
-          firstName: rawFirstName,
-          lastName: (parsed.lastName || 'Koné').replace(/\d+/g, '').trim(),
-          phone: parsed.phone || '+225 07 89 45 12 30',
-          email: parsed.email || 'awa.kone@example.com',
-          skinType: parsed.skinType || 'Mixte à tendance déshydratée',
-          fitzpatrickType: parsed.fitzpatrickType || 'Phototype V'
+          firstName: fname || 'Membre',
+          lastName: lname,
+          phone: parsed.phone || '',
+          email: parsed.email || '',
+          skinType: parsed.skinType || 'Peau mélanoderme',
+          fitzpatrickType: parsed.fitzpatrickType || 'Phototype IV à VI'
         });
-        setClientContactName(rawFirstName);
-        setClientContactPhone(parsed.phone || '+225 07 89 45 12 30');
+        setClientContactName(fname || fullName || 'Cliente');
+        setClientContactPhone(parsed.phone || '');
       } catch (e) {}
     }
 

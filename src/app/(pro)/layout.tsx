@@ -122,22 +122,22 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [companyName, setCompanyName] = useState<string>('Institut Beauté Kènè')
-  const [userName, setUserName] = useState<string>('Aminata Coulibaly')
-  const [userRole, setUserRole] = useState<string>('Gérante')
+  const [companyName, setCompanyName] = useState<string>('Espace Salon Pro')
+  const [userName, setUserName] = useState<string>('Gérant(e)')
+  const [userRole, setUserRole] = useState<string>('Gérante Salon')
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedUser = localStorage.getItem('kene_user');
       const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
 
-      // If no session exists at all, auto-create a demo pro salon session for instant exploration
+      // If no session exists at all, auto-create a clean pro session
       if (!savedUser && !hasCookie) {
         const guestProUser = {
-          name: 'Institut Beauté Kènè',
-          email: 'contact@kene.africa',
+          name: 'Partenaire Salon Kènè',
+          email: '',
           role: 'gerant',
-          salonName: 'Institut Beauté Kènè',
+          salonName: 'Partenaire Salon Kènè',
         };
         localStorage.setItem('kene_user', JSON.stringify(guestProUser));
         document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
@@ -147,28 +147,38 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
       const savedAllTenants = localStorage.getItem('kene_all_tenants')
       let name = ''
 
-      if (savedTenant) {
+      if (savedUser) {
+        try {
+          const u = JSON.parse(savedUser)
+          if (u.salonName) name = u.salonName
+          else if (u.name && (u.role === 'gerant' || u.role === 'salon')) name = u.name
+
+          if (u.name && !/^[\+\d\s\-\.\(\)]+$/.test(u.name)) {
+            setUserName(u.name)
+          } else if (u.email) {
+            setUserName(u.email.split('@')[0])
+          } else if (u.phone) {
+            setUserName(`Gérant (${u.phone})`)
+          }
+
+          if (u.role) setUserRole(u.role === 'admin' ? 'Super-Admin' : u.role === 'client' ? 'Cliente' : 'Gérante Salon')
+        } catch (e) {}
+      }
+
+      if (!name && savedTenant) {
         try {
           const parsed = JSON.parse(savedTenant)
           if (parsed.identity?.commercialName) name = parsed.identity.commercialName
         } catch (e) {}
       }
-      if (savedUser) {
-        try {
-          const u = JSON.parse(savedUser)
-          if (!name && u.salonName) name = u.salonName
-          else if (!name && u.name && u.role === 'salon') name = u.name
 
-          if (u.name && !/^[\+\d\s\-\.\(\)]+$/.test(u.name)) setUserName(u.name)
-          if (u.role) setUserRole(u.role === 'admin' ? 'Super-Admin' : u.role === 'client' ? 'Cliente' : 'Gérante Salon')
-        } catch (e) {}
-      }
       if (!name && savedAllTenants) {
         try {
           const list = JSON.parse(savedAllTenants)
           if (Array.isArray(list) && list.length > 0 && list[0].name) name = list[0].name
         } catch (e) {}
       }
+
       if (name) setCompanyName(name)
     }
   }, [])
