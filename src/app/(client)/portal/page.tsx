@@ -276,7 +276,7 @@ export default function ClientPortalPage() {
     price: 15000
   };
 
-  const clientName = client?.firstName || 'Cher Client';
+  const clientName = userProfile?.firstName || 'Chère Cliente';
 
   const handleRebook = () => {
     toast({

@@ -37,8 +37,9 @@ export function BeautyPassportModal({
 }: BeautyPassportModalProps) {
   if (!isOpen) return null;
 
-  const clientName = `${userProfile.firstName || ''} ${userProfile.lastName || ''}`.trim() || userProfile.name || 'Cliente Privilège';
-  const latestDiag = diagnoses.length > 0 ? diagnoses[0] : null;
+  const profile = userProfile || { firstName: 'Cliente', lastName: 'Kènè' };
+  const clientName = `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || profile.name || 'Cliente Privilège';
+  const latestDiag = Array.isArray(diagnoses) && diagnoses.length > 0 ? diagnoses[0] : null;
 
   const handlePrint = () => {
     if (typeof window !== 'undefined') {
@@ -123,17 +124,17 @@ export function BeautyPassportModal({
               <div className="space-y-1">
                 <span className="text-[10px] font-mono text-white/50 uppercase block print:text-gray-600">Titulaire du Passeport :</span>
                 <h3 className="font-display font-black text-xl text-[#F3E5AB] print:text-black">{clientName}</h3>
-                {userProfile.phone && <p className="text-xs text-white/70 print:text-black">📱 {userProfile.phone}</p>}
-                {userProfile.email && <p className="text-xs text-white/70 print:text-black">✉️ {userProfile.email}</p>}
+                {profile.phone && <p className="text-xs text-white/70 print:text-black">📱 {profile.phone}</p>}
+                {profile.email && <p className="text-xs text-white/70 print:text-black">✉️ {profile.email}</p>}
               </div>
 
               <div className="space-y-1">
                 <span className="text-[10px] font-mono text-white/50 uppercase block print:text-gray-600">Classification Cutanée :</span>
                 <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 print:text-black">
                   <ScanFace className="w-4 h-4 text-[#C8951E]" />
-                  <span>{userProfile.fitzpatrickType || 'Phototype V (Fitzpatrick)'}</span>
+                  <span>{profile.fitzpatrickType || 'Phototype V (Fitzpatrick)'}</span>
                 </div>
-                <p className="text-xs text-white/80 print:text-black font-semibold">Diagnostique : {userProfile.skinType || 'Peau Mélanoderme'}</p>
+                <p className="text-xs text-white/80 print:text-black font-semibold">Diagnostique : {profile.skinType || 'Peau Mélanoderme'}</p>
               </div>
             </div>
 
