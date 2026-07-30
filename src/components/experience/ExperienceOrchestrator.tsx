@@ -11,7 +11,35 @@ type ExperienceStep = 'splash' | 'onboarding' | 'welcome';
 export function ExperienceOrchestrator() {
   const [step, setStep] = useState<ExperienceStep>('splash');
 
-  // Auto transition from Splash to Onboarding after 3.8 seconds (generous logo visibility)
+  // 📱 PERSISTENT SOCIAL APP PATTERN (Facebook / TikTok / Instagram style)
+  // If user is already logged in, seamlessly restore their active portal session immediately
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const forceIntro = params.get('intro') === 'true';
+      const isLoggedOut = params.get('logged_out') === 'true';
+
+      if (!forceIntro && !isLoggedOut) {
+        const savedUser = localStorage.getItem('kene_user');
+        if (savedUser) {
+          try {
+            const user = JSON.parse(savedUser);
+            const role = user.role || 'client';
+            const target = role === 'admin' ? '/admin' : role === 'gerant' || role === 'salon' ? '/dashboard' : '/portal';
+            
+            // Ensure session cookie is refreshed for 1 year
+            document.cookie = `kene-session=${role}-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
+            
+            // Instant seamless portal entry
+            window.location.replace(target);
+            return;
+          } catch (e) {}
+        }
+      }
+    }
+  }, []);
+
+  // Auto transition from Splash to Onboarding after 3.8 seconds for first-time visitors
   useEffect(() => {
     if (step === 'splash') {
       const timer = setTimeout(() => {
