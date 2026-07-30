@@ -66,6 +66,15 @@ function SidebarContent({ pathname }: { pathname: string }) {
 
         {/* Multi-Salon Branch Switcher */}
         <BranchSwitcher />
+
+        <Link
+          href="/welcome"
+          className="mt-2 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/40 hover:bg-[#C8951E]/30 text-[#F3E5AB] text-xs font-bold font-mono transition shadow-sm w-full"
+          title="Revoir la page d'accueil 3D & le Micro-Quiz"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-[#C8951E]" />
+          <span>Voir l'Accueil 3D</span>
+        </Link>
       </div>
 
       {/* Nav groups */}

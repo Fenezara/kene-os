@@ -17,7 +17,13 @@ export function ExperienceOrchestrator() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const forceIntro = params.get('intro') === 'true';
+      const forceWelcome = params.get('welcome') === 'true';
       const isLoggedOut = params.get('logged_out') === 'true';
+
+      if (forceWelcome) {
+        setStep('welcome');
+        return;
+      }
 
       if (!forceIntro && !isLoggedOut) {
         const savedUser = localStorage.getItem('kene_user');

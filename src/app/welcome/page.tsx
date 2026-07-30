@@ -1,5 +1,5 @@
-import { ExperienceOrchestrator } from "@/components/experience/ExperienceOrchestrator";
+import { WelcomeScreen } from "@/components/experience/WelcomeScreen";
 
 export default function WelcomePage() {
-  return <ExperienceOrchestrator />;
+  return <WelcomeScreen />;
 }

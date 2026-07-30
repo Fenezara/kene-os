@@ -93,6 +93,15 @@ export default function ClientLayout({
 
           {/* Right Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/welcome"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/40 hover:bg-[#C8951E]/30 text-[#F3E5AB] text-xs font-bold font-mono transition shadow-sm"
+              title="Revoir la page d'accueil 3D & le Micro-Quiz"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#C8951E]" />
+              <span className="hidden sm:inline">Accueil 3D</span>
+            </Link>
+
             <RoleSwitcher />
 
             <Link
