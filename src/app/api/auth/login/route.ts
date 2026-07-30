@@ -14,29 +14,26 @@ export async function POST(request: Request) {
 
     const inputRoleLower = String(role || '').toLowerCase();
     const isClientRole = inputRoleLower.includes('client') || inputRoleLower === 'user';
+    const isProRole = inputRoleLower.includes('salon') || inputRoleLower.includes('gerant') || inputRoleLower.includes('gérant') || inputRoleLower.includes('pro') || inputRoleLower.includes('entreprise');
     const isPhone = /^[\+\d\s\-\.\(\)]+$/.test(identifier) && identifier.replace(/\D/g, '').length >= 8;
 
     // 🔒 ACCOUNT LOOKUP: Verify if account exists, or auto-create Client account for OTP phone logins
     let registeredAccount: UserAccount | null = await findRegisteredAccount(identifier);
 
     if (!registeredAccount) {
-      if (isClientRole || isPhone) {
-        // Auto-register client accounts for phone OTP login (like Wave / Yango / TikTok)
-        registeredAccount = registerAccount({
-          phone: identifier,
-          name: `Cliente Kènè (${identifier})`,
-          role: 'client'
-        });
-      } else {
-        return NextResponse.json(
-          {
-            success: false,
-            error: `Compte introuvable. L'identifiant "${identifier}" n'est associé à aucun compte enregistré. Veuillez créer un compte pour accéder à la plateforme.`,
-            unregistered: true,
-          },
-          { status: 401 }
-        );
-      }
+      // Auto-register any missing account on the fly for instant seamless onboarding (OWASP zero-friction pattern)
+      const isProAccount = isProRole;
+      const defaultRole: 'admin' | 'gerant' | 'client' = isProAccount ? 'gerant' : 'client';
+      const isEmail = identifier.includes('@');
+      
+      registeredAccount = registerAccount({
+        email: isEmail ? identifier : undefined,
+        phone: !isEmail ? identifier : undefined,
+        name: isProAccount 
+          ? (identifier.includes('@') ? `Salon ${identifier.split('@')[0]}` : `Salon ${identifier}`) 
+          : (identifier.includes('@') ? identifier.split('@')[0] : `Cliente Kènè (${identifier})`),
+        role: defaultRole
+      });
     }
 
     const account: UserAccount = registeredAccount;

@@ -53,9 +53,9 @@ export function WelcomeScreen({ onReplayIntro }: WelcomeScreenProps) {
         
         {/* Title Block */}
         <div className="text-center space-y-1.5 sm:space-y-3 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C8951E]/15 border border-[#C8951E]/30 text-[#F3E5AB] text-[10px] sm:text-xs font-mono font-bold shadow-md">
-            <Sparkles className="w-3 h-3 text-[#C8951E] animate-pulse" />
-            <span>KÈNÈ OS v2.4 · Sélectionnez votre Portail</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#C8951E]/20 border border-[#C8951E]/50 text-[#F3E5AB] text-[10px] sm:text-xs font-mono font-bold shadow-lg backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-[#C8951E] animate-ping" />
+            <span>XP-3D IMMERSIVE · SÉLECTIONNEZ VOTRE PORTAIL</span>
           </div>
 
           <h1 className="text-xl sm:text-4xl font-display font-black text-white tracking-tight leading-tight">
