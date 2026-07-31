@@ -26,9 +26,17 @@ export default function ClientErrorPage({
         Optimisation de votre Espace Client
       </h1>
       
-      <p className="text-xs text-white/60 max-w-md mx-auto mb-6">
-        Une mise à jour rapide de l'interface est en cours. Cliquez sur le bouton ci-dessous pour recharger l'espace.
+      <p className="text-xs text-white/60 max-w-md mx-auto mb-4">
+        Une mise à jour rapide de l'interface est en cours.
       </p>
+
+      {/* Show detailed error message on screen so it can be identified immediately */}
+      {error?.message && (
+        <div className="mb-6 max-w-lg w-full bg-red-950/40 border border-red-500/40 rounded-2xl p-3 text-left font-mono text-[11px] text-red-200 overflow-x-auto">
+          <div className="font-bold text-red-400 mb-1">Détails de l'erreur :</div>
+          <p className="whitespace-pre-wrap">{error.message}</p>
+        </div>
+      )}
 
       <div className="flex items-center gap-3 flex-wrap justify-center">
         <Button

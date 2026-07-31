@@ -144,7 +144,7 @@ export default function ClientPortalPage() {
           try {
             const u = JSON.parse(savedUser);
             const sName = u.salonName || (u.role === 'gerant' ? u.name : null);
-            if (sName && !localItems.some(l => l.name.toLowerCase() === sName.toLowerCase())) {
+            if (sName && !localItems.some(l => (l?.name || '').toLowerCase() === (sName || '').toLowerCase())) {
               localItems.push({
                 id: 'local-user-salon',
                 name: sName,
@@ -160,7 +160,7 @@ export default function ClientPortalPage() {
         }
 
         localItems.forEach(item => {
-          fetchedList = [item, ...fetchedList.filter((s: any) => s.name.toLowerCase() !== item.name.toLowerCase())];
+          fetchedList = [item, ...fetchedList.filter((s: any) => (s?.name || '').toLowerCase() !== (item?.name || '').toLowerCase())];
         });
         setSalons(fetchedList);
       } catch (e) {
