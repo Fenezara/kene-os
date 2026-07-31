@@ -73,6 +73,7 @@ export const metadata: Metadata = {
 
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { SessionPreserver } from "@/components/SessionPreserver";
+import { AppSplashScreen } from "@/components/AppSplashScreen";
 
 export default function RootLayout({
   children,
@@ -86,6 +87,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <SessionPreserver />
+          <AppSplashScreen />
           {children}
           <Toaster />
         </AuthProvider>
