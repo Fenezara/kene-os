@@ -80,6 +80,12 @@ export default function ClientLayout({
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={(e) => {
+                    if (link.href === '/portal' && pathname === '/portal') {
+                      e.preventDefault();
+                      window.location.href = '/portal';
+                    }
+                  }}
                   className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs transition-all ${
                     isActive
                       ? 'bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black shadow-md border border-[#FFD700]'
