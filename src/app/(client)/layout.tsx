@@ -28,16 +28,16 @@ export default function ClientLayout({
       // If no session exists at all, auto-create a guest/demo client session for instant exploration
       if (!savedUser && !hasCookie) {
         const guestUser = {
-          firstName: 'Awa',
-          lastName: 'Koné',
-          name: 'Awa Koné',
-          phone: '+225 07 89 45 12 30',
-          email: 'awa.kone@example.com',
+          firstName: 'Cliente',
+          lastName: '',
+          name: 'Cliente Privilège',
+          phone: '',
+          email: '',
           role: 'client',
-          skinType: 'Mixte à tendance déshydratée',
-          fitzpatrickType: 'Phototype V',
-          memberSince: '2024',
-          points: 1250,
+          skinType: 'Peau Mélanoderme',
+          fitzpatrickType: 'Phototype IV - VI',
+          memberSince: '2026',
+          points: 500,
         };
         localStorage.setItem('kene_user', JSON.stringify(guestUser));
         document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
