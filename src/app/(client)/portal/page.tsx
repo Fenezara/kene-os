@@ -19,9 +19,11 @@ import { BeautyPassportModal } from '@/components/BeautyPassportModal';
 
 export default function ClientPortalPage() {
   const { toast } = useToast();
+  const [mounted, setMounted] = useState(false);
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [latestClientPhoto, setLatestClientPhoto] = useState<string | null>(null);
   const [localDiagnoses, setLocalDiagnoses] = useState<any[]>([]);
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
   const [isPassportModalOpen, setIsPassportModalOpen] = useState(false);
@@ -66,8 +68,13 @@ export default function ClientPortalPage() {
   };
 
   useEffect(() => {
+    setMounted(true);
+
     const savedAvatar = localStorage.getItem('kene_user_avatar');
     if (savedAvatar) setAvatarUrl(savedAvatar);
+
+    const photo = localStorage.getItem('kene_latest_client_photo');
+    if (photo) setLatestClientPhoto(photo);
 
     const savedDiagnoses = localStorage.getItem('kene_saved_diagnoses');
     if (savedDiagnoses) {
@@ -257,7 +264,7 @@ export default function ClientPortalPage() {
     }
   };
 
-  if (loading) {
+  if (!mounted || loading) {
     return (
       <div className="flex h-[80vh] items-center justify-center bg-[#1A1410] text-white">
         <Activity className="h-8 w-8 animate-spin text-[var(--gold-kene)]" />
@@ -670,7 +677,7 @@ export default function ClientPortalPage() {
                     formula: 'Sérum Baobab & Aloe Vera Bio',
                     status: 'Résultat Optimal ✨',
                     scoreGlobal: 82,
-                    photos: [typeof window !== 'undefined' ? localStorage.getItem('kene_latest_client_photo') : null].filter(Boolean),
+                    photos: [latestClientPhoto].filter(Boolean),
                     badgeColor: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
                   },
                   {
@@ -702,7 +709,7 @@ export default function ClientPortalPage() {
                 ])).map((item: any, idx: number) => {
                   const itemPhoto = (item.photos && item.photos.length > 0 && item.photos[0])
                     ? item.photos[0]
-                    : (typeof window !== 'undefined' ? localStorage.getItem('kene_latest_client_photo') : null) || '/images/afro_skin_spectral_scanner.jpg';
+                    : latestClientPhoto || '/images/afro_skin_spectral_scanner.jpg';
 
                   return (
                     <div
@@ -1012,7 +1019,7 @@ export default function ClientPortalPage() {
       <BeforeAfterGalleryModal
         isOpen={isGalleryModalOpen}
         onClose={() => setIsGalleryModalOpen(false)}
-        clientPhoto={typeof window !== 'undefined' ? localStorage.getItem('kene_latest_client_photo') : null}
+        clientPhoto={latestClientPhoto}
       />
 
       <BeautyPassportModal
