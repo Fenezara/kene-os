@@ -7,13 +7,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter
 } from '@/components/ui/dialog';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { useToast } from '@/hooks/use-toast';
 import { BeforeAfterGalleryModal } from '@/components/BeforeAfterGalleryModal';
 import { BeautyPassportModal } from '@/components/BeautyPassportModal';
 
@@ -258,7 +255,16 @@ export default function ClientPortalPage() {
       if (!dateVal) return '';
       const d = new Date(dateVal);
       if (isNaN(d.getTime())) return '';
-      return format(d, formatStr, { locale: fr });
+      if (formatStr === 'HH:mm') {
+        return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      }
+      if (formatStr === 'MMM') {
+        return d.toLocaleDateString('fr-FR', { month: 'short' });
+      }
+      if (formatStr === 'dd') {
+        return d.toLocaleDateString('fr-FR', { day: '2-digit' });
+      }
+      return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
     } catch (e) {
       return '';
     }
