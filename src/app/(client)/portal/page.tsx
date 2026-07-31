@@ -77,7 +77,14 @@ export default function ClientPortalPage() {
 
     const savedDiagnoses = localStorage.getItem('kene_saved_diagnoses');
     if (savedDiagnoses) {
-      try { setLocalDiagnoses(JSON.parse(savedDiagnoses)); } catch (e) {}
+      try {
+        const parsed = JSON.parse(savedDiagnoses);
+        if (Array.isArray(parsed)) {
+          setLocalDiagnoses(parsed);
+        } else if (parsed && typeof parsed === 'object') {
+          setLocalDiagnoses([parsed]);
+        }
+      } catch (e) {}
     }
 
     const savedUser = localStorage.getItem('kene_user');

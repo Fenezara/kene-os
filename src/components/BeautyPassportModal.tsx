@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Printer, Share2, X, ShieldCheck, CheckCircle2, Sprout, ScanFace, Calendar, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
