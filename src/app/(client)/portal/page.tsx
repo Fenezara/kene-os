@@ -1,5 +1,6 @@
 'use client';
 
+// Kènè OS — Client Portal Main Dashboard v2.4 (Fresh Cache Release)
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, ScanFace, ChevronRight, Wallet, Activity, ArrowRight, Camera, User, Check, Sparkles, Sprout, Clock, Store, MapPin, Phone, Mail, Send, MessageSquare, Building2, Loader2, FileText } from 'lucide-react';
