@@ -16,7 +16,10 @@ export interface UserAccount {
   registeredAt: string;
 }
 
-const STORAGE_FILE_PATH = path.join(process.cwd(), 'prisma', 'registered_users.json');
+// Environment-safe storage path (uses /tmp on Vercel serverless to avoid EROFS, workspace tmp locally)
+const STORAGE_FILE_PATH = process.env.VERCEL
+  ? '/tmp/registered_users.json'
+  : path.join(process.cwd(), 'tmp', 'registered_users.json');
 
 // Initial Registered Accounts
 const INITIAL_REGISTERED_ACCOUNTS: UserAccount[] = [

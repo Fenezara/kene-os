@@ -35,6 +35,12 @@ export function BeautyPassportModal({
   },
   diagnoses = []
 }: BeautyPassportModalProps) {
+  const [dateStr, setDateStr] = useState('');
+
+  useEffect(() => {
+    setDateStr(new Date().toLocaleDateString('fr-FR'));
+  }, []);
+
   if (!isOpen) return null;
 
   const profile = userProfile || { firstName: 'Cliente', lastName: 'Kènè' };
@@ -172,7 +178,7 @@ export function BeautyPassportModal({
               <span className="flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#C8951E]" /> Sceau d'Authenticité Kènè OS
               </span>
-              <span>Délivré le {new Date().toLocaleDateString('fr-FR')}</span>
+              <span>Délivré le {dateStr || '2026'}</span>
             </div>
 
           </div>

@@ -19,8 +19,10 @@ export default function ClientLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window !== 'undefined') {
       const savedUser = localStorage.getItem('kene_user');
       const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));

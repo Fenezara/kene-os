@@ -279,7 +279,7 @@ export default function ClientPortalPage() {
   const lastAppt = {
     serviceName: 'Soin Hydratation Karité',
     practitionerName: 'Aissata',
-    date: new Date(),
+    date: '2026-07-30',
     price: 15000
   };
 

@@ -35,12 +35,14 @@ export interface DiagnosisRecord {
   createdAt: string;
 }
 
-const STORAGE_FILE_PATH = path.join(process.cwd(), 'prisma', 'client_diagnoses.json');
+// Environment-safe storage path (uses /tmp on Vercel serverless to avoid EROFS, workspace tmp locally)
+const STORAGE_FILE_PATH = process.env.VERCEL
+  ? '/tmp/client_diagnoses.json'
+  : path.join(process.cwd(), 'tmp', 'client_diagnoses.json');
 
 /**
  * Load persisted diagnoses from disk
  */
-
 function loadDiskDiagnoses(): DiagnosisRecord[] {
   try {
     if (fs.existsSync(STORAGE_FILE_PATH)) {
