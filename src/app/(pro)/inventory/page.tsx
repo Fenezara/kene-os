@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Plus, Search, AlertTriangle, Edit2, Trash2, RefreshCw, Filter, Store, Eye, EyeOff, Sparkles, Leaf, Stethoscope, Utensils, Crown, Smartphone, Monitor, Share2, Copy, QrCode, Check, ShoppingBag, X, ArrowLeft } from 'lucide-react';
+import { Package, Plus, Search, AlertTriangle, Edit2, Trash2, RefreshCw, Filter, Store, Eye, EyeOff, Sparkles, Leaf, Stethoscope, Utensils, Crown, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -54,7 +54,6 @@ export default function ProInventoryPage() {
 
   // Facebook-Style "Voir en tant que Visiteur" Mode State
   const [isVisitorViewMode, setIsVisitorViewMode] = useState(false);
-  const [copiedLink, setCopiedLink] = useState(false);
 
   // Form states for Create & Edit
   const [formData, setFormData] = useState({ 
@@ -221,24 +220,26 @@ export default function ProInventoryPage() {
     return (
       <div className="min-h-screen bg-[#0A0603] text-white p-4 md:p-6 space-y-6 font-sans">
         {/* BANNIÈRE FACEBOOK "VOIR EN TANT QUE VISITEUR" */}
-        <div className="sticky top-0 z-50 bg-gradient-to-r from-[var(--gold-kene)] via-[#C8951E] to-[#8A3B14] text-black p-3.5 rounded-2xl shadow-2xl flex items-center justify-between font-display font-black text-xs">
+        <div className="sticky top-0 z-50 bg-gradient-to-r from-[#F3E5AB] via-[#C8951E] to-[#8A3B14] text-[#0F0A05] p-3.5 rounded-2xl shadow-2xl flex items-center justify-between font-display font-black text-xs">
           <div className="flex items-center gap-2">
-            <Eye className="w-5 h-5" />
-            <span>👁️ MODE FACEBOOK : VOUS CONSULTEZ VOTRE BOUTIQUE EN TANT QUE VISITEUR PUBLIC (SANS AUCUN COMPTE CLIENT)</span>
+            <Eye className="w-5 h-5 text-[#0F0A05]" />
+            <span className="text-[#0F0A05] font-black tracking-wide">
+              👁️ MODE FACEBOOK : VOUS CONSULTEZ VOTRE BOUTIQUE EN TANT QUE VISITEUR PUBLIC (SANS COMPTE CLIENT)
+            </span>
           </div>
           <button
             onClick={() => setIsVisitorViewMode(false)}
-            className="bg-black text-white hover:bg-black/90 px-4 py-1.5 rounded-xl font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-md"
+            className="bg-[#0F0A05] text-[#F3E5AB] hover:text-white hover:bg-black px-4 py-2 rounded-xl font-black text-xs cursor-pointer flex items-center gap-1.5 shadow-md border border-[#F3E5AB]/40 transition"
           >
-            <X className="w-4 h-4" /> Quitter le Mode Visiteur
+            <X className="w-4 h-4 text-[#F3E5AB]" /> Quitter le Mode Visiteur
           </button>
         </div>
 
-        {/* VITRINE CLIENTE RÉELLE (LECTURE SEULE - ZÉRO PORTAIL OU COMPTE CLIENT) */}
+        {/* VITRINE CLIENTE RÉELLE (LECTURE SEULE - HIGH CONTRAST) */}
         <div className="bg-[#1A1410] border border-[var(--gold-kene)]/30 rounded-3xl p-6 space-y-6 shadow-2xl">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#F3E5AB] bg-[var(--gold-kene)]/20 border border-[var(--gold-kene)]/40 px-3 py-1 rounded-full">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#F3E5AB] bg-[#C8951E]/20 border border-[#C8951E]/40 px-3 py-1 rounded-full">
                 Boutique Officielle de l'Établissement Partner
               </span>
               <h2 className="font-display font-black text-2xl text-white mt-2">
@@ -255,14 +256,16 @@ export default function ProInventoryPage() {
             </div>
           </div>
 
-          {/* FILTRES CATEGORIES & ORIGINES (CÔTÉ VISITEUR) */}
+          {/* FILTRES CATEGORIES (HIGH CONTRAST CLICKABLE STATES) */}
           <div className="flex flex-wrap gap-2">
             {['Tous', 'Visage', 'Cheveux', 'Corps', 'Soins', 'Karité'].map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                  activeCategory === cat ? 'bg-[var(--gold-kene)] text-black font-black' : 'bg-white/5 text-white/60 hover:text-white'
+                className={`px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer ${
+                  activeCategory === cat 
+                    ? 'bg-[#C8951E] text-[#0F0A05] hover:text-[#0F0A05] focus:text-[#0F0A05] shadow-lg border border-[#F3E5AB]' 
+                    : 'bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10'
                 }`}
               >
                 {cat}
@@ -295,7 +298,7 @@ export default function ProInventoryPage() {
                     </div>
                     <button
                       onClick={() => toast({ title: "🛒 Panier Client", description: "Simulation de commande client enregistrée." })}
-                      className="bg-gradient-to-r from-[#F3E5AB] to-[var(--gold-kene)] text-black text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer"
+                      className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] text-[#0F0A05] hover:text-[#0F0A05] focus:text-[#0F0A05] text-xs font-black px-3.5 py-2 rounded-xl cursor-pointer shadow-md"
                     >
                       + Ajouter
                     </button>
@@ -347,12 +350,12 @@ export default function ProInventoryPage() {
             <span>Boutique: {isBoutiqueActive ? 'Active' : 'Désactivée'}</span>
           </button>
 
-          {/* BOUTON SEUL & UNIQUE DE CONSULTATION FACEBOOK MODE : "VOIR EN TANT QUE VISITEUR" */}
+          {/* BOUTON SEUL & UNIQUE DE CONSULTATION FACEBOOK MODE (ULTRA HIGH CONTRAST) */}
           <Button
             onClick={() => setIsVisitorViewMode(true)}
-            className="bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black text-xs font-black rounded-2xl px-4 flex items-center gap-1.5 shadow-md cursor-pointer hover:opacity-90"
+            className="bg-gradient-to-r from-[#F3E5AB] via-[#C8951E] to-[#D4AF37] text-[#0F0A05] hover:text-[#0F0A05] focus:text-[#0F0A05] active:text-[#0F0A05] text-xs font-black rounded-2xl px-4 py-2.5 flex items-center gap-1.5 shadow-md cursor-pointer hover:opacity-95"
           >
-            <Eye className="w-4 h-4" /> Voir en tant que Visiteur (Mode FB) 👁️
+            <Eye className="w-4 h-4 text-[#0F0A05]" /> Voir en tant que Visiteur (Mode FB) 👁️
           </Button>
 
           {/* Modal NOUVEAU PRODUIT */}
@@ -360,10 +363,10 @@ export default function ProInventoryPage() {
             <DialogTrigger asChild>
               <motion.button
                 whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-2xl font-bold text-xs text-[#0F0A05] cursor-pointer shadow-lg"
+                className="flex items-center gap-2 px-4 py-2 rounded-2xl font-black text-xs text-[#0F0A05] hover:text-[#0F0A05] focus:text-[#0F0A05] active:text-[#0F0A05] cursor-pointer shadow-lg"
                 style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)' }}
               >
-                <Plus className="w-4 h-4" /> Nouveau Produit
+                <Plus className="w-4 h-4 text-[#0F0A05]" /> Nouveau Produit
               </motion.button>
             </DialogTrigger>
             <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl shadow-2xl">
@@ -443,7 +446,7 @@ export default function ProInventoryPage() {
                 </div>
                 <DialogFooter className="flex gap-2">
                   <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)} className="text-white/50 rounded-xl">Annuler</Button>
-                  <Button type="submit" className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] text-[#0F0A05] font-bold rounded-xl h-11">
+                  <Button type="submit" className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] text-[#0F0A05] hover:text-[#0F0A05] focus:text-[#0F0A05] font-black rounded-xl h-11">
                     Ajouter au Catalogue & Stock
                   </Button>
                 </DialogFooter>
@@ -528,7 +531,7 @@ export default function ProInventoryPage() {
             </div>
             <DialogFooter className="flex gap-2">
               <Button type="button" variant="ghost" onClick={() => setIsEditDialogOpen(false)} className="text-white/50 rounded-xl">Annuler</Button>
-              <Button type="submit" className="bg-[#C8951E] text-[#0F0A05] font-bold rounded-xl h-11">
+              <Button type="submit" className="bg-[#C8951E] text-[#0F0A05] hover:text-[#0F0A05] focus:text-[#0F0A05] font-black rounded-xl h-11">
                 Enregistrer la Modification
               </Button>
             </DialogFooter>
@@ -551,8 +554,8 @@ export default function ProInventoryPage() {
         ))}
       </motion.div>
 
-      {/* ── ORIGINES COSMÉTIQUES FILTER BAR (5 GENRES) ── */}
-      <div className="bg-[#1A1410] border border-white/10 p-3 rounded-2xl space-y-2">
+      {/* ── ORIGINES COSMÉTIQUES FILTER BAR (ULTRA HIGH CONTRAST CLICKABLE STATES) ── */}
+      <div className="bg-[#1A1410] border border-white/10 p-3.5 rounded-2xl space-y-2">
         <span className="text-[10px] font-mono text-[#F3E5AB] font-bold uppercase tracking-wider block">
           🔍 Filtrer par Genre & Origine du Produit :
         </span>
@@ -568,10 +571,10 @@ export default function ProInventoryPage() {
             <button
               key={orig.id}
               onClick={() => setActiveOrigin(orig.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-black whitespace-nowrap transition cursor-pointer ${
                 activeOrigin === orig.id
-                  ? 'bg-[var(--gold-kene)] text-black shadow-md'
-                  : 'bg-white/5 text-white/60 hover:text-white border border-white/5'
+                  ? 'bg-[#C8951E] text-[#0F0A05] hover:text-[#0F0A05] focus:text-[#0F0A05] shadow-lg border border-[#F3E5AB]'
+                  : 'bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10'
               }`}
             >
               {orig.label}
@@ -580,17 +583,17 @@ export default function ProInventoryPage() {
         </div>
       </div>
 
-      {/* ── CATEGORIES & SEARCH ── */}
+      {/* ── CATEGORIES & SEARCH (ULTRA HIGH CONTRAST CLICKABLE STATES) ── */}
       <div className="space-y-3">
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
           {['Tous', 'Visage', 'Cheveux', 'Corps', 'Soins', 'Karité'].map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap transition cursor-pointer ${
                 activeCategory === cat
-                  ? 'bg-[#C8951E] text-[#0A0603]'
-                  : 'bg-[#1A1410] border border-white/10 text-white/50 hover:text-white'
+                  ? 'bg-[#C8951E] text-[#0F0A05] hover:text-[#0F0A05] focus:text-[#0F0A05] shadow-lg border border-[#F3E5AB]'
+                  : 'bg-[#1A1410] border border-white/10 text-white/70 hover:text-white hover:bg-white/10'
               }`}
             >
               {cat === 'Tous' ? <Filter className="w-3 h-3 inline-block mr-1" /> : getCategoryMeta(cat).emoji + ' '}
