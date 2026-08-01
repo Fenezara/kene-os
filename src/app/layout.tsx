@@ -73,6 +73,7 @@ export const metadata: Metadata = {
 
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { SessionPreserver } from "@/components/SessionPreserver";
+import { OfflineIndicator } from "@/components/OfflineIndicator";
 
 export default function RootLayout({
   children,
@@ -84,6 +85,8 @@ export default function RootLayout({
       <body
         className={`${ojuju.variable} ${plusJakartaSans.variable} ${cinzel.variable} ${jetbrainsMono.variable} antialiased bg-[#0F0A05] text-[#F8F1E4]`}
       >
+        <OfflineIndicator />
+
         {/* Instant HTML/CSS/JS Splash Screen Overlay (0ms Frame-0 Paint, Zero Flash) */}
         <div
           id="kene-instant-splash-screen"
@@ -121,7 +124,7 @@ export default function RootLayout({
           <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div style={{ position: 'relative', marginBottom: '24px' }}>
               <div style={{ position: 'absolute', inset: '-6px', background: 'linear-gradient(90deg, #FFD700, #C8951E, #D4AF37)', borderRadius: '28px', filter: 'blur(14px)', opacity: 0.7 }} />
-              <div style={{ position: 'relative', width: '110px', height: '110px', borderRadius: '24px', border: '2px solid #C8951E', background: '#1A1410', padding: '6px', boxShadow: '0 0 40px rgba(200,149,30,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+              <div style={{ position: 'relative', width: '110px', height: '110px', borderRadius: '24px', border: '2px solid #C8951E', background: '#1A1410', padding: '6px', boxShadow: '0 0 40px rgba(200,149,30,0.4)', display: 'flex', items: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                 <img src="/images/kene_logo.jpg" alt="Kènè OS" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }} />
               </div>
             </div>
@@ -176,20 +179,22 @@ export default function RootLayout({
           {children}
           <Toaster />
         </AuthProvider>
+
+        {/* Enregistrement du Service Worker PWA Kènè OS pour Support Hors-Ligne Pro */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                  for (let registration of registrations) {
-                    registration.unregister();
-                  }
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(
+                    function(registration) {
+                      console.log('[Kènè OS] ServiceWorker PWA actif avec succès :', registration.scope);
+                    },
+                    function(err) {
+                      console.log('[Kènè OS] Erreur enregistrement ServiceWorker :', err);
+                    }
+                  );
                 });
-                if ('caches' in window) {
-                  caches.keys().then(function(names) {
-                    for (let name of names) caches.delete(name);
-                  });
-                }
               }
             `,
           }}
