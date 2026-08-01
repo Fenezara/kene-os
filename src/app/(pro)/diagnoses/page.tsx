@@ -760,6 +760,26 @@ export default function ProDiagnosesPage() {
                 </button>
               </div>
 
+              {/* ── 3D GOLDEN OCTO-SPECTRAL MESH VISUALIZER ── */}
+              <div className="my-2">
+                <div className="flex items-center justify-between mb-1.5 px-1">
+                  <span className="text-[10px] font-mono font-bold text-[#F3E5AB] uppercase tracking-wider flex items-center gap-1.5">
+                    ✨ Cartographie Vectorielle 3D & Scanner Octo-Spectral Immersif (60 FPS)
+                  </span>
+                  <span className="text-[9px] bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 px-2 py-0.5 rounded-full font-mono font-bold">
+                    XP-3D IMMERSIVE
+                  </span>
+                </div>
+                <SpectralScanOverlay 
+                  imageSrc={viewingReport.photoUrl || capturedPhoto || '/images/afro_skin_spectral_scanner.jpg'}
+                  clientName={`${viewingReport.client?.firstName || 'Cliente'} ${viewingReport.client?.lastName || ''}`}
+                  hydrationScore={viewingReport.subScores?.hydration || 84}
+                  pihDepth="0.2mm"
+                  phototype={`Type ${viewingReport.phototype || 'V'}`}
+                  showControls={true}
+                />
+              </div>
+
               {/* Client & Phototype Card */}
               <div className="grid grid-cols-2 gap-4 bg-[#1A1410] border border-white/10 p-4 rounded-2xl">
                 <div>
