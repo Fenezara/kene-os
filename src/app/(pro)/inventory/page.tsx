@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Plus, Search, AlertTriangle, Edit2, Trash2, RefreshCw, Filter, Store, Eye, EyeOff, Sparkles, Leaf, Stethoscope, Utensils, Crown, Smartphone, Monitor, Share2, Copy, QrCode, Check, ShoppingBag, X } from 'lucide-react';
+import { Package, Plus, Search, AlertTriangle, Edit2, Trash2, RefreshCw, Filter, Store, Eye, EyeOff, Sparkles, Leaf, Stethoscope, Utensils, Crown, Smartphone, Monitor, Share2, Copy, QrCode, Check, ShoppingBag, X, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import Link from 'next/link';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter
 } from '@/components/ui/dialog';
@@ -53,9 +52,8 @@ export default function ProInventoryPage() {
   // Boutique Status per Salon
   const [isBoutiqueActive, setIsBoutiqueActive] = useState(true);
 
-  // Live Storefront Preview Modal State
-  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
-  const [previewDevice, setPreviewDevice] = useState<'mobile' | 'desktop'>('mobile');
+  // Facebook-Style "Voir en tant que Visiteur" Mode State
+  const [isVisitorViewMode, setIsVisitorViewMode] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
   // Form states for Create & Edit
@@ -205,16 +203,6 @@ export default function ProInventoryPage() {
     setIsEditDialogOpen(true);
   };
 
-  const copyBoutiqueLink = () => {
-    if (typeof window !== 'undefined') {
-      const link = `${window.location.origin}/boutique`;
-      navigator.clipboard.writeText(link);
-      setCopiedLink(true);
-      toast({ title: "🔗 Lien de la Boutique Copié !", description: "Vous pouvez partager ce lien sur WhatsApp ou Instagram." });
-      setTimeout(() => setCopiedLink(false), 2500);
-    }
-  };
-
   const filtered = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.category.toLowerCase().includes(search.toLowerCase());
     const matchesCat = activeCategory === 'Tous' || p.category === activeCategory;
@@ -228,6 +216,100 @@ export default function ProInventoryPage() {
   }, 0);
   const lowStockCount = products.filter(p => (p.inventoryItems?.reduce((s: number, i: any) => s + i.quantity, 0) || 0) <= 5).length;
 
+  // ── MODE FACEBOOK : "VOIR EN TANT QUE VISITEUR PUBLIC" ──
+  if (isVisitorViewMode) {
+    return (
+      <div className="min-h-screen bg-[#0A0603] text-white p-4 md:p-6 space-y-6 font-sans">
+        {/* BANNIÈRE FACEBOOK "VOIR EN TANT QUE VISITEUR" */}
+        <div className="sticky top-0 z-50 bg-gradient-to-r from-[var(--gold-kene)] via-[#C8951E] to-[#8A3B14] text-black p-3.5 rounded-2xl shadow-2xl flex items-center justify-between font-display font-black text-xs">
+          <div className="flex items-center gap-2">
+            <Eye className="w-5 h-5" />
+            <span>👁️ MODE FACEBOOK : VOUS CONSULTEZ VOTRE BOUTIQUE EN TANT QUE VISITEUR PUBLIC (SANS AUCUN COMPTE CLIENT)</span>
+          </div>
+          <button
+            onClick={() => setIsVisitorViewMode(false)}
+            className="bg-black text-white hover:bg-black/90 px-4 py-1.5 rounded-xl font-bold text-xs cursor-pointer flex items-center gap-1.5 shadow-md"
+          >
+            <X className="w-4 h-4" /> Quitter le Mode Visiteur
+          </button>
+        </div>
+
+        {/* VITRINE CLIENTE RÉELLE (LECTURE SEULE - ZÉRO PORTAIL OU COMPTE CLIENT) */}
+        <div className="bg-[#1A1410] border border-[var(--gold-kene)]/30 rounded-3xl p-6 space-y-6 shadow-2xl">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#F3E5AB] bg-[var(--gold-kene)]/20 border border-[var(--gold-kene)]/40 px-3 py-1 rounded-full">
+                Boutique Officielle de l'Établissement Partner
+              </span>
+              <h2 className="font-display font-black text-2xl text-white mt-2">
+                Soins Botaniques Africains & Prescriptions Dermo-Cosmétiques
+              </h2>
+              <p className="text-xs text-white/60 font-sans mt-1">
+                Commandez directement vos soins certifiés en Click & Collect 1h ou livraison sécurisée Mobile Money.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                🟢 Boutique Active en Ligne
+              </span>
+            </div>
+          </div>
+
+          {/* FILTRES CATEGORIES & ORIGINES (CÔTÉ VISITEUR) */}
+          <div className="flex flex-wrap gap-2">
+            {['Tous', 'Visage', 'Cheveux', 'Corps', 'Soins', 'Karité'].map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                  activeCategory === cat ? 'bg-[var(--gold-kene)] text-black font-black' : 'bg-white/5 text-white/60 hover:text-white'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* GRILLE PRODUITS (CÔTÉ VISITEUR - ZÉRO EDITEUR PRO) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filtered.map(product => {
+              const originMeta = getOriginMeta(product.origin);
+              return (
+                <div key={product.id} className="bg-[#0A0603] border border-white/10 rounded-3xl p-4 flex flex-col justify-between hover:border-[var(--gold-kene)]/40 transition shadow-lg">
+                  <div>
+                    <div className="h-44 w-full rounded-2xl overflow-hidden bg-black mb-3 relative">
+                      <img src={product.image || '/images/kene_botanical_lab_serum.jpg'} alt={product.name} className="w-full h-full object-cover" />
+                      <span className={`absolute top-3 right-3 text-[9px] font-bold px-2.5 py-1 rounded-full font-mono border backdrop-blur-md ${originMeta.badgeStyle}`}>
+                        {originMeta.shortLabel}
+                      </span>
+                    </div>
+                    <h4 className="font-display font-bold text-sm text-white">{product.name}</h4>
+                    <p className="text-xs text-white/50 line-clamp-2 mt-1">{product.description}</p>
+                  </div>
+                  <div className="pt-3 border-t border-white/5 flex items-center justify-between mt-3">
+                    <div>
+                      <span className="text-[10px] text-white/40 block font-mono">PRIX PUBLIC</span>
+                      <span className="font-mono font-black text-sm text-[#F3E5AB]">
+                        {product.salePrice.toLocaleString('fr-FR')} FCFA
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => toast({ title: "🛒 Panier Client", description: "Simulation de commande client enregistrée." })}
+                      className="bg-gradient-to-r from-[#F3E5AB] to-[var(--gold-kene)] text-black text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer"
+                    >
+                      + Ajouter
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── VUE DE GESTION PRO HABITUELLE ──
   return (
     <div className="space-y-6 text-[#F8F1E4] max-w-6xl mx-auto font-sans">
 
@@ -265,20 +347,13 @@ export default function ProInventoryPage() {
             <span>Boutique: {isBoutiqueActive ? 'Active' : 'Désactivée'}</span>
           </button>
 
-          {/* BOUTON APERÇU EN DIRECT SANS QUITTER L'ESPACE PRO */}
+          {/* BOUTON SEUL & UNIQUE DE CONSULTATION FACEBOOK MODE : "VOIR EN TANT QUE VISITEUR" */}
           <Button
-            onClick={() => setIsPreviewModalOpen(true)}
+            onClick={() => setIsVisitorViewMode(true)}
             className="bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black text-xs font-black rounded-2xl px-4 flex items-center gap-1.5 shadow-md cursor-pointer hover:opacity-90"
           >
-            <Eye className="w-4 h-4" /> Aperçu Vitrine en Direct 👁️
+            <Eye className="w-4 h-4" /> Voir en tant que Visiteur (Mode FB) 👁️
           </Button>
-
-          {/* LIEN DE CONSULTATION DE LA VITRINE PUBLIQUE CÔTÉ CLIENTE (SANS COMPTE CLIENT) */}
-          <a href="/boutique" target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" className="border-[#C8951E]/50 text-[#F3E5AB] hover:bg-[#C8951E]/15 text-xs font-bold rounded-2xl px-3.5 cursor-pointer">
-              🛍️ Vitrine Publique Cliente ↗
-            </Button>
-          </a>
 
           {/* Modal NOUVEAU PRODUIT */}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -377,132 +452,6 @@ export default function ProInventoryPage() {
           </Dialog>
         </div>
       </motion.div>
-
-      {/* ── MODAL APERÇU VITRINE EN DIRECT SANS QUITTER L'ESPACE PRO ── */}
-      <AnimatePresence>
-        {isPreviewModalOpen && (
-          <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-[#0F0A05] border-2 border-[var(--gold-kene)]/50 rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-hidden shadow-2xl flex flex-col select-none"
-            >
-              {/* Header Modal */}
-              <div className="p-4 bg-[#1A1410] border-b border-white/10 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[var(--gold-kene)]/20 border border-[var(--gold-kene)] flex items-center justify-center text-lg">
-                    👁️
-                  </div>
-                  <div>
-                    <h3 className="font-display font-black text-sm text-[#F3E5AB] uppercase tracking-wider">
-                      Aperçu Vitrine Clientèle en Direct
-                    </h3>
-                    <p className="text-[10px] text-white/50 font-mono">
-                      Voici exactement ce que vos clientes voient sur mobile sans entrer dans l'espace client.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {/* Selector Device */}
-                  <div className="flex bg-black/60 p-1 rounded-xl border border-white/10">
-                    <button
-                      onClick={() => setPreviewDevice('mobile')}
-                      className={`p-1.5 rounded-lg text-xs font-bold transition ${previewDevice === 'mobile' ? 'bg-[var(--gold-kene)] text-black' : 'text-white/50'}`}
-                      title="Vue Mobile"
-                    >
-                      <Smartphone className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setPreviewDevice('desktop')}
-                      className={`p-1.5 rounded-lg text-xs font-bold transition ${previewDevice === 'desktop' ? 'bg-[var(--gold-kene)] text-black' : 'text-white/50'}`}
-                      title="Vue Ordinateur"
-                    >
-                      <Monitor className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={copyBoutiqueLink}
-                    className="h-8 text-[11px] font-bold bg-white/10 hover:bg-white/20 text-[#F3E5AB] border border-[#C8951E]/40 rounded-xl px-3 flex items-center gap-1.5 cursor-pointer"
-                  >
-                    {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{copiedLink ? 'Copié !' : 'Copier Lien'}</span>
-                  </button>
-
-                  <button
-                    onClick={() => setIsPreviewModalOpen(false)}
-                    className="p-2 text-white/50 hover:text-white rounded-xl bg-white/5"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Modal Body: Device Frame Simulation */}
-              <div className="p-4 sm:p-6 overflow-y-auto flex-1 bg-[#0A0603] flex justify-center">
-                <div
-                  className={`transition-all duration-300 bg-[#1A1410] border-4 border-[#33251A] rounded-3xl overflow-hidden shadow-2xl p-4 space-y-4 ${
-                    previewDevice === 'mobile' ? 'w-full max-w-sm' : 'w-full max-w-3xl'
-                  }`}
-                >
-                  {/* Store Header inside Simulator */}
-                  <div className="bg-gradient-to-r from-[var(--gold-kene)]/20 via-[#1A1410] to-[#0A0603] p-4 rounded-2xl border border-[var(--gold-kene)]/40 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-[#F3E5AB] bg-black/60 px-2.5 py-0.5 rounded-full border border-[var(--gold-kene)]/30 font-mono">
-                        🟢 Boutique Active · Click & Collect 1h
-                      </span>
-                      <ShoppingBag className="w-4 h-4 text-[var(--gold-kene)]" />
-                    </div>
-                    <h4 className="font-display font-black text-lg text-white">
-                      Boutique Officielle du Salon
-                    </h4>
-                    <p className="text-[11px] text-white/60">
-                      Soins botaniques certifiés & prescriptions dermo-cosmétiques disponibles.
-                    </p>
-                  </div>
-
-                  {/* Simulated Products Grid */}
-                  <div className="space-y-3">
-                    <span className="text-[10px] font-mono text-[#F3E5AB] font-bold uppercase tracking-wider block">
-                      🛍️ Produits Disponibles ({products.length}) :
-                    </span>
-                    
-                    <div className={`grid gap-3 ${previewDevice === 'mobile' ? 'grid-cols-1' : 'grid-cols-2'}`}>
-                      {products.slice(0, 4).map((p) => {
-                        const originMeta = getOriginMeta(p.origin);
-                        return (
-                          <div key={p.id} className="bg-[#0A0603] p-3 rounded-2xl border border-white/10 flex gap-3 items-center">
-                            <div className="w-16 h-16 rounded-xl overflow-hidden bg-black shrink-0">
-                              <img src={p.image || '/images/kene_botanical_lab_serum.jpg'} alt={p.name} className="w-full h-full object-cover" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border font-mono ${originMeta.badgeStyle}`}>
-                                {originMeta.shortLabel}
-                              </span>
-                              <h5 className="font-display font-bold text-xs text-white truncate mt-1">{p.name}</h5>
-                              <span className="font-mono font-black text-xs text-[var(--gold-kene)] block">
-                                {p.salePrice.toLocaleString('fr-FR')} FCFA
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Simulated Share & QR Section */}
-                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-white/50">
-                    <span>📱 Lien WhatsApp Client : kene-os.vercel.app/boutique</span>
-                    <QrCode className="w-6 h-6 text-[var(--gold-kene)]" />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       {/* ── MODAL EDIT PRODUIT ── */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
