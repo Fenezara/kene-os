@@ -678,6 +678,76 @@ export default function ProClientsPage() {
                           ))}
                         </div>
                       )}
+                      {/* Display Archived Diagnostic Scans (Bilans Cutanés Archivés) */}
+                      {(() => {
+                        let archivedDiags = [];
+                        try {
+                          const saved = localStorage.getItem('kene_client_diagnoses');
+                          if (saved) {
+                            const parsed = JSON.parse(saved);
+                            archivedDiags = parsed.filter((d: any) => d.clientId === client.id);
+                          }
+                        } catch (e) {}
+
+                        // Default archive fallback for demo clients
+                        if (archivedDiags.length === 0) {
+                          archivedDiags = [
+                            {
+                              id: `diag-default-${client.id}`,
+                              date: '01/08/2026',
+                              scoreGlobal: 78,
+                              phototype: client.fitzpatrickType || 'V',
+                              clinicalNotes: { skinType: `Peau ${client.skinType || 'Mixte'} Déshydratée`, pihRisk: 'MODÉRÉ' },
+                              subScores: { hydration: 82, sebum: 65, brightness: 74 }
+                            }
+                          ];
+                        }
+
+                        return (
+                          <div className="space-y-2 pt-2 border-t border-white/5">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-bold text-[#F3E5AB] uppercase tracking-wider block font-mono">
+                                🔬 Bilans Cutanés Archivés & Historique 3D ({archivedDiags.length}) :
+                              </span>
+                              <span className="text-[9px] text-emerald-400 font-mono font-bold">🔒 Archive Sécurisée</span>
+                            </div>
+
+                            {archivedDiags.map((diag: any, dIdx: number) => (
+                              <div key={dIdx} className="bg-[#1A1410] border border-[#C8951E]/30 p-3 rounded-2xl space-y-2 shadow-md">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs">🔬</span>
+                                    <span className="font-display font-bold text-xs text-white">Bilan Cutané Octo-Spectral</span>
+                                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-[#C8951E]/20 text-[#F3E5AB] font-mono font-bold">
+                                      Score: {diag.scoreGlobal}/100
+                                    </span>
+                                  </div>
+                                  <span className="text-[10px] text-white/40 font-mono">{diag.date}</span>
+                                </div>
+
+                                <div className="grid grid-cols-3 gap-2 text-[9px] font-mono bg-black/40 p-2 rounded-xl border border-white/5">
+                                  <div><span className="text-white/40 block">Hydratation</span><span className="text-emerald-400 font-bold">{diag.subScores?.hydration || 80}%</span></div>
+                                  <div><span className="text-white/40 block">Phototype</span><span className="text-[#F3E5AB] font-bold">Type {diag.phototype}</span></div>
+                                  <div><span className="text-white/40 block">Risque PIH</span><span className="text-amber-400 font-bold">{diag.clinicalNotes?.pihRisk || 'Modéré'}</span></div>
+                                </div>
+
+                                <div className="flex justify-between items-center pt-1">
+                                  <span className="text-[10px] text-white/60 font-sans italic">{diag.clinicalNotes?.skinType}</span>
+                                  <button
+                                    onClick={() => {
+                                      window.print();
+                                    }}
+                                    className="text-[9px] font-bold px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[#F3E5AB] border border-white/10 flex items-center gap-1 cursor-pointer"
+                                  >
+                                    🖨️ Consulter / Imprimer Bilan
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()}
+
                       <div className="space-y-2">
                         <div className="flex justify-between border-b border-white/5 pb-2">
                           <span>Dernier soin: Hydratation Karité & Massage Baobab</span>

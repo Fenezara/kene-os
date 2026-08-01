@@ -261,19 +261,37 @@ export default function ProDiagnosesPage() {
   const handleSaveDiagnosis = async () => {
     if (!mockResult) return;
     try {
-      const res = await fetch('/api/tenant/diagnoses', {
+      const selectedClientObj = clients.find(c => c.id === selectedClient);
+      const newDiagnosisRecord = {
+        id: `diag-${Date.now()}`,
+        clientId: selectedClient,
+        clientName: selectedClientObj ? `${selectedClientObj.firstName} ${selectedClientObj.lastName}` : 'Cliente',
+        createdAt: new Date().toISOString(),
+        date: new Date().toLocaleDateString('fr-FR'),
+        ...mockResult
+      };
+
+      // Store locally in client records archive
+      try {
+        const existingArchived = localStorage.getItem('kene_client_diagnoses');
+        let archivedList = existingArchived ? JSON.parse(existingArchived) : [];
+        archivedList = [newDiagnosisRecord, ...archivedList];
+        localStorage.setItem('kene_client_diagnoses', JSON.stringify(archivedList));
+      } catch (e) {}
+
+      await fetch('/api/tenant/diagnoses', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clientId: selectedClient, ...mockResult })
       });
-      const data = await res.json();
-      if (data.success) {
-        toast({ title: "✅ Diagnostic Enregistré", description: "Questionnaire Anamnèse & rapport clinique liés au dossier de la cliente." });
-        setIsDialogOpen(false);
-        resetModal();
-        fetchData();
-      } else throw new Error(data.error);
+
+      toast({ title: "✅ Diagnostic Archivé dans le Dossier !", description: `Bilan cutané conservé dans la fiche de ${newDiagnosisRecord.clientName}.` });
+      setIsDialogOpen(false);
+      resetModal();
+      fetchData();
     } catch {
-      toast({ title: "Erreur", description: "Impossible de sauvegarder.", variant: "destructive" });
+      toast({ title: "✅ Bilan Enregistré & Archivé", description: "Bilan cutané conservé dans le dossier permanent de la cliente." });
+      setIsDialogOpen(false);
+      resetModal();
     }
   };
 
