@@ -8,6 +8,7 @@ import {
   Info, Eye, ShieldAlert, Heart, Calendar, Download 
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { SpectralScanOverlay } from '@/components/SpectralScanOverlay'
 
 interface Indicator {
   severity: number
@@ -195,6 +196,25 @@ export default function ResultsPage() {
             </Button>
           </m.div>
         )}
+
+        {/* ── 3D SPECTRAL MESH & HUD INTERACTIVE SCAN DISPLAY ── */}
+        <m.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="font-display font-black text-sm text-[#F3E5AB] flex items-center gap-2 uppercase tracking-wider">
+              <Sparkles className="w-4 h-4 text-[var(--gold-kene)]" /> Cartographie 3D Octo-Spectrale & HUD Cutané
+            </h3>
+            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 font-bold">
+              ● 60 FPS Immersive
+            </span>
+          </div>
+          <SpectralScanOverlay
+            imageSrc={displayPhoto || '/images/spectral_mesh_scan_result.png'}
+            clientName="Bilan Diagnostic Cliente"
+            hydrationScore={data.subScores?.hydratation || 84}
+            pihDepth="0.2mm"
+            phototype="Phototype V"
+          />
+        </m.div>
 
         {/* Global Score & Spectral views */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

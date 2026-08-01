@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { format } from 'date-fns';
 import { KeneLogo } from '@/components/ui/logo';
 import { BeforeAfterGalleryModal } from '@/components/BeforeAfterGalleryModal';
+import { SpectralScanOverlay } from '@/components/SpectralScanOverlay';
 
 // Score gauge component
 function ScoreGauge({ score, size = 120 }: { score: number; size?: number }) {
