@@ -73,7 +73,6 @@ export const metadata: Metadata = {
 
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { SessionPreserver } from "@/components/SessionPreserver";
-import { AppSplashScreen } from "@/components/AppSplashScreen";
 
 export default function RootLayout({
   children,
@@ -85,9 +84,95 @@ export default function RootLayout({
       <body
         className={`${ojuju.variable} ${plusJakartaSans.variable} ${cinzel.variable} ${jetbrainsMono.variable} antialiased bg-[#0F0A05] text-[#F8F1E4]`}
       >
+        {/* Instant HTML/CSS/JS Splash Screen Overlay (0ms Frame-0 Paint, Zero Flash) */}
+        <div
+          id="kene-instant-splash-screen"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: '#0F0A05',
+            zIndex: 99999999,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+            color: '#ffffff',
+            userSelect: 'none',
+            transition: 'opacity 0.6s ease',
+          }}
+        >
+          <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes keneGlow {
+              0%, 100% { opacity: 0.4; transform: scale(0.95); }
+              50% { opacity: 0.85; transform: scale(1.05); }
+            }
+            @keyframes keneBar {
+              0% { width: 0%; }
+              100% { width: 100%; }
+            }
+          ` }} />
+
+          <div style={{ position: 'absolute', width: '450px', height: '450px', background: 'rgba(200,149,30,0.18)', borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none', animation: 'keneGlow 3s infinite ease-in-out' }} />
+
+          <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ position: 'relative', marginBottom: '24px' }}>
+              <div style={{ position: 'absolute', inset: '-6px', background: 'linear-gradient(90deg, #FFD700, #C8951E, #D4AF37)', borderRadius: '28px', filter: 'blur(14px)', opacity: 0.7 }} />
+              <div style={{ position: 'relative', width: '110px', height: '110px', borderRadius: '24px', border: '2px solid #C8951E', background: '#1A1410', padding: '6px', boxShadow: '0 0 40px rgba(200,149,30,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                <img src="/images/kene_logo.jpg" alt="Kènè OS" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }} />
+              </div>
+            </div>
+
+            <h1 style={{ margin: '0 0 6px 0', fontSize: '32px', fontWeight: 900, letterSpacing: '2px', background: 'linear-gradient(90deg, #FFFFFF, #F3E5AB, #C8951E)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              KÈNÈ OS
+            </h1>
+
+            <p style={{ margin: '0 0 24px 0', fontSize: '11px', fontWeight: 700, letterSpacing: '3px', color: '#F3E5AB', textTransform: 'uppercase' }}>
+              ✨ La Beauté Mélanoderme, Révélée
+            </p>
+
+            <div style={{ width: '220px', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '999px', border: '1px solid rgba(200,149,30,0.3)', overflow: 'hidden', padding: '1px' }}>
+              <div style={{ height: '100%', background: 'linear-gradient(90deg, #FFD700, #C8951E, #D4AF37)', borderRadius: '999px', animation: 'keneBar 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards', boxShadow: '0 0 10px rgba(200,149,30,0.8)' }} />
+            </div>
+
+            <span style={{ marginTop: '14px', fontSize: '10px', fontFamily: 'monospace', color: 'rgba(243,229,171,0.6)', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 700 }}>
+              Initialisation de votre Espace...
+            </span>
+          </div>
+        </div>
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var splash = document.getElementById('kene-instant-splash-screen');
+                if (!splash) return;
+                try {
+                  var done = sessionStorage.getItem('kene_instant_splash_done');
+                  if (done) {
+                    splash.style.display = 'none';
+                  } else {
+                    setTimeout(function() {
+                      splash.style.opacity = '0';
+                      setTimeout(function() {
+                        if (splash.parentNode) splash.parentNode.removeChild(splash);
+                        sessionStorage.setItem('kene_instant_splash_done', 'true');
+                      }, 600);
+                    }, 2800);
+                  }
+                } catch(e) {
+                  setTimeout(function() { splash.style.display = 'none'; }, 2800);
+                }
+              })();
+            `,
+          }}
+        />
+
         <AuthProvider>
           <SessionPreserver />
-          <AppSplashScreen />
           {children}
           <Toaster />
         </AuthProvider>
