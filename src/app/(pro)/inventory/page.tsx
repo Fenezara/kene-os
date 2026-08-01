@@ -267,11 +267,11 @@ export default function ProInventoryPage() {
             <span>Boutique: {isBoutiqueActive ? 'Active' : 'Désactivée'}</span>
           </button>
 
-          <Link href="/boutique">
+          <a href="/boutique" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" className="border-[#C8951E]/40 text-[#C8951E] hover:bg-[#C8951E]/10 text-xs font-bold rounded-2xl cursor-pointer">
-              🌸 Voir ma Boutique Clientèle
+              🌸 Voir ma Boutique Clientèle ↗
             </Button>
-          </Link>
+          </a>
 
           {/* Modal NOUVEAU PRODUIT */}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

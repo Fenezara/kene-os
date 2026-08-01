@@ -150,9 +150,24 @@ export default function BoutiquePage() {
           } catch (e) {}
         }
 
+        if (fetchedProducts.length === 0) {
+          fetchedProducts = [
+            { id: 'p1', name: 'Beurre de Karité Brut de Korhogo', category: 'Karité', botanical: 'karité', description: 'Nourrit & répare les peaux très sèches', salePrice: 9500, image: '/images/kene_botanical_lab_serum.jpg' },
+            { id: 'p2', name: 'Sérum Niacinamide 10% & Zinc Dermo', category: 'Visage', botanical: 'moringa', description: 'Anti-taches PIH & régulation sébum', salePrice: 16500, image: '/images/afro_skin_spectral_scanner.jpg' },
+            { id: 'p3', name: 'Masque Frais Avocat & Chébé (Salon)', category: 'Cheveux', botanical: 'chebe', description: 'Préparation fraîche faite au salon le jour-même', salePrice: 8500, image: '/images/kene_custom_botanical_bottle.png' },
+            { id: 'p4', name: 'Lait Hydratant Solaire L’Oréal SPF50+', category: 'Corps', botanical: 'baobab', description: 'Protection solaire incolore haute défense', salePrice: 19500, image: '/images/botanical_ingredients_flatlay.jpg' },
+            { id: 'p5', name: 'Formulation Dermo-Awa Sur-Mesure #402', category: 'Soins', botanical: 'bissap', description: 'Sérum personnalisé préparé sur recommandation Dermo-IA', salePrice: 28500, image: '/images/kene_official_logo.jpg' },
+          ];
+        }
+
         setProducts(fetchedProducts);
       } catch (error) {
         console.error('Failed to fetch products', error);
+        setProducts([
+          { id: 'p1', name: 'Beurre de Karité Brut de Korhogo', category: 'Karité', botanical: 'karité', description: 'Nourrit & répare les peaux très sèches', salePrice: 9500, image: '/images/kene_botanical_lab_serum.jpg' },
+          { id: 'p2', name: 'Sérum Niacinamide 10% & Zinc Dermo', category: 'Visage', botanical: 'moringa', description: 'Anti-taches PIH & régulation sébum', salePrice: 16500, image: '/images/afro_skin_spectral_scanner.jpg' },
+          { id: 'p3', name: 'Masque Frais Avocat & Chébé (Salon)', category: 'Cheveux', botanical: 'chebe', description: 'Préparation fraîche faite au salon le jour-même', salePrice: 8500, image: '/images/kene_custom_botanical_bottle.png' },
+        ]);
       } finally {
         setLoading(false);
       }
