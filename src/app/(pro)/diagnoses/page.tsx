@@ -746,6 +746,80 @@ export default function ProDiagnosesPage() {
                           </div>
                         </div>
                       </div>
+
+                      {/* ⚠️ Problèmes & Anomalies Cutanées Décelées */}
+                      <div className="bg-[#8A1C14]/15 border border-[#8A1C14]/40 p-4 rounded-2xl space-y-2">
+                        <span className="text-xs font-bold text-red-400 uppercase tracking-widest font-display flex items-center gap-1.5">
+                          ⚠️ Anomalies & Pathologies Cutanées Décelées au Scan
+                        </span>
+                        <div className="space-y-1.5 text-xs">
+                          <div className="bg-[#0A0603] p-2 rounded-xl border border-red-500/20 text-red-200 flex items-center justify-between font-mono text-[11px]">
+                            <span>🔴 Hyperpigmentation post-inflammatoire (PIH)</span>
+                            <span className="font-bold">Profondeur 0.2mm</span>
+                          </div>
+                          <div className="bg-[#0A0603] p-2 rounded-xl border border-amber-500/20 text-amber-200 flex items-center justify-between font-mono text-[11px]">
+                            <span>🟡 Perturbation Transepidermique en Eau (TEWL)</span>
+                            <span className="font-bold">14.2 g/m²/h</span>
+                          </div>
+                          <div className="bg-[#0A0603] p-2 rounded-xl border border-white/10 text-white/80 flex items-center justify-between font-mono text-[11px]">
+                            <span>🟠 Teint Terne & Perte d'Éclat</span>
+                            <span className="font-bold">Kératine en surface</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 📋 Recommandations & Protocoles Cliniques */}
+                      <div className="bg-[#1A1410] border border-[#C8951E]/40 p-4 rounded-2xl space-y-2">
+                        <span className="text-xs font-bold text-[#F3E5AB] uppercase tracking-widest font-display flex items-center gap-1.5">
+                          📋 Protocoles Cliniques & Actions Prescrites
+                        </span>
+                        <div className="space-y-1.5 text-xs text-white/90 font-sans">
+                          {mockResult.recommendations ? (
+                            mockResult.recommendations.map((rec: string, rIdx: number) => (
+                              <div key={rIdx} className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 flex items-start gap-2">
+                                <span className="text-[#C8951E] font-bold">✓</span>
+                                <span className="text-white/80 leading-snug">{rec}</span>
+                              </div>
+                            ))
+                          ) : (
+                            <>
+                              <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 flex items-start gap-2">
+                                <span className="text-[#C8951E] font-bold">✓</span>
+                                <span>Protocole Cabine : Soin Éclat Karité & Bissap (60 min)</span>
+                              </div>
+                              <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 flex items-start gap-2">
+                                <span className="text-[#C8951E] font-bold">✓</span>
+                                <span>Sérum Concentré Éclat Bissap & Niacinamide (3 gouttes le soir)</span>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* 🌅 Routine Quotidienne à Domicile (Matin & Soir) */}
+                      <div className="bg-[#0A0603] border border-[#4E9FD1]/40 p-4 rounded-2xl space-y-3">
+                        <span className="text-xs font-bold text-[#4E9FD1] uppercase tracking-widest font-display flex items-center gap-1.5">
+                          🌅 Routine Dermo-Cosmétique à Domicile (Matin & Soir)
+                        </span>
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                          <div className="bg-[#1A1410] p-3 rounded-xl border border-[#4E9FD1]/20 space-y-1.5">
+                            <span className="font-bold text-sky-300 block border-b border-white/5 pb-1">🌅 Matin (Protection & Hydratation)</span>
+                            <p className="text-[11px] text-white/70 leading-relaxed font-sans">
+                              1. Nettoyage doux à l'eau d'Aloe Vera<br />
+                              2. 2 gouttes de Sérum Niacinamide 5%<br />
+                              3. Écran Solaire Minéral SPF 50+ obligatoire
+                            </p>
+                          </div>
+                          <div className="bg-[#1A1410] p-3 rounded-xl border border-[#C8951E]/20 space-y-1.5">
+                            <span className="font-bold text-[#F3E5AB] block border-b border-white/5 pb-1">🌙 Soir (Régénération & Éclat)</span>
+                            <p className="text-[11px] text-white/70 leading-relaxed font-sans">
+                              1. Double nettoyage Huile de Baobab<br />
+                              2. Application Sérum Bissap Anti-taches<br />
+                              3. Scellage avec Beurre de Karité brut
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
