@@ -273,12 +273,6 @@ export default function ProInventoryPage() {
             <Eye className="w-4 h-4" /> Aperçu Vitrine en Direct 👁️
           </Button>
 
-          <a href="/boutique" target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" className="border-[#C8951E]/40 text-[#C8951E] hover:bg-[#C8951E]/10 text-xs font-bold rounded-2xl cursor-pointer">
-              🌸 Ouvrir Boutique Externe ↗
-            </Button>
-          </a>
-
           {/* Modal NOUVEAU PRODUIT */}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
