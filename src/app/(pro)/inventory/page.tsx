@@ -273,6 +273,13 @@ export default function ProInventoryPage() {
             <Eye className="w-4 h-4" /> Aperçu Vitrine en Direct 👁️
           </Button>
 
+          {/* LIEN DE CONSULTATION DE LA VITRINE PUBLIQUE CÔTÉ CLIENTE (SANS COMPTE CLIENT) */}
+          <a href="/boutique" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" className="border-[#C8951E]/50 text-[#F3E5AB] hover:bg-[#C8951E]/15 text-xs font-bold rounded-2xl px-3.5 cursor-pointer">
+              🛍️ Vitrine Publique Cliente ↗
+            </Button>
+          </a>
+
           {/* Modal NOUVEAU PRODUIT */}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
