@@ -639,7 +639,7 @@ export default function ProDiagnosesPage() {
                   )}
                 </div>
 
-                {/* Detailed Results panel */}
+                {/* Detailed Results panel with 3D Golden Octo-Spectral Mesh Scanner */}
                 <AnimatePresence>
                   {scanComplete && mockResult && (
                     <motion.div
@@ -647,47 +647,103 @@ export default function ProDiagnosesPage() {
                       animate={{ opacity: 1, height: 'auto' }}
                       className="bg-[#1A1410] border border-white/10 rounded-2xl p-4 space-y-4 font-sans"
                     >
-                      {/* Metrics grid */}
-                      <h4 className="text-xs font-bold uppercase tracking-widest text-[#C8951E] font-display">
-                        Métriques Biométriques & Dermo-Santé
-                      </h4>
-                      <div className="grid grid-cols-2 gap-3">
-                        {[
-                          { label: 'Hydratation Épidermique', value: mockResult.subScores.hydration, color: '#4E9FD1' },
-                          { label: 'Indice Séborrhique (Zone T)', value: mockResult.subScores.sebum, color: '#C8951E' },
-                          { label: 'Hyper-Pigmentation (PIH)', value: mockResult.subScores.pigmentation, color: '#8A1C14' },
-                          { label: 'Intégrité Barrière Lipidique', value: mockResult.subScores.barrierIntegrity, color: '#4CAF6E' },
-                        ].map(s => (
-                          <div key={s.label} className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5">
-                            <div className="flex justify-between text-[10px] mb-1">
-                              <span className="text-white/50">{s.label}</span>
-                              <span className="font-bold font-mono" style={{ color: s.color }}>{s.value}%</span>
-                            </div>
-                            <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-                              <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${s.value}%` }}
-                                transition={{ delay: 0.2, duration: 0.8 }}
-                                className="h-full rounded-full"
-                                style={{ background: s.color }}
-                              />
-                            </div>
-                          </div>
-                        ))}
+                      {/* Dermo-Translator Mode Toggle */}
+                      <div className="bg-[#0A0603] p-1.5 rounded-2xl border border-[#C8951E]/30 flex items-center justify-between shadow-inner">
+                        <button
+                          type="button"
+                          onClick={() => setMedicalMode(true)}
+                          className={`flex-1 py-2 rounded-xl text-xs font-bold font-mono transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                            medicalMode ? 'bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] shadow-md font-black' : 'text-white/50 hover:text-white'
+                          }`}
+                        >
+                          🧬 Mode Médical Dermo-Clinique
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setMedicalMode(false)}
+                          className={`flex-1 py-2 rounded-xl text-xs font-bold font-mono transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                            !medicalMode ? 'bg-[#4E9FD1] text-white shadow-md font-black' : 'text-white/50 hover:text-white'
+                          }`}
+                        >
+                          💡 Mode Vulgarisé Explication Cliente
+                        </button>
                       </div>
 
-                      {/* Botanical Prescription */}
-                      <div className="bg-[#2E5A36]/15 border border-[#2E5A36]/40 rounded-2xl p-3.5 space-y-2">
-                        <h4 className="text-xs font-bold uppercase tracking-widest text-[#4CAF6E] flex items-center gap-1.5 font-display">
-                          <Leaf className="w-4 h-4 text-[#4CAF6E]" /> Prescription Dermo-Botanique Kènè
-                        </h4>
-                        <div className="space-y-1.5">
-                          {mockResult.botanicalPrescription.map((item: any, idx: number) => (
-                            <div key={idx} className="flex justify-between items-center text-xs bg-[#0A0603]/60 p-2 rounded-xl border border-white/5">
-                              <span className="font-bold text-white">{item.ingredient}</span>
-                              <span className="text-[10px] text-[#4CAF6E] font-mono">{item.role}</span>
+                      {/* 3D Golden Octo-Spectral Mesh Visualizer Overlay */}
+                      <div className="my-2">
+                        <div className="flex items-center justify-between mb-1.5 px-1">
+                          <span className="text-[10px] font-mono font-bold text-[#F3E5AB] uppercase tracking-wider flex items-center gap-1.5">
+                            ✨ Cartographie Vectorielle 3D & Scanner Octo-Spectral Immersif (60 FPS)
+                          </span>
+                          <span className="text-[9px] bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 px-2 py-0.5 rounded-full font-mono font-bold">
+                            XP-3D IMMERSIVE
+                          </span>
+                        </div>
+                        <SpectralScanOverlay 
+                          imageSrc={capturedPhoto || '/images/afro_skin_spectral_scanner.jpg'}
+                          clientName="Aperçu Scan Cliente"
+                          hydrationScore={mockResult.subScores.hydration}
+                          pihDepth="0.2mm"
+                          phototype={`Type ${selectedPhototype}`}
+                          showControls={true}
+                        />
+                      </div>
+
+                      {/* Medical vs Clear Explanation Card */}
+                      <div className={`p-4 rounded-2xl border transition-all ${medicalMode ? 'bg-[#C8951E]/10 border-[#C8951E]/40' : 'bg-[#4E9FD1]/10 border-[#4E9FD1]/40'}`}>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-1.5 text-white">
+                            {medicalMode ? '🔬 Diagnostic Scientifique & Métriques Cliniques :' : '💬 Explication Simple pour la Cliente :'}
+                          </span>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${medicalMode ? 'bg-[#C8951E] text-[#0F0A05]' : 'bg-[#4E9FD1] text-white'}`}>
+                            {medicalMode ? 'Dermo-Clinique V3' : 'Vulgarisé'}
+                          </span>
+                        </div>
+                        {medicalMode ? (
+                          <div className="space-y-2 text-xs">
+                            <p className="text-white/80 font-mono leading-relaxed">
+                              Perte Transepidermique en Eau (TEWL) : <strong className="text-emerald-400">14.2 g/m²/h</strong> · Profondeur Hyperpigmentation PIH : <strong className="text-amber-400">0.2mm (Épidermique)</strong> · Indice de Mélanine : <strong className="text-[#F3E5AB]">68/100</strong>.
+                            </p>
+                            <div className="grid grid-cols-3 gap-2 text-[10px] font-mono bg-black/40 p-2.5 rounded-xl border border-white/10">
+                              <div><span className="text-white/40 block">Taux Sébum</span><span className="text-emerald-400 font-bold">Équilibré ({mockResult.subScores.sebum}%)</span></div>
+                              <div><span className="text-white/40 block">Densité Collagène</span><span className="text-sky-300 font-bold">Optimale (88%)</span></div>
+                              <div><span className="text-white/40 block">Intégrité Barrière</span><span className="text-[#F3E5AB] font-bold">Fortifiée ({mockResult.subScores.barrierIntegrity}%)</span></div>
                             </div>
-                          ))}
+                          </div>
+                        ) : (
+                          <p className="text-xs text-white/90 font-sans leading-relaxed">
+                            "Votre peau manque légèrement d'eau mais sécrète la bonne quantité d'huile naturelle. Nous allons appliquer un soin hydratant à base de Beurre de Karité brut et de Sérum d'Hibiscus pour éclaircir vos taches sombres et redonner de l'éclat à votre teint."
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Formulation Botanique Sur-Mesure Kènè Lab */}
+                      <div className="bg-[#1A1410] border border-[#2E5A36]/50 p-4 rounded-2xl space-y-2.5">
+                        <div className="flex items-center justify-between border-b border-[#2E5A36]/40 pb-2">
+                          <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest font-display flex items-center gap-1.5">
+                            🌱 Formulation Botanique Sur-Mesure & Dosages Précis
+                          </span>
+                          <span className="text-[9px] bg-[#2E5A36]/30 text-emerald-300 px-2 py-0.5 rounded-full font-mono font-bold">
+                            Kènè Lab Certified
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
+                            <span className="text-emerald-400 font-bold block text-[11px]">🥣 Beurre de Karité Brut de Korhogo (45%)</span>
+                            <span className="text-white/50 text-[10px] block">Restauration lipidique & nutrition intense</span>
+                          </div>
+                          <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
+                            <span className="text-emerald-400 font-bold block text-[11px]">🌳 Huile de Baobab de Tambacounda (30%)</span>
+                            <span className="text-white/50 text-[10px] block">Scellage hydrique & anti-oxydant</span>
+                          </div>
+                          <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
+                            <span className="text-emerald-400 font-bold block text-[11px]">🌺 Sérum Concentré d'Hibiscus (20%)</span>
+                            <span className="text-white/50 text-[10px] block">AHA botaniques & anti-taches PIH</span>
+                          </div>
+                          <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
+                            <span className="text-emerald-400 font-bold block text-[11px]">✨ Niacinamide Clinique 5% (5%)</span>
+                            <span className="text-white/50 text-[10px] block">Régulation séborrhique & barrière cutanée</span>
+                          </div>
                         </div>
                       </div>
                     </motion.div>
