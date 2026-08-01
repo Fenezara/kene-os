@@ -187,17 +187,18 @@ export default function ProPOSPage() {
                   placeholder="Rechercher nom, téléphone..."
                   className="bg-white/5 border-white/10 text-white rounded-xl focus:border-[#C8951E] mb-2 h-10"
                 />
-                <Select value={formData.clientId} onValueChange={(v) => setFormData({ ...formData, clientId: v })}>
-                  <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-xl">
-                    <SelectValue placeholder="Sélectionner un client trouvé..." />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#1A1410] border-[#362A21] text-white max-h-52">
-                    <SelectItem value="none">Client de passage</SelectItem>
-                    {clients.map((c: any) => (
-                      <SelectItem key={c.id} value={c.id}>{c.firstName} {c.lastName}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <select 
+                  value={formData.clientId} 
+                  onChange={(e) => setFormData({ ...formData, clientId: e.target.value })}
+                  className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl p-3 text-xs font-bold cursor-pointer focus:border-[#C8951E] outline-none"
+                >
+                  <option value="none" className="bg-[#0F0A05] text-white/50">-- Client de passage --</option>
+                  {clients.map((c: any) => (
+                    <option key={c.id} value={c.id} className="bg-[#0F0A05] text-white font-bold py-1">
+                      👤 {c.firstName} {c.lastName} ({c.phone})
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="grid grid-cols-2 gap-3">

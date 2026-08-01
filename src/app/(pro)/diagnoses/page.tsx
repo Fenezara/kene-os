@@ -381,13 +381,19 @@ export default function ProDiagnosesPage() {
               <div className="space-y-4 py-2">
                 {/* Client Selection */}
                 <div className="space-y-1">
-                  <Label className="text-white/70 text-xs font-bold uppercase font-mono">1. Sélectionner la Cliente :</Label>
-                  <Select value={selectedClient} onValueChange={setSelectedClient}>
-                    <SelectTrigger className="bg-[#1A1410] border-white/10 text-white rounded-xl text-xs"><SelectValue placeholder="Choisir une cliente dans le CRM..." /></SelectTrigger>
-                    <SelectContent className="bg-[#1A1410] border-[#362A21] text-white max-h-52 text-xs">
-                      {clients.map((c: any) => <SelectItem key={c.id} value={c.id}>{c.firstName} {c.lastName} ({c.phone})</SelectItem>)}
-                    </SelectContent>
-                  </Select>
+                  <Label className="text-[#F3E5AB] text-xs font-bold uppercase font-mono">1. Sélectionner la Cliente dans le CRM :</Label>
+                  <select 
+                    value={selectedClient} 
+                    onChange={(e) => setSelectedClient(e.target.value)}
+                    className="w-full bg-[#1A1410] border border-[#C8951E]/60 text-white rounded-xl p-3 text-xs font-bold cursor-pointer focus:border-[#F3E5AB] outline-none shadow-md"
+                  >
+                    <option value="" className="bg-[#0F0A05] text-white/50">-- Choisir une cliente dans le CRM --</option>
+                    {clients.map((c: any) => (
+                      <option key={c.id} value={c.id} className="bg-[#0F0A05] text-white font-bold py-1.5">
+                        👤 {c.firstName} {c.lastName} ({c.phone})
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Perceived Skin Type */}

@@ -600,15 +600,16 @@ export default function ProClientsPage() {
                               <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1">
                                   <Label className="text-white/60 text-[10px]">Type de visite</Label>
-                                  <Select value={consultationType} onValueChange={setConsultationType}>
-                                    <SelectTrigger className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs"><SelectValue /></SelectTrigger>
-                                    <SelectContent className="bg-[#1A1410] text-white border-white/10">
-                                      <SelectItem value="Contrôle Dermatologique">Contrôle Dermatologique</SelectItem>
-                                      <SelectItem value="Consultation Initiale">Consultation Initiale</SelectItem>
-                                      <SelectItem value="Suivi Hyperpigmentation">Suivi Hyperpigmentation</SelectItem>
-                                      <SelectItem value="Ajustement Routine Cosmétique">Ajustement Routine Cosmétique</SelectItem>
-                                    </SelectContent>
-                                  </Select>
+                                  <select 
+                                    value={consultationType} 
+                                    onChange={(e) => setConsultationType(e.target.value)}
+                                    className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl p-2.5 text-xs font-bold cursor-pointer outline-none focus:border-[#C8951E]"
+                                  >
+                                    <option value="Contrôle Dermatologique" className="bg-[#0F0A05] text-white">Contrôle Dermatologique</option>
+                                    <option value="Consultation Initiale" className="bg-[#0F0A05] text-white">Consultation Initiale</option>
+                                    <option value="Suivi Hyperpigmentation" className="bg-[#0F0A05] text-white">Suivi Hyperpigmentation</option>
+                                    <option value="Ajustement Routine Cosmétique" className="bg-[#0F0A05] text-white">Ajustement Routine Cosmétique</option>
+                                  </select>
                                 </div>
                                 <div className="space-y-1">
                                   <Label className="text-white/60 text-[10px]">Taux d'Hydratation (%)</Label>
