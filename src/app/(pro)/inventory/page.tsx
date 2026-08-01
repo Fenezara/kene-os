@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Package, Plus, Search, AlertTriangle, Edit2, Trash2, RefreshCw, Filter, Store, Eye, EyeOff, Sparkles, Leaf, Stethoscope, Utensils, Crown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Package, Plus, Search, AlertTriangle, Edit2, Trash2, RefreshCw, Filter, Store, Eye, EyeOff, Sparkles, Leaf, Stethoscope, Utensils, Crown, Smartphone, Monitor, Share2, Copy, QrCode, Check, ShoppingBag, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -53,6 +53,11 @@ export default function ProInventoryPage() {
   // Boutique Status per Salon
   const [isBoutiqueActive, setIsBoutiqueActive] = useState(true);
 
+  // Live Storefront Preview Modal State
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [previewDevice, setPreviewDevice] = useState<'mobile' | 'desktop'>('mobile');
+  const [copiedLink, setCopiedLink] = useState(false);
+
   // Form states for Create & Edit
   const [formData, setFormData] = useState({ 
     id: '', 
@@ -73,16 +78,6 @@ export default function ProInventoryPage() {
     } catch (e) {}
   };
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      setFormData(prev => ({ ...prev, image: reader.result as string }));
-    };
-    reader.readAsDataURL(file);
-  };
-
   const fetchInventory = async () => {
     try {
       const res = await fetch('/api/tenant/inventory');
@@ -101,7 +96,6 @@ export default function ProInventoryPage() {
         } catch (e) {}
       }
 
-      // Catalog fallback containing products across all 5 cosmetic origins
       if (list.length === 0) {
         list = [
           { id: 'p1', name: 'Beurre de Karité Brut de Korhogo', category: 'Karité', origin: 'tradipraticien', botanical: 'karité', description: 'Nourrit & répare les peaux très sèches', purchasePrice: 4000, salePrice: 9500, inventoryItems: [{ quantity: 18 }], image: '/images/kene_botanical_lab_serum.jpg' },
@@ -148,7 +142,7 @@ export default function ProInventoryPage() {
         body: JSON.stringify(formData)
       });
 
-      toast({ title: "✅ Produit Ajouté à la Boutique !", description: `Produit référencé en categorie "${getOriginMeta(formData.origin).shortLabel}".` });
+      toast({ title: "✅ Produit Ajouté à la Boutique !", description: `Produit référencé en catégorie "${getOriginMeta(formData.origin).shortLabel}".` });
       setIsDialogOpen(false);
       setFormData({ id: '', name: '', category: 'Visage', origin: 'tradipraticien', botanical: 'karité', description: '', purchasePrice: '', salePrice: '', quantity: '0', image: '' });
     } catch {
@@ -174,12 +168,6 @@ export default function ProInventoryPage() {
 
       setProducts(updated);
       syncProductsToLocalStorage(updated);
-
-      await fetch('/api/tenant/inventory', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
 
       toast({ title: "✅ Produit Mis à Jour !", description: "Modifications enregistrées avec succès." });
       setIsEditDialogOpen(false);
@@ -215,6 +203,16 @@ export default function ProInventoryPage() {
       image: product.image || '',
     });
     setIsEditDialogOpen(true);
+  };
+
+  const copyBoutiqueLink = () => {
+    if (typeof window !== 'undefined') {
+      const link = `${window.location.origin}/boutique`;
+      navigator.clipboard.writeText(link);
+      setCopiedLink(true);
+      toast({ title: "🔗 Lien de la Boutique Copié !", description: "Vous pouvez partager ce lien sur WhatsApp ou Instagram." });
+      setTimeout(() => setCopiedLink(false), 2500);
+    }
   };
 
   const filtered = products.filter(p => {
@@ -267,9 +265,17 @@ export default function ProInventoryPage() {
             <span>Boutique: {isBoutiqueActive ? 'Active' : 'Désactivée'}</span>
           </button>
 
+          {/* BOUTON APERÇU EN DIRECT SANS QUITTER L'ESPACE PRO */}
+          <Button
+            onClick={() => setIsPreviewModalOpen(true)}
+            className="bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black text-xs font-black rounded-2xl px-4 flex items-center gap-1.5 shadow-md cursor-pointer hover:opacity-90"
+          >
+            <Eye className="w-4 h-4" /> Aperçu Vitrine en Direct 👁️
+          </Button>
+
           <a href="/boutique" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" className="border-[#C8951E]/40 text-[#C8951E] hover:bg-[#C8951E]/10 text-xs font-bold rounded-2xl cursor-pointer">
-              🌸 Voir ma Boutique Clientèle ↗
+              🌸 Ouvrir Boutique Externe ↗
             </Button>
           </a>
 
@@ -278,7 +284,7 @@ export default function ProInventoryPage() {
             <DialogTrigger asChild>
               <motion.button
                 whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-xs text-[#0F0A05] cursor-pointer shadow-lg"
+                className="flex items-center gap-2 px-4 py-2 rounded-2xl font-bold text-xs text-[#0F0A05] cursor-pointer shadow-lg"
                 style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)' }}
               >
                 <Plus className="w-4 h-4" /> Nouveau Produit
@@ -297,7 +303,6 @@ export default function ProInventoryPage() {
                     <Input required className="bg-white/5 border-white/10 text-white rounded-xl" placeholder="ex: Sérum Niacinamide ou Macérat Karité Neem" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                   </div>
 
-                  {/* SÉLECTEUR ORIGINE PRODUIT (5 ORIGINES) */}
                   <div className="space-y-1 col-span-2">
                     <Label className="text-[#F3E5AB] font-bold text-xs">Origine / Genre du Produit Cosmétique</Label>
                     <select 
@@ -371,6 +376,132 @@ export default function ProInventoryPage() {
           </Dialog>
         </div>
       </motion.div>
+
+      {/* ── MODAL APERÇU VITRINE EN DIRECT SANS QUITTER L'ESPACE PRO ── */}
+      <AnimatePresence>
+        {isPreviewModalOpen && (
+          <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-[#0F0A05] border-2 border-[var(--gold-kene)]/50 rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-hidden shadow-2xl flex flex-col select-none"
+            >
+              {/* Header Modal */}
+              <div className="p-4 bg-[#1A1410] border-b border-white/10 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-[var(--gold-kene)]/20 border border-[var(--gold-kene)] flex items-center justify-center text-lg">
+                    👁️
+                  </div>
+                  <div>
+                    <h3 className="font-display font-black text-sm text-[#F3E5AB] uppercase tracking-wider">
+                      Aperçu Vitrine Clientèle en Direct
+                    </h3>
+                    <p className="text-[10px] text-white/50 font-mono">
+                      Voici exactement ce que vos clientes voient sur mobile sans entrer dans l'espace client.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {/* Selector Device */}
+                  <div className="flex bg-black/60 p-1 rounded-xl border border-white/10">
+                    <button
+                      onClick={() => setPreviewDevice('mobile')}
+                      className={`p-1.5 rounded-lg text-xs font-bold transition ${previewDevice === 'mobile' ? 'bg-[var(--gold-kene)] text-black' : 'text-white/50'}`}
+                      title="Vue Mobile"
+                    >
+                      <Smartphone className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setPreviewDevice('desktop')}
+                      className={`p-1.5 rounded-lg text-xs font-bold transition ${previewDevice === 'desktop' ? 'bg-[var(--gold-kene)] text-black' : 'text-white/50'}`}
+                      title="Vue Ordinateur"
+                    >
+                      <Monitor className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={copyBoutiqueLink}
+                    className="h-8 text-[11px] font-bold bg-white/10 hover:bg-white/20 text-[#F3E5AB] border border-[#C8951E]/40 rounded-xl px-3 flex items-center gap-1.5 cursor-pointer"
+                  >
+                    {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedLink ? 'Copié !' : 'Copier Lien'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => setIsPreviewModalOpen(false)}
+                    className="p-2 text-white/50 hover:text-white rounded-xl bg-white/5"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Body: Device Frame Simulation */}
+              <div className="p-4 sm:p-6 overflow-y-auto flex-1 bg-[#0A0603] flex justify-center">
+                <div
+                  className={`transition-all duration-300 bg-[#1A1410] border-4 border-[#33251A] rounded-3xl overflow-hidden shadow-2xl p-4 space-y-4 ${
+                    previewDevice === 'mobile' ? 'w-full max-w-sm' : 'w-full max-w-3xl'
+                  }`}
+                >
+                  {/* Store Header inside Simulator */}
+                  <div className="bg-gradient-to-r from-[var(--gold-kene)]/20 via-[#1A1410] to-[#0A0603] p-4 rounded-2xl border border-[var(--gold-kene)]/40 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-[#F3E5AB] bg-black/60 px-2.5 py-0.5 rounded-full border border-[var(--gold-kene)]/30 font-mono">
+                        🟢 Boutique Active · Click & Collect 1h
+                      </span>
+                      <ShoppingBag className="w-4 h-4 text-[var(--gold-kene)]" />
+                    </div>
+                    <h4 className="font-display font-black text-lg text-white">
+                      Boutique Officielle du Salon
+                    </h4>
+                    <p className="text-[11px] text-white/60">
+                      Soins botaniques certifiés & prescriptions dermo-cosmétiques disponibles.
+                    </p>
+                  </div>
+
+                  {/* Simulated Products Grid */}
+                  <div className="space-y-3">
+                    <span className="text-[10px] font-mono text-[#F3E5AB] font-bold uppercase tracking-wider block">
+                      🛍️ Produits Disponibles ({products.length}) :
+                    </span>
+                    
+                    <div className={`grid gap-3 ${previewDevice === 'mobile' ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                      {products.slice(0, 4).map((p) => {
+                        const originMeta = getOriginMeta(p.origin);
+                        return (
+                          <div key={p.id} className="bg-[#0A0603] p-3 rounded-2xl border border-white/10 flex gap-3 items-center">
+                            <div className="w-16 h-16 rounded-xl overflow-hidden bg-black shrink-0">
+                              <img src={p.image || '/images/kene_botanical_lab_serum.jpg'} alt={p.name} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border font-mono ${originMeta.badgeStyle}`}>
+                                {originMeta.shortLabel}
+                              </span>
+                              <h5 className="font-display font-bold text-xs text-white truncate mt-1">{p.name}</h5>
+                              <span className="font-mono font-black text-xs text-[var(--gold-kene)] block">
+                                {p.salePrice.toLocaleString('fr-FR')} FCFA
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Simulated Share & QR Section */}
+                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-white/50">
+                    <span>📱 Lien WhatsApp Client : kene-os.vercel.app/boutique</span>
+                    <QrCode className="w-6 h-6 text-[var(--gold-kene)]" />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* ── MODAL EDIT PRODUIT ── */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
