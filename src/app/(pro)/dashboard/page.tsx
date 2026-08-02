@@ -235,10 +235,10 @@ export default function ProDashboardPage() {
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-display font-black text-white tracking-tight leading-tight">
-              {greeting}{ownerName ? `, ${ownerName}` : ''} 👋
+              {greeting}, <span className="text-[#F3E5AB]">{ownerName || 'Fatou Koné'}</span> 👋
             </h1>
             <p className="text-xs sm:text-sm text-white/60 font-sans max-w-xl">
-              Tableau de bord de pilotage dermo-cosmétique & gestion intégrée de votre salon.
+              Bienvenue sur votre espace de travail professionnel chez <strong className="text-white">{tenantName}</strong>.
             </p>
 
             <div className="mt-3 inline-flex items-center gap-2 bg-[#0F0A05]/80 border border-[#C8951E]/30 rounded-2xl p-2 sm:px-3 sm:py-1.5 backdrop-blur-md max-w-full">

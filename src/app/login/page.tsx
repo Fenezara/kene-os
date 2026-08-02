@@ -164,11 +164,22 @@ function LoginFormContent() {
       } else {
         document.cookie = `kene-session=${sessionRole}-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
 
+        // Extract employee name cleanly (e.g. "Fatou Koné", "Aminata Diallo")
+        let finalEmployeeName = isSuperAdmin ? 'Super-Admin SaaS Kènè' : displayName;
+        if (salonEmail && salonEmail.includes('@') && !isSuperAdmin) {
+          const rawPart = salonEmail.split('@')[0].replace(/[\._\-]/g, ' ').trim();
+          const parts = rawPart.split(/\s+/);
+          if (parts.length > 0 && parts[0]) {
+            finalEmployeeName = parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+          }
+        }
+
         const userObj = {
-          name: isSuperAdmin ? 'Super-Admin SaaS Kènè' : displayName,
+          name: finalEmployeeName || 'Fatou Koné',
           email: userEmailOrName || (isSuperAdmin ? 'admin@kene.africa' : 'contact@salon.com'),
           role: sessionRole,
-          salonName: sessionRole === 'gerant' ? (displayName.startsWith('Institut') ? displayName : `Institut ${displayName}`) : undefined,
+          employeeRole: sessionRole === 'gerant' ? 'Praticienne & Directrice d\'Institut' : 'Membre d\'Équipe',
+          salonName: 'Institut Beauté Kènè',
         };
 
         if (sessionRole === 'gerant') {
