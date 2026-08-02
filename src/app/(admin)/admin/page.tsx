@@ -156,6 +156,20 @@ export default function AdminDashboardPage() {
   const projectedMRR = projectedSalons * 35000;
   const projectedARR = projectedMRR * 12;
 
+  const [adminName, setAdminName] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const savedUser = localStorage.getItem('kene_user');
+        if (savedUser) {
+          const u = JSON.parse(savedUser);
+          if (u.name) setAdminName(u.name);
+        }
+      } catch {}
+    }
+  }, []);
+
   if (loading) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
@@ -181,8 +195,11 @@ export default function AdminDashboardPage() {
             </Badge>
           </div>
           <h1 className="text-2xl sm:text-3xl font-display font-black text-white tracking-tight">
-            Gouvernance SaaS & Intelligence Beauté Africaine
-          </h1>
+              {new Date().getHours() < 12 ? 'Bonjour' : new Date().getHours() < 18 ? 'Bon après-midi' : 'Bonsoir'}{adminName ? `, ${adminName}` : ''} 👋
+            </h1>
+            <p className="text-sm text-white/50 font-sans">
+              Gouvernance SaaS & Intelligence Beauté Africaine
+            </p>
           <p className="text-xs text-white/60 max-w-2xl">
             Supervision consolidée des abonnements salons, annuaire des clientes, rituels botaniques et conformité fiscale SYSCOHADA.
           </p>

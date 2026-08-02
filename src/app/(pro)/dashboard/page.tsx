@@ -235,7 +235,7 @@ export default function ProDashboardPage() {
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-display font-black text-white tracking-tight leading-tight">
-              {greeting}{ownerName && ownerName !== tenantName && !ownerName.toLowerCase().includes('institut') ? `, ${ownerName} 👋` : ' 👋'}
+              {greeting}{ownerName ? `, ${ownerName}` : ''} 👋
             </h1>
             <p className="text-xs sm:text-sm text-white/60 font-sans max-w-xl">
               Tableau de bord de pilotage dermo-cosmétique & gestion intégrée de votre salon.
