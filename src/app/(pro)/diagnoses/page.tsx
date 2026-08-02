@@ -346,7 +346,7 @@ export default function ProDiagnosesPage() {
                 <Sparkles className="w-4 h-4" /> Nouveau Diagnostic (Anamnèse + Scan)
               </motion.button>
             </DialogTrigger>
-          <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl p-6">
+          <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl w-[95vw] max-w-4xl lg:max-w-5xl max-h-[92vh] overflow-y-auto shadow-2xl p-4 sm:p-6">
             <DialogHeader>
               <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
                 <span>🔬</span> Diagnostic Cutané : {wizardStep === 1 ? 'Étape 1 - Questionnaire Anamnèse Clinique' : 'Étape 2 - Scan Biométrique Camera IA'}
@@ -854,7 +854,7 @@ export default function ProDiagnosesPage() {
 
       {/* ── DETAILED CLINICAL REPORT MODAL (WITH QUESTIONNAIRE DATA) ── */}
       <Dialog open={!!viewingReport} onOpenChange={(open) => !open && setViewingReport(null)}>
-        <DialogContent className="bg-[#0A0603] border border-[#C8951E]/40 text-white rounded-3xl max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl p-6">
+        <DialogContent className="bg-[#0A0603] border border-[#C8951E]/40 text-white rounded-3xl w-[95vw] max-w-4xl lg:max-w-5xl max-h-[92vh] overflow-y-auto shadow-2xl p-4 sm:p-6">
           {viewingReport && (
             <div className="space-y-6">
               {/* Header with Logo & Salon Branding */}
