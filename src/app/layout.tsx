@@ -87,7 +87,25 @@ export default function RootLayout({
       >
         <OfflineIndicator />
 
-        {/* Instant HTML/CSS/JS Splash Screen Overlay (0ms Frame-0 Paint, Zero Flash) */}
+        {/* Instant HTML/CSS Splash Screen — Pure CSS auto-hide (immune to React hydration) */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes keneGlow {
+            0%, 100% { opacity: 0.4; transform: scale(0.95); }
+            50% { opacity: 0.85; transform: scale(1.05); }
+          }
+          @keyframes keneBar {
+            0% { width: 0%; }
+            100% { width: 100%; }
+          }
+          @keyframes keneSplashHide {
+            0% { opacity: 1; visibility: visible; }
+            100% { opacity: 0; visibility: hidden; pointer-events: none; }
+          }
+          #kene-instant-splash-screen {
+            animation: keneSplashHide 0.6s ease 2.8s forwards;
+          }
+        ` }} />
+
         <div
           id="kene-instant-splash-screen"
           style={{
@@ -105,26 +123,14 @@ export default function RootLayout({
             fontFamily: 'system-ui, -apple-system, sans-serif',
             color: '#ffffff',
             userSelect: 'none',
-            transition: 'opacity 0.6s ease',
           }}
         >
-          <style dangerouslySetInnerHTML={{ __html: `
-            @keyframes keneGlow {
-              0%, 100% { opacity: 0.4; transform: scale(0.95); }
-              50% { opacity: 0.85; transform: scale(1.05); }
-            }
-            @keyframes keneBar {
-              0% { width: 0%; }
-              100% { width: 100%; }
-            }
-          ` }} />
-
           <div style={{ position: 'absolute', width: '450px', height: '450px', background: 'rgba(200,149,30,0.18)', borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none', animation: 'keneGlow 3s infinite ease-in-out' }} />
 
           <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div style={{ position: 'relative', marginBottom: '24px' }}>
               <div style={{ position: 'absolute', inset: '-6px', background: 'linear-gradient(90deg, #FFD700, #C8951E, #D4AF37)', borderRadius: '28px', filter: 'blur(14px)', opacity: 0.7 }} />
-              <div style={{ position: 'relative', width: '110px', height: '110px', borderRadius: '24px', border: '2px solid #C8951E', background: '#1A1410', padding: '6px', boxShadow: '0 0 40px rgba(200,149,30,0.4)', display: 'flex', items: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+              <div style={{ position: 'relative', width: '110px', height: '110px', borderRadius: '24px', border: '2px solid #C8951E', background: '#1A1410', padding: '6px', boxShadow: '0 0 40px rgba(200,149,30,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                 <img src="/images/kene_logo.jpg" alt="Kènè OS" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '18px' }} />
               </div>
             </div>
@@ -146,33 +152,6 @@ export default function RootLayout({
             </span>
           </div>
         </div>
-
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var splash = document.getElementById('kene-instant-splash-screen');
-                if (!splash) return;
-                try {
-                  var done = sessionStorage.getItem('kene_instant_splash_done');
-                  if (done) {
-                    splash.style.display = 'none';
-                  } else {
-                    setTimeout(function() {
-                      splash.style.opacity = '0';
-                      setTimeout(function() {
-                        if (splash.parentNode) splash.parentNode.removeChild(splash);
-                        sessionStorage.setItem('kene_instant_splash_done', 'true');
-                      }, 600);
-                    }, 2800);
-                  }
-                } catch(e) {
-                  setTimeout(function() { splash.style.display = 'none'; }, 2800);
-                }
-              })();
-            `,
-          }}
-        />
 
         <AuthProvider>
           <SessionPreserver />
