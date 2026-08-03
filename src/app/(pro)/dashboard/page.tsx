@@ -90,13 +90,13 @@ export default function ProDashboardPage() {
   const { toast } = useToast();
   const [stats, setStats] = useState<TenantStats | null>(null);
   const [tenantName, setTenantName] = useState<string>('Institut Beauté Kènè');
-  const [ownerName, setOwnerName] = useState<string>('');
+  const [employeeName, setEmployeeName] = useState<string>('Fatou Koné');
   const [loading, setLoading] = useState(true);
   const [activeChartPoint, setActiveChartPoint] = useState<number | null>(5); // Default to Saturday
 
   useEffect(() => {
     let customSalonName = '';
-    let customOwnerName = '';
+    let customEmployeeName = '';
 
     if (typeof window !== 'undefined') {
       const savedTenant = localStorage.getItem('kene_tenant_settings');
@@ -113,7 +113,15 @@ export default function ProDashboardPage() {
         try {
           const u = JSON.parse(savedUser);
           if (u.salonName) customSalonName = u.salonName;
-          if (u.name && !/^[\+\d\s\-\.\(\)]+$/.test(u.name)) customOwnerName = u.name;
+          
+          // Check for human employee name (skip salon/company names)
+          const rawName = u.employeeName || u.name || '';
+          if (rawName && !/^[\+\d\s\-\.\(\)]+$/.test(rawName)) {
+            const isSalonName = /institut|salon|spa|centre|cabinet|kènè|kene/i.test(rawName);
+            if (!isSalonName) {
+              customEmployeeName = rawName;
+            }
+          }
         } catch (e) {}
       }
       if (!customSalonName && savedAllTenants) {
@@ -127,7 +135,7 @@ export default function ProDashboardPage() {
     }
 
     if (customSalonName) setTenantName(sanitizeName(customSalonName));
-    if (customOwnerName) setOwnerName(sanitizeName(customOwnerName));
+    setEmployeeName(customEmployeeName ? sanitizeName(customEmployeeName) : 'Fatou Koné');
 
     const fetchStats = async () => {
       try {
@@ -235,7 +243,7 @@ export default function ProDashboardPage() {
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-display font-black text-white tracking-tight leading-tight">
-              {greeting}, <span className="text-[#F3E5AB]">{ownerName || 'Fatou Koné'}</span> 👋
+              {greeting}, <span className="text-[#F3E5AB]">{employeeName}</span> 👋
             </h1>
             <p className="text-xs sm:text-sm text-white/60 font-sans max-w-xl">
               Bienvenue sur votre espace de travail professionnel chez <strong className="text-white">{tenantName}</strong>.
