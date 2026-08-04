@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -369,22 +369,22 @@ export default function ProDiagnosesPage() {
             <div className="flex border-b border-white/10 my-2">
               <button
                 onClick={() => setWizardStep(1)}
-                className={`flex-1 py-2 text-[10px] sm:text-xs font-bold font-display border-b-2 transition flex items-center justify-center gap-1 sm:gap-2 ${
+                className={`flex-1 min-w-0 py-2 sm:py-3 px-1 text-[10px] sm:text-xs font-bold font-display border-b-2 transition flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 ${
                   wizardStep === 1 ? 'border-[#C8951E] text-[#F3E5AB]' : 'border-transparent text-white/40'
                 }`}
               >
-                <ClipboardList className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="truncate">1. Questionnaire AnamnÃ¨se</span>
+                <ClipboardList className="w-4 h-4 shrink-0" /> <span className="text-center truncate w-full">1. Questionnaire Anamnèse</span>
               </button>
               <button
                 onClick={() => {
                   if (!selectedClient) return toast({ title: "Erreur", description: "SÃ©lectionnez une cliente d'abord.", variant: "destructive" });
                   setWizardStep(2);
                 }}
-                className={`flex-1 py-2 text-[10px] sm:text-xs font-bold font-display border-b-2 transition flex items-center justify-center gap-1 sm:gap-2 ${
+                className={`flex-1 min-w-0 py-2 sm:py-3 px-1 text-[10px] sm:text-xs font-bold font-display border-b-2 transition flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 ${
                   wizardStep === 2 ? 'border-[#C8951E] text-[#F3E5AB]' : 'border-transparent text-white/40'
                 }`}
               >
-                <Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="truncate">2. Scan BiomÃ©trique IA</span>
+                <Camera className="w-4 h-4 shrink-0" /> <span className="text-center truncate w-full">2. Scan Biométrique IA</span>
               </button>
             </div>
 
@@ -414,7 +414,7 @@ export default function ProDiagnosesPage() {
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {[
                       { id: 'seche', label: 'SÃ¨che / TiraillÃ©e ðŸŒµ' },
-                      { id: 'mixte', label: 'Mixte (Zone T) âš–ï¸' },
+                      { id: 'mixte', label: 'Mixte (Zone T) âš–ï¸ ' },
                       { id: 'grasse', label: 'Grasse / Brillante ðŸ’§' },
                       { id: 'sensible', label: 'Sensible / Rougeurs ðŸŒ¸' },
                       { id: 'reactive', label: 'RÃ©active / EczÃ©ma âš¡' },
@@ -637,8 +637,8 @@ export default function ProDiagnosesPage() {
                   {!isScanning && scanComplete && mockResult ? (
                     <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="absolute inset-0 bg-[#0A0603]/90 z-20 flex flex-col items-center justify-center p-4">
                       <CheckCircle2 className="w-10 h-10 text-emerald-400 mb-2" />
-                      <p className="text-xs font-bold text-emerald-400">Analyse BiomÃ©trique & Questionnaire ValidÃ©s !</p>
-                      <ScoreGauge score={mockResult.scoreGlobal} size={100} />
+                      <p className="text-[10px] sm:text-xs font-bold text-emerald-400 text-center break-words px-2">Analyse Biométrique & Questionnaire Validés !</p>
+                      <ScoreGauge score={mockResult.scoreGlobal} size={80} />
                     </motion.div>
                   ) : !capturedPhoto && !isCameraActive && !isScanning && (
                     <div className="flex flex-col items-center p-4 text-center">
@@ -657,32 +657,32 @@ export default function ProDiagnosesPage() {
                       className="bg-[#1A1410] border border-white/10 rounded-2xl p-4 space-y-4 font-sans"
                     >
                       {/* Dermo-Translator Mode Toggle */}
-                      <div className="bg-[#0A0603] p-1.5 rounded-2xl border border-[#C8951E]/30 flex items-center justify-between shadow-inner">
+                      <div className="bg-[#0A0603] p-1.5 rounded-2xl border border-[#C8951E]/30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between shadow-inner gap-1.5">
                         <button
                           type="button"
                           onClick={() => setMedicalMode(true)}
-                          className={`flex-1 py-2 rounded-xl text-xs font-bold font-mono transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                          className={`flex-1 py-2 px-2 rounded-xl text-[10px] sm:text-xs font-bold font-mono transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-normal sm:whitespace-nowrap ${
                             medicalMode ? 'bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] shadow-md font-black' : 'text-white/50 hover:text-white'
                           }`}
                         >
-                          ðŸ§¬ Mode MÃ©dical Dermo-Clinique
+                          <span className="shrink-0">🧬</span> <span className="text-center leading-tight">Mode Médical Dermo-Clinique</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => setMedicalMode(false)}
-                          className={`flex-1 py-2 rounded-xl text-xs font-bold font-mono transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                          className={`flex-1 py-2 px-2 rounded-xl text-[10px] sm:text-xs font-bold font-mono transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-normal sm:whitespace-nowrap ${
                             !medicalMode ? 'bg-[#4E9FD1] text-white shadow-md font-black' : 'text-white/50 hover:text-white'
                           }`}
                         >
-                          ðŸ’¡ Mode VulgarisÃ© Explication Cliente
+                          <span className="shrink-0">💡</span> <span className="text-center leading-tight">Mode Vulgarisé (Cliente)</span>
                         </button>
                       </div>
 
                       {/* 3D Golden Octo-Spectral Mesh Visualizer Overlay */}
                       <div className="my-2">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-1.5 px-1 gap-1">
-                          <span className="text-[9px] sm:text-[10px] font-mono font-bold text-[#F3E5AB] uppercase tracking-wider flex items-center gap-1.5 break-words">
-                            âœ¨ Cartographie 3D & Scanner Octo-Spectral (60 FPS)
+                          <span className="text-[9px] sm:text-[10px] font-mono font-bold text-[#F3E5AB] uppercase tracking-wider flex items-start sm:items-center gap-1.5 min-w-0">
+                            <span className="shrink-0">✨</span> <span className="break-words leading-tight">Cartographie 3D & Scanner Octo-Spectral</span>
                           </span>
                           <span className="text-[9px] bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 px-2 py-0.5 rounded-full font-mono font-bold shrink-0 self-start">
                             XP-3D
@@ -728,9 +728,9 @@ export default function ProDiagnosesPage() {
 
                       {/* Formulation Botanique Sur-Mesure KÃ¨nÃ¨ Lab */}
                       <div className="bg-[#1A1410] border border-[#2E5A36]/50 p-4 rounded-2xl space-y-2.5">
-                        <div className="flex items-center justify-between border-b border-[#2E5A36]/40 pb-2">
-                          <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest font-display flex items-center gap-1.5">
-                            ðŸŒ± Formulation Botanique Sur-Mesure & Dosages PrÃ©cis
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#2E5A36]/40 pb-2 gap-2">
+                          <span className="text-[10px] sm:text-xs font-bold text-emerald-400 uppercase tracking-widest font-display flex items-start sm:items-center gap-1.5 min-w-0">
+                            <span className="shrink-0">🌱</span> <span className="break-words leading-tight">Formulation Botanique Sur-Mesure</span>
                           </span>
                           <span className="text-[9px] bg-[#2E5A36]/30 text-emerald-300 px-2 py-0.5 rounded-full font-mono font-bold">
                             KÃ¨nÃ¨ Lab Certified
@@ -756,10 +756,10 @@ export default function ProDiagnosesPage() {
                         </div>
                       </div>
 
-                      {/* âš ï¸ ProblÃ¨mes & Anomalies CutanÃ©es DÃ©celÃ©es */}
+                      {/* âš ï¸  ProblÃ¨mes & Anomalies CutanÃ©es DÃ©celÃ©es */}
                       <div className="bg-[#8A1C14]/15 border border-[#8A1C14]/40 p-4 rounded-2xl space-y-2">
-                        <span className="text-xs font-bold text-red-400 uppercase tracking-widest font-display flex items-center gap-1.5">
-                          âš ï¸ Anomalies & Pathologies CutanÃ©es DÃ©celÃ©es au Scan
+                        <span className="text-[10px] sm:text-xs font-bold text-red-400 uppercase tracking-widest font-display flex items-start sm:items-center gap-1.5 min-w-0">
+                          <span className="shrink-0">⚠️</span> <span className="break-words leading-tight">Anomalies & Pathologies Cutanées</span>
                         </span>
                         <div className="space-y-1.5 text-xs">
                           <div className="bg-[#0A0603] p-2 rounded-xl border border-red-500/20 text-red-200 flex flex-col sm:flex-row sm:items-center justify-between font-mono text-[10px] sm:text-[11px] gap-1">
@@ -880,22 +880,22 @@ export default function ProDiagnosesPage() {
               </div>
 
               {/* Dermo-Translator Mode Toggle Header (Medical Scientific vs Clear Practitioner-Client Explanations) */}
-              <div className="bg-[#0A0603] p-1.5 rounded-2xl border border-[#C8951E]/30 flex items-center justify-between shadow-inner">
+              <div className="bg-[#0A0603] p-1.5 rounded-2xl border border-[#C8951E]/30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between shadow-inner gap-1.5">
                 <button
                   onClick={() => setMedicalMode(true)}
-                  className={`flex-1 py-2 rounded-xl text-xs font-bold font-mono transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 py-2 px-2 rounded-xl text-[10px] sm:text-xs font-bold font-mono transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-normal sm:whitespace-nowrap ${
                     medicalMode ? 'bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] shadow-md font-black' : 'text-white/50 hover:text-white'
                   }`}
                 >
-                  ðŸ§¬ Mode MÃ©dical Dermo-Clinique
+                  <span className="shrink-0">🧬</span> <span className="text-center leading-tight">Mode Médical Dermo-Clinique</span>
                 </button>
                 <button
                   onClick={() => setMedicalMode(false)}
-                  className={`flex-1 py-2 rounded-xl text-xs font-bold font-mono transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 py-2 px-2 rounded-xl text-[10px] sm:text-xs font-bold font-mono transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-normal sm:whitespace-nowrap ${
                     !medicalMode ? 'bg-[#4E9FD1] text-white shadow-md font-black' : 'text-white/50 hover:text-white'
                   }`}
                 >
-                  ðŸ’¡ Mode VulgarisÃ© Explication Cliente
+                  <span className="shrink-0">💡</span> <span className="text-center leading-tight">Mode Vulgarisé (Cliente)</span>
                 </button>
               </div>
 
