@@ -551,16 +551,16 @@ export default function ProClientsPage() {
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between text-[9px] text-white/20 font-mono border-t border-white/5 pt-3">
-                    <span>Inscrite le {format(new Date(client.createdAt), 'dd/MM/yyyy')}</span>
+                  <div className="flex items-center justify-between text-[10px] text-white/60 font-mono border-t border-white/10 pt-3">
+                    <span className="flex items-center gap-1"><span className="text-[#C8951E]">🗓️</span> Inscrite le {format(new Date(client.createdAt), 'dd/MM/yyyy')}</span>
                     <a
                       href={`https://wa.me/${client.phone.replace(/[^0-9]/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-2 py-1 bg-[#25D366]/10 text-[#25D366] rounded-full hover:bg-[#25D366]/20 transition-colors"
+                      className="flex items-center gap-1.5 px-2.5 py-1 bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/40 rounded-full hover:bg-[#25D366]/30 font-bold transition-all shadow-sm"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <MessageCircle className="w-3 h-3" /> WhatsApp
+                      <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
                     </a>
                   </div>
                   </div>
