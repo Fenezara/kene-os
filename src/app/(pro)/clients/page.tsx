@@ -473,18 +473,21 @@ export default function ProClientsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((client, i) => {
+              const clientId = client.id || client._id || `client-id-${i}-${client.firstName}-${client.phone}`;
               const allergies = JSON.parse(client.allergies || '[]');
               const fitzColor = FITZPATRICK_COLORS[client.fitzpatrickType] || '#A0522D';
               const skinEmoji = SKIN_TYPE_EMOJI[client.skinType] || '✨';
+              const isExpanded = expandedId === clientId;
+
               return (
                 <motion.div
-                  key={client.id}
+                  key={clientId}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                   className="group relative rounded-3xl border border-white/5 bg-[#1A1410] hover:border-[#C8951E]/30 transition-all duration-300 overflow-hidden"
                 >
-                  <div className="p-5 cursor-pointer" onClick={() => setExpandedId(expandedId === client.id ? null : client.id)}>
+                  <div className="p-5 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : clientId)}>
                     {/* Phototype color accent top line */}
                   <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-3xl opacity-60" style={{ background: fitzColor }} />
                   {/* Hover glow */}
@@ -512,14 +515,14 @@ export default function ProClientsPage() {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       {(() => {
-                        const tier = getLoyaltyTier(client.id);
+                        const tier = getLoyaltyTier(clientId);
                         return (
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/5 border border-white/10" style={{ color: tier.color }}>
                             {tier.icon} {tier.name}
                           </span>
                         );
                       })()}
-                      {expandedId === client.id ? (
+                      {isExpanded ? (
                         <ChevronUp className="w-4 h-4 text-[#C8951E]" />
                       ) : (
                         <ChevronDown className="w-4 h-4 text-white/20 group-hover:text-[#C8951E] transition-colors" />
@@ -566,7 +569,7 @@ export default function ProClientsPage() {
                   </div>
 
                   {/* Expandable History */}
-                  {expandedId === client.id && (
+                  {isExpanded && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
@@ -576,9 +579,9 @@ export default function ProClientsPage() {
                         <span className="font-bold text-[#C8951E] text-[10px] uppercase tracking-widest">
                           Dossier Dermo-Clinique & Suivi Consultations
                         </span>
-                        <Dialog open={isConsultationOpen && selectedClientForConsultation?.id === client.id} onOpenChange={(o) => {
+                        <Dialog open={isConsultationOpen && selectedClientForConsultation?.id === clientId} onOpenChange={(o) => {
                           setIsConsultationOpen(o);
-                          if (o) setSelectedClientForConsultation(client);
+                          if (o) setSelectedClientForConsultation({ ...client, id: clientId });
                         }}>
                           <DialogTrigger asChild>
                             <Button className="h-7 text-[10px] bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 hover:bg-[#C8951E]/30 rounded-xl font-bold cursor-pointer">
