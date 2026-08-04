@@ -180,37 +180,57 @@ export function ClientFullDossierModal({
             </div>
           </div>
 
-          {/* ── NAVIGATION TABS (TOUCH SCROLLABLE ON MOBILE) ── */}
-          <div className="flex border-b border-white/10 bg-[#0A0603] px-3 sm:px-6 gap-1 overflow-x-auto no-scrollbar">
-            {[
-              { id: 'overview' as const, label: '📋 Vue Globale', icon: User },
-              { id: 'self_diagnostic' as const, label: '📱 Bilan Auto-Réalisé', icon: Smartphone, highlight: true },
-              { id: 'photos' as const, label: '📸 Photos Évolution', icon: Camera, badge: photosList.length },
-              { id: 'consultations' as const, label: '🔬 Scan Cabine', icon: Activity },
-              { id: 'appointments' as const, label: '📅 Visites & RDV', icon: Calendar },
-              { id: 'purchases' as const, label: '🧾 Caisse POS', icon: ShoppingBag },
-              { id: 'hair_prescriptions' as const, label: '🌱 Capillaire', icon: Sparkles },
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`py-2.5 sm:py-3.5 px-2.5 sm:px-3.5 font-display font-bold text-[11px] sm:text-xs border-b-2 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0 ${
-                  activeTab === tab.id
-                    ? tab.highlight 
-                      ? 'border-sky-400 text-sky-300 bg-sky-500/10' 
-                      : 'border-[#C8951E] text-[#F3E5AB] bg-[#C8951E]/10'
-                    : 'border-transparent text-white/50 hover:text-white'
-                }`}
+          {/* ── NAVIGATION TABS (SELECT DROPDOWN ON MOBILE, HIGH-CONTRAST PILLS ON TABLET & PC) ── */}
+          <div className="border-b border-white/10 bg-[#0A0603] px-3 sm:px-6 py-2.5">
+            {/* Mobile Dropdown Menu (< 640px) */}
+            <div className="sm:hidden w-full">
+              <select
+                value={activeTab}
+                onChange={(e) => setActiveTab(e.target.value as any)}
+                className="w-full bg-[#1A1410] border-2 border-[#C8951E] text-[#F3E5AB] font-bold text-xs rounded-xl p-2.5 outline-none font-display shadow-lg"
               >
-                <tab.icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-                {tab.badge && (
-                  <span className="bg-[#C8951E] text-[#0F0A05] text-[9px] font-black px-1.5 py-0.2 rounded-full">
-                    {tab.badge}
-                  </span>
-                )}
-              </button>
-            ))}
+                <option value="overview">📋 Vue Globale Client</option>
+                <option value="self_diagnostic">📱 Bilan Auto-Réalisé Cliente</option>
+                <option value="photos">📸 Galerie Évolution Photos ({photosList.length})</option>
+                <option value="consultations">🔬 Scan Cabine & Consultations</option>
+                <option value="appointments">📅 Visites & Rendez-Vous</option>
+                <option value="purchases">🧾 Caisse POS & Factures</option>
+                <option value="hair_prescriptions">🌱 Diagnostic Capillaire & Soins</option>
+              </select>
+            </div>
+
+            {/* Tablet & Desktop Tab Pills (>= 640px) */}
+            <div className="hidden sm:flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+              {[
+                { id: 'overview' as const, label: '📋 Vue Globale', icon: User },
+                { id: 'self_diagnostic' as const, label: '📱 Bilan Auto-Réalisé', icon: Smartphone, highlight: true },
+                { id: 'photos' as const, label: '📸 Photos Évolution', icon: Camera, badge: photosList.length },
+                { id: 'consultations' as const, label: '🔬 Scan Cabine', icon: Activity },
+                { id: 'appointments' as const, label: '📅 Visites & RDV', icon: Calendar },
+                { id: 'purchases' as const, label: '🧾 Caisse POS', icon: ShoppingBag },
+                { id: 'hair_prescriptions' as const, label: '🌱 Capillaire', icon: Sparkles },
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`py-2 px-3.5 rounded-xl font-display font-bold text-xs transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0 border ${
+                    activeTab === tab.id
+                      ? tab.highlight 
+                        ? 'border-sky-400 text-black bg-sky-300 font-black shadow-md' 
+                        : 'border-[#C8951E] text-[#0F0A05] bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] font-black shadow-md'
+                      : 'border-white/10 text-white/80 hover:text-white hover:bg-white/5 bg-white/5'
+                  }`}
+                >
+                  <tab.icon className="w-3.5 h-3.5" />
+                  <span>{tab.label}</span>
+                  {tab.badge && (
+                    <span className={`text-[9px] font-black px-1.5 py-0.2 rounded-full ${activeTab === tab.id ? 'bg-[#0F0A05] text-[#F3E5AB]' : 'bg-[#C8951E] text-[#0F0A05]'}`}>
+                      {tab.badge}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* ── CONTENT BODY (RESPONSIVE GRID) ── */}
