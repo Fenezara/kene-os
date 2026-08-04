@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -38,7 +38,7 @@ export default function OnboardingPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const salonTitle = formData.salonName || 'Kènè Institut Beauté';
+    const salonTitle = formData.salonName || 'KÃ¨nÃ¨ Institut BeautÃ©';
     const tenantSettings = {
       identity: { commercialName: salonTitle, legalName: salonTitle + ' SAS', type: 'Institut', logoUrl: null },
       address: { street: 'Adresse Principale', phone: '+225 07 00 00 00', email: 'contact@salon.com' },
@@ -50,23 +50,23 @@ export default function OnboardingPage() {
     registerNewTenant({
       name: salonTitle,
       type: 'Institut & Spa Botanique',
-      subscriptionTier: formData.plan === 'chaine' ? 'Chaîne' : formData.plan === 'pro' ? 'Pro' : 'Essentiel',
-      country: { code: formData.country || 'CI', name: formData.country === 'SN' ? 'Sénégal' : 'Côte d\'Ivoire' },
-      ownerName: 'Gérant Fondateur'
+      subscriptionTier: formData.plan === 'chaine' ? 'ChaÃ®ne' : formData.plan === 'pro' ? 'Pro' : 'Essentiel',
+      country: { code: formData.country || 'CI', name: formData.country === 'SN' ? 'SÃ©nÃ©gal' : 'CÃ´te d\'Ivoire' },
+      ownerName: 'GÃ©rant Fondateur'
     });
 
     localStorage.setItem('kene_tenant_settings', JSON.stringify(tenantSettings));
     toast({
-      title: "✅ Succès",
-      description: `Le salon "${salonTitle}" a été configuré avec succès !`,
+      title: "âœ… SuccÃ¨s",
+      description: `Le salon "${salonTitle}" a Ã©tÃ© configurÃ© avec succÃ¨s !`,
     });
     router.push('/dashboard');
   };
 
   const plans = [
-    { id: 'essentiel', name: 'Essentiel', desc: 'Pour les indépendants et petits salons', price: '15 000 FCFA/mois' },
-    { id: 'pro', name: 'Pro', desc: 'Gestion complète pour salons en croissance', price: '30 000 FCFA/mois' },
-    { id: 'chaine', name: 'Chaîne', desc: 'Multi-salons avec gestion consolidée', price: 'Sur devis' },
+    { id: 'essentiel', name: 'Essentiel', desc: 'Pour les indÃ©pendants et petits salons', price: '15 000 FCFA/mois' },
+    { id: 'pro', name: 'Pro', desc: 'Gestion complÃ¨te pour salons en croissance', price: '30 000 FCFA/mois' },
+    { id: 'chaine', name: 'ChaÃ®ne', desc: 'Multi-salons avec gestion consolidÃ©e', price: 'Sur devis' },
   ];
 
   return (
@@ -83,9 +83,9 @@ export default function OnboardingPage() {
       <div className="w-full max-w-3xl">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold tracking-tight">
-            Bienvenue sur <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F3E5AB] to-[#C8951E]">Kènè Pro</span>
+            Bienvenue sur <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F3E5AB] to-[#C8951E]">KÃ¨nÃ¨ Pro</span>
           </h1>
-          <p className="text-white/60 mt-2">Configurez votre salon en 3 étapes simples</p>
+          <p className="text-white/60 mt-2">Configurez votre salon en 3 Ã©tapes simples</p>
         </div>
 
         <div className="flex justify-between items-center mb-8 px-12">
@@ -160,7 +160,7 @@ export default function OnboardingPage() {
                       Configuration Salon & Pays UEMOA
                     </h2>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2 col-span-2">
                       <label className="text-sm text-white/80">Nom du Salon</label>
                       <input 
@@ -178,8 +178,8 @@ export default function OnboardingPage() {
                         onChange={(e) => updateForm('country', e.target.value)}
                         className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl px-4 py-2 focus:border-[#C8951E] outline-none"
                       >
-                        <option value="SN">Sénégal (SN)</option>
-                        <option value="CI">Côte d'Ivoire (CI)</option>
+                        <option value="SN">SÃ©nÃ©gal (SN)</option>
+                        <option value="CI">CÃ´te d'Ivoire (CI)</option>
                         <option value="ML">Mali (ML)</option>
                         <option value="BF">Burkina Faso (BF)</option>
                       </select>
@@ -195,7 +195,7 @@ export default function OnboardingPage() {
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm text-white/80">Numéro RCCM</label>
+                      <label className="text-sm text-white/80">NumÃ©ro RCCM</label>
                       <input 
                         type="text" 
                         value={formData.rccm}
@@ -205,7 +205,7 @@ export default function OnboardingPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm text-white/80">NINEA / Numéro TVA</label>
+                      <label className="text-sm text-white/80">NINEA / NumÃ©ro TVA</label>
                       <input 
                         type="text" 
                         value={formData.tva}
@@ -241,8 +241,8 @@ export default function OnboardingPage() {
                           : 'border-white/10 bg-white/5 hover:border-white/20'
                       }`}
                     >
-                      <h3 className="font-bold text-lg mb-2">Template Pré-rempli</h3>
-                      <p className="text-sm text-white/60">Utiliser notre catalogue standard (Coiffure, Soins Visage, Manucure) adapté à l'Afrique de l'Ouest.</p>
+                      <h3 className="font-bold text-lg mb-2">Template PrÃ©-rempli</h3>
+                      <p className="text-sm text-white/60">Utiliser notre catalogue standard (Coiffure, Soins Visage, Manucure) adaptÃ© Ã  l'Afrique de l'Ouest.</p>
                     </div>
                     <div
                       onClick={() => updateForm('importMethod', 'csv')}
@@ -252,7 +252,7 @@ export default function OnboardingPage() {
                           : 'border-white/10 bg-white/5 hover:border-white/20'
                       }`}
                     >
-                      <h3 className="font-bold text-lg mb-2">Import CSV personnalisé</h3>
+                      <h3 className="font-bold text-lg mb-2">Import CSV personnalisÃ©</h3>
                       <p className="text-sm text-white/60">Importer votre propre fichier Excel/CSV contenant tous vos services et tarifs.</p>
                     </div>
                   </div>
@@ -267,7 +267,7 @@ export default function OnboardingPage() {
                   onClick={prevStep}
                   className="px-6 py-2 rounded-xl border border-white/20 text-white hover:bg-white/10 flex items-center gap-2"
                 >
-                  <ArrowLeft className="w-4 h-4" /> Précédent
+                  <ArrowLeft className="w-4 h-4" /> PrÃ©cÃ©dent
                 </motion.button>
               ) : <div></div>}
 

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -136,11 +136,11 @@ export default function AppointmentsPage() {
     const diffHours = diffMs / (1000 * 60 * 60)
 
     if (diffHours > 72) {
-      return { rate: 1.0, refund: app.depositAmount, text: 'Remboursement Intégral (100%)', style: 'text-emerald-400' }
+      return { rate: 1.0, refund: app.depositAmount, text: 'Remboursement IntÃ©gral (100%)', style: 'text-emerald-400' }
     } else if (diffHours > 24) {
       return { rate: 0.8, refund: Math.round(app.depositAmount * 0.8), text: 'Remboursement Standard (80%)', style: 'text-green-400' }
     } else if (diffHours > 2) {
-      return { rate: 0.3, refund: Math.round(app.depositAmount * 0.3), text: 'Pénalité Appliquée (30% remboursé)', style: 'text-orange-400' }
+      return { rate: 0.3, refund: Math.round(app.depositAmount * 0.3), text: 'PÃ©nalitÃ© AppliquÃ©e (30% remboursÃ©)', style: 'text-orange-400' }
     }
     return { rate: 0.0, refund: 0, text: 'Non Remboursable (0%)', style: 'text-red-400' }
   }
@@ -156,11 +156,11 @@ export default function AppointmentsPage() {
 
       if (json.success) {
         toast({
-          title: "❌ Rendez-vous Annulé",
-          description: `Votre rendez-vous a été annulé. ${
+          title: "âŒ Rendez-vous AnnulÃ©",
+          description: `Votre rendez-vous a Ã©tÃ© annulÃ©. ${
             json.refundAmount > 0 
-              ? `${json.refundAmount.toLocaleString()} F ont été recrédités sur votre portefeuille.` 
-              : "L'acompte a été conservé selon la politique horaire."
+              ? `${json.refundAmount.toLocaleString()} F ont Ã©tÃ© recrÃ©ditÃ©s sur votre portefeuille.` 
+              : "L'acompte a Ã©tÃ© conservÃ© selon la politique horaire."
           }`,
         })
         setCancelTarget(null)
@@ -170,7 +170,7 @@ export default function AppointmentsPage() {
       }
     } catch (e: any) {
       toast({
-        title: "❌ Échec de l'annulation",
+        title: "âŒ Ã‰chec de l'annulation",
         description: e.message,
         variant: "destructive"
       })
@@ -182,7 +182,7 @@ export default function AppointmentsPage() {
   const handleCreateAppointment = async () => {
     if (!selectedService || !selectedEmployee || !selectedDate || !selectedTime || !clientId) {
       toast({
-        title: "⚠️ Formulaire incomplet",
+        title: "âš ï¸ Formulaire incomplet",
         description: "Veuillez renseigner la date, l'heure et les intervenants.",
         variant: "destructive"
       })
@@ -194,8 +194,8 @@ export default function AppointmentsPage() {
     
     if (paymentMethod === 'wallet' && walletBalance !== null && walletBalance < depositAmount) {
       toast({
-        title: "⚠️ Solde insuffisant",
-        description: "Votre portefeuille Kènè n'a pas assez de fonds pour payer l'acompte (5 000 F).",
+        title: "âš ï¸ Solde insuffisant",
+        description: "Votre portefeuille KÃ¨nÃ¨ n'a pas assez de fonds pour payer l'acompte (5 000 F).",
         variant: "destructive"
       })
       return
@@ -203,8 +203,8 @@ export default function AppointmentsPage() {
 
     if (paymentMethod !== 'wallet' && !momoNumber) {
       toast({
-        title: "⚠️ Numéro requis",
-        description: "Veuillez entrer votre numéro Mobile Money pour valider la transaction.",
+        title: "âš ï¸ NumÃ©ro requis",
+        description: "Veuillez entrer votre numÃ©ro Mobile Money pour valider la transaction.",
         variant: "destructive"
       })
       return
@@ -231,7 +231,7 @@ export default function AppointmentsPage() {
           amount: selectedServ?.price,
           depositAmount,
           paymentMethod,
-          notes: 'Réservé via le portail client Kènè'
+          notes: 'RÃ©servÃ© via le portail client KÃ¨nÃ¨'
         })
       })
 
@@ -241,11 +241,11 @@ export default function AppointmentsPage() {
         setWizardStep('success')
         if (userId) fetchData(userId)
       } else {
-        throw new Error(json.error?.message || "Erreur de réservation.")
+        throw new Error(json.error?.message || "Erreur de rÃ©servation.")
       }
     } catch (e: any) {
       toast({
-        title: "❌ Échec de la réservation",
+        title: "âŒ Ã‰chec de la rÃ©servation",
         description: e.message,
         variant: "destructive"
       })
@@ -255,9 +255,9 @@ export default function AppointmentsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'confirmed': return { label: 'Confirmé', style: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' }
-      case 'completed': return { label: 'Effectué', style: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' }
-      case 'cancelled': return { label: 'Annulé', style: 'bg-red-500/10 text-red-400 border border-red-500/20' }
+      case 'confirmed': return { label: 'ConfirmÃ©', style: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' }
+      case 'completed': return { label: 'EffectuÃ©', style: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' }
+      case 'cancelled': return { label: 'AnnulÃ©', style: 'bg-red-500/10 text-red-400 border border-red-500/20' }
       default: return { label: 'En attente', style: 'bg-amber-500/10 text-amber-400 border border-amber-500/20' }
     }
   }
@@ -292,9 +292,9 @@ export default function AppointmentsPage() {
       <div className="bg-[#241C16]/50 border border-white/5 p-4 rounded-2xl flex items-start gap-3 text-[10px]">
         <Info className="w-4 h-4 text-gold-kene shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <h4 className="font-bold text-white uppercase tracking-wider">Politique d'Annulation Kènè</h4>
+          <h4 className="font-bold text-white uppercase tracking-wider">Politique d'Annulation KÃ¨nÃ¨</h4>
           <p className="text-karite/60 leading-relaxed font-sans">
-            Annulation libre et remboursée à **100%** à plus de 72h. Remboursement à **80%** entre 24h et 72h, et **30%** à moins de 24h. Aucun remboursement à moins de 2h. Les remboursements sont crédités instantanément sur votre portefeuille.
+            Annulation libre et remboursÃ©e Ã  **100%** Ã  plus de 72h. Remboursement Ã  **80%** entre 24h et 72h, et **30%** Ã  moins de 24h. Aucun remboursement Ã  moins de 2h. Les remboursements sont crÃ©ditÃ©s instantanÃ©ment sur votre portefeuille.
           </p>
         </div>
       </div>
@@ -310,7 +310,7 @@ export default function AppointmentsPage() {
           </div>
         ) : appointments.length === 0 ? (
           <div className="text-center py-16 bg-[#1A1410]/40 border border-white/5 rounded-2xl text-karite/40 text-xs italic font-sans">
-            Aucun rendez-vous planifié.
+            Aucun rendez-vous planifiÃ©.
           </div>
         ) : (
           <div className="space-y-3">
@@ -344,7 +344,7 @@ export default function AppointmentsPage() {
 
                   <div className="flex justify-between items-center border-t border-white/5 pt-3.5 text-[10px]">
                     <div className="font-mono text-karite/50">
-                      Acompte payé : <span className="text-white font-bold">{app.depositAmount.toLocaleString()} F</span>
+                      Acompte payÃ© : <span className="text-white font-bold">{app.depositAmount.toLocaleString()} F</span>
                     </div>
 
                     {upcoming && (
@@ -377,10 +377,10 @@ export default function AppointmentsPage() {
                 <div className="space-y-4">
                   <div className="space-y-1">
                     <h3 className="font-display font-bold text-sm text-gold-kene uppercase tracking-wider flex items-center gap-1.5">
-                      <CalendarIcon className="w-4 h-4" /> Réserver un Soin Kènè
+                      <CalendarIcon className="w-4 h-4" /> RÃ©server un Soin KÃ¨nÃ¨
                     </h3>
                     <p className="text-[10px] text-karite/50 font-sans">
-                      Choisissez la prestation, la praticienne et le créneau idéal.
+                      Choisissez la prestation, la praticienne et le crÃ©neau idÃ©al.
                     </p>
                   </div>
 
@@ -401,7 +401,7 @@ export default function AppointmentsPage() {
 
                     {/* Practitioner selection */}
                     <div className="space-y-1">
-                      <label className="text-[9px] uppercase tracking-wider font-semibold text-karite/40 font-display">Praticienne / Esthéticienne</label>
+                      <label className="text-[9px] uppercase tracking-wider font-semibold text-karite/40 font-display">Praticienne / EsthÃ©ticienne</label>
                       <select
                         value={selectedEmployee}
                         onChange={(e) => setSelectedEmployee(e.target.value)}
@@ -414,7 +414,7 @@ export default function AppointmentsPage() {
                     </div>
 
                     {/* Date and Time slots */}
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <div className="space-y-1">
                         <label className="text-[9px] uppercase tracking-wider font-semibold text-karite/40 font-display">Date</label>
                         <input
@@ -461,10 +461,10 @@ export default function AppointmentsPage() {
                 <div className="space-y-4">
                   <div className="space-y-1">
                     <h3 className="font-display font-bold text-sm text-gold-kene uppercase tracking-wider flex items-center gap-1.5">
-                      <Coins className="w-4 h-4" /> Acompte de Réservation
+                      <Coins className="w-4 h-4" /> Acompte de RÃ©servation
                     </h3>
                     <p className="text-[10px] text-karite/50 font-sans">
-                      Pour valider votre créneau, un acompte de **5 000 FCFA** est requis.
+                      Pour valider votre crÃ©neau, un acompte de **5 000 FCFA** est requis.
                     </p>
                   </div>
 
@@ -500,7 +500,7 @@ export default function AppointmentsPage() {
                       </div>
                     ) : (
                       <div className="space-y-1">
-                        <label className="text-[9px] uppercase tracking-wider font-semibold text-karite/40 font-display block">Numéro Mobile Money</label>
+                        <label className="text-[9px] uppercase tracking-wider font-semibold text-karite/40 font-display block">NumÃ©ro Mobile Money</label>
                         <input
                           type="tel"
                           placeholder="Ex: 07080910"
@@ -534,7 +534,7 @@ export default function AppointmentsPage() {
                 <div className="space-y-4 py-6 text-center">
                   <div className="w-10 h-10 border-4 border-gold-kene border-t-transparent rounded-full animate-spin mx-auto"></div>
                   <div className="space-y-1">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-white">Création du rendez-vous...</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-white">CrÃ©ation du rendez-vous...</h4>
                     {paymentMethod !== 'wallet' && (
                       <p className="text-[10px] text-white/40">Veuillez approuver la transaction Mobile Money sur votre appareil.</p>
                     )}
@@ -548,9 +548,9 @@ export default function AppointmentsPage() {
                     <CheckCircle className="w-6 h-6 animate-bounce" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-display font-bold text-sm uppercase text-emerald-400">Rendez-vous Confirmé !</h3>
+                    <h3 className="font-display font-bold text-sm uppercase text-emerald-400">Rendez-vous ConfirmÃ© !</h3>
                     <p className="text-[11px] text-white/50 leading-relaxed font-sans">
-                      Votre acompte de **5 000 F** a été validé. La cabine et votre esthéticienne vous sont réservées.
+                      Votre acompte de **5 000 F** a Ã©tÃ© validÃ©. La cabine et votre esthÃ©ticienne vous sont rÃ©servÃ©es.
                     </p>
                   </div>
 
@@ -584,21 +584,21 @@ export default function AppointmentsPage() {
                     <AlertTriangle className="w-4 h-4" /> Confirmer l'Annulation
                   </h3>
                   <p className="text-[10px] text-karite/50 font-sans">
-                    Vous êtes sur le point d'annuler votre soin : **{cancelTarget.service.name}**.
+                    Vous Ãªtes sur le point d'annuler votre soin : **{cancelTarget.service.name}**.
                   </p>
                 </div>
 
                 <div className="bg-[#241C16] border border-white/5 p-4 rounded-xl space-y-2 text-xs">
                   <div className="flex justify-between text-karite/50">
-                    <span>Acompte Versé :</span>
+                    <span>Acompte VersÃ© :</span>
                     <span className="font-mono text-white">{cancelTarget.depositAmount.toLocaleString()} F</span>
                   </div>
                   <div className="flex justify-between text-karite/50">
-                    <span>Règle horaire :</span>
+                    <span>RÃ¨gle horaire :</span>
                     <span className={`font-semibold ${refundInfo.style}`}>{refundInfo.text}</span>
                   </div>
                   <div className="flex justify-between font-bold border-t border-white/5 pt-2 mt-2 text-white">
-                    <span>Montant Remboursé :</span>
+                    <span>Montant RemboursÃ© :</span>
                     <span className="font-mono text-gold-kene">{refundInfo.refund.toLocaleString()} FCFA</span>
                   </div>
                 </div>

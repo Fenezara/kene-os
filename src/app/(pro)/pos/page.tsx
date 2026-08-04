@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,11 +17,11 @@ import { DigitalReceiptModal } from '@/components/pos/DigitalReceiptModal';
 import { OfflineSyncBanner } from '@/components/pos/OfflineSyncBanner';
 
 const PAYMENT_METHODS = [
-  { value: 'cash', label: 'Espèces', icon: '💵', color: '#4CAF6E', badge: 'bg-emerald-500/10 text-emerald-400' },
-  { value: 'wave', label: 'Wave', icon: '🌊', color: '#00B4D8', badge: 'bg-blue-500/10 text-blue-400' },
-  { value: 'orange', label: 'Orange Money', icon: '🟠', color: '#FF6B00', badge: 'bg-orange-500/10 text-orange-400' },
-  { value: 'mtn', label: 'MTN MoMo', icon: '📱', color: '#FFCB00', badge: 'bg-yellow-500/10 text-yellow-400' },
-  { value: 'card', label: 'Carte Bancaire', icon: '💳', color: '#8B5CF6', badge: 'bg-purple-500/10 text-purple-400' },
+  { value: 'cash', label: 'EspÃ¨ces', icon: 'ðŸ’µ', color: '#4CAF6E', badge: 'bg-emerald-500/10 text-emerald-400' },
+  { value: 'wave', label: 'Wave', icon: 'ðŸŒŠ', color: '#00B4D8', badge: 'bg-blue-500/10 text-blue-400' },
+  { value: 'orange', label: 'Orange Money', icon: 'ðŸŸ ', color: '#FF6B00', badge: 'bg-orange-500/10 text-orange-400' },
+  { value: 'mtn', label: 'MTN MoMo', icon: 'ðŸ“±', color: '#FFCB00', badge: 'bg-yellow-500/10 text-yellow-400' },
+  { value: 'card', label: 'Carte Bancaire', icon: 'ðŸ’³', color: '#8B5CF6', badge: 'bg-purple-500/10 text-purple-400' },
 ]
 
 export default function ProPOSPage() {
@@ -49,7 +49,7 @@ export default function ProPOSPage() {
       if (clientsData.success) setClients(clientsData.clients);
       if (apptsData.success) setAppointments(apptsData.appointments.filter((a: any) => a.status === 'pending' || a.status === 'confirmed'));
     } catch {
-      toast({ title: "Erreur", description: "Impossible de charger les données.", variant: "destructive" });
+      toast({ title: "Erreur", description: "Impossible de charger les donnÃ©es.", variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,7 @@ export default function ProPOSPage() {
       });
       const data = await res.json();
       if (data.success) {
-        toast({ title: "✅ Vente enregistrée", description: "Reçu numérique généré." });
+        toast({ title: "âœ… Vente enregistrÃ©e", description: "ReÃ§u numÃ©rique gÃ©nÃ©rÃ©." });
         setIsDialogOpen(false);
         const total = parseFloat(formData.subtotal || '0');
         const vat = Math.round(total * 0.18);
@@ -75,7 +75,7 @@ export default function ProPOSPage() {
           createdAt: new Date(),
           clientName: clientObj ? `${clientObj.firstName} ${clientObj.lastName}` : 'Client de passage',
           clientPhone: clientObj?.phone,
-          items: [{ name: 'Prestation Soin & Cosmétiques', price: total, qty: 1 }],
+          items: [{ name: 'Prestation Soin & CosmÃ©tiques', price: total, qty: 1 }],
           subtotalHT: total - vat, vatAmount: vat, totalTTC: total, paymentMethod: formData.method
         });
         setIsReceiptOpen(true);
@@ -123,7 +123,7 @@ export default function ProPOSPage() {
 
       <OfflineSyncBanner />
 
-      {/* ── HEADER ── */}
+      {/* â”€â”€ HEADER â”€â”€ */}
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -134,7 +134,7 @@ export default function ProPOSPage() {
               Point de <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">Vente</span>
             </h1>
           </div>
-          <p className="text-white/40 text-xs">Encaissez les prestations, gérez les acomptes MoMo et émettez des reçus certifiés.</p>
+          <p className="text-white/40 text-xs">Encaissez les prestations, gÃ©rez les acomptes MoMo et Ã©mettez des reÃ§us certifiÃ©s.</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ export default function ProPOSPage() {
             onClick={() => setIsZReportOpen(true)}
             className="flex items-center gap-2 px-4 py-3 rounded-2xl font-bold text-xs bg-white/5 hover:bg-white/10 text-white border border-white/10 cursor-pointer transition"
           >
-            <Receipt className="w-4 h-4 text-[#C8951E]" /> Rapport Z Clôture
+            <Receipt className="w-4 h-4 text-[#C8951E]" /> Rapport Z ClÃ´ture
           </button>
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -160,21 +160,21 @@ export default function ProPOSPage() {
             <div className="h-0.5 bg-gradient-to-r from-transparent via-[#C8951E] to-transparent -mt-[1px] mx-6 rounded-full" />
             <DialogHeader className="pt-2">
               <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
-                <span className="text-2xl">💰</span> Encaisser une prestation
+                <span className="text-2xl">ðŸ’°</span> Encaisser une prestation
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleCreateSale} className="space-y-4 mt-2">
               <div className="space-y-1.5">
-                <Label className="text-white/50 text-xs">Lier à un RDV (Optionnel)</Label>
+                <Label className="text-white/50 text-xs">Lier Ã  un RDV (Optionnel)</Label>
                 <Select value={formData.appointmentId} onValueChange={handleAppointmentChange}>
                   <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-xl">
-                    <SelectValue placeholder="Sélectionner un RDV en attente..." />
+                    <SelectValue placeholder="SÃ©lectionner un RDV en attente..." />
                   </SelectTrigger>
                   <SelectContent className="bg-[#1A1410] border-[#362A21] text-white">
                     <SelectItem value="none">Aucun (Vente directe)</SelectItem>
                     {appointments.map((a: any) => (
                       <SelectItem key={a.id} value={a.id}>
-                        {format(new Date(a.startAt), 'dd/MM HH:mm')} · {a.client?.firstName} · {a.amount.toLocaleString()} F
+                        {format(new Date(a.startAt), 'dd/MM HH:mm')} Â· {a.client?.firstName} Â· {a.amount.toLocaleString()} F
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -184,7 +184,7 @@ export default function ProPOSPage() {
               <div className="space-y-1.5">
                 <Label className="text-white/50 text-xs">Recherche Client Rapide (CRM)</Label>
                 <Input
-                  placeholder="Rechercher nom, téléphone..."
+                  placeholder="Rechercher nom, tÃ©lÃ©phone..."
                   className="bg-white/5 border-white/10 text-white rounded-xl focus:border-[#C8951E] mb-2 h-10"
                 />
                 <select 
@@ -195,13 +195,13 @@ export default function ProPOSPage() {
                   <option value="none" className="bg-[#0F0A05] text-white/50">-- Client de passage --</option>
                   {clients.map((c: any) => (
                     <option key={c.id} value={c.id} className="bg-[#0F0A05] text-white font-bold py-1">
-                      👤 {c.firstName} {c.lastName} ({c.phone})
+                      ðŸ‘¤ {c.firstName} {c.lastName} ({c.phone})
                     </option>
                   ))}
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5 col-span-2 md:col-span-1">
                   <Label className="text-white/50 text-xs">Montant (FCFA)</Label>
                   <Input
@@ -292,7 +292,7 @@ export default function ProPOSPage() {
                   className="flex-1 h-11 rounded-xl font-bold text-sm text-[#0F0A05] cursor-pointer"
                   style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)' }}
                 >
-                  ✅ Enregistrer & Émettre Reçu
+                  âœ… Enregistrer & Ã‰mettre ReÃ§u
                 </motion.button>
               </DialogFooter>
             </form>
@@ -301,7 +301,7 @@ export default function ProPOSPage() {
         </div>
       </motion.div>
 
-      {/* ── KPI TOP BAR ── */}
+      {/* â”€â”€ KPI TOP BAR â”€â”€ */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -312,7 +312,7 @@ export default function ProPOSPage() {
           { label: "Ventes Aujourd'hui", value: sales.filter(s => new Date(s.createdAt).toDateString() === new Date().toDateString()).length, suffix: 'ventes', accent: '#C8951E' },
           { label: 'CA Aujourd\'hui', value: todayRevenue.toLocaleString('fr-FR'), suffix: 'FCFA', accent: '#4CAF6E' },
           { label: 'CA Total (Mois)', value: sales.reduce((s, v) => s + v.total, 0).toLocaleString('fr-FR'), suffix: 'FCFA', accent: '#4E9FD1' },
-          { label: 'Factures Émises', value: sales.length, suffix: 'total', accent: '#E07A2B' },
+          { label: 'Factures Ã‰mises', value: sales.length, suffix: 'total', accent: '#E07A2B' },
         ].map((kpi, i) => (
           <div key={i} className="relative overflow-hidden rounded-2xl bg-[#1A1410] border border-white/5 p-4">
             <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full blur-xl opacity-15" style={{ background: kpi.accent }} />
@@ -323,7 +323,7 @@ export default function ProPOSPage() {
         ))}
       </motion.div>
 
-      {/* ── SALES TABLE ── */}
+      {/* â”€â”€ SALES TABLE â”€â”€ */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
         <div className="rounded-3xl border border-white/5 bg-[#1A1410] overflow-hidden">
           {/* Table header bar */}
@@ -332,7 +332,7 @@ export default function ProPOSPage() {
               <div className="w-7 h-7 rounded-xl bg-[#C8951E]/15 flex items-center justify-center">
                 <Receipt className="w-3.5 h-3.5 text-[#C8951E]" />
               </div>
-              <span className="font-display font-bold text-sm text-white">Historique des Ventes & Reçus</span>
+              <span className="font-display font-bold text-sm text-white">Historique des Ventes & ReÃ§us</span>
               <span className="text-[10px] bg-[#C8951E]/10 text-[#C8951E] px-2 py-0.5 rounded-full font-mono">{sales.length}</span>
             </div>
             <div className="relative w-full md:w-56">
@@ -352,8 +352,8 @@ export default function ProPOSPage() {
             </div>
           ) : filteredSales.length === 0 ? (
             <div className="text-center py-16 text-white/20 text-xs font-sans">
-              <div className="text-4xl mb-3">🛒</div>
-              Aucune vente enregistrée.
+              <div className="text-4xl mb-3">ðŸ›’</div>
+              Aucune vente enregistrÃ©e.
             </div>
           ) : (
             <div className="divide-y divide-white/5">
@@ -377,7 +377,7 @@ export default function ProPOSPage() {
                         </span>
                       </div>
                       <div className="text-[11px] text-white/60 mt-0.5">
-                        {sale.client ? `${sale.client.firstName} ${sale.client.lastName}` : 'Client de passage'} · {format(new Date(sale.createdAt), 'dd/MM/yyyy HH:mm')}
+                        {sale.client ? `${sale.client.firstName} ${sale.client.lastName}` : 'Client de passage'} Â· {format(new Date(sale.createdAt), 'dd/MM/yyyy HH:mm')}
                       </div>
                     </div>
 
@@ -400,13 +400,13 @@ export default function ProPOSPage() {
 
       <DigitalReceiptModal isOpen={isReceiptOpen} onClose={() => setIsReceiptOpen(false)} sale={selectedReceipt} />
 
-      {/* 🧾 MODAL RAPPORT Z FIN DE JOURNÉE & CLÔTURE CAISSE */}
+      {/* ðŸ§¾ MODAL RAPPORT Z FIN DE JOURNÃ‰E & CLÃ”TURE CAISSE */}
       <Dialog open={isZReportOpen} onOpenChange={setIsZReportOpen}>
         <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/40 text-white rounded-3xl max-w-md p-6 shadow-2xl">
           <DialogHeader>
             <DialogTitle className="font-display text-xl text-white flex items-center justify-between">
               <span className="flex items-center gap-2">
-                <Receipt className="w-5 h-5 text-[#C8951E]" /> Rapport Z — Clôture Caisse
+                <Receipt className="w-5 h-5 text-[#C8951E]" /> Rapport Z â€” ClÃ´ture Caisse
               </span>
               <Badge className="bg-[#C8951E]/15 text-[#F3E5AB] border border-[#C8951E]/30 text-[10px] font-mono font-bold">
                 {format(new Date(), 'dd/MM/yyyy')}
@@ -418,7 +418,7 @@ export default function ProPOSPage() {
             {/* Total Today */}
             <div className="bg-gradient-to-br from-[#1A1410] to-[#0A0603] border border-[#C8951E]/30 p-4 rounded-2xl flex items-center justify-between">
               <div>
-                <span className="text-white/50 text-[10px] font-mono uppercase block">Chiffre d'Affaires Encaissé Aujourd'hui</span>
+                <span className="text-white/50 text-[10px] font-mono uppercase block">Chiffre d'Affaires EncaissÃ© Aujourd'hui</span>
                 <span className="font-display font-black text-2xl text-[#F3E5AB]">{todayRevenue.toLocaleString('fr-FR')} FCFA</span>
               </div>
               <div className="text-right">
@@ -454,13 +454,13 @@ export default function ProPOSPage() {
 
             {/* Fiscal VAT Summary */}
             <div className="bg-[#1A1410] border border-white/10 p-3 rounded-xl flex justify-between items-center text-xs">
-              <span className="text-white/60 font-sans">TVA Collectée (Taux 18% UEMOA) :</span>
+              <span className="text-white/60 font-sans">TVA CollectÃ©e (Taux 18% UEMOA) :</span>
               <span className="font-mono font-bold text-[#C8951E]">{Math.round(todayRevenue * 0.18).toLocaleString('fr-FR')} FCFA</span>
             </div>
 
             <Button
               onClick={() => {
-                toast({ title: "🖨️ Rapport Z Généré !", description: "Impression du ticket de clôture caisse en cours..." });
+                toast({ title: "ðŸ–¨ï¸ Rapport Z GÃ©nÃ©rÃ© !", description: "Impression du ticket de clÃ´ture caisse en cours..." });
                 setTimeout(() => window.print(), 500);
               }}
               className="w-full h-11 bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] text-[#0F0A05] font-black text-xs rounded-xl shadow-lg cursor-pointer flex items-center justify-center gap-2 mt-2"

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,13 +11,13 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 
-// Mappage des 5 Origines & Genres de Produits Cosmétiques
+// Mappage des 5 Origines & Genres de Produits CosmÃ©tiques
 export const COSMETIC_ORIGINS: Record<string, { label: string; shortLabel: string; emoji: string; badgeStyle: string }> = {
-  'tradipraticien': { label: '🌿 Tradipraticien / Botanique Ancestral', shortLabel: 'Tradipraticien 🌿', emoji: '🌿', badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
-  'pharmaceutique': { label: '💊 Dermo-Pharmaceutique', shortLabel: 'Dermo-Pharmacie 💊', emoji: '💊', badgeStyle: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' },
-  'artisanal': { label: '🥣 Fait Maison / Artisanal (Salon)', shortLabel: 'Fait Maison 🥣', emoji: '🥣', badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40' },
-  'marque': { label: '👑 Produit de Marque / International', shortLabel: 'Grande Marque 👑', emoji: '👑', badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40' },
-  'sur_mesure': { label: '✨ Formulation Sur-Mesure Kènè', shortLabel: 'Sur-Mesure ✨', emoji: '✨', badgeStyle: 'bg-[var(--gold-kene)]/20 text-[#F3E5AB] border-[var(--gold-kene)]/50' },
+  'tradipraticien': { label: 'ðŸŒ¿ Tradipraticien / Botanique Ancestral', shortLabel: 'Tradipraticien ðŸŒ¿', emoji: 'ðŸŒ¿', badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
+  'pharmaceutique': { label: 'ðŸ’Š Dermo-Pharmaceutique', shortLabel: 'Dermo-Pharmacie ðŸ’Š', emoji: 'ðŸ’Š', badgeStyle: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' },
+  'artisanal': { label: 'ðŸ¥£ Fait Maison / Artisanal (Salon)', shortLabel: 'Fait Maison ðŸ¥£', emoji: 'ðŸ¥£', badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40' },
+  'marque': { label: 'ðŸ‘‘ Produit de Marque / International', shortLabel: 'Grande Marque ðŸ‘‘', emoji: 'ðŸ‘‘', badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40' },
+  'sur_mesure': { label: 'âœ¨ Formulation Sur-Mesure KÃ¨nÃ¨', shortLabel: 'Sur-Mesure âœ¨', emoji: 'âœ¨', badgeStyle: 'bg-[var(--gold-kene)]/20 text-[#F3E5AB] border-[var(--gold-kene)]/50' },
 };
 
 const getOriginMeta = (origin?: string) => {
@@ -26,18 +26,18 @@ const getOriginMeta = (origin?: string) => {
 
 // African botanical product categories with emojis
 const CATEGORY_META: Record<string, { emoji: string; color: string }> = {
-  'Cosmétiques': { emoji: '🌿', color: '#2E5A36' },
-  'Huiles': { emoji: '🫙', color: '#C8951E' },
-  'Soins': { emoji: '💎', color: '#4E9FD1' },
-  'Équipements': { emoji: '⚙️', color: '#8A3B14' },
-  'Karité': { emoji: '🥜', color: '#A0522D' },
-  'Baobab': { emoji: '🌳', color: '#3F7D3F' },
-  'Parfums': { emoji: '🌸', color: '#8A1C14' },
-  'Visage': { emoji: '✨', color: '#C8951E' },
-  'Cheveux': { emoji: '💇', color: '#8A3B14' },
-  'Corps': { emoji: '💆', color: '#2E5A36' },
+  'CosmÃ©tiques': { emoji: 'ðŸŒ¿', color: '#2E5A36' },
+  'Huiles': { emoji: 'ðŸ«™', color: '#C8951E' },
+  'Soins': { emoji: 'ðŸ’Ž', color: '#4E9FD1' },
+  'Ã‰quipements': { emoji: 'âš™ï¸', color: '#8A3B14' },
+  'KaritÃ©': { emoji: 'ðŸ¥œ', color: '#A0522D' },
+  'Baobab': { emoji: 'ðŸŒ³', color: '#3F7D3F' },
+  'Parfums': { emoji: 'ðŸŒ¸', color: '#8A1C14' },
+  'Visage': { emoji: 'âœ¨', color: '#C8951E' },
+  'Cheveux': { emoji: 'ðŸ’‡', color: '#8A3B14' },
+  'Corps': { emoji: 'ðŸ’†', color: '#2E5A36' },
 };
-const getCategoryMeta = (cat: string) => CATEGORY_META[cat] || { emoji: '📦', color: '#C8951E' };
+const getCategoryMeta = (cat: string) => CATEGORY_META[cat] || { emoji: 'ðŸ“¦', color: '#C8951E' };
 
 export default function ProInventoryPage() {
   const { toast } = useToast();
@@ -61,7 +61,7 @@ export default function ProInventoryPage() {
     name: '', 
     category: 'Visage', 
     origin: 'tradipraticien',
-    botanical: 'karité',
+    botanical: 'karitÃ©',
     description: '',
     purchasePrice: '', 
     salePrice: '', 
@@ -95,11 +95,11 @@ export default function ProInventoryPage() {
 
       if (list.length === 0) {
         list = [
-          { id: 'p1', name: 'Beurre de Karité Brut de Korhogo', category: 'Karité', origin: 'tradipraticien', botanical: 'karité', description: 'Nourrit & répare les peaux très sèches', purchasePrice: 4000, salePrice: 9500, inventoryItems: [{ quantity: 18 }], image: '/images/kene_botanical_lab_serum.jpg' },
-          { id: 'p2', name: 'Sérum Niacinamide 10% & Zinc Dermo', category: 'Visage', origin: 'pharmaceutique', botanical: 'moringa', description: 'Anti-taches PIH & régulation sébum', purchasePrice: 8500, salePrice: 16500, inventoryItems: [{ quantity: 12 }], image: '/images/afro_skin_spectral_scanner.jpg' },
-          { id: 'p3', name: 'Masque Frais Avocat & Chébé (Salon)', category: 'Cheveux', origin: 'artisanal', botanical: 'chebe', description: 'Préparation fraîche faite au salon le jour-même', purchasePrice: 3000, salePrice: 8500, inventoryItems: [{ quantity: 8 }], image: '/images/kene_custom_botanical_bottle.png' },
-          { id: 'p4', name: 'Lait Hydratant Solaire L’Oréal SPF50+', category: 'Corps', origin: 'marque', botanical: 'baobab', description: 'Protection solaire incolore haute défense', purchasePrice: 12000, salePrice: 19500, inventoryItems: [{ quantity: 15 }], image: '/images/botanical_ingredients_flatlay.jpg' },
-          { id: 'p5', name: 'Formulation Dermo-Awa Sur-Mesure #402', category: 'Soins', origin: 'sur_mesure', botanical: 'bissap', description: 'Sérum personnalisé préparé sur recommandation Dermo-IA', purchasePrice: 10000, salePrice: 28500, inventoryItems: [{ quantity: 5 }], image: '/images/kene_official_logo.jpg' },
+          { id: 'p1', name: 'Beurre de KaritÃ© Brut de Korhogo', category: 'KaritÃ©', origin: 'tradipraticien', botanical: 'karitÃ©', description: 'Nourrit & rÃ©pare les peaux trÃ¨s sÃ¨ches', purchasePrice: 4000, salePrice: 9500, inventoryItems: [{ quantity: 18 }], image: '/images/kene_botanical_lab_serum.jpg' },
+          { id: 'p2', name: 'SÃ©rum Niacinamide 10% & Zinc Dermo', category: 'Visage', origin: 'pharmaceutique', botanical: 'moringa', description: 'Anti-taches PIH & rÃ©gulation sÃ©bum', purchasePrice: 8500, salePrice: 16500, inventoryItems: [{ quantity: 12 }], image: '/images/afro_skin_spectral_scanner.jpg' },
+          { id: 'p3', name: 'Masque Frais Avocat & ChÃ©bÃ© (Salon)', category: 'Cheveux', origin: 'artisanal', botanical: 'chebe', description: 'PrÃ©paration fraÃ®che faite au salon le jour-mÃªme', purchasePrice: 3000, salePrice: 8500, inventoryItems: [{ quantity: 8 }], image: '/images/kene_custom_botanical_bottle.png' },
+          { id: 'p4', name: 'Lait Hydratant Solaire Lâ€™OrÃ©al SPF50+', category: 'Corps', origin: 'marque', botanical: 'baobab', description: 'Protection solaire incolore haute dÃ©fense', purchasePrice: 12000, salePrice: 19500, inventoryItems: [{ quantity: 15 }], image: '/images/botanical_ingredients_flatlay.jpg' },
+          { id: 'p5', name: 'Formulation Dermo-Awa Sur-Mesure #402', category: 'Soins', origin: 'sur_mesure', botanical: 'bissap', description: 'SÃ©rum personnalisÃ© prÃ©parÃ© sur recommandation Dermo-IA', purchasePrice: 10000, salePrice: 28500, inventoryItems: [{ quantity: 5 }], image: '/images/kene_official_logo.jpg' },
         ];
       }
 
@@ -139,11 +139,11 @@ export default function ProInventoryPage() {
         body: JSON.stringify(formData)
       });
 
-      toast({ title: "✅ Produit Ajouté à la Boutique !", description: `Produit référencé en catégorie "${getOriginMeta(formData.origin).shortLabel}".` });
+      toast({ title: "âœ… Produit AjoutÃ© Ã  la Boutique !", description: `Produit rÃ©fÃ©rencÃ© en catÃ©gorie "${getOriginMeta(formData.origin).shortLabel}".` });
       setIsDialogOpen(false);
-      setFormData({ id: '', name: '', category: 'Visage', origin: 'tradipraticien', botanical: 'karité', description: '', purchasePrice: '', salePrice: '', quantity: '0', image: '' });
+      setFormData({ id: '', name: '', category: 'Visage', origin: 'tradipraticien', botanical: 'karitÃ©', description: '', purchasePrice: '', salePrice: '', quantity: '0', image: '' });
     } catch {
-      toast({ title: "Erreur", description: "Impossible de créer le produit.", variant: "destructive" });
+      toast({ title: "Erreur", description: "Impossible de crÃ©er le produit.", variant: "destructive" });
     }
   };
 
@@ -166,7 +166,7 @@ export default function ProInventoryPage() {
       setProducts(updated);
       syncProductsToLocalStorage(updated);
 
-      toast({ title: "✅ Produit Mis à Jour !", description: "Modifications enregistrées avec succès." });
+      toast({ title: "âœ… Produit Mis Ã  Jour !", description: "Modifications enregistrÃ©es avec succÃ¨s." });
       setIsEditDialogOpen(false);
     } catch (err: any) {
       toast({ title: "Erreur Modification", description: err.message, variant: "destructive" });
@@ -179,7 +179,7 @@ export default function ProInventoryPage() {
       const updated = products.filter(p => p.id !== id);
       setProducts(updated);
       syncProductsToLocalStorage(updated);
-      toast({ title: "🗑️ Produit Supprimé", description: `"${name}" a été retiré des stocks.` });
+      toast({ title: "ðŸ—‘ï¸ Produit SupprimÃ©", description: `"${name}" a Ã©tÃ© retirÃ© des stocks.` });
     } catch (err: any) {
       toast({ title: "Erreur", description: err.message, variant: "destructive" });
     }
@@ -192,7 +192,7 @@ export default function ProInventoryPage() {
       name: product.name || '',
       category: product.category || 'Visage',
       origin: product.origin || 'tradipraticien',
-      botanical: product.botanical || 'karité',
+      botanical: product.botanical || 'karitÃ©',
       description: product.description || '',
       purchasePrice: String(product.purchasePrice || 0),
       salePrice: String(product.salePrice || 0),
@@ -215,16 +215,16 @@ export default function ProInventoryPage() {
   }, 0);
   const lowStockCount = products.filter(p => (p.inventoryItems?.reduce((s: number, i: any) => s + i.quantity, 0) || 0) <= 5).length;
 
-  // ── MODE FACEBOOK : "VOIR EN TANT QUE VISITEUR PUBLIC" ──
+  // â”€â”€ MODE FACEBOOK : "VOIR EN TANT QUE VISITEUR PUBLIC" â”€â”€
   if (isVisitorViewMode) {
     return (
       <div className="min-h-screen bg-[#0A0603] text-white p-4 md:p-6 space-y-6 font-sans">
-        {/* BANNIÈRE FACEBOOK "VOIR EN TANT QUE VISITEUR" */}
+        {/* BANNIÃˆRE FACEBOOK "VOIR EN TANT QUE VISITEUR" */}
         <div className="sticky top-0 z-50 bg-gradient-to-r from-[#F3E5AB] via-[#C8951E] to-[#8A3B14] text-[#0F0A05] p-3.5 rounded-2xl shadow-2xl flex items-center justify-between font-display font-black text-xs">
           <div className="flex items-center gap-2">
             <Eye className="w-5 h-5 text-[#0F0A05]" />
             <span className="text-[#0F0A05] font-black tracking-wide">
-              👁️ MODE FACEBOOK : VOUS CONSULTEZ VOTRE BOUTIQUE EN TANT QUE VISITEUR PUBLIC (SANS COMPTE CLIENT)
+              ðŸ‘ï¸ MODE FACEBOOK : VOUS CONSULTEZ VOTRE BOUTIQUE EN TANT QUE VISITEUR PUBLIC (SANS COMPTE CLIENT)
             </span>
           </div>
           <button
@@ -235,30 +235,30 @@ export default function ProInventoryPage() {
           </button>
         </div>
 
-        {/* VITRINE CLIENTE RÉELLE (LECTURE SEULE - HIGH CONTRAST) */}
+        {/* VITRINE CLIENTE RÃ‰ELLE (LECTURE SEULE - HIGH CONTRAST) */}
         <div className="bg-[#1A1410] border border-[var(--gold-kene)]/30 rounded-3xl p-6 space-y-6 shadow-2xl">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-widest text-[#F3E5AB] bg-[#C8951E]/20 border border-[#C8951E]/40 px-3 py-1 rounded-full">
-                Boutique Officielle de l'Établissement Partner
+                Boutique Officielle de l'Ã‰tablissement Partner
               </span>
               <h2 className="font-display font-black text-2xl text-white mt-2">
-                Soins Botaniques Africains & Prescriptions Dermo-Cosmétiques
+                Soins Botaniques Africains & Prescriptions Dermo-CosmÃ©tiques
               </h2>
               <p className="text-xs text-white/60 font-sans mt-1">
-                Commandez directement vos soins certifiés en Click & Collect 1h ou livraison sécurisée Mobile Money.
+                Commandez directement vos soins certifiÃ©s en Click & Collect 1h ou livraison sÃ©curisÃ©e Mobile Money.
               </p>
             </div>
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                🟢 Boutique Active en Ligne
+                ðŸŸ¢ Boutique Active en Ligne
               </span>
             </div>
           </div>
 
           {/* FILTRES CATEGORIES (HIGH CONTRAST CLICKABLE STATES) */}
           <div className="flex flex-wrap gap-2">
-            {['Tous', 'Visage', 'Cheveux', 'Corps', 'Soins', 'Karité'].map(cat => (
+            {['Tous', 'Visage', 'Cheveux', 'Corps', 'Soins', 'KaritÃ©'].map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
@@ -273,7 +273,7 @@ export default function ProInventoryPage() {
             ))}
           </div>
 
-          {/* GRILLE PRODUITS (CÔTÉ VISITEUR - ZÉRO EDITEUR PRO) */}
+          {/* GRILLE PRODUITS (CÃ”TÃ‰ VISITEUR - ZÃ‰RO EDITEUR PRO) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filtered.map(product => {
               const originMeta = getOriginMeta(product.origin);
@@ -297,7 +297,7 @@ export default function ProInventoryPage() {
                       </span>
                     </div>
                     <button
-                      onClick={() => toast({ title: "🛒 Panier Client", description: "Simulation de commande client enregistrée." })}
+                      onClick={() => toast({ title: "ðŸ›’ Panier Client", description: "Simulation de commande client enregistrÃ©e." })}
                       className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] text-[#0F0A05] hover:text-[#0F0A05] focus:text-[#0F0A05] text-xs font-black px-3.5 py-2 rounded-xl cursor-pointer shadow-md"
                     >
                       + Ajouter
@@ -312,11 +312,11 @@ export default function ProInventoryPage() {
     );
   }
 
-  // ── VUE DE GESTION PRO HABITUELLE ──
+  // â”€â”€ VUE DE GESTION PRO HABITUELLE â”€â”€
   return (
     <div className="space-y-6 text-[#F8F1E4] max-w-6xl mx-auto font-sans">
 
-      {/* ── HEADER & BOUTIQUE CONTROL BAR ── */}
+      {/* â”€â”€ HEADER & BOUTIQUE CONTROL BAR â”€â”€ */}
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1A1410] border border-white/10 p-5 rounded-3xl shadow-xl">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -324,10 +324,10 @@ export default function ProInventoryPage() {
               <Package className="w-5 h-5 text-emerald-200" />
             </div>
             <h1 className="text-2xl font-display font-black text-white tracking-tight">
-              Stocks & <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">Multi-Origines Cosmétiques</span>
+              Stocks & <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">Multi-Origines CosmÃ©tiques</span>
             </h1>
           </div>
-          <p className="text-white/50 text-xs ml-11">Gestion intégrée des soins Tradipraticien, Dermo-Pharmacie, Fait Maison, Marques & Sur-Mesure</p>
+          <p className="text-white/50 text-xs ml-11">Gestion intÃ©grÃ©e des soins Tradipraticien, Dermo-Pharmacie, Fait Maison, Marques & Sur-Mesure</p>
         </div>
 
         <div className="flex gap-2 flex-wrap items-center">
@@ -336,8 +336,8 @@ export default function ProInventoryPage() {
             onClick={() => {
               setIsBoutiqueActive(!isBoutiqueActive);
               toast({
-                title: isBoutiqueActive ? '🔒 Boutique Désactivée' : '🌐 Boutique en Ligne Activée',
-                description: isBoutiqueActive ? 'Votre boutique est masquée côté client.' : 'Votre boutique est maintenant visible par vos clientes.',
+                title: isBoutiqueActive ? 'ðŸ”’ Boutique DÃ©sactivÃ©e' : 'ðŸŒ Boutique en Ligne ActivÃ©e',
+                description: isBoutiqueActive ? 'Votre boutique est masquÃ©e cÃ´tÃ© client.' : 'Votre boutique est maintenant visible par vos clientes.',
               });
             }}
             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-2xl font-bold text-xs border transition cursor-pointer ${
@@ -347,7 +347,7 @@ export default function ProInventoryPage() {
             }`}
           >
             {isBoutiqueActive ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-            <span>Boutique: {isBoutiqueActive ? 'Active' : 'Désactivée'}</span>
+            <span>Boutique: {isBoutiqueActive ? 'Active' : 'DÃ©sactivÃ©e'}</span>
           </button>
 
           {/* BOUTON SEUL & UNIQUE DE CONSULTATION FACEBOOK MODE (ULTRA HIGH CONTRAST) */}
@@ -355,7 +355,7 @@ export default function ProInventoryPage() {
             onClick={() => setIsVisitorViewMode(true)}
             className="bg-gradient-to-r from-[#F3E5AB] via-[#C8951E] to-[#D4AF37] text-[#0F0A05] hover:text-[#0F0A05] focus:text-[#0F0A05] active:text-[#0F0A05] text-xs font-black rounded-2xl px-4 py-2.5 flex items-center gap-1.5 shadow-md cursor-pointer hover:opacity-95"
           >
-            <Eye className="w-4 h-4 text-[#0F0A05]" /> Voir en tant que Visiteur (Mode FB) 👁️
+            <Eye className="w-4 h-4 text-[#0F0A05]" /> Voir en tant que Visiteur (Mode FB) ðŸ‘ï¸
           </Button>
 
           {/* Modal NOUVEAU PRODUIT */}
@@ -372,33 +372,33 @@ export default function ProInventoryPage() {
             <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl shadow-2xl">
               <DialogHeader>
                 <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
-                  <span>📦</span> Référencer un Produit Cosmétique
+                  <span>ðŸ“¦</span> RÃ©fÃ©rencer un Produit CosmÃ©tique
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleCreateProduct} className="space-y-4 mt-2">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1 col-span-2">
                     <Label className="text-white/60 text-xs">Nom du produit</Label>
-                    <Input required className="bg-white/5 border-white/10 text-white rounded-xl" placeholder="ex: Sérum Niacinamide ou Macérat Karité Neem" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                    <Input required className="bg-white/5 border-white/10 text-white rounded-xl" placeholder="ex: SÃ©rum Niacinamide ou MacÃ©rat KaritÃ© Neem" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                   </div>
 
                   <div className="space-y-1 col-span-2">
-                    <Label className="text-[#F3E5AB] font-bold text-xs">Origine / Genre du Produit Cosmétique</Label>
+                    <Label className="text-[#F3E5AB] font-bold text-xs">Origine / Genre du Produit CosmÃ©tique</Label>
                     <select 
                       className="w-full bg-[#1A1410] border border-[#C8951E]/50 text-white rounded-xl p-2.5 text-xs font-bold"
                       value={formData.origin}
                       onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
                     >
-                      <option value="tradipraticien">🌿 Tradipraticien / Recette Botanique Ancestrale</option>
-                      <option value="pharmaceutique">💊 Dermo-Pharmaceutique / Prescription Dermatologue</option>
-                      <option value="artisanal">🥣 Fait Maison / Préparation Artisanale au Salon</option>
-                      <option value="marque">👑 Produit de Grande Marque / International</option>
-                      <option value="sur_mesure">✨ Formulation Sur-Mesure Dermo-IA Kènè</option>
+                      <option value="tradipraticien">ðŸŒ¿ Tradipraticien / Recette Botanique Ancestrale</option>
+                      <option value="pharmaceutique">ðŸ’Š Dermo-Pharmaceutique / Prescription Dermatologue</option>
+                      <option value="artisanal">ðŸ¥£ Fait Maison / PrÃ©paration Artisanale au Salon</option>
+                      <option value="marque">ðŸ‘‘ Produit de Grande Marque / International</option>
+                      <option value="sur_mesure">âœ¨ Formulation Sur-Mesure Dermo-IA KÃ¨nÃ¨</option>
                     </select>
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-white/60 text-xs">Catégorie</Label>
+                    <Label className="text-white/60 text-xs">CatÃ©gorie</Label>
                     <select 
                       className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl p-2.5 text-xs font-bold"
                       value={formData.category}
@@ -408,28 +408,28 @@ export default function ProInventoryPage() {
                       <option value="Cheveux">Cheveux</option>
                       <option value="Corps">Corps</option>
                       <option value="Soins">Soins</option>
-                      <option value="Karité">Karité</option>
+                      <option value="KaritÃ©">KaritÃ©</option>
                     </select>
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-white/60 text-xs">Actif Botanique Clé</Label>
+                    <Label className="text-white/60 text-xs">Actif Botanique ClÃ©</Label>
                     <select 
                       className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl p-2.5 text-xs font-bold"
                       value={formData.botanical}
                       onChange={(e) => setFormData({ ...formData, botanical: e.target.value })}
                     >
-                      <option value="karité">Karité 🌰</option>
-                      <option value="baobab">Baobab 🌳</option>
-                      <option value="bissap">Bissap 🌺</option>
-                      <option value="moringa">Moringa 🌿</option>
-                      <option value="chebe">Chébé ✨</option>
+                      <option value="karitÃ©">KaritÃ© ðŸŒ°</option>
+                      <option value="baobab">Baobab ðŸŒ³</option>
+                      <option value="bissap">Bissap ðŸŒº</option>
+                      <option value="moringa">Moringa ðŸŒ¿</option>
+                      <option value="chebe">ChÃ©bÃ© âœ¨</option>
                     </select>
                   </div>
 
                   <div className="space-y-1 col-span-2">
                     <Label className="text-white/60 text-xs">Description & Bienfaits</Label>
-                    <Input className="bg-white/5 border-white/10 text-white rounded-xl" placeholder="ex: Anti-taches PIH & régénération..." value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+                    <Input className="bg-white/5 border-white/10 text-white rounded-xl" placeholder="ex: Anti-taches PIH & rÃ©gÃ©nÃ©ration..." value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
                   </div>
                   <div className="space-y-1">
                     <Label className="text-white/60 text-xs">Prix Achat (FCFA)</Label>
@@ -440,7 +440,7 @@ export default function ProInventoryPage() {
                     <Input type="number" required min="0" className="bg-white/5 border-white/10 text-white rounded-xl" value={formData.salePrice} onChange={(e) => setFormData({ ...formData, salePrice: e.target.value })} />
                   </div>
                   <div className="space-y-1 col-span-2">
-                    <Label className="text-white/60 text-xs">Quantité en Stock Initial</Label>
+                    <Label className="text-white/60 text-xs">QuantitÃ© en Stock Initial</Label>
                     <Input type="number" required min="0" className="bg-white/5 border-white/10 text-white rounded-xl" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} />
                   </div>
                 </div>
@@ -456,16 +456,16 @@ export default function ProInventoryPage() {
         </div>
       </motion.div>
 
-      {/* ── MODAL EDIT PRODUIT ── */}
+      {/* â”€â”€ MODAL EDIT PRODUIT â”€â”€ */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl shadow-2xl">
           <DialogHeader>
             <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
-              <span>✏️</span> Modifier le Produit & Origine
+              <span>âœï¸</span> Modifier le Produit & Origine
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleUpdateProduct} className="space-y-4 mt-2">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1 col-span-2">
                 <Label className="text-white/60 text-xs">Nom du produit</Label>
                 <Input required className="bg-white/5 border-white/10 text-white rounded-xl" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
@@ -477,15 +477,15 @@ export default function ProInventoryPage() {
                   value={formData.origin}
                   onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
                 >
-                  <option value="tradipraticien">🌿 Tradipraticien / Recette Botanique Ancestrale</option>
-                  <option value="pharmaceutique">💊 Dermo-Pharmaceutique / Prescription Dermatologue</option>
-                  <option value="artisanal">🥣 Fait Maison / Préparation Artisanale au Salon</option>
-                  <option value="marque">👑 Produit de Grande Marque / International</option>
-                  <option value="sur_mesure">✨ Formulation Sur-Mesure Dermo-IA Kènè</option>
+                  <option value="tradipraticien">ðŸŒ¿ Tradipraticien / Recette Botanique Ancestrale</option>
+                  <option value="pharmaceutique">ðŸ’Š Dermo-Pharmaceutique / Prescription Dermatologue</option>
+                  <option value="artisanal">ðŸ¥£ Fait Maison / PrÃ©paration Artisanale au Salon</option>
+                  <option value="marque">ðŸ‘‘ Produit de Grande Marque / International</option>
+                  <option value="sur_mesure">âœ¨ Formulation Sur-Mesure Dermo-IA KÃ¨nÃ¨</option>
                 </select>
               </div>
               <div className="space-y-1">
-                <Label className="text-white/60 text-xs">Catégorie</Label>
+                <Label className="text-white/60 text-xs">CatÃ©gorie</Label>
                 <select 
                   className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl p-2.5 text-xs font-bold"
                   value={formData.category}
@@ -495,7 +495,7 @@ export default function ProInventoryPage() {
                   <option value="Cheveux">Cheveux</option>
                   <option value="Corps">Corps</option>
                   <option value="Soins">Soins</option>
-                  <option value="Karité">Karité</option>
+                  <option value="KaritÃ©">KaritÃ©</option>
                 </select>
               </div>
               <div className="space-y-1">
@@ -505,11 +505,11 @@ export default function ProInventoryPage() {
                   value={formData.botanical}
                   onChange={(e) => setFormData({ ...formData, botanical: e.target.value })}
                 >
-                  <option value="karité">Karité 🌰</option>
-                  <option value="baobab">Baobab 🌳</option>
-                  <option value="bissap">Bissap 🌺</option>
-                  <option value="moringa">Moringa 🌿</option>
-                  <option value="chebe">Chébé ✨</option>
+                  <option value="karitÃ©">KaritÃ© ðŸŒ°</option>
+                  <option value="baobab">Baobab ðŸŒ³</option>
+                  <option value="bissap">Bissap ðŸŒº</option>
+                  <option value="moringa">Moringa ðŸŒ¿</option>
+                  <option value="chebe">ChÃ©bÃ© âœ¨</option>
                 </select>
               </div>
               <div className="space-y-1 col-span-2">
@@ -525,7 +525,7 @@ export default function ProInventoryPage() {
                 <Input type="number" required min="0" className="bg-white/5 border-white/10 text-white rounded-xl" value={formData.salePrice} onChange={(e) => setFormData({ ...formData, salePrice: e.target.value })} />
               </div>
               <div className="space-y-1 col-span-2">
-                <Label className="text-white/60 text-xs">Quantité en Stock Actuelle</Label>
+                <Label className="text-white/60 text-xs">QuantitÃ© en Stock Actuelle</Label>
                 <Input type="number" required min="0" className="bg-white/5 border-white/10 text-white rounded-xl" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} />
               </div>
             </div>
@@ -539,12 +539,12 @@ export default function ProInventoryPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ── KPI BANNER ── */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 }} className="grid grid-cols-3 gap-3">
+      {/* â”€â”€ KPI BANNER â”€â”€ */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 }} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {[
-          { label: 'Produits Référencés', value: products.length, color: '#C8951E', icon: '📦' },
-          { label: 'Valeur Totale Stock', value: `${totalValue.toLocaleString('fr-FR')} F`, color: '#4CAF6E', icon: '💰' },
-          { label: 'Alertes Stock Bas', value: lowStockCount, color: lowStockCount > 0 ? '#E07A2B' : '#4CAF6E', icon: lowStockCount > 0 ? '⚠️' : '✅' },
+          { label: 'Produits RÃ©fÃ©rencÃ©s', value: products.length, color: '#C8951E', icon: 'ðŸ“¦' },
+          { label: 'Valeur Totale Stock', value: `${totalValue.toLocaleString('fr-FR')} F`, color: '#4CAF6E', icon: 'ðŸ’°' },
+          { label: 'Alertes Stock Bas', value: lowStockCount, color: lowStockCount > 0 ? '#E07A2B' : '#4CAF6E', icon: lowStockCount > 0 ? 'âš ï¸' : 'âœ…' },
         ].map((kpi, i) => (
           <div key={i} className="relative overflow-hidden rounded-2xl bg-[#1A1410] border border-white/5 p-4 shadow-md">
             <div className="text-xl mb-1">{kpi.icon}</div>
@@ -554,19 +554,19 @@ export default function ProInventoryPage() {
         ))}
       </motion.div>
 
-      {/* ── ORIGINES COSMÉTIQUES FILTER BAR (ULTRA HIGH CONTRAST CLICKABLE STATES) ── */}
+      {/* â”€â”€ ORIGINES COSMÃ‰TIQUES FILTER BAR (ULTRA HIGH CONTRAST CLICKABLE STATES) â”€â”€ */}
       <div className="bg-[#1A1410] border border-white/10 p-3.5 rounded-2xl space-y-2">
         <span className="text-[10px] font-mono text-[#F3E5AB] font-bold uppercase tracking-wider block">
-          🔍 Filtrer par Genre & Origine du Produit :
+          ðŸ” Filtrer par Genre & Origine du Produit :
         </span>
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
           {[
             { id: 'Toutes', label: 'Toutes Origines' },
-            { id: 'tradipraticien', label: '🌿 Tradipraticien' },
-            { id: 'pharmaceutique', label: '💊 Dermo-Pharmacie' },
-            { id: 'artisanal', label: '🥣 Fait Maison (Salon)' },
-            { id: 'marque', label: '👑 Grandes Marques' },
-            { id: 'sur_mesure', label: '✨ Sur-Mesure' },
+            { id: 'tradipraticien', label: 'ðŸŒ¿ Tradipraticien' },
+            { id: 'pharmaceutique', label: 'ðŸ’Š Dermo-Pharmacie' },
+            { id: 'artisanal', label: 'ðŸ¥£ Fait Maison (Salon)' },
+            { id: 'marque', label: 'ðŸ‘‘ Grandes Marques' },
+            { id: 'sur_mesure', label: 'âœ¨ Sur-Mesure' },
           ].map((orig) => (
             <button
               key={orig.id}
@@ -583,10 +583,10 @@ export default function ProInventoryPage() {
         </div>
       </div>
 
-      {/* ── CATEGORIES & SEARCH (ULTRA HIGH CONTRAST CLICKABLE STATES) ── */}
+      {/* â”€â”€ CATEGORIES & SEARCH (ULTRA HIGH CONTRAST CLICKABLE STATES) â”€â”€ */}
       <div className="space-y-3">
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {['Tous', 'Visage', 'Cheveux', 'Corps', 'Soins', 'Karité'].map(cat => (
+          {['Tous', 'Visage', 'Cheveux', 'Corps', 'Soins', 'KaritÃ©'].map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
@@ -612,7 +612,7 @@ export default function ProInventoryPage() {
         </div>
       </div>
 
-      {/* ── PRODUCTS GRID WITH ORIGIN BADGES ── */}
+      {/* â”€â”€ PRODUCTS GRID WITH ORIGIN BADGES â”€â”€ */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((product) => {
           const qty = product.inventoryItems?.reduce((acc: number, item: any) => acc + item.quantity, 0) || 0;
@@ -644,7 +644,7 @@ export default function ProInventoryPage() {
                     {meta.emoji} {product.category}
                   </span>
 
-                  {/* ORIGINE COSMÉTIQUE BADGE */}
+                  {/* ORIGINE COSMÃ‰TIQUE BADGE */}
                   <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-bold font-mono border backdrop-blur-md ${originMeta.badgeStyle}`}>
                     {originMeta.shortLabel}
                   </span>
@@ -669,7 +669,7 @@ export default function ProInventoryPage() {
                     <div className="text-right">
                       <span className="text-[10px] text-white/40 block uppercase">Stock</span>
                       <span className={`font-mono font-bold text-xs ${isOut ? 'text-red-400' : isLow ? 'text-amber-400' : 'text-emerald-400'}`}>
-                        {qty} unité{qty > 1 ? 's' : ''}
+                        {qty} unitÃ©{qty > 1 ? 's' : ''}
                       </span>
                     </div>
                   </div>

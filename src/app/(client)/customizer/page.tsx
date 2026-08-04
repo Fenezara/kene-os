@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -21,10 +21,10 @@ interface Ingredient {
 }
 
 const INGREDIENTS: Ingredient[] = [
-  { id: 'moringa', name: 'Moringa Bio', scientificName: 'Moringa oleifera', description: 'Détoxifiant & Régulateur de sébum', color: 'text-emerald-400', rgb: [90, 125, 66] },
-  { id: 'baobab', name: 'Huile de Baobab', scientificName: 'Adansonia digitata', description: 'Tenseur naturel & Booster de collagène', color: 'text-[#C8951E]', rgb: [200, 149, 30] },
-  { id: 'karite', name: 'Karité Soluble', scientificName: 'Vitellaria paradoxa', description: 'Restructurant & Protecteur barrière', color: 'text-amber-600', rgb: [217, 119, 6] },
-  { id: 'bissap', name: 'Acide de Fleur de Bissap', scientificName: 'Hibiscus sabdariffa', description: 'Éclat & Peeling doux AHA', color: 'text-[#8A1C14]', rgb: [138, 28, 20] },
+  { id: 'moringa', name: 'Moringa Bio', scientificName: 'Moringa oleifera', description: 'DÃ©toxifiant & RÃ©gulateur de sÃ©bum', color: 'text-emerald-400', rgb: [90, 125, 66] },
+  { id: 'baobab', name: 'Huile de Baobab', scientificName: 'Adansonia digitata', description: 'Tenseur naturel & Booster de collagÃ¨ne', color: 'text-[#C8951E]', rgb: [200, 149, 30] },
+  { id: 'karite', name: 'KaritÃ© Soluble', scientificName: 'Vitellaria paradoxa', description: 'Restructurant & Protecteur barriÃ¨re', color: 'text-amber-600', rgb: [217, 119, 6] },
+  { id: 'bissap', name: 'Acide de Fleur de Bissap', scientificName: 'Hibiscus sabdariffa', description: 'Ã‰clat & Peeling doux AHA', color: 'text-[#8A1C14]', rgb: [138, 28, 20] },
 ]
 
 function CustomizerContent() {
@@ -72,8 +72,8 @@ function CustomizerContent() {
         bissap: 1,
       })
       toast({
-        title: "🧪 Actifs recommandés pré-chargés",
-        description: "Les dosages ont été optimisés en fonction de votre dernier diagnostic de peau Kènè.",
+        title: "ðŸ§ª Actifs recommandÃ©s prÃ©-chargÃ©s",
+        description: "Les dosages ont Ã©tÃ© optimisÃ©s en fonction de votre dernier diagnostic de peau KÃ¨nÃ¨.",
       })
     }
   }, [searchParams])
@@ -90,8 +90,8 @@ function CustomizerContent() {
 
       if (currentTotalWithoutTarget + nextValue > 10) {
         toast({
-          title: "⚠️ Seuil de sécurité atteint",
-          description: "La concentration cumulée des actifs ne doit pas dépasser 10% pour préserver l'épiderme.",
+          title: "âš ï¸ Seuil de sÃ©curitÃ© atteint",
+          description: "La concentration cumulÃ©e des actifs ne doit pas dÃ©passer 10% pour prÃ©server l'Ã©piderme.",
           variant: "destructive",
         })
         return prev
@@ -131,8 +131,8 @@ function CustomizerContent() {
   const handleOrderSubmit = async () => {
     if (paymentMethod !== 'wallet' && !momoNumber) {
       toast({
-        title: "⚠️ Informations requises",
-        description: "Veuillez entrer votre numéro Mobile Money.",
+        title: "âš ï¸ Informations requises",
+        description: "Veuillez entrer votre numÃ©ro Mobile Money.",
         variant: "destructive",
       })
       return
@@ -140,8 +140,8 @@ function CustomizerContent() {
 
     if (paymentMethod === 'wallet' && walletBalance !== null && walletBalance < totalTTC) {
       toast({
-        title: "⚠️ Solde insuffisant",
-        description: "Votre portefeuille Kènè n'a pas assez de fonds.",
+        title: "âš ï¸ Solde insuffisant",
+        description: "Votre portefeuille KÃ¨nÃ¨ n'a pas assez de fonds.",
         variant: "destructive",
       })
       return
@@ -155,7 +155,7 @@ function CustomizerContent() {
 
       const items = [{
         id: `formule-custom-${selectedBase}`,
-        name: `Formule Custom : ${selectedBase === 'serum' ? 'Sérum' : selectedBase === 'cream' ? 'Émulsion' : 'Huile'} Kènè`,
+        name: `Formule Custom : ${selectedBase === 'serum' ? 'SÃ©rum' : selectedBase === 'cream' ? 'Ã‰mulsion' : 'Huile'} KÃ¨nÃ¨`,
         price: totalTTC,
         qty: 1,
         category: 'produit',
@@ -185,7 +185,7 @@ function CustomizerContent() {
       }
     } catch (err: any) {
       toast({
-        title: "❌ Échec de la transaction",
+        title: "âŒ Ã‰chec de la transaction",
         description: err.message,
         variant: "destructive",
       })
@@ -203,7 +203,7 @@ function CustomizerContent() {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <span className="font-display font-bold text-lg text-gold-kene">Kènè Customizer</span>
+          <span className="font-display font-bold text-lg text-gold-kene">KÃ¨nÃ¨ Customizer</span>
           <div className="w-10 h-10" />
         </div>
       </header>
@@ -212,7 +212,7 @@ function CustomizerContent() {
         <div className="flex flex-col items-center justify-center bg-[#1A1410] border border-white/5 rounded-3xl p-6 md:flex-1 relative min-h-[250px]">
           <div className="absolute top-4 left-4 text-left">
             <span className="text-[10px] text-white/40 block font-sans">Formulation unique</span>
-            <span className="text-xs font-bold text-white capitalize">{selectedBase} personnalisé</span>
+            <span className="text-xs font-bold text-white capitalize">{selectedBase} personnalisÃ©</span>
           </div>
 
           <div className="relative w-32 h-44 mt-4">
@@ -263,10 +263,10 @@ function CustomizerContent() {
         <div className="space-y-6 md:flex-1">
           <div className="bg-[#1A1410] border border-white/5 p-5 rounded-3xl space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-gold-kene font-display">1. Choisissez votre Base</h3>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
               {[
-                { id: 'serum', label: 'Sérum', desc: 'Fluide léger' },
-                { id: 'cream', label: 'Émulsion', desc: 'Crème douce' },
+                { id: 'serum', label: 'SÃ©rum', desc: 'Fluide lÃ©ger' },
+                { id: 'cream', label: 'Ã‰mulsion', desc: 'CrÃ¨me douce' },
                 { id: 'oil', label: 'Huile', desc: 'Fini soyeux' },
               ].map((base) => (
                 <button
@@ -336,7 +336,7 @@ function CustomizerContent() {
             {totalTTC.toLocaleString()} FCFA
           </span>
           <span className="text-[9px] text-white/30 block font-sans">
-            Base : {basePrice.toLocaleString()} F | Suppléments : {activePrice.toLocaleString()} F
+            Base : {basePrice.toLocaleString()} F | SupplÃ©ments : {activePrice.toLocaleString()} F
           </span>
         </div>
 
@@ -365,7 +365,7 @@ function CustomizerContent() {
                   </div>
                   <div className="space-y-1">
                     <h3 className="font-display font-bold text-sm uppercase text-gold-kene">Mode de Paiement</h3>
-                    <p className="text-[11px] text-white/50">Sélectionnez le moyen de règlement de votre commande.</p>
+                    <p className="text-[11px] text-white/50">SÃ©lectionnez le moyen de rÃ¨glement de votre commande.</p>
                   </div>
 
                   <div className="space-y-3">
@@ -417,7 +417,7 @@ function CustomizerContent() {
                     ) : (
                       <input
                         type="tel"
-                        placeholder="Votre numéro Mobile Money"
+                        placeholder="Votre numÃ©ro Mobile Money"
                         value={momoNumber}
                         onChange={(e) => setMomoNumber(e.target.value)}
                         className="w-full bg-[#241C16] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-gold-kene text-center font-mono"
@@ -447,7 +447,7 @@ function CustomizerContent() {
                   <div className="w-10 h-10 border-4 border-gold-kene border-t-transparent rounded-full animate-spin mx-auto"></div>
                   <div className="space-y-1">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-white">Validation en cours...</h4>
-                    <p className="text-[10px] text-white/40">Veuillez approuver la notification push MoMo sur votre téléphone.</p>
+                    <p className="text-[10px] text-white/40">Veuillez approuver la notification push MoMo sur votre tÃ©lÃ©phone.</p>
                   </div>
                 </div>
               )}
@@ -458,9 +458,9 @@ function CustomizerContent() {
                     <CheckCircle2 className="w-6 h-6" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-display font-bold text-sm uppercase text-emerald-400">Formule Commandée !</h3>
+                    <h3 className="font-display font-bold text-sm uppercase text-emerald-400">Formule CommandÃ©e !</h3>
                     <p className="text-[11px] text-white/50 leading-relaxed font-sans">
-                      Votre paiement de **{totalTTC.toLocaleString()} FCFA** a été reçu. Notre laboratoire prépare votre formule sur mesure.
+                      Votre paiement de **{totalTTC.toLocaleString()} FCFA** a Ã©tÃ© reÃ§u. Notre laboratoire prÃ©pare votre formule sur mesure.
                     </p>
                   </div>
 
@@ -471,7 +471,7 @@ function CustomizerContent() {
                     }}
                     className="w-full bg-gold-kene hover:bg-gold-kene/90 text-[#1A1410] text-xs font-semibold py-2 rounded-xl cursor-pointer"
                   >
-                    Retour à l'Accueil
+                    Retour Ã  l'Accueil
                   </Button>
                 </div>
               )}
@@ -496,7 +496,7 @@ function ARMirrorContent() {
   const HAIR_SHADES = [
     { id: '1b', name: 'Knotless #1B', color: '#1B1B1B' },
     { id: '30', name: '#30 Miel', color: '#B37D4E' },
-    { id: '27', name: '#27 Doré', color: '#D4AF37' },
+    { id: '27', name: '#27 DorÃ©', color: '#D4AF37' },
     { id: 'bug', name: '#BUG Bordeaux', color: '#5D1916' },
   ]
 
@@ -504,7 +504,7 @@ function ARMirrorContent() {
     { id: 'nude_v', name: 'Nude (Photo V)', color: '#A0522D' },
     { id: 'nude_vi', name: 'Nude (Photo VI)', color: '#5C3317' },
     { id: 'bissap', name: 'Bissap Glow', color: '#8A1C14' },
-    { id: 'karite', name: 'Karité Éclat', color: '#D97706' },
+    { id: 'karite', name: 'KaritÃ© Ã‰clat', color: '#D97706' },
   ]
 
   useEffect(() => {
@@ -517,8 +517,8 @@ function ARMirrorContent() {
         })
         .catch(() => {
           toast({
-            title: "📸 Erreur Caméra",
-            description: "Impossible d'accéder à la caméra. Utilisation du modèle par défaut.",
+            title: "ðŸ“¸ Erreur CamÃ©ra",
+            description: "Impossible d'accÃ©der Ã  la camÃ©ra. Utilisation du modÃ¨le par dÃ©faut.",
             variant: "destructive"
           })
         })
@@ -540,11 +540,11 @@ function ARMirrorContent() {
   const handleBook = () => {
     const serviceName = selectedStyle === 'hair' 
       ? `Tresses Africaines (${HAIR_SHADES.find(s => s.color === hairColor)?.name})` 
-      : `Mise en Beauté (${MAKEUP_SHADES.find(s => s.color === makeupColor)?.name})`
+      : `Mise en BeautÃ© (${MAKEUP_SHADES.find(s => s.color === makeupColor)?.name})`
       
     toast({
-      title: "✅ Style sélectionné",
-      description: "Redirection vers la réservation...",
+      title: "âœ… Style sÃ©lectionnÃ©",
+      description: "Redirection vers la rÃ©servation...",
     })
     
     // Simulate pre-filling checkout
@@ -566,12 +566,12 @@ function ARMirrorContent() {
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#241C16] to-[#1A1410]">
             <Camera className="w-16 h-16 text-white/20 mb-4" />
-            <p className="text-white/40 text-sm font-sans mb-4">Miroir Virtuel Désactivé</p>
+            <p className="text-white/40 text-sm font-sans mb-4">Miroir Virtuel DÃ©sactivÃ©</p>
             <Button 
               onClick={() => setCameraActive(true)}
               className="bg-gold-kene text-[#1A1410] font-semibold rounded-full px-6"
             >
-              Activer la Caméra
+              Activer la CamÃ©ra
             </Button>
           </div>
         )}
@@ -620,7 +620,7 @@ function ARMirrorContent() {
 
         <div className="space-y-3">
           <h3 className="text-xs font-bold uppercase tracking-wider text-gold-kene font-display">
-            Sélectionnez votre teinte
+            SÃ©lectionnez votre teinte
           </h3>
           <div className="flex flex-wrap gap-3">
             {(selectedStyle === 'hair' ? HAIR_SHADES : MAKEUP_SHADES).map((shade) => (
@@ -645,7 +645,7 @@ function ARMirrorContent() {
           className="w-full bg-gold-kene hover:bg-gold-kene/90 text-[#1A1410] font-semibold py-6 rounded-2xl flex items-center justify-center gap-2 font-display cursor-pointer shadow-lg shadow-gold-kene/10"
         >
           <Sparkles className="w-4.5 h-4.5" />
-          Réserver ce Style
+          RÃ©server ce Style
         </Button>
       </div>
     </div>

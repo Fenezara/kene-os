@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -9,32 +9,32 @@ import { useRouter } from 'next/navigation';
 const TRANSFORMATIONS = [
   {
     id: 't_1',
-    title: 'Traitement Hyperpigmentation PIH (Taches d\'Acné)',
+    title: 'Traitement Hyperpigmentation PIH (Taches d\'AcnÃ©)',
     category: 'Visage & Dermo',
     duration: '30 Jours de Soin',
-    practitioner: 'Fatou Koné',
-    salon: 'Kènè Institut Cocody (Abidjan 🇨🇮)',
+    practitioner: 'Fatou KonÃ©',
+    salon: 'KÃ¨nÃ¨ Institut Cocody (Abidjan ðŸ‡¨ðŸ‡®)',
     phototype: 'Phototype V (Afro-Subsaharien)',
-    activeIngredients: ['Bissap AHA (Hibiscus)', 'Niacinamide 5%', 'Baume Karité Brut'],
-    scoreGain: '+48% d\'Éclat Cutané',
-    beforeDesc: 'Hyperpigmentation marquée sur les joues suite à des lésions d\'acné rétentionnelle.',
-    afterDesc: 'Atténuation nette des macules pigmentaires et teint unifié sans hydroquinone.',
+    activeIngredients: ['Bissap AHA (Hibiscus)', 'Niacinamide 5%', 'Baume KaritÃ© Brut'],
+    scoreGain: '+48% d\'Ã‰clat CutanÃ©',
+    beforeDesc: 'Hyperpigmentation marquÃ©e sur les joues suite Ã  des lÃ©sions d\'acnÃ© rÃ©tentionnelle.',
+    afterDesc: 'AttÃ©nuation nette des macules pigmentaires et teint unifiÃ© sans hydroquinone.',
     certified: true,
     likes: 245,
     image: '/images/afro_beauty_hero_woman.jpg',
   },
   {
     id: 't_2',
-    title: 'Régénération Cuir Chevelu & Alopécie de Traction',
+    title: 'RÃ©gÃ©nÃ©ration Cuir Chevelu & AlopÃ©cie de Traction',
     category: 'Capillaire & Nappy',
     duration: '45 Jours de Soin',
     practitioner: 'Aminata Diallo',
-    salon: 'Kènè Afro Beauty Almadies (Dakar 🇸🇳)',
-    phototype: 'Cheveux 4C Très Crépus',
-    activeIngredients: ['Huile de Baobab Purifiée', 'Poudre de Chébé', 'Massage Stimulant Moringa'],
-    scoreGain: '+62% de Densité Capillaire',
-    beforeDesc: 'Recul de la ligne frontale suite à des tresses trop serrées répétées.',
-    afterDesc: 'Repousse visible des follicules sur la zone temporale et cuir chevelu apaisé.',
+    salon: 'KÃ¨nÃ¨ Afro Beauty Almadies (Dakar ðŸ‡¸ðŸ‡³)',
+    phototype: 'Cheveux 4C TrÃ¨s CrÃ©pus',
+    activeIngredients: ['Huile de Baobab PurifiÃ©e', 'Poudre de ChÃ©bÃ©', 'Massage Stimulant Moringa'],
+    scoreGain: '+62% de DensitÃ© Capillaire',
+    beforeDesc: 'Recul de la ligne frontale suite Ã  des tresses trop serrÃ©es rÃ©pÃ©tÃ©es.',
+    afterDesc: 'Repousse visible des follicules sur la zone temporale et cuir chevelu apaisÃ©.',
     certified: true,
     likes: 312,
     image: '/images/african_young_girl_hair.jpg',
@@ -45,11 +45,11 @@ const TRANSFORMATIONS = [
     category: 'Visage & Homme',
     duration: '14 Jours de Soin',
     practitioner: 'Kady Coulibaly',
-    salon: 'Kènè Botanique Bamako Coura (Bamako 🇲🇱)',
-    phototype: 'Phototype VI (Peau Mélanoderme Sèche)',
-    activeIngredients: ['Beurre de Karité Brut Filtré', 'Aloe Vera Pur', 'Gel Neem'],
-    scoreGain: '+85% d\'Hydratation & Barbe Apaisée',
-    beforeDesc: 'Desquamation sous la barbe et récurrence de boutons de rasage.',
+    salon: 'KÃ¨nÃ¨ Botanique Bamako Coura (Bamako ðŸ‡²ðŸ‡±)',
+    phototype: 'Phototype VI (Peau MÃ©lanoderme SÃ¨che)',
+    activeIngredients: ['Beurre de KaritÃ© Brut FiltrÃ©', 'Aloe Vera Pur', 'Gel Neem'],
+    scoreGain: '+85% d\'Hydratation & Barbe ApaisÃ©e',
+    beforeDesc: 'Desquamation sous la barbe et rÃ©currence de boutons de rasage.',
     afterDesc: 'Barbe souple, peau sous-jacente saine et absence d\'inflammation.',
     certified: true,
     likes: 189,
@@ -85,13 +85,13 @@ export default function PortfolioPage() {
       <div className="bg-gradient-to-r from-[#241C16] via-[#1A1410] to-[#0A0603] border border-[#C8951E]/30 rounded-3xl p-6 relative overflow-hidden shadow-xl">
         <div className="relative z-10 space-y-2">
           <span className="text-xs font-bold text-[#C8951E] uppercase tracking-widest font-display flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-[#C8951E]" /> Portfolio & Résultats Certifiés par l'IA
+            <ShieldCheck className="w-4 h-4 text-[#C8951E]" /> Portfolio & RÃ©sultats CertifiÃ©s par l'IA
           </span>
           <h1 className="font-display font-black text-2xl text-white">
-            Galerie Avant / Après des Praticiennes Kènè
+            Galerie Avant / AprÃ¨s des Praticiennes KÃ¨nÃ¨
           </h1>
           <p className="text-xs text-white/60 font-sans max-w-xl">
-            Découvrez les résultats réels obtenus par nos esthéticiennes et dermatologues partenaires en Afrique de l'Ouest. Photos certifiées non-retouchées.
+            DÃ©couvrez les rÃ©sultats rÃ©els obtenus par nos esthÃ©ticiennes et dermatologues partenaires en Afrique de l'Ouest. Photos certifiÃ©es non-retouchÃ©es.
           </p>
         </div>
       </div>
@@ -135,7 +135,7 @@ export default function PortfolioPage() {
                     {t.duration}
                   </span>
                   <span className="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold flex items-center gap-1 backdrop-blur-md">
-                    <CheckCircle2 className="w-3 h-3" /> Certifié IA
+                    <CheckCircle2 className="w-3 h-3" /> CertifiÃ© IA
                   </span>
                 </div>
               </div>
@@ -143,13 +143,13 @@ export default function PortfolioPage() {
 
             {/* Split Comparison Text Box */}
             <div className="p-4 bg-[#241C16]/50 border-b border-white/5 space-y-2">
-              <div className="grid grid-cols-2 gap-2 text-[10px] font-sans">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] font-sans">
                 <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5">
                   <span className="font-mono text-[#C8951E] font-bold block text-[9px]">AVANT (J-0)</span>
                   <p className="text-white/60 mt-0.5 leading-tight">{t.beforeDesc}</p>
                 </div>
                 <div className="bg-[#0A0603] p-2.5 rounded-xl border border-emerald-500/20">
-                  <span className="font-mono text-emerald-400 font-bold block text-[9px]">APRÈS ({t.duration})</span>
+                  <span className="font-mono text-emerald-400 font-bold block text-[9px]">APRÃˆS ({t.duration})</span>
                   <p className="text-emerald-200/80 mt-0.5 leading-tight">{t.afterDesc}</p>
                 </div>
               </div>
@@ -162,20 +162,20 @@ export default function PortfolioPage() {
                   {t.title}
                 </h3>
                 <p className="text-[11px] text-white/40 font-sans mt-0.5">
-                  Par <strong className="text-white/80">{t.practitioner}</strong> · {t.salon}
+                  Par <strong className="text-white/80">{t.practitioner}</strong> Â· {t.salon}
                 </p>
               </div>
 
               {/* Gain Badge */}
               <div className="bg-[#C8951E]/10 border border-[#C8951E]/20 p-2.5 rounded-xl text-center">
                 <span className="text-xs font-bold text-[#C8951E] font-display">
-                  ✨ Résultat Obtenu : {t.scoreGain}
+                  âœ¨ RÃ©sultat Obtenu : {t.scoreGain}
                 </span>
               </div>
 
               {/* Ingredients Pills */}
               <div className="space-y-1">
-                <span className="text-[9px] text-white/30 font-semibold uppercase">Actifs Botaniques Utilisés :</span>
+                <span className="text-[9px] text-white/30 font-semibold uppercase">Actifs Botaniques UtilisÃ©s :</span>
                 <div className="flex flex-wrap gap-1">
                   {t.activeIngredients.map((ing, idx) => (
                     <span key={idx} className="text-[9px] bg-white/5 border border-white/10 px-2 py-0.5 rounded-md text-white/70">
@@ -200,7 +200,7 @@ export default function PortfolioPage() {
                 onClick={() => router.push(`/appointments?service=${encodeURIComponent(t.title)}`)}
                 className="bg-[#C8951E] hover:bg-[#C8951E]/90 text-[#0F0A05] font-bold text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-md shadow-[#C8951E]/10"
               >
-                <span>Réserver ce Soin</span>
+                <span>RÃ©server ce Soin</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             </div>
