@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, Calendar, Phone, Mail, MessageCircle, ShieldAlert, Award, Camera, Plus,
@@ -65,11 +65,25 @@ export function ClientFullDossierModal({
   const [activeTab, setActiveTab] = useState<'overview' | 'self_diagnostic' | 'photos' | 'consultations' | 'appointments' | 'purchases' | 'hair_prescriptions'>('overview');
   const [photosList, setPhotosList] = useState<EvolutionPhoto[]>(DEFAULT_EVOLUTION_PHOTOS);
   const [selectedPhoto, setSelectedPhoto] = useState<EvolutionPhoto>(DEFAULT_EVOLUTION_PHOTOS[2]);
+  const [clientAvatar, setClientAvatar] = useState<string | null>(null);
 
-  if (!isOpen || !client) return null;
+  useEffect(() => {
+    if (client?.avatar) {
+      setClientAvatar(client.avatar);
+    } else {
+      setClientAvatar(null);
+    }
+  }, [client]);
 
-  const fitzColor = client.fitzpatrickType === 'VI' ? '#6B3A2A' : client.fitzpatrickType === 'IV' ? '#CA9B5C' : '#A0522D';
-  const allergies = JSON.parse(client.allergies || '[]');
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setClientAvatar(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -89,6 +103,11 @@ export function ClientFullDossierModal({
     };
     reader.readAsDataURL(file);
   };
+
+  if (!isOpen || !client) return null;
+
+  const fitzColor = client.fitzpatrickType === 'VI' ? '#6B3A2A' : client.fitzpatrickType === 'IV' ? '#CA9B5C' : '#A0522D';
+  const allergies = JSON.parse(client.allergies || '[]');
 
   return (
     <AnimatePresence>
