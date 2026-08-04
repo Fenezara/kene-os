@@ -111,23 +111,23 @@ export function ClientFullDossierModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-xl flex items-center justify-center p-2 sm:p-6 overflow-y-auto">
+      <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-xl flex items-center justify-center p-1 sm:p-4 md:p-6 overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 20 }}
-          className="relative w-full max-w-6xl bg-[#0F0A05] border-2 border-[#C8951E]/40 text-white rounded-3xl shadow-[0_0_80px_rgba(200,149,30,0.25)] overflow-hidden flex flex-col max-h-[94vh]"
+          className="relative w-full max-w-6xl bg-[#0F0A05] border-2 border-[#C8951E]/40 text-white rounded-2xl sm:rounded-3xl shadow-[0_0_80px_rgba(200,149,30,0.25)] overflow-hidden flex flex-col max-h-[96vh] sm:max-h-[94vh] my-auto"
         >
           {/* Top Decorative Kente Bar */}
-          <div className="h-2 bg-gradient-to-r from-[#C8951E] via-[#8A3B14] via-[#2E5A36] via-[#1E3A5F] to-[#C8951E]" />
+          <div className="h-1.5 sm:h-2 bg-gradient-to-r from-[#C8951E] via-[#8A3B14] via-[#2E5A36] via-[#1E3A5F] to-[#C8951E]" />
 
-          {/* ── HEADER GRAND FORMAT ── */}
-          <div className="p-6 border-b border-white/10 bg-gradient-to-r from-[#1A1410] via-[#241C16] to-[#1A1410] flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <label className="relative cursor-pointer group" title="Cliquez pour changer la photo de profil">
+          {/* ── HEADER GRAND FORMAT RESPONSIVE (MOBILE / TABLET / PC) ── */}
+          <div className="p-4 sm:p-6 border-b border-white/10 bg-gradient-to-r from-[#1A1410] via-[#241C16] to-[#1A1410] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              <label className="relative cursor-pointer group shrink-0" title="Cliquez pour changer la photo de profil">
                 <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
                 <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center font-display font-black text-2xl text-[#0F0A05] shadow-xl overflow-hidden border-2 border-[#C8951E] group-hover:border-[#F3E5AB] transition"
+                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center font-display font-black text-lg sm:text-2xl text-[#0F0A05] shadow-xl overflow-hidden border-2 border-[#C8951E] group-hover:border-[#F3E5AB] transition"
                   style={{ background: `linear-gradient(135deg, ${fitzColor}, #F3E5AB)` }}
                 >
                   {clientAvatar ? (
@@ -136,65 +136,65 @@ export function ClientFullDossierModal({
                     <>{client.firstName?.charAt(0)}{client.lastName?.charAt(0)}</>
                   )}
                 </div>
-                <div className="absolute inset-0 rounded-2xl bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white">
-                  <Camera className="w-5 h-5" />
+                <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white">
+                  <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#0F0A05] flex items-center justify-center text-[10px]" title="Cliente Active">
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-400 border-2 border-[#0F0A05] flex items-center justify-center text-[9px] sm:text-[10px]" title="Cliente Active">
                   ✓
                 </div>
               </label>
 
-              <div>
+              <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-2xl sm:text-3xl font-display font-black text-white tracking-tight">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-black text-white tracking-tight truncate">
                     {client.firstName} {client.lastName}
                   </h2>
-                  <Badge className="bg-[#C8951E] text-black font-black text-xs px-2.5 py-0.5">
-                    💎 Membre Platine (1 850 pts)
+                  <Badge className="bg-[#C8951E] text-black font-black text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5">
+                    💎 Membre Platine
                   </Badge>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-white/60 mt-1 flex-wrap font-mono">
-                  <span className="flex items-center gap-1"><Phone className="w-3.5 h-3.5 text-[#C8951E]" /> {client.phone}</span>
-                  {client.email && <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5 text-[#C8951E]" /> {client.email}</span>}
-                  <span className="text-[#F3E5AB]">🗓️ Inscrite le {format(new Date(client.createdAt), 'dd/MM/yyyy')}</span>
-                  <span className="text-emerald-400 font-bold">💰 Total Dépensé: 285 000 FCFA</span>
+                <div className="flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs text-white/60 mt-1 flex-wrap font-mono">
+                  <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-[#C8951E]" /> {client.phone}</span>
+                  {client.email && <span className="hidden md:flex items-center gap-1"><Mail className="w-3 h-3 text-[#C8951E]" /> {client.email}</span>}
+                  <span className="text-[#F3E5AB]">🗓️ {format(new Date(client.createdAt), 'dd/MM/yyyy')}</span>
+                  <span className="text-emerald-400 font-bold">💰 285 000 FCFA</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 pt-3 sm:pt-0 border-white/10">
               <a
                 href={`https://wa.me/${client.phone.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-4 py-2 bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/50 rounded-xl font-bold text-xs hover:bg-[#25D366]/30 transition"
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/50 rounded-xl font-bold text-xs hover:bg-[#25D366]/30 transition"
               >
-                <MessageCircle className="w-4 h-4" /> WhatsApp Direct
+                <MessageCircle className="w-4 h-4" /> WhatsApp
               </a>
               <button
                 onClick={onClose}
                 className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition cursor-pointer"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
             </div>
           </div>
 
-          {/* ── NAVIGATION TABS (7 DEDICATED TABS) ── */}
-          <div className="flex border-b border-white/10 bg-[#0A0603] px-6 gap-1.5 overflow-x-auto">
+          {/* ── NAVIGATION TABS (TOUCH SCROLLABLE ON MOBILE) ── */}
+          <div className="flex border-b border-white/10 bg-[#0A0603] px-3 sm:px-6 gap-1 overflow-x-auto no-scrollbar">
             {[
               { id: 'overview' as const, label: '📋 Vue Globale', icon: User },
-              { id: 'self_diagnostic' as const, label: '📱 Bilan Auto-Réalisé Cliente', icon: Smartphone, highlight: true },
-              { id: 'photos' as const, label: '📸 Évolution Photos (Avant / Après)', icon: Camera, badge: photosList.length },
-              { id: 'consultations' as const, label: '🔬 Consultations & Scan Cabine', icon: Activity },
-              { id: 'appointments' as const, label: '📅 RDV & Visites', icon: Calendar },
-              { id: 'purchases' as const, label: '🧾 Achats & Caisse POS', icon: ShoppingBag },
-              { id: 'hair_prescriptions' as const, label: '🌱 Diagnostic Capillaire & Soins', icon: Sparkles },
+              { id: 'self_diagnostic' as const, label: '📱 Bilan Auto-Réalisé', icon: Smartphone, highlight: true },
+              { id: 'photos' as const, label: '📸 Photos Évolution', icon: Camera, badge: photosList.length },
+              { id: 'consultations' as const, label: '🔬 Scan Cabine', icon: Activity },
+              { id: 'appointments' as const, label: '📅 Visites & RDV', icon: Calendar },
+              { id: 'purchases' as const, label: '🧾 Caisse POS', icon: ShoppingBag },
+              { id: 'hair_prescriptions' as const, label: '🌱 Capillaire', icon: Sparkles },
             ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-3.5 px-3.5 font-display font-bold text-xs border-b-2 transition flex items-center gap-2 whitespace-nowrap cursor-pointer ${
+                className={`py-2.5 sm:py-3.5 px-2.5 sm:px-3.5 font-display font-bold text-[11px] sm:text-xs border-b-2 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0 ${
                   activeTab === tab.id
                     ? tab.highlight 
                       ? 'border-sky-400 text-sky-300 bg-sky-500/10' 
@@ -202,10 +202,10 @@ export function ClientFullDossierModal({
                     : 'border-transparent text-white/50 hover:text-white'
                 }`}
               >
-                <tab.icon className="w-4 h-4" />
+                <tab.icon className="w-3.5 h-3.5" />
                 <span>{tab.label}</span>
                 {tab.badge && (
-                  <span className="bg-[#C8951E] text-[#0F0A05] text-[10px] font-black px-1.5 py-0.2 rounded-full">
+                  <span className="bg-[#C8951E] text-[#0F0A05] text-[9px] font-black px-1.5 py-0.2 rounded-full">
                     {tab.badge}
                   </span>
                 )}
@@ -213,33 +213,33 @@ export function ClientFullDossierModal({
             ))}
           </div>
 
-          {/* ── CONTENT BODY ── */}
-          <div className="p-6 overflow-y-auto flex-1 space-y-6">
+          {/* ── CONTENT BODY (RESPONSIVE GRID) ── */}
+          <div className="p-3 sm:p-6 overflow-y-auto flex-1 space-y-4 sm:space-y-6">
 
             {/* TAB 1: VUE GLOBALE & PREFÉRÉES */}
             {activeTab === 'overview' && (
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* 4 Metric Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                  <div className="bg-[#1A1410] border border-[#C8951E]/30 p-4 rounded-2xl space-y-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  <div className="bg-[#1A1410] border border-[#C8951E]/30 p-3.5 sm:p-4 rounded-2xl space-y-1">
                     <span className="text-[10px] font-mono text-white/50 uppercase block">Type de Peau</span>
-                    <div className="text-base font-display font-black text-[#F3E5AB] capitalize">
+                    <div className="text-sm sm:text-base font-display font-black text-[#F3E5AB] capitalize">
                       🌗 Peau {client.skinType}
                     </div>
                     <span className="text-[10px] text-white/40 block">Tendance déshydratée zone T</span>
                   </div>
 
-                  <div className="bg-[#1A1410] border border-[#C8951E]/30 p-4 rounded-2xl space-y-1">
+                  <div className="bg-[#1A1410] border border-[#C8951E]/30 p-3.5 sm:p-4 rounded-2xl space-y-1">
                     <span className="text-[10px] font-mono text-white/50 uppercase block">Phototype Fitzpatrick</span>
-                    <div className="text-base font-display font-black text-amber-300 flex items-center gap-1.5">
+                    <div className="text-sm sm:text-base font-display font-black text-amber-300 flex items-center gap-1.5">
                       <span className="w-2.5 h-2.5 rounded-full" style={{ background: fitzColor }} />
                       <span>Type {client.fitzpatrickType} (Afro)</span>
                     </div>
                     <span className="text-[10px] text-white/40 block">Haute sensibilité taches PIH</span>
                   </div>
 
-                  <div className="bg-[#1A1410] border border-[#C8951E]/30 p-4 rounded-2xl space-y-1">
-                    <span className="text-[10px] font-mono text-white/50 uppercase block">Allergies / Ingrédients Évités</span>
+                  <div className="bg-[#1A1410] border border-[#C8951E]/30 p-3.5 sm:p-4 rounded-2xl space-y-1">
+                    <span className="text-[10px] font-mono text-white/50 uppercase block">Allergies / Évités</span>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {allergies.length > 0 ? (
                         allergies.map((a: string, i: number) => (
@@ -253,9 +253,9 @@ export function ClientFullDossierModal({
                     </div>
                   </div>
 
-                  <div className="bg-[#1A1410] border border-[#C8951E]/30 p-4 rounded-2xl space-y-1">
+                  <div className="bg-[#1A1410] border border-[#C8951E]/30 p-3.5 sm:p-4 rounded-2xl space-y-1">
                     <span className="text-[10px] font-mono text-white/50 uppercase block">Fidélité & Points Kènè</span>
-                    <div className="text-base font-display font-black text-emerald-400">
+                    <div className="text-sm sm:text-base font-display font-black text-emerald-400">
                       💎 1 850 Points
                     </div>
                     <span className="text-[10px] text-amber-300 font-bold block">Remise 15% active en caisse</span>
@@ -263,51 +263,51 @@ export function ClientFullDossierModal({
                 </div>
 
                 {/* Preferences & Salon Habits */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-[#150D07] border border-white/10 p-5 rounded-3xl space-y-3">
-                    <h3 className="font-display font-bold text-sm text-[#F3E5AB] flex items-center gap-2">
-                      <Heart className="w-4 h-4 text-[#C8951E]" /> Préférences Personnelles & Confort en Cabine
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="bg-[#150D07] border border-white/10 p-4 sm:p-5 rounded-2xl sm:rounded-3xl space-y-3">
+                    <h3 className="font-display font-bold text-xs sm:text-sm text-[#F3E5AB] flex items-center gap-2">
+                      <Heart className="w-4 h-4 text-[#C8951E]" /> Préférences Personnelles & Confort
                     </h3>
                     <div className="space-y-2 text-xs text-white/80 font-sans">
                       <p className="flex justify-between py-1 border-b border-white/5">
-                        <span className="text-white/40">Boisson d'accueil préférée :</span>
-                        <strong className="text-white">Jus de Bissap glacé au gingembre 🌺</strong>
+                        <span className="text-white/40">Boisson d'accueil :</span>
+                        <strong className="text-white text-right">Bissap glacé gingembre 🌺</strong>
                       </p>
                       <p className="flex justify-between py-1 border-b border-white/5">
-                        <span className="text-white/40">Pression de massage :</span>
+                        <span className="text-white/40">Pression massage :</span>
                         <strong className="text-white">Moyenne à appuyée</strong>
                       </p>
                       <p className="flex justify-between py-1 border-b border-white/5">
                         <span className="text-white/40">Praticienne préférée :</span>
-                        <strong className="text-amber-300">Fatou Koné (Dermo-Praticienne)</strong>
+                        <strong className="text-amber-300">Fatou Koné</strong>
                       </p>
                       <p className="flex justify-between py-1">
-                        <span className="text-white/40">Créneau d'accueil habituel :</span>
-                        <strong className="text-white">Vendredi de 14h00 à 16h00</strong>
+                        <span className="text-white/40">Créneau habituel :</span>
+                        <strong className="text-white">Vendredi après-midi</strong>
                       </p>
                     </div>
                   </div>
 
-                  <div className="bg-[#150D07] border border-white/10 p-5 rounded-3xl space-y-3">
-                    <h3 className="font-display font-bold text-sm text-[#F3E5AB] flex items-center gap-2">
+                  <div className="bg-[#150D07] border border-white/10 p-4 sm:p-5 rounded-2xl sm:rounded-3xl space-y-3">
+                    <h3 className="font-display font-bold text-xs sm:text-sm text-[#F3E5AB] flex items-center gap-2">
                       <Activity className="w-4 h-4 text-[#C8951E]" /> Synthèse Clinique Cabine
                     </h3>
                     <div className="space-y-2 text-xs text-white/80 font-sans">
                       <p className="flex justify-between py-1 border-b border-white/5">
-                        <span className="text-white/40">Score Santé Cutanée Cabine :</span>
+                        <span className="text-white/40">Score Cutané Cabine :</span>
                         <strong className="text-emerald-400 font-bold">78/100 (Bon)</strong>
                       </p>
                       <p className="flex justify-between py-1 border-b border-white/5">
-                        <span className="text-white/40">Taux d'Hydratation Epidermique :</span>
-                        <strong className="text-sky-300">84% (+22% depuis J-0)</strong>
+                        <span className="text-white/40">Hydratation Epidermique :</span>
+                        <strong className="text-sky-300">84% (+22% vs J-0)</strong>
                       </p>
                       <p className="flex justify-between py-1 border-b border-white/5">
-                        <span className="text-white/40">Profondeur Pigmentaire (PIH) :</span>
-                        <strong className="text-amber-300">0.2mm (Épidermique Réversible)</strong>
+                        <span className="text-white/40">Profondeur PIH :</span>
+                        <strong className="text-amber-300">0.2mm (Réversible)</strong>
                       </p>
                       <p className="flex justify-between py-1">
-                        <span className="text-white/40">Prochain Soin Recommandé :</span>
-                        <strong className="text-emerald-400">Soin Scellant Karité-Baobab (dans 12j)</strong>
+                        <span className="text-white/40">Prochain Soin :</span>
+                        <strong className="text-emerald-400">Karité-Baobab (dans 12j)</strong>
                       </p>
                     </div>
                   </div>
@@ -315,30 +315,30 @@ export function ClientFullDossierModal({
               </div>
             )}
 
-            {/* TAB 2: BILAN CUTANÉ AUTO-RÉALISÉ PAR LA CLIENTE (PWA CLIENT) */}
+            {/* TAB 2: BILAN CUTANÉ AUTO-RÉALISÉ PAR LA CLIENTE */}
             {activeTab === 'self_diagnostic' && (
-              <div className="space-y-6">
-                <div className="bg-gradient-to-r from-[#1A2634] via-[#151F2B] to-[#1A2634] border border-sky-400/40 p-5 rounded-3xl space-y-4 shadow-xl">
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-sky-400/20 pb-3">
+              <div className="space-y-4 sm:space-y-6">
+                <div className="bg-gradient-to-r from-[#1A2634] via-[#151F2B] to-[#1A2634] border border-sky-400/40 p-4 sm:p-5 rounded-2xl sm:rounded-3xl space-y-4 shadow-xl">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-sky-400/20 pb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-sky-400/20 border border-sky-400/50 flex items-center justify-center text-sky-300">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-sky-400/20 border border-sky-400/50 flex items-center justify-center text-sky-300 shrink-0">
                         <Smartphone className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="font-display font-bold text-base text-white">
+                        <h3 className="font-display font-bold text-sm sm:text-base text-white">
                           Bilan Cutané Auto-Réalisé par {client.firstName} depuis son Appareil
                         </h3>
-                        <p className="text-xs text-sky-200/70 font-mono">
-                          Soumis directement par la cliente via l'application Web/Mobile PWA Client
+                        <p className="text-[11px] text-sky-200/70 font-mono">
+                          Soumis directement par la cliente via l'application Web/Mobile PWA
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-sky-400 text-black font-black text-[10px] uppercase">
-                        📱 iPhone 15 Pro (iOS Safari)
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge className="bg-sky-400 text-black font-black text-[9px] sm:text-[10px] uppercase">
+                        📱 iPhone 15 Pro (iOS)
                       </Badge>
-                      <span className="text-xs font-mono text-sky-300 font-bold">🗓️ 04/08/2026 à 14:32</span>
+                      <span className="text-[11px] font-mono text-sky-300 font-bold">🗓️ 04/08/2026 à 14:32</span>
                     </div>
                   </div>
 
@@ -360,7 +360,7 @@ export function ClientFullDossierModal({
                         <span>📝</span> Réponses au Questionnaire Auto-Diagnostique Client :
                       </h4>
 
-                      <div className="grid grid-cols-2 gap-3 text-white/80">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-white/80">
                         <div className="bg-[#101824] p-3 rounded-xl border border-white/5 space-y-1">
                           <span className="text-white/40 text-[10px] block">Ressenti Cutané Déclaré :</span>
                           <strong className="text-amber-300 block">Tiraillements le soir + Zone T brillante</strong>
@@ -379,10 +379,10 @@ export function ClientFullDossierModal({
                         </div>
                       </div>
 
-                      <div className="pt-2 border-t border-sky-400/20 flex items-center justify-between">
+                      <div className="pt-2 border-t border-sky-400/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                         <span className="text-sky-200/70 text-[11px]">Score Auto-Scan Client : <strong className="text-emerald-400">72/100</strong></span>
-                        <Button className="bg-sky-400 text-black font-bold text-xs h-8">
-                          <RefreshCw className="w-3.5 h-3.5 mr-1" /> Comparer avec Diagnostic Cabine Pro
+                        <Button className="bg-sky-400 text-black font-bold text-xs h-8 w-full sm:w-auto">
+                          <RefreshCw className="w-3.5 h-3.5 mr-1" /> Comparer avec Diagnostic Pro
                         </Button>
                       </div>
                     </div>
@@ -391,38 +391,36 @@ export function ClientFullDossierModal({
               </div>
             )}
 
-            {/* TAB 3: ÉVOLUTION PHOTOS AU FIL DU TEMPS */}
+            {/* TAB 3: ÉVOLUTION PHOTOS */}
             {activeTab === 'photos' && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between bg-[#1A1410] p-4 rounded-2xl border border-white/10">
+              <div className="space-y-4 sm:space-y-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-[#1A1410] p-4 rounded-2xl border border-white/10 gap-3">
                   <div>
                     <h3 className="font-display font-bold text-sm text-white">Galerie Chronologique du Traitement</h3>
-                    <p className="text-xs text-white/50">Suivi visuel des résultats et de l'amélioration du teint au fil des séances</p>
+                    <p className="text-xs text-white/50">Suivi visuel des résultats au fil des séances</p>
                   </div>
 
-                  <label className="cursor-pointer">
+                  <label className="cursor-pointer w-full sm:w-auto">
                     <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] font-black text-xs shadow-lg hover:brightness-110">
+                    <span className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] font-black text-xs shadow-lg hover:brightness-110">
                       <Camera className="w-4 h-4" /> 📸 Ajouter Photo d'Évolution
                     </span>
                   </label>
                 </div>
 
-                {/* Main Photo Showcase */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                  {/* Selected Photo Viewer */}
-                  <div className="md:col-span-8 bg-[#150D07] border border-[#C8951E]/40 rounded-3xl p-4 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
+                  <div className="md:col-span-8 bg-[#150D07] border border-[#C8951E]/40 rounded-2xl sm:rounded-3xl p-3 sm:p-4 space-y-4">
                     <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black border border-white/10">
                       <img src={selectedPhoto.src} alt={selectedPhoto.stage} className="w-full h-full object-cover" />
-                      <div className="absolute top-3 left-3 bg-black/80 border border-[#C8951E] px-3 py-1 rounded-xl text-xs font-mono font-bold text-[#F3E5AB]">
+                      <div className="absolute top-3 left-3 bg-black/80 border border-[#C8951E] px-2.5 py-1 rounded-xl text-[11px] font-mono font-bold text-[#F3E5AB]">
                         {selectedPhoto.stage}
                       </div>
-                      <div className="absolute bottom-3 right-3 bg-black/80 border border-white/10 px-3 py-1 rounded-xl text-xs font-mono text-white/70">
+                      <div className="absolute bottom-3 right-3 bg-black/80 border border-white/10 px-2.5 py-1 rounded-xl text-[11px] font-mono text-white/70">
                         🗓️ {selectedPhoto.date}
                       </div>
                     </div>
 
-                    <div className="bg-[#0A0603] p-4 rounded-2xl border border-white/10 space-y-2">
+                    <div className="bg-[#0A0603] p-3 sm:p-4 rounded-2xl border border-white/10 space-y-2">
                       <div className="flex items-center justify-between text-xs">
                         <span className="font-bold text-[#C8951E]">Observations Cliniques :</span>
                         <span className="font-mono text-emerald-400 font-bold">{selectedPhoto.metrics.glow}</span>
@@ -431,10 +429,9 @@ export function ClientFullDossierModal({
                     </div>
                   </div>
 
-                  {/* Photo Timeline Sidebar */}
                   <div className="md:col-span-4 space-y-3">
-                    <span className="text-xs font-mono font-bold text-white/50 uppercase block">Timeline des Prises de Vue ({photosList.length})</span>
-                    <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
+                    <span className="text-xs font-mono font-bold text-white/50 uppercase block">Timeline Prises de Vue ({photosList.length})</span>
+                    <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
                       {photosList.map(photo => (
                         <div
                           key={photo.id}
@@ -445,7 +442,7 @@ export function ClientFullDossierModal({
                               : 'bg-[#1A1410] border-white/10 hover:border-white/30'
                           }`}
                         >
-                          <div className="w-14 h-14 rounded-xl overflow-hidden bg-black border border-white/10 shrink-0">
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-black border border-white/10 shrink-0">
                             <img src={photo.src} alt={photo.stage} className="w-full h-full object-cover" />
                           </div>
                           <div className="space-y-1">
@@ -461,13 +458,13 @@ export function ClientFullDossierModal({
               </div>
             )}
 
-            {/* TAB 4: HISTORIQUE CONSULTATIONS & SCAN CABINE */}
+            {/* TAB 4: CONSULTATIONS */}
             {activeTab === 'consultations' && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-display font-bold text-sm text-white">Consultations Dermatologiques & Examens Passeport</h3>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                  <h3 className="font-display font-bold text-sm text-white">Consultations Dermatologiques & Examens</h3>
                   {onNewConsultation && (
-                    <Button onClick={() => onNewConsultation(client)} className="bg-[#C8951E] text-black font-bold text-xs h-9">
+                    <Button onClick={() => onNewConsultation(client)} className="bg-[#C8951E] text-black font-bold text-xs h-9 w-full sm:w-auto">
                       + Nouvelle Consultation
                     </Button>
                   )}
@@ -478,7 +475,7 @@ export function ClientFullDossierModal({
                     { date: '01/08/2026', type: 'Contrôle Suivi PIH', note: 'Diminution des zones de taches de 65%. Barrière cutanée hydratée.', doc: 'Dr. Aminata Diallo' },
                     { date: '15/06/2026', type: 'Consultation Initiale 3D', note: 'Bilan dermo-spectral complet. Phototype V identifié. Début cure Karité-Baobab.', doc: 'Fatou Koné' },
                   ].map((cons, idx) => (
-                    <div key={idx} className="bg-[#1A1410] border border-white/10 p-4 rounded-2xl flex items-start justify-between gap-4">
+                    <div key={idx} className="bg-[#1A1410] border border-white/10 p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-mono font-bold text-[#F3E5AB]">🗓️ {cons.date}</span>
@@ -487,7 +484,7 @@ export function ClientFullDossierModal({
                         <p className="text-xs text-white/80 leading-relaxed">{cons.note}</p>
                         <span className="text-[10px] text-white/40 block font-mono">Praticienne : {cons.doc}</span>
                       </div>
-                      <Button variant="outline" onClick={() => onPrintPassport?.(client)} className="border-white/10 text-xs text-white/70 hover:text-white shrink-0">
+                      <Button variant="outline" onClick={() => onPrintPassport?.(client)} className="border-white/10 text-xs text-white/70 hover:text-white shrink-0 w-full sm:w-auto">
                         <Printer className="w-3.5 h-3.5 mr-1" /> Imprimer Rapport
                       </Button>
                     </div>
@@ -496,12 +493,12 @@ export function ClientFullDossierModal({
               </div>
             )}
 
-            {/* TAB 5: HISTORIQUE RENDEZ-VOUS */}
+            {/* TAB 5: RENDEZ-VOUS */}
             {activeTab === 'appointments' && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-display font-bold text-sm text-white">Historique des Rendez-Vous & Soins Réalisés</h3>
-                  <Button className="bg-[#C8951E] text-black font-bold text-xs h-9">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                  <h3 className="font-display font-bold text-sm text-white">Historique des Rendez-Vous</h3>
+                  <Button className="bg-[#C8951E] text-black font-bold text-xs h-9 w-full sm:w-auto">
                     + Prendre un Rendez-Vous
                   </Button>
                 </div>
@@ -510,17 +507,16 @@ export function ClientFullDossierModal({
                   {[
                     { date: 'Demain 14:00', service: 'Soin Scellant Karité-Baobab (60 min)', status: 'Confirmé', price: '35 000 FCFA', doc: 'Fatou Koné' },
                     { date: '15/07/2026 15:30', service: 'Massage Réparateur Huile de Neem (45 min)', status: 'Terminé', price: '25 000 FCFA', doc: 'Aminata Diallo' },
-                    { date: '15/06/2026 10:00', service: 'Diagnostic 3D & Consultation Initiale (30 min)', status: 'Terminé', price: '15 000 FCFA', doc: 'Fatou Koné' },
                   ].map((rdv, idx) => (
-                    <div key={idx} className="bg-[#1A1410] border border-white/10 p-4 rounded-2xl flex items-center justify-between gap-4">
+                    <div key={idx} className="bg-[#1A1410] border border-white/10 p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div className="space-y-1">
                         <span className="font-bold text-white text-sm block">{rdv.service}</span>
                         <div className="flex items-center gap-3 text-white/50 text-[11px] font-mono">
                           <span>🗓️ {rdv.date}</span>
-                          <span>👤 Praticienne: {rdv.doc}</span>
+                          <span>👤 {rdv.doc}</span>
                         </div>
                       </div>
-                      <div className="text-right space-y-1">
+                      <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto">
                         <span className="font-display font-black text-amber-300 block">{rdv.price}</span>
                         <Badge className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px]">{rdv.status}</Badge>
                       </div>
@@ -530,20 +526,20 @@ export function ClientFullDossierModal({
               </div>
             )}
 
-            {/* TAB 6: ACHATS & CAISSE POS */}
+            {/* TAB 6: ACHATS POS */}
             {activeTab === 'purchases' && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-display font-bold text-sm text-white">Achats de Produits Cosmétiques & Factures Caisse</h3>
-                  <span className="text-xs font-mono text-[#F3E5AB] font-bold">Cumul Total : 285 000 FCFA</span>
+                  <h3 className="font-display font-bold text-sm text-white">Factures & Achats Caisse POS</h3>
+                  <span className="text-xs font-mono text-[#F3E5AB] font-bold">Total : 285 000 FCFA</span>
                 </div>
 
                 <div className="space-y-3 text-xs">
                   {[
-                    { ref: 'FAC-2026-089', date: '15/07/2026', items: 'Sérum Niacinamide & Baobab (50ml) + Beurre de Karité pur (200g)', total: '45 000 FCFA', mode: 'Wave Digital' },
+                    { ref: 'FAC-2026-089', date: '15/07/2026', items: 'Sérum Niacinamide & Baobab (50ml) + Beurre de Karité (200g)', total: '45 000 FCFA', mode: 'Wave Digital' },
                     { ref: 'FAC-2026-042', date: '15/06/2026', items: 'Soin Visage Cabine + Gel Aloe Vera 99% + Écran Solaire SPF 50', total: '75 000 FCFA', mode: 'Orange Money' },
                   ].map((fact, idx) => (
-                    <div key={idx} className="bg-[#1A1410] border border-white/10 p-4 rounded-2xl flex items-center justify-between gap-4">
+                    <div key={idx} className="bg-[#1A1410] border border-white/10 p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <span className="font-mono font-bold text-[#C8951E] text-xs">{fact.ref}</span>
@@ -552,20 +548,18 @@ export function ClientFullDossierModal({
                         <p className="text-xs text-white/80 font-sans">{fact.items}</p>
                         <span className="text-[10px] text-sky-400 font-mono block">Règlement : {fact.mode}</span>
                       </div>
-                      <div className="text-right">
-                        <span className="font-display font-black text-emerald-400 text-sm">{fact.total}</span>
-                      </div>
+                      <span className="font-display font-black text-emerald-400 text-sm self-end sm:self-auto">{fact.total}</span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* TAB 7: DIAGNOSTIC CAPILLAIRE & RITUELS CHEBE */}
+            {/* TAB 7: CAPILLAIRE */}
             {activeTab === 'hair_prescriptions' && (
               <div className="space-y-4">
-                <div className="bg-[#150D07] border border-[#C8951E]/40 p-5 rounded-3xl space-y-4">
-                  <h3 className="font-display font-bold text-sm text-[#F3E5AB] flex items-center gap-2">
+                <div className="bg-[#150D07] border border-[#C8951E]/40 p-4 sm:p-5 rounded-2xl sm:rounded-3xl space-y-4">
+                  <h3 className="font-display font-bold text-xs sm:text-sm text-[#F3E5AB] flex items-center gap-2">
                     <Scissors className="w-4 h-4 text-[#C8951E]" /> Diagnostic Capillaire & Rituels Tresses/Chebe
                   </h3>
 
@@ -584,7 +578,7 @@ export function ClientFullDossierModal({
                     </div>
                   </div>
 
-                  <div className="bg-[#0A0603] p-4 rounded-2xl border border-white/10 space-y-2 text-xs">
+                  <div className="bg-[#0A0603] p-3 sm:p-4 rounded-2xl border border-white/10 space-y-2 text-xs">
                     <span className="font-bold text-[#C8951E] block">Rituel Capillaire Conseillé :</span>
                     <p className="text-white/80 leading-relaxed">
                       Bain d'huile chaude de Baobab & Ricin 1 fois par semaine. Masque fortifiant à la Poudre de Chebe du Tchad après shampoing doux surgras. Coiffures protectrices recommandées (Knotless Braids au Beurre de Karité).
@@ -596,15 +590,15 @@ export function ClientFullDossierModal({
 
           </div>
 
-          {/* ── FOOTER ACTIONS ── */}
-          <div className="p-4 border-t border-white/10 bg-[#0A0603] flex items-center justify-between">
-            <span className="text-xs font-mono text-white/40">ID Dossier : {client.id} • Mis à jour le {new Date().toLocaleDateString('fr-FR')}</span>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={onClose} className="border-white/10 text-white/70 text-xs">
+          {/* ── FOOTER ACTIONS (RESPONSIVE BUTTONS) ── */}
+          <div className="p-3 sm:p-4 border-t border-white/10 bg-[#0A0603] flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span className="text-[10px] sm:text-xs font-mono text-white/40 text-center sm:text-left">ID Dossier : {client.id}</span>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Button variant="outline" onClick={onClose} className="border-white/10 text-white/70 text-xs flex-1 sm:flex-none">
                 Fermer
               </Button>
-              <Button onClick={() => onPrintPassport?.(client)} className="bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] font-black text-xs">
-                <Printer className="w-4 h-4 mr-1.5" /> Imprimer Passeport Beauté PDF
+              <Button onClick={() => onPrintPassport?.(client)} className="bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] font-black text-xs flex-1 sm:flex-none">
+                <Printer className="w-4 h-4 mr-1.5" /> Passeport PDF
               </Button>
             </div>
           </div>
