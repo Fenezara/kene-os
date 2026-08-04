@@ -383,15 +383,15 @@ export function SpectralScanOverlay({
           </div>
 
           {/* Multi-Photo + Spectral Modes Row */}
-          <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
             {availablePhotos.length > 1 ? (
-              <div className="flex items-center gap-1.5 bg-[#0F0A05] p-1 rounded-xl border border-white/10">
-                <span className="text-[9px] text-white/40 font-mono px-1">Photos ({availablePhotos.length}) :</span>
+              <div className="flex flex-wrap items-center gap-1.5 bg-[#0F0A05] p-1 rounded-xl border border-white/10">
+                <span className="text-[9px] text-white/40 font-mono px-1 w-full sm:w-auto">Photos ({availablePhotos.length}) :</span>
                 {availablePhotos.map((_, pIdx) => (
                   <button
                     key={pIdx}
                     onClick={() => setSelectedPhotoIdx(pIdx)}
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-lg transition ${
+                    className={`text-[10px] font-bold px-2 py-1 rounded-lg transition ${
                       selectedPhotoIdx === pIdx ? 'bg-[#C8951E] text-[#0F0A05]' : 'text-white/60 hover:text-white'
                     }`}
                   >
@@ -400,12 +400,12 @@ export function SpectralScanOverlay({
                 ))}
               </div>
             ) : (
-              <span className="text-[10px] font-mono text-[#F3E5AB] font-bold flex items-center gap-1">
+              <span className="text-[10px] font-mono text-[#F3E5AB] font-bold flex items-center gap-1 min-w-0">
                 ✨ {BODY_ZONES.find(z => z.id === currentZone)?.icon} Scan {BODY_ZONES.find(z => z.id === currentZone)?.label} (3D AI)
               </span>
             )}
 
-            <div className="flex items-center gap-1 bg-[#0F0A05] p-1 rounded-xl border border-white/10">
+            <div className="flex flex-wrap items-center gap-1 bg-[#0F0A05] p-1 rounded-xl border border-white/10">
               {[
                 { mode: 'mesh' as const, label: '🌟 Mesh 3D', activeClass: 'bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05]' },
                 { mode: 'pih' as const, label: '🔬 PIH', activeClass: 'bg-red-500 text-white' },
@@ -415,7 +415,7 @@ export function SpectralScanOverlay({
                 <button
                   key={mode}
                   onClick={() => setActiveMode(mode)}
-                  className={`text-[10px] font-mono font-bold px-2 py-1 rounded-lg transition ${activeMode === mode ? activeClass : 'text-white/50 hover:text-white'}`}
+                  className={`text-[9px] sm:text-[10px] font-mono font-bold px-2 py-1 rounded-lg transition whitespace-nowrap ${activeMode === mode ? activeClass : 'text-white/50 hover:text-white'}`}
                 >
                   {label}
                 </button>

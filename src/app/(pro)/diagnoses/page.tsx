@@ -355,7 +355,7 @@ export default function ProDiagnosesPage() {
                 <Sparkles className="w-4 h-4" /> Nouveau Diagnostic (AnamnÃ¨se + Scan)
               </motion.button>
             </DialogTrigger>
-          <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-2xl sm:rounded-3xl w-[96vw] sm:w-[95vw] max-w-4xl lg:max-w-5xl max-h-[92vh] overflow-y-auto overflow-x-hidden shadow-2xl p-3 sm:p-4 md:p-6">
+          <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-2xl sm:rounded-3xl w-[96vw] max-w-[96vw] sm:max-w-4xl lg:max-w-5xl max-h-[92vh] overflow-y-auto overflow-x-hidden shadow-2xl p-3 sm:p-4 md:p-6 mx-auto flex flex-col">
             <DialogHeader>
               <DialogTitle className="font-display text-sm sm:text-lg md:text-xl text-white flex items-start gap-2">
                 <span className="shrink-0">ðŸ”¬</span> <span className="break-words">Diagnostic CutanÃ© : {wizardStep === 1 ? 'Ã‰tape 1 - Questionnaire AnamnÃ¨se' : 'Ã‰tape 2 - Scan BiomÃ©trique Camera IA'}</span>
@@ -607,7 +607,7 @@ export default function ProDiagnosesPage() {
                 )}
 
                 {/* Camera / Photo preview scan box */}
-                <div className="relative w-full h-60 bg-[#0A0603] border border-[#C8951E]/30 rounded-3xl overflow-hidden flex items-center justify-center flex-col shadow-inner">
+                <div className="relative w-full max-w-[90vw] sm:max-w-full h-60 bg-[#0A0603] border border-[#C8951E]/30 rounded-3xl overflow-hidden flex items-center justify-center flex-col shadow-inner mx-auto">
                   {/* Hidden Canvas for Photo Capture */}
                   <canvas ref={canvasRef} className="hidden" />
 
