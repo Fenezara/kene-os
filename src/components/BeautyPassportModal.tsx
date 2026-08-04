@@ -115,7 +115,7 @@ export function BeautyPassportModal({
           </div>
 
           {/* 🌟 PASSEPORT BEAUTÉ CONTENT CARD (OFFICIAL CERTIFICATE DESIGN) */}
-          <div className="space-y-6 bg-gradient-to-b from-[#1A1410] to-[#0A0603] border border-[#C8951E]/30 rounded-2xl p-6 relative overflow-hidden print:border-black print:bg-white print:p-4">
+          <div className="kene-beauty-passport space-y-6 bg-gradient-to-b from-[#1A1410] to-[#0A0603] border border-[#C8951E]/30 rounded-2xl p-6 relative overflow-hidden">
             
             {/* Header Brand */}
             <div className="flex items-center justify-between border-b border-white/10 pb-4 print:border-black">
