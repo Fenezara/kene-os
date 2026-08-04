@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 import { KeneLogo } from '@/components/ui/logo';
 import { BeforeAfterGalleryModal } from '@/components/BeforeAfterGalleryModal';
 import { SpectralScanOverlay } from '@/components/SpectralScanOverlay';
+import { PrintableAnamnesisSheet } from '@/components/PrintableAnamnesisSheet';
 
 // Score gauge component
 function ScoreGauge({ score, size = 120 }: { score: number; size?: number }) {
@@ -65,6 +66,7 @@ export default function ProDiagnosesPage() {
   const [clients, setClients] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [showPrintableSheet, setShowPrintableSheet] = useState(false);
   const [search, setSearch] = useState('');
   const [selectedClient, setSelectedClient] = useState('');
 
@@ -334,6 +336,13 @@ export default function ProDiagnosesPage() {
             className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs bg-white/5 hover:bg-white/10 text-white border border-white/10 transition cursor-pointer"
           >
             <span>🖼️</span> Galerie Avant / Après (Évolution)
+          </button>
+
+          <button
+            onClick={() => setShowPrintableSheet(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs bg-[#C8951E]/15 hover:bg-[#C8951E]/25 text-[#F3E5AB] border border-[#C8951E]/40 transition cursor-pointer shadow-md"
+          >
+            <Printer className="w-4 h-4 text-[#C8951E]" /> Fiche Physique A4 (Accueil)
           </button>
 
           <Dialog open={isDialogOpen} onOpenChange={(o) => { setIsDialogOpen(o); if (!o) resetModal(); }}>
@@ -1173,6 +1182,13 @@ export default function ProDiagnosesPage() {
         onClose={() => setIsGalleryModalOpen(false)}
         clientPhoto={typeof window !== 'undefined' ? localStorage.getItem('kene_latest_client_photo') : null}
       />
+
+      {/* ── MODALE IMPRESSION FICHE ANAMNÈSE PAPIER A4 (ACCUEIL) ── */}
+      <Dialog open={showPrintableSheet} onOpenChange={setShowPrintableSheet}>
+        <DialogContent className="bg-[#0A0603] border border-[#C8951E]/40 text-white rounded-3xl w-[95vw] max-w-4xl max-h-[92vh] overflow-y-auto shadow-2xl p-4 sm:p-6">
+          <PrintableAnamnesisSheet onClose={() => setShowPrintableSheet(false)} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
