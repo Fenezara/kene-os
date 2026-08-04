@@ -105,21 +105,25 @@ export function ClientFullDossierModal({
           {/* ── HEADER GRAND FORMAT ── */}
           <div className="p-6 border-b border-white/10 bg-gradient-to-r from-[#1A1410] via-[#241C16] to-[#1A1410] flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="relative">
+              <label className="relative cursor-pointer group" title="Cliquez pour changer la photo de profil">
+                <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
                 <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center font-display font-black text-2xl text-[#0F0A05] shadow-xl overflow-hidden border-2 border-[#C8951E]"
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center font-display font-black text-2xl text-[#0F0A05] shadow-xl overflow-hidden border-2 border-[#C8951E] group-hover:border-[#F3E5AB] transition"
                   style={{ background: `linear-gradient(135deg, ${fitzColor}, #F3E5AB)` }}
                 >
-                  {client.avatar ? (
-                    <img src={client.avatar} alt="avatar" className="w-full h-full object-cover" />
+                  {clientAvatar ? (
+                    <img src={clientAvatar} alt="avatar" className="w-full h-full object-cover" />
                   ) : (
                     <>{client.firstName?.charAt(0)}{client.lastName?.charAt(0)}</>
                   )}
                 </div>
+                <div className="absolute inset-0 rounded-2xl bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white">
+                  <Camera className="w-5 h-5" />
+                </div>
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-400 border-2 border-[#0F0A05] flex items-center justify-center text-[10px]" title="Cliente Active">
                   ✓
                 </div>
-              </div>
+              </label>
 
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
