@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, Calendar, Phone, Mail, MessageCircle, ShieldAlert, Award, Camera, Plus,
-  Printer, Sparkles, FileText, ChevronRight, Droplets, Sun, Activity, CheckCircle2, Clock, MapPin, User
+  Printer, Sparkles, FileText, ChevronRight, Droplets, Sun, Activity, CheckCircle2, Clock, MapPin, User,
+  Smartphone, ShoppingBag, CreditCard, Scissors, Heart, Check, RefreshCw
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -61,10 +62,9 @@ export function ClientFullDossierModal({
   onNewConsultation,
   onPrintPassport,
 }: ClientFullDossierModalProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'photos' | 'consultations' | 'prescriptions'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'self_diagnostic' | 'photos' | 'consultations' | 'appointments' | 'purchases' | 'hair_prescriptions'>('overview');
   const [photosList, setPhotosList] = useState<EvolutionPhoto[]>(DEFAULT_EVOLUTION_PHOTOS);
   const [selectedPhoto, setSelectedPhoto] = useState<EvolutionPhoto>(DEFAULT_EVOLUTION_PHOTOS[2]);
-  const [isAddingPhoto, setIsAddingPhoto] = useState(false);
 
   if (!isOpen || !client) return null;
 
@@ -86,7 +86,6 @@ export function ClientFullDossierModal({
       };
       setPhotosList([newPhoto, ...photosList]);
       setSelectedPhoto(newPhoto);
-      setIsAddingPhoto(false);
     };
     reader.readAsDataURL(file);
   };
@@ -123,18 +122,19 @@ export function ClientFullDossierModal({
               </div>
 
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-2xl sm:text-3xl font-display font-black text-white tracking-tight">
                     {client.firstName} {client.lastName}
                   </h2>
                   <Badge className="bg-[#C8951E] text-black font-black text-xs px-2.5 py-0.5">
-                    💎 Membre Platine
+                    💎 Membre Platine (1 850 pts)
                   </Badge>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-white/60 mt-1 flex-wrap font-mono">
                   <span className="flex items-center gap-1"><Phone className="w-3.5 h-3.5 text-[#C8951E]" /> {client.phone}</span>
                   {client.email && <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5 text-[#C8951E]" /> {client.email}</span>}
                   <span className="text-[#F3E5AB]">🗓️ Inscrite le {format(new Date(client.createdAt), 'dd/MM/yyyy')}</span>
+                  <span className="text-emerald-400 font-bold">💰 Total Dépensé: 285 000 FCFA</span>
                 </div>
               </div>
             </div>
@@ -157,20 +157,25 @@ export function ClientFullDossierModal({
             </div>
           </div>
 
-          {/* ── NAVIGATION TABS ── */}
-          <div className="flex border-b border-white/10 bg-[#0A0603] px-6 gap-2 overflow-x-auto">
+          {/* ── NAVIGATION TABS (7 DEDICATED TABS) ── */}
+          <div className="flex border-b border-white/10 bg-[#0A0603] px-6 gap-1.5 overflow-x-auto">
             {[
-              { id: 'overview' as const, label: '📋 Vue Globale & Constantes', icon: User },
+              { id: 'overview' as const, label: '📋 Vue Globale', icon: User },
+              { id: 'self_diagnostic' as const, label: '📱 Bilan Auto-Réalisé Cliente', icon: Smartphone, highlight: true },
               { id: 'photos' as const, label: '📸 Évolution Photos (Avant / Après)', icon: Camera, badge: photosList.length },
-              { id: 'consultations' as const, label: '🔬 Historique Consultations', icon: Activity },
-              { id: 'prescriptions' as const, label: '🌱 Ordonnance Botanique', icon: Sparkles },
+              { id: 'consultations' as const, label: '🔬 Consultations & Scan Cabine', icon: Activity },
+              { id: 'appointments' as const, label: '📅 RDV & Visites', icon: Calendar },
+              { id: 'purchases' as const, label: '🧾 Achats & Caisse POS', icon: ShoppingBag },
+              { id: 'hair_prescriptions' as const, label: '🌱 Diagnostic Capillaire & Soins', icon: Sparkles },
             ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-3.5 px-4 font-display font-bold text-xs border-b-2 transition flex items-center gap-2 whitespace-nowrap cursor-pointer ${
+                className={`py-3.5 px-3.5 font-display font-bold text-xs border-b-2 transition flex items-center gap-2 whitespace-nowrap cursor-pointer ${
                   activeTab === tab.id
-                    ? 'border-[#C8951E] text-[#F3E5AB] bg-[#C8951E]/10'
+                    ? tab.highlight 
+                      ? 'border-sky-400 text-sky-300 bg-sky-500/10' 
+                      : 'border-[#C8951E] text-[#F3E5AB] bg-[#C8951E]/10'
                     : 'border-transparent text-white/50 hover:text-white'
                 }`}
               >
@@ -188,86 +193,182 @@ export function ClientFullDossierModal({
           {/* ── CONTENT BODY ── */}
           <div className="p-6 overflow-y-auto flex-1 space-y-6">
 
-            {/* TAB 1: VUE GLOBALE & CONSTANTES */}
+            {/* TAB 1: VUE GLOBALE & PREFÉRÉES */}
             {activeTab === 'overview' && (
               <div className="space-y-6">
-                {/* 3 Metric Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* 4 Metric Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                   <div className="bg-[#1A1410] border border-[#C8951E]/30 p-4 rounded-2xl space-y-1">
-                    <span className="text-[10px] font-mono text-white/50 uppercase block">Type de Peau Perçu</span>
-                    <div className="text-lg font-display font-black text-[#F3E5AB] capitalize flex items-center gap-2">
-                      <span>🌗 Peau {client.skinType}</span>
+                    <span className="text-[10px] font-mono text-white/50 uppercase block">Type de Peau</span>
+                    <div className="text-base font-display font-black text-[#F3E5AB] capitalize">
+                      🌗 Peau {client.skinType}
                     </div>
                     <span className="text-[10px] text-white/40 block">Tendance déshydratée zone T</span>
                   </div>
 
                   <div className="bg-[#1A1410] border border-[#C8951E]/30 p-4 rounded-2xl space-y-1">
                     <span className="text-[10px] font-mono text-white/50 uppercase block">Phototype Fitzpatrick</span>
-                    <div className="text-lg font-display font-black text-amber-300 flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full" style={{ background: fitzColor }} />
-                      <span>Type {client.fitzpatrickType} (Afro/Mélanoderme)</span>
+                    <div className="text-base font-display font-black text-amber-300 flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: fitzColor }} />
+                      <span>Type {client.fitzpatrickType} (Afro)</span>
                     </div>
-                    <span className="text-[10px] text-white/40 block">Haute sensibilité aux taches PIH</span>
+                    <span className="text-[10px] text-white/40 block">Haute sensibilité taches PIH</span>
                   </div>
 
                   <div className="bg-[#1A1410] border border-[#C8951E]/30 p-4 rounded-2xl space-y-1">
-                    <span className="text-[10px] font-mono text-white/50 uppercase block">Contre-indications & Allergies</span>
+                    <span className="text-[10px] font-mono text-white/50 uppercase block">Allergies / Ingrédients Évités</span>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {allergies.length > 0 ? (
                         allergies.map((a: string, i: number) => (
-                          <span key={i} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/40">
+                          <span key={i} className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/40">
                             ⚠️ {a}
                           </span>
                         ))
                       ) : (
-                        <span className="text-xs text-emerald-400 font-bold">✓ Aucune allergie connue</span>
+                        <span className="text-xs text-emerald-400 font-bold">✓ Aucune allergie</span>
                       )}
                     </div>
                   </div>
+
+                  <div className="bg-[#1A1410] border border-[#C8951E]/30 p-4 rounded-2xl space-y-1">
+                    <span className="text-[10px] font-mono text-white/50 uppercase block">Fidélité & Points Kènè</span>
+                    <div className="text-base font-display font-black text-emerald-400">
+                      💎 1 850 Points
+                    </div>
+                    <span className="text-[10px] text-amber-300 font-bold block">Remise 15% active en caisse</span>
+                  </div>
                 </div>
 
-                {/* Main Clinical Summary Card */}
-                <div className="bg-[#150D07] border border-white/10 p-6 rounded-3xl space-y-4">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-[#C8951E]" />
-                      <h3 className="font-display font-bold text-base text-white">Dernier Bilan Cutané Octo-Spectral</h3>
-                    </div>
-                    <span className="text-xs font-mono text-emerald-400 font-bold">Score Santé Cutanée : 78/100</span>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                    <div className="bg-[#0F0A05] p-3 rounded-xl border border-white/5">
-                      <span className="text-[9px] text-white/40 font-mono uppercase block">Hydratation</span>
-                      <span className="text-base font-bold text-sky-400">84% (+22%)</span>
-                    </div>
-                    <div className="bg-[#0F0A05] p-3 rounded-xl border border-white/5">
-                      <span className="text-[9px] text-white/40 font-mono uppercase block">Profondeur PIH</span>
-                      <span className="text-base font-bold text-amber-400">0.2mm (Epiderme)</span>
-                    </div>
-                    <div className="bg-[#0F0A05] p-3 rounded-xl border border-white/5">
-                      <span className="text-[9px] text-white/40 font-mono uppercase block">Perte TEWL</span>
-                      <span className="text-base font-bold text-emerald-400">14.2 g/m²/h</span>
-                    </div>
-                    <div className="bg-[#0F0A05] p-3 rounded-xl border border-white/5">
-                      <span className="text-[9px] text-white/40 font-mono uppercase block">Risque Rebond</span>
-                      <span className="text-base font-bold text-emerald-300">Faible (94%)</span>
+                {/* Preferences & Salon Habits */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-[#150D07] border border-white/10 p-5 rounded-3xl space-y-3">
+                    <h3 className="font-display font-bold text-sm text-[#F3E5AB] flex items-center gap-2">
+                      <Heart className="w-4 h-4 text-[#C8951E]" /> Préférences Personnelles & Confort en Cabine
+                    </h3>
+                    <div className="space-y-2 text-xs text-white/80 font-sans">
+                      <p className="flex justify-between py-1 border-b border-white/5">
+                        <span className="text-white/40">Boisson d'accueil préférée :</span>
+                        <strong className="text-white">Jus de Bissap glacé au gingembre 🌺</strong>
+                      </p>
+                      <p className="flex justify-between py-1 border-b border-white/5">
+                        <span className="text-white/40">Pression de massage :</span>
+                        <strong className="text-white">Moyenne à appuyée</strong>
+                      </p>
+                      <p className="flex justify-between py-1 border-b border-white/5">
+                        <span className="text-white/40">Praticienne préférée :</span>
+                        <strong className="text-amber-300">Fatou Koné (Dermo-Praticienne)</strong>
+                      </p>
+                      <p className="flex justify-between py-1">
+                        <span className="text-white/40">Créneau d'accueil habituel :</span>
+                        <strong className="text-white">Vendredi de 14h00 à 16h00</strong>
+                      </p>
                     </div>
                   </div>
 
-                  <div className="bg-[#0A0603] p-4 rounded-2xl border border-[#C8951E]/20 space-y-2">
-                    <span className="text-xs font-bold text-[#C8951E] uppercase tracking-wider block">
-                      Prescription & Recommandation Praticienne Référente :
-                    </span>
-                    <p className="text-xs text-white/80 leading-relaxed font-sans">
-                      Phototype V à tendance hyperpigmentation post-inflammatoire. Appliquer 3 gouttes de sérum Niacinamide 5% & Baobab le soir. Écran solaire minéral SPF 50 obligatoire le matin. Soin cabine au Karité de Korhogo recommandé tous les 28 jours.
-                    </p>
+                  <div className="bg-[#150D07] border border-white/10 p-5 rounded-3xl space-y-3">
+                    <h3 className="font-display font-bold text-sm text-[#F3E5AB] flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-[#C8951E]" /> Synthèse Clinique Cabine
+                    </h3>
+                    <div className="space-y-2 text-xs text-white/80 font-sans">
+                      <p className="flex justify-between py-1 border-b border-white/5">
+                        <span className="text-white/40">Score Santé Cutanée Cabine :</span>
+                        <strong className="text-emerald-400 font-bold">78/100 (Bon)</strong>
+                      </p>
+                      <p className="flex justify-between py-1 border-b border-white/5">
+                        <span className="text-white/40">Taux d'Hydratation Epidermique :</span>
+                        <strong className="text-sky-300">84% (+22% depuis J-0)</strong>
+                      </p>
+                      <p className="flex justify-between py-1 border-b border-white/5">
+                        <span className="text-white/40">Profondeur Pigmentaire (PIH) :</span>
+                        <strong className="text-amber-300">0.2mm (Épidermique Réversible)</strong>
+                      </p>
+                      <p className="flex justify-between py-1">
+                        <span className="text-white/40">Prochain Soin Recommandé :</span>
+                        <strong className="text-emerald-400">Soin Scellant Karité-Baobab (dans 12j)</strong>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* TAB 2: ÉVOLUTION PHOTOS AU FIL DU TEMPS */}
+            {/* TAB 2: BILAN CUTANÉ AUTO-RÉALISÉ PAR LA CLIENTE (PWA CLIENT) */}
+            {activeTab === 'self_diagnostic' && (
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-[#1A2634] via-[#151F2B] to-[#1A2634] border border-sky-400/40 p-5 rounded-3xl space-y-4 shadow-xl">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-sky-400/20 pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-sky-400/20 border border-sky-400/50 flex items-center justify-center text-sky-300">
+                        <Smartphone className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-display font-bold text-base text-white">
+                          Bilan Cutané Auto-Réalisé par {client.firstName} depuis son Appareil
+                        </h3>
+                        <p className="text-xs text-sky-200/70 font-mono">
+                          Soumis directement par la cliente via l'application Web/Mobile PWA Client
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Badge className="bg-sky-400 text-black font-black text-[10px] uppercase">
+                        📱 iPhone 15 Pro (iOS Safari)
+                      </Badge>
+                      <span className="text-xs font-mono text-sky-300 font-bold">🗓️ 04/08/2026 à 14:32</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Selfie Client Capture */}
+                    <div className="space-y-2">
+                      <span className="text-xs font-mono font-bold text-sky-200 block">📸 Selfie Capturé par la Cliente :</span>
+                      <div className="relative aspect-square rounded-2xl overflow-hidden bg-black border border-sky-400/30">
+                        <img src="/images/afro_skin_spectral_scanner.jpg" alt="Selfie client" className="w-full h-full object-cover" />
+                        <div className="absolute bottom-2 left-2 bg-black/80 text-sky-300 text-[10px] font-mono px-2 py-0.5 rounded-lg border border-sky-400/30">
+                          Vue Face Auto-Scan
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Auto-Evaluation Answers */}
+                    <div className="md:col-span-2 space-y-3 bg-[#0A1017] p-4 rounded-2xl border border-sky-400/20 text-xs">
+                      <h4 className="font-bold text-sky-300 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                        <span>📝</span> Réponses au Questionnaire Auto-Diagnostique Client :
+                      </h4>
+
+                      <div className="grid grid-cols-2 gap-3 text-white/80">
+                        <div className="bg-[#101824] p-3 rounded-xl border border-white/5 space-y-1">
+                          <span className="text-white/40 text-[10px] block">Ressenti Cutané Déclaré :</span>
+                          <strong className="text-amber-300 block">Tiraillements le soir + Zone T brillante</strong>
+                        </div>
+                        <div className="bg-[#101824] p-3 rounded-xl border border-white/5 space-y-1">
+                          <span className="text-white/40 text-[10px] block">Préoccupation Majeure :</span>
+                          <strong className="text-amber-300 block">Taches sombres de boutons sur les joues</strong>
+                        </div>
+                        <div className="bg-[#101824] p-3 rounded-xl border border-white/5 space-y-1">
+                          <span className="text-white/40 text-[10px] block">Exposition Solaire Déclarée :</span>
+                          <strong className="text-white block">Élevée (Trajets voiture & marche 2h/jour)</strong>
+                        </div>
+                        <div className="bg-[#101824] p-3 rounded-xl border border-white/5 space-y-1">
+                          <span className="text-white/40 text-[10px] block">Écran Solaire Utilisé :</span>
+                          <strong className="text-red-400 block">Non (Sensation collante évitée)</strong>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-sky-400/20 flex items-center justify-between">
+                        <span className="text-sky-200/70 text-[11px]">Score Auto-Scan Client : <strong className="text-emerald-400">72/100</strong></span>
+                        <Button className="bg-sky-400 text-black font-bold text-xs h-8">
+                          <RefreshCw className="w-3.5 h-3.5 mr-1" /> Comparer avec Diagnostic Cabine Pro
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 3: ÉVOLUTION PHOTOS AU FIL DU TEMPS */}
             {activeTab === 'photos' && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between bg-[#1A1410] p-4 rounded-2xl border border-white/10">
@@ -337,7 +438,7 @@ export function ClientFullDossierModal({
               </div>
             )}
 
-            {/* TAB 3: HISTORIQUE CONSULTATIONS */}
+            {/* TAB 4: HISTORIQUE CONSULTATIONS & SCAN CABINE */}
             {activeTab === 'consultations' && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -372,26 +473,99 @@ export function ClientFullDossierModal({
               </div>
             )}
 
-            {/* TAB 4: ORDONNANCE BOTANIQUE */}
-            {activeTab === 'prescriptions' && (
+            {/* TAB 5: HISTORIQUE RENDEZ-VOUS */}
+            {activeTab === 'appointments' && (
               <div className="space-y-4">
-                <div className="bg-[#1A1410] border border-[#C8951E]/40 p-5 rounded-2xl space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display font-bold text-sm text-white">Historique des Rendez-Vous & Soins Réalisés</h3>
+                  <Button className="bg-[#C8951E] text-black font-bold text-xs h-9">
+                    + Prendre un Rendez-Vous
+                  </Button>
+                </div>
+
+                <div className="space-y-3 text-xs">
+                  {[
+                    { date: 'Demain 14:00', service: 'Soin Scellant Karité-Baobab (60 min)', status: 'Confirmé', price: '35 000 FCFA', doc: 'Fatou Koné' },
+                    { date: '15/07/2026 15:30', service: 'Massage Réparateur Huile de Neem (45 min)', status: 'Terminé', price: '25 000 FCFA', doc: 'Aminata Diallo' },
+                    { date: '15/06/2026 10:00', service: 'Diagnostic 3D & Consultation Initiale (30 min)', status: 'Terminé', price: '15 000 FCFA', doc: 'Fatou Koné' },
+                  ].map((rdv, idx) => (
+                    <div key={idx} className="bg-[#1A1410] border border-white/10 p-4 rounded-2xl flex items-center justify-between gap-4">
+                      <div className="space-y-1">
+                        <span className="font-bold text-white text-sm block">{rdv.service}</span>
+                        <div className="flex items-center gap-3 text-white/50 text-[11px] font-mono">
+                          <span>🗓️ {rdv.date}</span>
+                          <span>👤 Praticienne: {rdv.doc}</span>
+                        </div>
+                      </div>
+                      <div className="text-right space-y-1">
+                        <span className="font-display font-black text-amber-300 block">{rdv.price}</span>
+                        <Badge className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px]">{rdv.status}</Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 6: ACHATS & CAISSE POS */}
+            {activeTab === 'purchases' && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display font-bold text-sm text-white">Achats de Produits Cosmétiques & Factures Caisse</h3>
+                  <span className="text-xs font-mono text-[#F3E5AB] font-bold">Cumul Total : 285 000 FCFA</span>
+                </div>
+
+                <div className="space-y-3 text-xs">
+                  {[
+                    { ref: 'FAC-2026-089', date: '15/07/2026', items: 'Sérum Niacinamide & Baobab (50ml) + Beurre de Karité pur (200g)', total: '45 000 FCFA', mode: 'Wave Digital' },
+                    { ref: 'FAC-2026-042', date: '15/06/2026', items: 'Soin Visage Cabine + Gel Aloe Vera 99% + Écran Solaire SPF 50', total: '75 000 FCFA', mode: 'Orange Money' },
+                  ].map((fact, idx) => (
+                    <div key={idx} className="bg-[#1A1410] border border-white/10 p-4 rounded-2xl flex items-center justify-between gap-4">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-bold text-[#C8951E] text-xs">{fact.ref}</span>
+                          <span className="text-white/40 text-[10px]">🗓️ {fact.date}</span>
+                        </div>
+                        <p className="text-xs text-white/80 font-sans">{fact.items}</p>
+                        <span className="text-[10px] text-sky-400 font-mono block">Règlement : {fact.mode}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-display font-black text-emerald-400 text-sm">{fact.total}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 7: DIAGNOSTIC CAPILLAIRE & RITUELS CHEBE */}
+            {activeTab === 'hair_prescriptions' && (
+              <div className="space-y-4">
+                <div className="bg-[#150D07] border border-[#C8951E]/40 p-5 rounded-3xl space-y-4">
                   <h3 className="font-display font-bold text-sm text-[#F3E5AB] flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-[#C8951E]" /> Routine Dermo-Cosmétique Botanique Prescrite
+                    <Scissors className="w-4 h-4 text-[#C8951E]" /> Diagnostic Capillaire & Rituels Tresses/Chebe
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div className="bg-[#0F0A05] p-4 rounded-xl border border-white/10 space-y-2">
-                      <span className="font-bold text-amber-300 block">🌅 Matin :</span>
-                      <p className="text-white/70">1. Nettoyage doux à l'eau florale d'Hibiscus.</p>
-                      <p className="text-white/70">2. Gel Aloe Vera 99% + Hydratant Karité-Baobab.</p>
-                      <p className="text-white/70">3. Écran Solaire Minéral SPF 50 (Incontournable).</p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-center">
+                    <div className="bg-[#0F0A05] p-3 rounded-xl border border-white/10">
+                      <span className="text-[9px] text-white/40 font-mono uppercase block">Type de Boucle</span>
+                      <strong className="text-[#F3E5AB] text-sm block mt-0.5">4C (Crépu Très Serré)</strong>
                     </div>
-                    <div className="bg-[#0F0A05] p-4 rounded-xl border border-white/10 space-y-2">
-                      <span className="font-bold text-indigo-300 block">🌙 Soir :</span>
-                      <p className="text-white/70">1. Savon Noir Africain Surgras.</p>
-                      <p className="text-white/70">2. 3 gouttes de Sérum Niacinamide 5% & Baobab.</p>
-                      <p className="text-white/70">3. Application locale Beurre Karité pur sur zones PIH.</p>
+                    <div className="bg-[#0F0A05] p-3 rounded-xl border border-white/10">
+                      <span className="text-[9px] text-white/40 font-mono uppercase block">Porosité</span>
+                      <strong className="text-amber-300 text-sm block mt-0.5">Moyenne à Forte</strong>
                     </div>
+                    <div className="bg-[#0F0A05] p-3 rounded-xl border border-white/10">
+                      <span className="text-[9px] text-white/40 font-mono uppercase block">Densité & Longueur</span>
+                      <strong className="text-emerald-400 text-sm block mt-0.5">Épaisse · Mid-Back</strong>
+                    </div>
+                  </div>
+
+                  <div className="bg-[#0A0603] p-4 rounded-2xl border border-white/10 space-y-2 text-xs">
+                    <span className="font-bold text-[#C8951E] block">Rituel Capillaire Conseillé :</span>
+                    <p className="text-white/80 leading-relaxed">
+                      Bain d'huile chaude de Baobab & Ricin 1 fois par semaine. Masque fortifiant à la Poudre de Chebe du Tchad après shampoing doux surgras. Coiffures protectrices recommandées (Knotless Braids au Beurre de Karité).
+                    </p>
                   </div>
                 </div>
               </div>
