@@ -314,7 +314,7 @@ export default function ProDiagnosesPage() {
   );
 
   return (
-    <div className="space-y-6 text-white max-w-6xl mx-auto font-sans">
+    <div className="space-y-6 text-white max-w-6xl mx-auto font-sans overflow-x-hidden">
 
       {/* ── HEADER ── */}
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1A1410] border border-white/10 p-5 rounded-3xl shadow-xl">
@@ -330,19 +330,19 @@ export default function ProDiagnosesPage() {
           <p className="text-white/50 text-xs ml-11">Questionnaire clinique · Analyse biométrique cutanée · Phototypes Fitzpatrick I-VI</p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setIsGalleryModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs bg-white/5 hover:bg-white/10 text-white border border-white/10 transition cursor-pointer"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl font-bold text-[10px] sm:text-xs bg-white/5 hover:bg-white/10 text-white border border-white/10 transition cursor-pointer"
           >
-            <span>🖼️</span> Galerie Avant / Après (Évolution)
+            <span>🖼️</span> <span className="hidden sm:inline">Galerie</span> Avant / Après
           </button>
 
           <button
             onClick={() => setShowPrintableSheet(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs bg-[#C8951E]/15 hover:bg-[#C8951E]/25 text-[#F3E5AB] border border-[#C8951E]/40 transition cursor-pointer shadow-md"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl font-bold text-[10px] sm:text-xs bg-[#C8951E]/15 hover:bg-[#C8951E]/25 text-[#F3E5AB] border border-[#C8951E]/40 transition cursor-pointer shadow-md"
           >
-            <Printer className="w-4 h-4 text-[#C8951E]" /> Fiche Physique A4 (Accueil)
+            <Printer className="w-4 h-4 text-[#C8951E]" /> Fiche A4
           </button>
 
           <Dialog open={isDialogOpen} onOpenChange={(o) => { setIsDialogOpen(o); if (!o) resetModal(); }}>
@@ -355,12 +355,12 @@ export default function ProDiagnosesPage() {
                 <Sparkles className="w-4 h-4" /> Nouveau Diagnostic (Anamnèse + Scan)
               </motion.button>
             </DialogTrigger>
-          <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl w-[95vw] max-w-4xl lg:max-w-5xl max-h-[92vh] overflow-y-auto shadow-2xl p-4 sm:p-6">
+          <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-2xl sm:rounded-3xl w-[96vw] sm:w-[95vw] max-w-4xl lg:max-w-5xl max-h-[92vh] overflow-y-auto overflow-x-hidden shadow-2xl p-3 sm:p-4 md:p-6">
             <DialogHeader>
-              <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
-                <span>🔬</span> Diagnostic Cutané : {wizardStep === 1 ? 'Étape 1 - Questionnaire Anamnèse Clinique' : 'Étape 2 - Scan Biométrique Camera IA'}
+              <DialogTitle className="font-display text-sm sm:text-lg md:text-xl text-white flex items-start gap-2">
+                <span className="shrink-0">🔬</span> <span className="break-words">Diagnostic Cutané : {wizardStep === 1 ? 'Étape 1 - Questionnaire Anamnèse' : 'Étape 2 - Scan Biométrique Camera IA'}</span>
               </DialogTitle>
-              <DialogDescription className="text-white/50 text-xs">
+              <DialogDescription className="text-white/50 text-[10px] sm:text-xs">
                 Remplissez les habitudes cliniques de la cliente puis effectuez le scan facial.
               </DialogDescription>
             </DialogHeader>
@@ -369,22 +369,22 @@ export default function ProDiagnosesPage() {
             <div className="flex border-b border-white/10 my-2">
               <button
                 onClick={() => setWizardStep(1)}
-                className={`flex-1 py-2 text-xs font-bold font-display border-b-2 transition flex items-center justify-center gap-2 ${
+                className={`flex-1 py-2 text-[10px] sm:text-xs font-bold font-display border-b-2 transition flex items-center justify-center gap-1 sm:gap-2 ${
                   wizardStep === 1 ? 'border-[#C8951E] text-[#F3E5AB]' : 'border-transparent text-white/40'
                 }`}
               >
-                <ClipboardList className="w-4 h-4" /> 1. Questionnaire Anamnèse
+                <ClipboardList className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="truncate">1. Questionnaire Anamnèse</span>
               </button>
               <button
                 onClick={() => {
                   if (!selectedClient) return toast({ title: "Erreur", description: "Sélectionnez une cliente d'abord.", variant: "destructive" });
                   setWizardStep(2);
                 }}
-                className={`flex-1 py-2 text-xs font-bold font-display border-b-2 transition flex items-center justify-center gap-2 ${
+                className={`flex-1 py-2 text-[10px] sm:text-xs font-bold font-display border-b-2 transition flex items-center justify-center gap-1 sm:gap-2 ${
                   wizardStep === 2 ? 'border-[#C8951E] text-[#F3E5AB]' : 'border-transparent text-white/40'
                 }`}
               >
-                <Camera className="w-4 h-4" /> 2. Scan Biométrique Camera IA
+                <Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="truncate">2. Scan Biométrique IA</span>
               </button>
             </div>
 
@@ -411,7 +411,7 @@ export default function ProDiagnosesPage() {
                 {/* Perceived Skin Type */}
                 <div className="space-y-1.5">
                   <Label className="text-white/70 text-xs font-bold uppercase font-mono">2. Type de Peau Ressenti par la Cliente :</Label>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {[
                       { id: 'seche', label: 'Sèche / Tiraillée 🌵' },
                       { id: 'mixte', label: 'Mixte (Zone T) ⚖️' },
@@ -439,7 +439,7 @@ export default function ProDiagnosesPage() {
                 {/* Main Concerns Checkboxes */}
                 <div className="space-y-1.5">
                   <Label className="text-white/70 text-xs font-bold uppercase font-mono">3. Préoccupations Cutanées Majeures (Cocher tout ce qui s'applique) :</Label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {[
                       { id: 'taches', label: 'Taches sombres / Hyperpigmentation PIH' },
                       { id: 'eclat', label: 'Teint terne / Manque de luminosité' },
@@ -469,7 +469,7 @@ export default function ProDiagnosesPage() {
                 </div>
 
                 {/* Lifestyle & Routine */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label className="text-white/60 text-xs">Exposition Solaire Quotidienne</Label>
                     <select
@@ -557,12 +557,12 @@ export default function ProDiagnosesPage() {
                     <Label className="text-white/60 text-xs flex items-center gap-1">
                       <Palette className="w-3.5 h-3.5 text-[#C8951E]" /> Étalonnage Phototype Fitzpatrick (I à VI)
                     </Label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {['I', 'II', 'III', 'IV', 'V', 'VI'].map(type => (
                         <button
                           key={type}
                           onClick={() => setSelectedPhototype(type)}
-                          className={`flex-1 h-11 rounded-xl border-2 transition-all flex flex-col items-center justify-center font-bold text-xs ${selectedPhototype === type ? 'border-white scale-105 z-10 shadow-lg text-white' : 'border-transparent opacity-70 hover:opacity-100'}`}
+                          className={`w-10 h-10 sm:w-auto sm:h-11 sm:flex-1 rounded-xl border-2 transition-all flex flex-col items-center justify-center font-bold text-[10px] sm:text-xs ${selectedPhototype === type ? 'border-white scale-105 z-10 shadow-lg text-white' : 'border-transparent opacity-70 hover:opacity-100'}`}
                           style={{ backgroundColor: FITZPATRICK_COLORS[type] }}
                           title={`Phototype ${type}`}
                         >
@@ -578,7 +578,7 @@ export default function ProDiagnosesPage() {
 
                 {/* Photo Capture & Upload Control Buttons */}
                 {!isScanning && !scanComplete && (
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Button 
                       onClick={() => {
                         if (!isCameraActive) startCamera();
@@ -680,12 +680,12 @@ export default function ProDiagnosesPage() {
 
                       {/* 3D Golden Octo-Spectral Mesh Visualizer Overlay */}
                       <div className="my-2">
-                        <div className="flex items-center justify-between mb-1.5 px-1">
-                          <span className="text-[10px] font-mono font-bold text-[#F3E5AB] uppercase tracking-wider flex items-center gap-1.5">
-                            ✨ Cartographie Vectorielle 3D & Scanner Octo-Spectral Immersif (60 FPS)
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-1.5 px-1 gap-1">
+                          <span className="text-[9px] sm:text-[10px] font-mono font-bold text-[#F3E5AB] uppercase tracking-wider flex items-center gap-1.5 break-words">
+                            ✨ Cartographie 3D & Scanner Octo-Spectral (60 FPS)
                           </span>
-                          <span className="text-[9px] bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 px-2 py-0.5 rounded-full font-mono font-bold">
-                            XP-3D IMMERSIVE
+                          <span className="text-[9px] bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 px-2 py-0.5 rounded-full font-mono font-bold shrink-0 self-start">
+                            XP-3D
                           </span>
                         </div>
                         <SpectralScanOverlay 
@@ -713,7 +713,7 @@ export default function ProDiagnosesPage() {
                             <p className="text-white/80 font-mono leading-relaxed">
                               Perte Transepidermique en Eau (TEWL) : <strong className="text-emerald-400">14.2 g/m²/h</strong> · Profondeur Hyperpigmentation PIH : <strong className="text-amber-400">0.2mm (Épidermique)</strong> · Indice de Mélanine : <strong className="text-[#F3E5AB]">68/100</strong>.
                             </p>
-                            <div className="grid grid-cols-3 gap-2 text-[10px] font-mono bg-black/40 p-2.5 rounded-xl border border-white/10">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10px] font-mono bg-black/40 p-2.5 rounded-xl border border-white/10">
                               <div><span className="text-white/40 block">Taux Sébum</span><span className="text-emerald-400 font-bold">Équilibré ({mockResult.subScores.sebum}%)</span></div>
                               <div><span className="text-white/40 block">Densité Collagène</span><span className="text-sky-300 font-bold">Optimale (88%)</span></div>
                               <div><span className="text-white/40 block">Intégrité Barrière</span><span className="text-[#F3E5AB] font-bold">Fortifiée ({mockResult.subScores.barrierIntegrity}%)</span></div>
@@ -736,7 +736,7 @@ export default function ProDiagnosesPage() {
                             Kènè Lab Certified
                           </span>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                           <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
                             <span className="text-emerald-400 font-bold block text-[11px]">🥣 Beurre de Karité Brut de Korhogo (45%)</span>
                             <span className="text-white/50 text-[10px] block">Restauration lipidique & nutrition intense</span>
@@ -762,17 +762,17 @@ export default function ProDiagnosesPage() {
                           ⚠️ Anomalies & Pathologies Cutanées Décelées au Scan
                         </span>
                         <div className="space-y-1.5 text-xs">
-                          <div className="bg-[#0A0603] p-2 rounded-xl border border-red-500/20 text-red-200 flex items-center justify-between font-mono text-[11px]">
-                            <span>🔴 Hyperpigmentation post-inflammatoire (PIH)</span>
-                            <span className="font-bold">Profondeur 0.2mm</span>
+                          <div className="bg-[#0A0603] p-2 rounded-xl border border-red-500/20 text-red-200 flex flex-col sm:flex-row sm:items-center justify-between font-mono text-[10px] sm:text-[11px] gap-1">
+                            <span className="break-words">🔴 Hyperpigmentation post-inflammatoire (PIH)</span>
+                            <span className="font-bold shrink-0">Profondeur 0.2mm</span>
                           </div>
-                          <div className="bg-[#0A0603] p-2 rounded-xl border border-amber-500/20 text-amber-200 flex items-center justify-between font-mono text-[11px]">
-                            <span>🟡 Perturbation Transepidermique en Eau (TEWL)</span>
-                            <span className="font-bold">14.2 g/m²/h</span>
+                          <div className="bg-[#0A0603] p-2 rounded-xl border border-amber-500/20 text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between font-mono text-[10px] sm:text-[11px] gap-1">
+                            <span className="break-words">🟡 Perturbation Transepidermique (TEWL)</span>
+                            <span className="font-bold shrink-0">14.2 g/m²/h</span>
                           </div>
-                          <div className="bg-[#0A0603] p-2 rounded-xl border border-white/10 text-white/80 flex items-center justify-between font-mono text-[11px]">
-                            <span>🟠 Teint Terne & Perte d'Éclat</span>
-                            <span className="font-bold">Kératine en surface</span>
+                          <div className="bg-[#0A0603] p-2 rounded-xl border border-white/10 text-white/80 flex flex-col sm:flex-row sm:items-center justify-between font-mono text-[10px] sm:text-[11px] gap-1">
+                            <span className="break-words">🟠 Teint Terne & Perte d'Éclat</span>
+                            <span className="font-bold shrink-0">Kératine en surface</span>
                           </div>
                         </div>
                       </div>
@@ -810,7 +810,7 @@ export default function ProDiagnosesPage() {
                         <span className="text-xs font-bold text-[#4E9FD1] uppercase tracking-widest font-display flex items-center gap-1.5">
                           🌅 Routine Dermo-Cosmétique à Domicile (Matin & Soir)
                         </span>
-                        <div className="grid grid-cols-2 gap-3 text-xs">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                           <div className="bg-[#1A1410] p-3 rounded-xl border border-[#4E9FD1]/20 space-y-1.5">
                             <span className="font-bold text-sky-300 block border-b border-white/5 pb-1">🌅 Matin (Protection & Hydratation)</span>
                             <p className="text-[11px] text-white/70 leading-relaxed font-sans">

@@ -251,22 +251,22 @@ export default function DiagnosticPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-between min-h-[85vh] text-white">
+    <div className="flex-1 flex flex-col justify-between min-h-[85vh] text-white overflow-x-hidden">
       {/* Header */}
-      <header className="flex items-center justify-between p-4 border-b border-white/10 bg-[#1A1410] rounded-2xl mb-4 shadow-lg">
-        <div>
-          <h1 className="font-display font-bold text-lg text-[#C8951E] flex items-center gap-2">
-            <Scan className="w-5 h-5" /> Miroir Intelligent & Scanner Cutané Kènè
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border-b border-white/10 bg-[#1A1410] rounded-2xl mb-4 shadow-lg gap-2">
+        <div className="min-w-0">
+          <h1 className="font-display font-bold text-sm sm:text-lg text-[#C8951E] flex items-center gap-2">
+            <Scan className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" /> <span className="truncate">Miroir Intelligent & Scanner Cutané Kènè</span>
           </h1>
-          <span className="text-xs text-white/50 font-mono block">
-            {anamnesisData ? 'Étape 2/2 : Capture Multi-Angles & Analyse Spectrale IA' : 'Étape 1/2 : Anamnèse Cutanée'}
+          <span className="text-[10px] sm:text-xs text-white/50 font-mono block">
+            {anamnesisData ? 'Étape 2/2 : Capture & Analyse IA' : 'Étape 1/2 : Anamnèse Cutanée'}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <Button
             onClick={() => setIsQuestionnaireOpen(true)}
             variant="outline"
-            className="border-[#C8951E]/40 text-[#C8951E] hover:bg-[#C8951E]/10 text-xs font-bold rounded-xl cursor-pointer"
+            className="border-[#C8951E]/40 text-[#C8951E] hover:bg-[#C8951E]/10 text-[10px] sm:text-xs font-bold rounded-xl cursor-pointer"
           >
             <FileText className="w-3.5 h-3.5 mr-1" />
             Anamnèse ({anamnesisData ? 'Remplie' : 'À compléter'})

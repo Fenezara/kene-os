@@ -60,12 +60,12 @@ export function AnamnesisQuestionnaire({ isOpen, onClose, onComplete }: Anamnesi
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md">
       <m.div 
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-[#1A1410] border border-[var(--gold-kene)]/30 rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-6 text-white overflow-hidden relative"
+        className="bg-[#1A1410] border border-[var(--gold-kene)]/30 rounded-2xl sm:rounded-3xl p-3 sm:p-6 w-[96vw] max-w-lg shadow-2xl space-y-4 sm:space-y-6 text-white overflow-x-hidden overflow-y-auto max-h-[92vh] relative"
       >
         {/* Top Progress Bar */}
         <div className="space-y-2">
