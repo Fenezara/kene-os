@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { format } from 'date-fns';
 import { AvatarUpload } from '@/components/AvatarUpload';
+import { ClientFullDossierModal } from '@/components/ClientFullDossierModal';
 
 const FITZPATRICK_COLORS: Record<string, string> = {
   I: '#FDDBB4', II: '#F5CBA7', III: '#E59866', IV: '#CA9B5C', V: '#A0522D', VI: '#6B3A2A'
@@ -29,6 +30,7 @@ export default function ProClientsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [fullDossierClient, setFullDossierClient] = useState<any | null>(null);
 
   // IA Client Database Importer State
   const [isImportOpen, setIsImportOpen] = useState(false);
@@ -487,7 +489,7 @@ export default function ProClientsPage() {
                   transition={{ delay: i * 0.05 }}
                   className="group relative rounded-3xl border border-white/5 bg-[#1A1410] hover:border-[#C8951E]/30 transition-all duration-300 overflow-hidden"
                 >
-                  <div className="p-5 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : clientId)}>
+                  <div className="p-5 cursor-pointer" onClick={() => setFullDossierClient({ ...client, id: clientId })}>
                     {/* Phototype color accent top line */}
                   <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-3xl opacity-60" style={{ background: fitzColor }} />
                   {/* Hover glow */}
@@ -522,11 +524,9 @@ export default function ProClientsPage() {
                           </span>
                         );
                       })()}
-                      {isExpanded ? (
-                        <ChevronUp className="w-4 h-4 text-[#C8951E]" />
-                      ) : (
-                        <ChevronDown className="w-4 h-4 text-white/20 group-hover:text-[#C8951E] transition-colors" />
-                      )}
+                      <span className="text-[10px] font-bold text-[#F3E5AB] bg-[#C8951E]/20 border border-[#C8951E]/40 px-2 py-0.5 rounded-lg group-hover:bg-[#C8951E] group-hover:text-[#0F0A05] transition-all flex items-center gap-1">
+                        <span>🔍 Ouvrir</span> <ChevronRight className="w-3 h-3" />
+                      </span>
                     </div>
                   </div>
 
@@ -818,6 +818,21 @@ export default function ProClientsPage() {
           </div>
         )}
       </motion.div>
+
+      {/* ── PLEIN ÉCRAN / DÉDIÉ DOSSIER CLIENT COMPLET ── */}
+      <ClientFullDossierModal
+        isOpen={Boolean(fullDossierClient)}
+        onClose={() => setFullDossierClient(null)}
+        client={fullDossierClient}
+        onNewConsultation={(client) => {
+          setSelectedClientForConsultation(client);
+          setIsConsultationOpen(true);
+        }}
+        onPrintPassport={() => {
+          toast({ title: "🖨️ Passeport Beauté PDF", description: "Impression du passeport de diagnostic." });
+          window.print();
+        }}
+      />
     </div>
   );
 }
