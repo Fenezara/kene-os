@@ -322,22 +322,47 @@ export default function DiagnosticPage() {
             {/* Hidden Canvas for High-Res Capture */}
             <canvas ref={canvasRef} className="hidden" />
 
-            {/* Face Mesh Overlay Target Guide */}
+            {/* Face Mesh Overlay Target Guide — Afro-Futuristic 3D Reticle */}
             <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-              <div className="w-64 h-80 rounded-full border-2 border-dashed border-[#C8951E]/60 flex items-center justify-center relative">
+              {/* Corner Hologram Anchors */}
+              <div className="absolute inset-6 border border-[#C8951E]/20 rounded-3xl pointer-events-none flex flex-col justify-between p-2">
+                <div className="flex justify-between">
+                  <span className="text-[#C8951E] font-mono text-xs font-bold">┌ KÈNÈ 3D</span>
+                  <span className="text-[#C8951E] font-mono text-xs font-bold">┐</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#C8951E] font-mono text-xs font-bold">└ VLM-2026</span>
+                  <span className="text-[#C8951E] font-mono text-xs font-bold">┘</span>
+                </div>
+              </div>
+
+              {/* Glowing Oval Kente Target Matrix */}
+              <div className="w-64 h-80 rounded-full border-2 border-dashed border-[#FFD700]/70 flex items-center justify-center relative shadow-[0_0_40px_rgba(255,215,0,0.25)] animate-pulse">
+                {/* Rotating Inner Geometric Ring */}
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+                  className="absolute inset-2 rounded-full border border-[#C8951E]/40 border-t-[#FFD700] border-b-[#00E5FF]"
+                />
+
                 {/* Laser Scanning Bar */}
                 <motion.div
                   animate={{ y: [-140, 140, -140] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-full h-0.5 bg-gradient-to-r from-transparent via-[#C8951E] to-transparent shadow-[0_0_15px_#C8951E]"
+                  transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-full h-1 bg-gradient-to-r from-transparent via-[#FFD700] via-[#00E5FF] to-transparent shadow-[0_0_25px_#FFD700]"
                 />
+
+                {/* Center Biometric Target Reticle */}
+                <div className="absolute w-8 h-8 rounded-full border border-[#00E5FF]/80 flex items-center justify-center">
+                  <div className="w-2 h-2 rounded-full bg-[#FFD700] animate-ping" />
+                </div>
               </div>
             </div>
 
             {/* Alignment Badge */}
-            <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+            <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#C8951E]/40 text-xs font-bold text-[#F3E5AB] flex items-center gap-1.5 shadow-lg">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Alignement IA : 98%</span>
+              <span>Alignement 3D : 98% (VLM-IA)</span>
             </div>
 
             {/* Camera Switcher Button */}

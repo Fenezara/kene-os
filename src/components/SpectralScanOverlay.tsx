@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Droplets } from 'lucide-react';
+import { Droplets, Sparkles, Zap, Shield, Eye, RefreshCw } from 'lucide-react';
 
 // ── TYPES ──
 type BodyZone = 'visage' | 'cou' | 'decollete' | 'bras' | 'mains' | 'dos' | 'jambes' | 'pieds' | 'cuir_chevelu' | 'corps_entier';
@@ -326,6 +326,139 @@ const MESH_SVG: Record<BodyZone, JSX.Element> = {
   ),
 };
 
+// ── AFRO-FUTURISTIC 3D HOLOGRAPHIC PARTICLE CANVAS ──
+function HolographicParticleCanvas({ activeMode, isScanning }: { activeMode: string; isScanning: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    let width = (canvas.width = canvas.parentElement?.clientWidth || 500);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || 600);
+
+    const handleResize = () => {
+      if (!canvas.parentElement) return;
+      width = canvas.width = canvas.parentElement.clientWidth;
+      height = canvas.height = canvas.parentElement.clientHeight;
+    };
+    window.addEventListener('resize', handleResize);
+
+    const colorMap: Record<string, { primary: string; secondary: string; glow: string }> = {
+      mesh: { primary: '#FFD700', secondary: '#C8951E', glow: 'rgba(255, 215, 0, 0.5)' },
+      pih: { primary: '#FF4D4D', secondary: '#FF8800', glow: 'rgba(255, 77, 77, 0.5)' },
+      hydration: { primary: '#00E5FF', secondary: '#00A2FF', glow: 'rgba(0, 229, 255, 0.5)' },
+      barrier: { primary: '#00E676', secondary: '#B9F6CA', glow: 'rgba(0, 230, 118, 0.5)' },
+    };
+
+    const palette = colorMap[activeMode] || colorMap.mesh;
+
+    const numParticles = 40;
+    const particles = Array.from({ length: numParticles }, () => ({
+      x: (Math.random() - 0.5) * 350,
+      y: (Math.random() - 0.5) * 450,
+      z: Math.random() * 350 + 100,
+      vx: (Math.random() - 0.5) * 0.7,
+      vy: (Math.random() - 0.5) * 0.7,
+      vz: (Math.random() - 0.5) * 0.7,
+      size: Math.random() * 2 + 1,
+    }));
+
+    let laserY = 0;
+    let laserDirection = 1;
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      const fov = 280;
+      const centerX = width / 2;
+      const centerY = height / 2;
+
+      const projected: { x: number; y: number; z: number }[] = [];
+
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.z += p.vz;
+
+        if (p.x < -180 || p.x > 180) p.vx *= -1;
+        if (p.y < -220 || p.y > 220) p.vy *= -1;
+        if (p.z < 60 || p.z > 450) p.vz *= -1;
+
+        const scale = fov / p.z;
+        const px = p.x * scale + centerX;
+        const py = p.y * scale + centerY;
+
+        projected.push({ x: px, y: py, z: p.z });
+
+        ctx.beginPath();
+        ctx.arc(px, py, Math.max(1, p.size * scale * 0.6), 0, Math.PI * 2);
+        ctx.fillStyle = palette.primary;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = palette.glow;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      // Connect nodes with Kente geometric lines
+      ctx.lineWidth = 0.6;
+      for (let i = 0; i < projected.length; i++) {
+        for (let j = i + 1; j < projected.length; j++) {
+          const dx = projected[i].x - projected[j].x;
+          const dy = projected[i].y - projected[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 70) {
+            ctx.beginPath();
+            ctx.moveTo(projected[i].x, projected[i].y);
+            ctx.lineTo(projected[j].x, projected[j].y);
+            ctx.strokeStyle = palette.secondary;
+            ctx.globalAlpha = (1 - dist / 70) * 0.4;
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        }
+      }
+
+      // Moving Laser Line
+      laserY += laserDirection * (isScanning ? 5.0 : 2.0);
+      if (laserY > height) laserDirection = -1;
+      if (laserY < 0) laserDirection = 1;
+
+      const grad = ctx.createLinearGradient(0, laserY - 12, 0, laserY + 12);
+      grad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      grad.addColorStop(0.5, palette.primary);
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, laserY - 8, width, 16);
+
+      // Spark particles
+      for (let i = 0; i < 4; i++) {
+        const sparkX = Math.random() * width;
+        ctx.beginPath();
+        ctx.arc(sparkX, laserY + (Math.random() - 0.5) * 4, Math.random() * 1.8 + 0.8, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fill();
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [activeMode, isScanning]);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 z-15 pointer-events-none w-full h-full" />;
+}
+
 export function SpectralScanOverlay({
   imageSrc = '/images/afro_skin_spectral_scanner.jpg',
   photos = [],
@@ -461,6 +594,9 @@ export function SpectralScanOverlay({
             </svg>
           </div>
         )}
+
+        {/* ── AFRO-FUTURISTIC 3D HOLOGRAPHIC CANVAS ── */}
+        <HolographicParticleCanvas activeMode={activeMode} isScanning={isScanning} />
 
         {/* HOTSPOTS INTELLIGENTS (positionnés sur zones suspectes) */}
         <div className="absolute inset-0 z-20">
