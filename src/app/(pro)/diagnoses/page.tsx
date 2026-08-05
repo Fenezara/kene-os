@@ -619,69 +619,64 @@ export default function ProDiagnosesPage() {
                     <video ref={videoRef} playsInline autoPlay muted className="w-full h-full object-cover" />
                   ) : null}
 
-                  {/* 3D Afro-Futuristic Holographic Particle Matrix Overlay during scanning */}
+                  {/* High-Tech Transparent Dermo-Scan Overlay over captured photo during scanning */}
                   {isScanning && (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="absolute inset-0 bg-gradient-to-b from-[#0F0A05]/90 via-[#0F0A05]/95 to-[#0A0603]/98 z-30 flex flex-col items-center justify-between p-4 border-2 border-[#C8951E]/60 rounded-3xl overflow-hidden backdrop-blur-md select-none"
+                      className="absolute inset-0 z-30 flex flex-col justify-between p-3 border-2 border-[#FFD700] rounded-3xl overflow-hidden pointer-events-none select-none bg-black/30 backdrop-blur-[2px]"
                     >
-                      {/* Sweeping Laser Beam Line */}
+                      {/* Laser Beam Sweeping Over Actual Photo */}
                       <motion.div
                         className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FFD700] via-[#00E5FF] to-transparent z-40"
-                        style={{ boxShadow: '0 0 30px #FFD700, 0 0 60px #00E5FF' }}
+                        style={{ boxShadow: '0 0 25px #FFD700, 0 0 50px #00E5FF' }}
                         animate={{ y: [0, 220, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                        transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
                       />
 
-                      {/* HUD Corner Anchors */}
-                      <div className="w-full flex justify-between items-center text-[9px] font-mono text-[#FFD700] font-bold z-40 border-b border-white/10 pb-1.5">
-                        <span className="flex items-center gap-1"><Cpu className="w-3 h-3 text-[#00E5FF] animate-spin" /> KÈNÈ 3D SPECTRAL ENGINE</span>
-                        <span className="text-[#00E5FF]">VLM-2026 • 60 FPS</span>
+                      {/* HUD Top Bar */}
+                      <div className="w-full flex justify-between items-center text-[9px] font-mono text-[#FFD700] font-bold z-40 bg-black/60 px-2 py-1 rounded-xl border border-white/10 backdrop-blur-md">
+                        <span className="flex items-center gap-1"><Cpu className="w-3 h-3 text-[#00E5FF] animate-spin" /> DERMO-VLM 3D ENGINE</span>
+                        <span className="text-[#00E5FF]">RECOGNITION: ACTIVE</span>
                       </div>
 
-                      {/* Center 3D Reticle & Dynamic Percentage Counter */}
-                      <div className="relative z-40 flex flex-col items-center my-auto">
-                        <div className="relative w-28 h-28 flex items-center justify-center">
-                          {/* Outer Rotating Ring */}
+                      {/* Simulated Anatomical Landmark Tracking Points Over Photo */}
+                      <div className="absolute inset-0 z-40 flex items-center justify-center">
+                        <div className="relative w-48 h-48 border border-[#FFD700]/40 rounded-full flex items-center justify-center">
+                          {/* Outer Rotating Reticle */}
                           <motion.div
                             animate={{ rotate: 360 }}
-                            transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-                            className="absolute inset-0 rounded-full border-2 border-dashed border-[#FFD700]/70 shadow-[0_0_20px_#FFD700]"
+                            transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+                            className="absolute inset-0 rounded-full border border-dashed border-[#00E5FF]/60"
                           />
-                          {/* Inner Counter-Rotating Ring */}
-                          <motion.div
-                            animate={{ rotate: -360 }}
-                            transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-                            className="absolute inset-2 rounded-full border border-dotted border-[#00E5FF]/80"
-                          />
-                          {/* Center Icon */}
-                          <ScanFace className="w-12 h-12 text-[#FFD700] animate-pulse" />
+                          {/* Anatomical Point Markers */}
+                          <div className="absolute top-4 left-12 w-2 h-2 rounded-full bg-[#FFD700] animate-ping" />
+                          <div className="absolute top-4 right-12 w-2 h-2 rounded-full bg-[#FFD700] animate-ping" />
+                          <div className="absolute top-20 left-6 w-2.5 h-2.5 rounded-full bg-[#00E5FF] animate-pulse" />
+                          <div className="absolute top-20 right-6 w-2.5 h-2.5 rounded-full bg-[#00E5FF] animate-pulse" />
+                          <div className="absolute bottom-6 center w-2 h-2 rounded-full bg-[#00E676] animate-pulse" />
+                          <ScanFace className="w-16 h-16 text-[#FFD700]/80 animate-pulse" />
                         </div>
-
-                        {/* Live Step Description */}
-                        <p className="mt-3 text-xs font-mono font-bold text-[#F3E5AB] text-center px-4 max-w-xs drop-shadow-md">
-                          {SCAN_STEPS[Math.min(scanStep, SCAN_STEPS.length - 1)]}
-                        </p>
                       </div>
 
-                      {/* Audio-Visual Bio-Frequency Equalizer (432Hz) & Footnote */}
-                      <div className="w-full space-y-2 z-40 border-t border-white/10 pt-2">
-                        <div className="flex items-center justify-center gap-1.5">
-                          <span className="text-[8px] font-mono text-white/40 uppercase">Bio-Fréquence 432Hz :</span>
+                      {/* Bottom Status Bar Over Photo */}
+                      <div className="w-full space-y-1 z-40 bg-black/80 border border-white/10 p-2 rounded-2xl backdrop-blur-md">
+                        <p className="text-[10px] font-mono font-bold text-[#F3E5AB] text-center truncate">
+                          {SCAN_STEPS[Math.min(scanStep, SCAN_STEPS.length - 1)]}
+                        </p>
+                        {/* Audio-Visual Equalizer */}
+                        <div className="flex items-center justify-center gap-1">
+                          <span className="text-[8px] font-mono text-white/40 uppercase">Bio-Freq :</span>
                           {[40, 75, 55, 90, 65, 80, 45, 95, 60, 30].map((h, idx) => (
                             <motion.div
                               key={idx}
-                              animate={{ height: [4, h / 4, 4] }}
+                              animate={{ height: [3, h / 5, 3] }}
                               transition={{ duration: 0.5 + idx * 0.08, repeat: Infinity, ease: 'easeInOut' }}
                               className="w-1 rounded-full bg-gradient-to-t from-[#C8951E] to-[#00E5FF]"
                             />
                           ))}
                         </div>
-                        <p className="text-[9px] font-mono text-emerald-400 text-center font-bold">
-                          ✨ Cartographie Biométrique PIH & TEWL en cours...
-                        </p>
                       </div>
                     </motion.div>
                   )}
