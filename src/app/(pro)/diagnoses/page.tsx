@@ -1353,7 +1353,7 @@ export default function ProDiagnosesPage() {
 
       {/* ── MODALE IMPRESSION FICHE ANAMNÈSE PAPIER A4 (ACCUEIL) ── */}
       <Dialog open={showPrintableSheet} onOpenChange={setShowPrintableSheet}>
-        <DialogContent className="bg-[#0A0603] border-2 border-[#C8951E]/60 text-white rounded-3xl w-[98vw] max-w-6xl max-h-[96vh] overflow-y-auto shadow-2xl p-2 sm:p-6">
+        <DialogContent className="bg-[#0A0603] border-2 border-[#C8951E]/60 text-white rounded-3xl w-[96vw] sm:max-w-4xl md:max-w-5xl lg:max-w-6xl max-h-[96vh] overflow-y-auto shadow-2xl p-2 sm:p-6">
           <PrintableAnamnesisSheet onClose={() => setShowPrintableSheet(false)} />
         </DialogContent>
       </Dialog>
