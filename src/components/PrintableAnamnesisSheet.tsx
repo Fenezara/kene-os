@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import { KeneLogo } from '@/components/ui/logo';
 import { SankofaIcon, GyeNyameIcon } from '@/components/ui/adinkra-icons';
-import { Printer, Download, Sparkles, ShieldCheck, CheckSquare, QrCode } from 'lucide-react';
+import { Printer, Sparkles, ShieldCheck, CheckSquare, QrCode, FileText, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface PrintableAnamnesisSheetProps {
@@ -21,7 +20,7 @@ interface PrintableAnamnesisSheetProps {
 }
 
 export function PrintableAnamnesisSheet({
-  salonName = 'Institut Beauté Kènè',
+  salonName = 'Institut Beauté Kènè OS',
   salonPhone = '+225 07 00 11 22 33',
   salonAddress = 'Cocody II Plateaux, Abidjan 🇨🇮',
   clientData,
@@ -29,11 +28,13 @@ export function PrintableAnamnesisSheet({
 }: PrintableAnamnesisSheetProps) {
 
   const handlePrint = () => {
-    window.print();
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 font-sans select-none">
       {/* ── ACTION BAR (Non-printable controls) ── */}
       <div className="print:hidden bg-[#1A1410] border border-[#C8951E]/40 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-xl">
         <div className="flex items-center gap-2.5">
@@ -41,200 +42,215 @@ export function PrintableAnamnesisSheet({
             <Printer className="w-5 h-5 text-[#F3E5AB]" />
           </div>
           <div>
-            <h3 className="text-sm font-display font-bold text-white">Fiche Anamnèse Clinique Physico-Numérique A4</h3>
-            <p className="text-xs text-white/60">Imprimez ce document de luxe pour la collecte manuelle à l'accueil du salon</p>
+            <h3 className="text-sm sm:text-base font-display font-bold text-white flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#C8951E]" /> Fiche Anamnèse Clinique Physico-Numérique A4 (Grand Format)
+            </h3>
+            <p className="text-xs text-white/60">
+              Document Officiel de Collecte Clinique & Bilan Dermo-Cosmétique A4 pour Accueil & Cabinet
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
           {onClose && (
             <Button variant="outline" onClick={onClose} className="border-white/10 text-white/70 hover:text-white text-xs">
-              Fermer
+              <X className="w-4 h-4 mr-1" /> Fermer
             </Button>
           )}
           <Button
             onClick={handlePrint}
-            className="bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] font-black text-xs shadow-lg hover:brightness-110 flex items-center gap-2"
+            className="bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs h-10 px-5 shadow-lg hover:brightness-110 flex items-center gap-2 cursor-pointer"
           >
-            <Printer className="w-4 h-4" /> Imprimer Fiche A4 (1-Clic)
+            <Printer className="w-4.5 h-4.5" /> Imprimer Fiche A4 (1-Clic PDF)
           </Button>
         </div>
       </div>
 
-      {/* ── PRINTABLE A4 CONTAINER (Targeted by @media print) ── */}
-      <div className="kene-printable-anamnesis bg-white text-slate-900 p-8 sm:p-12 rounded-2xl shadow-2xl max-w-4xl mx-auto font-sans relative overflow-hidden text-sm leading-relaxed">
+      {/* ── PRINTABLE A4 GRAND FORMAT CONTAINER (Targeted by @media print) ── */}
+      <div className="kene-printable-anamnesis kene-printable-sheet kene-printable-document bg-white text-slate-950 p-8 sm:p-14 rounded-2xl shadow-2xl max-w-5xl mx-auto font-sans relative overflow-hidden text-sm leading-relaxed border-2 border-slate-900 min-h-[1050px]">
         
-        {/* Subtle Watermark Logo */}
+        {/* Watermark Logo */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
-          <SankofaIcon className="w-[500px] h-[500px] text-[#C8951E]" />
+          <SankofaIcon className="w-[600px] h-[600px] text-[#C8951E]" />
         </div>
 
-        {/* ── EN-TÊTE ET BRANDING SALON ── */}
-        <div className="flex justify-between items-start border-b-2 border-[#C8951E] pb-6 mb-6">
-          <div className="space-y-1">
-            <h1 className="font-display font-black text-2xl text-[#0F0A05] tracking-tight uppercase">
+        {/* ── 1. EN-TÊTE ET BRANDING SALON ── */}
+        <div className="flex justify-between items-start border-b-4 border-slate-900 pb-6 mb-6">
+          <div className="space-y-1.5">
+            <h1 className="font-display font-black text-3xl text-slate-950 tracking-tight uppercase">
               {salonName}
             </h1>
-            <p className="text-xs text-slate-600 font-medium">{salonAddress} • Tel: {salonPhone}</p>
-            <span className="inline-block text-[10px] font-mono font-bold bg-[#C8951E]/15 text-[#8A5A00] border border-[#C8951E]/40 px-2.5 py-0.5 rounded-full mt-1 uppercase">
-              Établissement Agréé Kènè OS • Conformité UEMOA
+            <p className="text-xs text-slate-700 font-bold">{salonAddress} • Tel: {salonPhone}</p>
+            <span className="inline-block text-[10px] font-mono font-bold bg-slate-100 text-slate-900 border border-slate-400 px-3 py-1 rounded-full uppercase tracking-wider">
+              Établissement Agréé Kènè OS • NORMES CLINIQUES OHADA & UEMOA
             </span>
           </div>
 
           <div className="text-right flex flex-col items-end">
-            <div className="w-16 h-16 border-2 border-[#C8951E] p-1 rounded-xl bg-slate-50 flex items-center justify-center mb-1">
-              <QrCode className="w-12 h-12 text-[#0F0A05]" />
+            <div className="w-20 h-20 border-2 border-slate-900 p-1.5 rounded-xl bg-white flex items-center justify-center mb-1 shadow-sm">
+              <QrCode className="w-16 h-16 text-slate-950" />
             </div>
-            <span className="text-[9px] font-mono text-slate-500 font-bold uppercase tracking-wider">
-              Scan Import Kènè OS
+            <span className="text-[9px] font-mono text-slate-600 font-bold uppercase tracking-wider">
+              NUMÉRISATION SCAN IA
             </span>
           </div>
         </div>
 
-        {/* ── TITRE DU DOCUMENT ── */}
-        <div className="bg-[#0F0A05] text-[#F3E5AB] p-3.5 rounded-xl flex items-center justify-between mb-6 shadow-md">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#C8951E]" />
-            <h2 className="font-display font-bold text-sm tracking-wide uppercase">
-              FICHE D'ANAMNÈSE CLINIQUE & BILAN DERMO-COSMÉTIQUE
+        {/* ── 2. TITRE OFFICIEL DU DOCUMENT ── */}
+        <div className="bg-slate-950 text-white p-4 rounded-xl flex items-center justify-between mb-8 shadow-md">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-5 h-5 text-[#FFD700]" />
+            <h2 className="font-display font-black text-base sm:text-lg tracking-wide uppercase">
+              FICHE D'ANAMNÈSE CLINIQUE & BILAN DERMO-COSMÉTIQUE (A4)
             </h2>
           </div>
-          <span className="text-xs font-mono font-bold text-white/60">RÉF: KENE-ANM-{Date.now().toString().slice(-6)}</span>
+          <span className="text-xs font-mono font-bold text-[#FFD700]">DOC-2026-A4</span>
         </div>
 
-        {/* ── SECTION 1 : IDENTITÉ CLIENTE ── */}
-        <div className="space-y-3 mb-6">
-          <h3 className="font-display font-bold text-xs uppercase tracking-wider text-[#8A5A00] border-b border-slate-200 pb-1 flex items-center gap-1.5">
-            <span>👤</span> 1. IDENTITÉ & COORDONNÉES DE LA CLIENTE
+        {/* ── 3. SECTION IDENTITÉ CLIENTE & CONSULTATION ── */}
+        <div className="border-2 border-slate-800 rounded-xl p-5 mb-6 space-y-4 bg-slate-50">
+          <h3 className="font-display font-bold text-xs text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-2 flex items-center gap-2">
+            <span>👤</span> 1. IDENTITÉ CLIENTE & COORDONNÉES DE CONSULTATION
           </h3>
-          <div className="grid grid-cols-2 gap-4 text-xs">
-            <div className="border-b border-slate-300 pb-1">
-              <span className="text-slate-500 block text-[10px] font-bold">NOM & PRÉNOM(S) :</span>
-              <span className="font-semibold text-slate-900">{clientData?.name || '_____________________________________________'}</span>
-            </div>
-            <div className="border-b border-slate-300 pb-1">
-              <span className="text-slate-500 block text-[10px] font-bold">TÉLÉPHONE / WHATSAPP :</span>
-              <span className="font-semibold text-slate-900">{clientData?.phone || '_____________________________________________'}</span>
-            </div>
-            <div className="border-b border-slate-300 pb-1">
-              <span className="text-slate-500 block text-[10px] font-bold">EMAIL :</span>
-              <span className="font-semibold text-slate-900">{clientData?.email || '_____________________________________________'}</span>
-            </div>
-            <div className="border-b border-slate-300 pb-1">
-              <span className="text-slate-500 block text-[10px] font-bold">DATE DE NAISSANCE / AGE :</span>
-              <span className="font-semibold text-slate-900">____ / ____ / ________  ( _____ Ans )</span>
-            </div>
-          </div>
-        </div>
 
-        {/* ── SECTION 2 : PROFIL CUTANÉ & PHOTOTYPE ── */}
-        <div className="space-y-3 mb-6">
-          <h3 className="font-display font-bold text-xs uppercase tracking-wider text-[#8A5A00] border-b border-slate-200 pb-1 flex items-center gap-1.5">
-            <span>🧬</span> 2. AUTO-ÉVALUATION CUTANÉE & PHOTOTYPE FITZPATRICK
-          </h3>
-          
-          <div className="grid grid-cols-2 gap-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-semibold">
             <div>
-              <span className="text-slate-700 font-bold block mb-1.5">A. Type de Peau Perçu :</span>
-              <div className="space-y-1 text-slate-600">
-                <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Normal / Équilibré</label>
-                <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Mixte (Zone T grasse)</label>
-                <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Gras / Séborrhéique</label>
-                <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" defaultChecked={!clientData?.skinType} /> Sec / Déshydraté / Tiraillements</label>
-              </div>
+              <span className="text-slate-500 font-bold block text-[10px] uppercase">Nom & Prénom :</span>
+              <span className="border-b-2 border-slate-400 block pb-1 pt-0.5 text-slate-900 font-black text-sm">
+                {clientData?.name || '________________________________________'}
+              </span>
             </div>
 
             <div>
-              <span className="text-slate-700 font-bold block mb-1.5">B. Phototype Fitzpatrick (Teint) :</span>
-              <div className="space-y-1 text-slate-600">
-                <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Phototype IV (Marron Clair / Méditerranéen)</label>
-                <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" defaultChecked /> Phototype V (Marron Foncé / Métissé / Afro)</label>
-                <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Phototype VI (Noir Très Foncé / Ébène)</label>
+              <span className="text-slate-500 font-bold block text-[10px] uppercase">Téléphone / WhatsApp :</span>
+              <span className="border-b-2 border-slate-400 block pb-1 pt-0.5 text-slate-900 font-bold">
+                {clientData?.phone || '+225 __ __ __ __ __'}
+              </span>
+            </div>
+
+            <div>
+              <span className="text-slate-500 font-bold block text-[10px] uppercase">Date du Jour :</span>
+              <span className="border-b-2 border-slate-400 block pb-1 pt-0.5 text-slate-900 font-bold font-mono">
+                {new Date().toLocaleDateString('fr-FR')}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── 4. SECTION ÉTALONNAGE PHOTOTYPE FITZPATRICK ── */}
+        <div className="border-2 border-slate-800 rounded-xl p-5 mb-6 space-y-3">
+          <h3 className="font-display font-bold text-xs text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-2 flex items-center gap-2">
+            <span>🔬</span> 2. ÉTALONNAGE PHOTOTYPE FITZPATRICK & CARACTÉRISTIQUES CUTANÉES
+          </h3>
+
+          <div className="grid grid-cols-6 gap-2 text-center text-xs">
+            {[
+              { type: 'I', label: 'Très Clair', desc: 'Coup de soleil 100%' },
+              { type: 'II', label: 'Clair', desc: 'Brûle facilement' },
+              { type: 'III', label: 'Intermédiaire', desc: 'Bronze modéré' },
+              { type: 'IV', label: 'Mat', desc: 'Bronze foncé' },
+              { type: 'V', label: 'Brun / Mélano', desc: 'PIH fréquente' },
+              { type: 'VI', label: 'Noir Profond', desc: 'Très résistant' },
+            ].map((item) => (
+              <div key={item.type} className={`border-2 p-2 rounded-xl text-center space-y-1 ${clientData?.phototype === item.type ? 'border-slate-950 bg-slate-100 font-black' : 'border-slate-300'}`}>
+                <div className="w-5 h-5 mx-auto border border-slate-700 rounded-md flex items-center justify-center font-bold text-[10px]">
+                  {clientData?.phototype === item.type ? '✓' : '☐'}
+                </div>
+                <span className="font-bold block text-slate-900">Type {item.type}</span>
+                <span className="text-[9px] text-slate-600 block leading-tight">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── 5. SECTION QUESTIONNAIRE SANTE & ANAMNÈSE ── */}
+        <div className="border-2 border-slate-800 rounded-xl p-5 mb-6 space-y-4">
+          <h3 className="font-display font-bold text-xs text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-2 flex items-center gap-2">
+            <span>📋</span> 3. QUESTIONNAIRE ANAMNÈSE DE SANTÉ & HISTORIQUE DERMO-COSMÉTIQUE
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="space-y-2 border-r border-slate-200 pr-3">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border border-slate-700 rounded flex items-center justify-center font-bold">☐</div>
+                <span>Grossesse ou Allaitement en cours ?</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border border-slate-700 rounded flex items-center justify-center font-bold">☐</div>
+                <span>Allergies cosmétiques ou alimentaires connues ?</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border border-slate-700 rounded flex items-center justify-center font-bold">☐</div>
+                <span>Utilisation de rétinoïdes ou corticoïdes récents ?</span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border border-slate-700 rounded flex items-center justify-center font-bold">☐</div>
+                <span>Hyper-pigmentation / Taches sombres (PIH) ?</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border border-slate-700 rounded flex items-center justify-center font-bold">☐</div>
+                <span>Sensation de tiraillement / Peau déshydratée ?</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border border-slate-700 rounded flex items-center justify-center font-bold">☐</div>
+                <span>Exposition solaire fréquente sans protection SPF ?</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ── SECTION 3 : ANTÉCÉDENTS MÉDICAUX & ALLERGIES ── */}
-        <div className="space-y-3 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
-          <h3 className="font-display font-bold text-xs uppercase tracking-wider text-[#8A5A00] flex items-center gap-1.5">
-            <span>⚠️</span> 3. ANTÉCÉDENTS CLINIQUE & ALLERGIES (OBLIGATOIRE)
+        {/* ── 6. SECTION ORDONNANCE BOTANIQUE KÈNÈ ── */}
+        <div className="border-2 border-slate-800 rounded-xl p-5 mb-6 space-y-3 bg-slate-50">
+          <h3 className="font-display font-bold text-xs text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-2 flex items-center gap-2">
+            <span>🌱</span> 4. PROTOCOLE & ORDONNANCE DERMO-BOTANIQUE RECOMMANDÉE
           </h3>
-          <div className="grid grid-cols-2 gap-3 text-xs text-slate-700">
-            <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Allergies Huiles / Huiles Essentielles</label>
-            <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Enceinte ou Allaitante</label>
-            <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Traitement Roaccutane / Rétinoïdes (&lt; 6 mois)</label>
-            <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Peelings ou Laser Récents (&lt; 1 mois)</label>
-          </div>
-          <div className="border-t border-slate-200 pt-2 text-xs">
-            <span className="text-slate-500 font-bold block text-[10px]">Précisez vos allergies connues :</span>
-            <p className="text-slate-800 italic">___________________________________________________________________________________</p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-slate-900 font-bold">
+            <div className="border border-slate-300 p-2.5 rounded-lg bg-white">
+              <span>🥣 Karité Brut Korhogo</span>
+              <span className="block text-[9px] text-slate-500 font-normal">Régénération lipidique</span>
+            </div>
+            <div className="border border-slate-300 p-2.5 rounded-lg bg-white">
+              <span>🌳 Huile de Baobab</span>
+              <span className="block text-[9px] text-slate-500 font-normal">Scellage hydrique TEWL</span>
+            </div>
+            <div className="border border-slate-300 p-2.5 rounded-lg bg-white">
+              <span>🌺 Sérum Hibiscus</span>
+              <span className="block text-[9px] text-slate-500 font-normal">AHA & Éclat anti-taches</span>
+            </div>
+            <div className="border border-slate-300 p-2.5 rounded-lg bg-white">
+              <span>🍃 Extrait de Neem</span>
+              <span className="block text-[9px] text-slate-500 font-normal">Purification séborrhique</span>
+            </div>
           </div>
         </div>
 
-        {/* ── SECTION 4 : OBJECTIFS DE SOIN PRINCIPAUX ── */}
-        <div className="space-y-3 mb-6">
-          <h3 className="font-display font-bold text-xs uppercase tracking-wider text-[#8A5A00] border-b border-slate-200 pb-1 flex items-center gap-1.5">
-            <span>🎯</span> 4. VOS OBJECTIFS & ATTENTES DE SOIN PRIORITAIRES
-          </h3>
-          <div className="grid grid-cols-3 gap-2 text-xs text-slate-700">
-            <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" defaultChecked /> Éliminer Taches Sombre (PIH)</label>
-            <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" defaultChecked /> Hydratation & Nutrition Karité</label>
-            <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Traitement Acné / Boutons</label>
-            <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Éclat & Uniformité du Teint</label>
-            <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Resserrer les Pores Dilatés</label>
-            <label className="flex items-center gap-2"><input type="checkbox" className="rounded border-slate-400" /> Anti-Âge & Fermeté Baobab</label>
-          </div>
-        </div>
-
-        {/* ── SECTION 5 : CONSENTEMENT ÉCLAIRÉ & SIGNATURE ── */}
-        <div className="border-t-2 border-slate-300 pt-4 mt-6 grid grid-cols-2 gap-6 text-xs">
-          <div className="space-y-2">
-            <span className="font-bold text-slate-800 block text-[11px]">CONSENTEMENT ÉCLAIRÉ CLIENTE :</span>
-            <p className="text-[10px] text-slate-500 leading-tight">
-              Je certifie l'exactitude des informations fournies ci-dessus. J'autorise le salon à effectuer le scan dermo-IA 3D et à conserver mon bilan dans mon espace sécurisé Kènè OS.
-            </p>
-            <div className="border-b border-slate-300 pt-6">
-              <span className="text-[9px] text-slate-400 block">Signature de la Cliente :</span>
+        {/* ── 7. SIGNATURE ET VALIDATION MANUELLE/NUMÉRIQUE ── */}
+        <div className="border-t-2 border-slate-900 pt-6 mt-8 grid grid-cols-2 gap-8 text-xs font-semibold">
+          <div>
+            <span className="text-slate-600 block text-[10px] uppercase font-bold">Signature de la Cliente :</span>
+            <div className="border-b-2 border-slate-400 h-14 mt-1 flex items-end pb-1">
+              <span className="text-[10px] text-slate-400 font-mono italic">« Lu et approuvé pour examen cutané »</span>
             </div>
           </div>
 
-          <div className="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
-            <span className="font-bold text-[#8A5A00] block text-[11px]">CADRE RÉSERVÉ À LA PRATICIENNE :</span>
-            <p className="text-[10px] text-slate-600">Date du Soin : _____ / _____ / _________</p>
-            <p className="text-[10px] text-slate-600">Praticienne Référente : ____________________</p>
-            <p className="text-[10px] text-slate-600">Score Hydratation Scan 3D : _____ %</p>
+          <div>
+            <span className="text-slate-600 block text-[10px] uppercase font-bold">Cachet & Visa de la Praticienne / Dermato :</span>
+            <div className="border-b-2 border-slate-400 h-14 mt-1 flex items-end justify-between pb-1">
+              <span className="text-[10px] text-slate-400 font-mono italic">Dr. / Praticienne Certifiée Kènè</span>
+              <ShieldCheck className="w-5 h-5 text-slate-950" />
+            </div>
           </div>
         </div>
 
-        {/* ── FOOTER DE DOCUMENT ── */}
-        <div className="mt-8 pt-4 border-t border-slate-200 flex justify-between items-center text-[9px] text-slate-400 font-mono">
-          <span>KÈNÈ OS v2.4 • Plateforme Homologuée Beauté Africaine & UEMOA</span>
-          <span>Page 1 / 1</span>
+        {/* FOOTER */}
+        <div className="mt-8 text-center text-[9px] font-mono text-slate-500 border-t border-slate-200 pt-3">
+          KÈNÈ OS v3.2 • Fiche Anamnèse Clinique Physico-Numérique A4 • Document Protégé & Conforme UEMOA / OHADA
         </div>
       </div>
-
-      {/* ── CSS FOR CLEAN A4 PRINTING ── */}
-      <style jsx global>{`
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-          .kene-printable-anamnesis, .kene-printable-anamnesis * {
-            visibility: visible;
-          }
-          .kene-printable-anamnesis {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            margin: 0;
-            padding: 20px !important;
-            box-shadow: none !important;
-            border: none !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

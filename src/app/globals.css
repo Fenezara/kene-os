@@ -230,43 +230,45 @@ button, a, [role="button"] {
     padding: 0 !important;
   }
 
-  /* Hide app shell, navigation, sidebars, action buttons, and backdrops */
+  /* Hide app shell, navigation, sidebars, action buttons, and header bars */
   header, nav, aside, footer, .print\:hidden, button:not(.print-keep), [data-radix-focus-guard] {
     display: none !important;
   }
 
-  /* Ensure all printable documents display in full A4 high contrast */
-  .kene-printable-document,
+  /* Force printable targets to take over entire A4 page */
   .kene-printable-anamnesis,
+  .kene-printable-document,
   .kene-beauty-passport,
   .kene-printable-sheet,
   .kene-printable-receipt {
-    position: relative !important;
+    position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 10mm !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    min-height: 100vh !important;
+    z-index: 999999999 !important;
     background: #FFFFFF !important;
     color: #000000 !important;
-    border: 1px solid #000000 !important;
+    border: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
     display: block !important;
     visibility: visible !important;
     font-size: 11pt !important;
     line-height: 1.4 !important;
+    padding: 15mm !important;
+    overflow: visible !important;
   }
 
-  .kene-printable-document *,
   .kene-printable-anamnesis *,
+  .kene-printable-document *,
   .kene-beauty-passport *,
   .kene-printable-sheet *,
   .kene-printable-receipt * {
     color: #000000 !important;
     -webkit-text-fill-color: #000000 !important;
-    background-color: transparent !important;
     visibility: visible !important;
   }
 
