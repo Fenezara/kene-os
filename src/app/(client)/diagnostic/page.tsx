@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -34,7 +34,7 @@ export default function DiagnosticPage() {
 
   // Kènè Mirror Smart Features
   const [alignmentScore, setAlignmentScore] = useState<number>(95);
-  const [selectedZone, setSelectedZone] = useState<'visage' | 'profil_gauche' | 'profil_droit' | 'zone_t' | 'cuir_chevelu'>('visage');
+  const [selectedZone, setSelectedZone] = useState<string>('visage');
 
   // Request camera access
   const startCamera = async (mode = facingMode) => {
@@ -281,11 +281,18 @@ export default function DiagnosticPage() {
           {/* Zone Selector Pills */}
           <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {[
-              { id: 'visage', label: 'Visage Face' },
-              { id: 'profil_gauche', label: 'Profil Gauche' },
-              { id: 'profil_droit', label: 'Profil Droit' },
-              { id: 'zone_t', label: 'Zone T (Hyperpigmentation)' },
-              { id: 'cuir_chevelu', label: 'Cuir Chevelu / Alopécie' },
+              { id: 'visage', label: '👤 Visage Face' },
+              { id: 'profil_gauche', label: '👈 Profil Gauche' },
+              { id: 'profil_droit', label: '👉 Profil Droit' },
+              { id: 'zone_t', label: '✨ Zone T & Pommettes' },
+              { id: 'cou', label: '🦒 Cou & Nuque' },
+              { id: 'decollete', label: '👗 Décolleté & Poitrine' },
+              { id: 'dos', label: '🔙 Dos & Épaules' },
+              { id: 'mains', label: '🤲 Mains & Ongles' },
+              { id: 'bras', label: '💪 Bras & Avant-Bras' },
+              { id: 'jambes', label: '🦵 Jambes & Cuisses' },
+              { id: 'pieds', label: '🦶 Pieds & Talons' },
+              { id: 'cuir_chevelu', label: '💇 Cuir Chevelu / Alopécie' },
             ].map((z) => (
               <button
                 key={z.id}
