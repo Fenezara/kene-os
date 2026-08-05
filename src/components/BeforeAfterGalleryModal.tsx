@@ -93,7 +93,7 @@ export function BeforeAfterGalleryModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl max-w-4xl p-6 shadow-2xl overflow-y-auto max-h-[92vh]">
+      <DialogContent className="kene-printable-document bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl max-w-4xl p-6 shadow-2xl overflow-y-auto max-h-[92vh]">
         <DialogHeader className="border-b border-white/10 pb-4">
           <DialogTitle className="font-display text-xl text-white flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2.5">

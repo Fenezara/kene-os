@@ -48,7 +48,7 @@ export function DigitalReceiptModal({ isOpen, onClose, sale }: DigitalReceiptMod
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="bg-[#1A1410] border-[#362A21] text-white max-w-md p-6 font-sans">
+      <DialogContent className="kene-printable-document bg-[#1A1410] border-[#362A21] text-white max-w-md p-6 font-sans">
         <DialogHeader className="border-b border-[#362A21] pb-4 flex flex-row items-center justify-between">
           <div>
             <DialogTitle className="font-display text-xl text-[var(--gold-kene)] flex items-center gap-2">

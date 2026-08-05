@@ -123,7 +123,7 @@ export function ClientFullDossierModal({
           initial={{ opacity: 0, scale: 0.96, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 20 }}
-          className="relative w-full max-w-6xl bg-[#0F0A05] border-2 border-[#C8951E]/40 text-white rounded-2xl sm:rounded-3xl shadow-[0_0_80px_rgba(200,149,30,0.25)] overflow-hidden flex flex-col max-h-[96vh] sm:max-h-[94vh] my-auto"
+          className="kene-printable-document relative w-full max-w-6xl bg-[#0F0A05] border-2 border-[#C8951E]/40 text-white rounded-2xl sm:rounded-3xl shadow-[0_0_80px_rgba(200,149,30,0.25)] overflow-hidden flex flex-col max-h-[96vh] sm:max-h-[94vh] my-auto"
         >
           {/* Top Decorative Kente Bar */}
           <div className="h-1.5 sm:h-2 bg-gradient-to-r from-[#C8951E] via-[#8A3B14] via-[#2E5A36] via-[#1E3A5F] to-[#C8951E]" />
