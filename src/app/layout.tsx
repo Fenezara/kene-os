@@ -6,8 +6,8 @@ import { Toaster } from "@/components/ui/toaster";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
   viewportFit: "cover",
   themeColor: "#C8951E",
 };
@@ -159,10 +159,28 @@ export default function RootLayout({
           <Toaster />
         </AuthProvider>
 
-        {/* Enregistrement du Service Worker PWA Kènè OS pour Support Hors-Ligne Pro */}
+        {/* Enregistrement du Service Worker PWA Kènè OS & Auto-Nettoyage Cache Mojibake */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
+              try {
+                for (var i = 0; i < localStorage.length; i++) {
+                  var k = localStorage.key(i);
+                  if (k && k.indexOf('kene') !== -1) {
+                    var val = localStorage.getItem(k);
+                    if (val && (val.indexOf('Ã') !== -1 || val.indexOf('Â') !== -1 || val.indexOf('ð') !== -1)) {
+                      var clean = val
+                        .replace(/Ã©/g, 'é').replace(/Ã¨/g, 'è').replace(/Ã /g, 'à ')
+                        .replace(/Ã¢/g, 'â').replace(/Ãª/g, 'ê').replace(/Ã«/g, 'ë')
+                        .replace(/Ã§/g, 'ç').replace(/Ã‰/g, 'É').replace(/Ãˆ/g, 'È')
+                        .replace(/Ã€/g, 'À').replace(/Â·/g, '·').replace(/â€”/g, '—')
+                        .replace(/ðŸ” /g, '📂').replace(/ðŸ‘ ï¸ /g, '👁️');
+                      localStorage.setItem(k, clean);
+                    }
+                  }
+                }
+              } catch(e) {}
+
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
                   navigator.serviceWorker.register('/sw.js').then(

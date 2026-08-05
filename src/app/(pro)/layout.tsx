@@ -206,8 +206,8 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
         }}
       />
 
-      {/* ─── DESKTOP SIDEBAR (FIXED STICKY LEFT) ─── */}
-      <aside className="hidden md:flex flex-col w-60 shrink-0 sticky top-0 h-screen z-20 border-r border-white/5">
+      {/* ─── DESKTOP SIDEBAR (FIXED STICKY LEFT AT 1024px+) ─── */}
+      <aside className="hidden lg:flex flex-col w-60 shrink-0 sticky top-0 h-screen z-20 border-r border-white/5">
         {/* Glass bg */}
         <div className="absolute inset-0 bg-[#110D09]/90 backdrop-blur-xl" />
         <div className="relative z-10 h-full overflow-hidden">
@@ -215,8 +215,8 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* ─── MOBILE HEADER + DRAWER (SCROLLS NATURALLY WITH INTERFACE) ─── */}
-      <div className="md:hidden flex items-center justify-between px-4 h-14 bg-[#110D09]/95 backdrop-blur-xl border-b border-white/5 w-full shrink-0 z-30 sticky top-0">
+      {/* ─── MOBILE & TABLET PORTRAIT HEADER + DRAWER (UP TO 1023px) ─── */}
+      <div className="lg:hidden flex items-center justify-between px-4 h-14 bg-[#110D09]/95 backdrop-blur-xl border-b border-white/5 w-full shrink-0 z-30 sticky top-0">
         <div className="flex items-center gap-2 min-w-0">
           {pathname !== '/dashboard' && (
             <button
@@ -233,8 +233,9 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
             <span className="text-[9px] text-white/40 block truncate">Session : {userName}</span>
           </div>
         </div>
-        <button onClick={() => setMobileOpen(true)} className="p-2 text-white/60 hover:text-white shrink-0">
-          <Menu className="w-5 h-5" />
+        <button onClick={() => setMobileOpen(true)} className="p-2 text-white/60 hover:text-white shrink-0 flex items-center gap-1.5 bg-[#C8951E]/10 border border-[#C8951E]/30 rounded-xl">
+          <Menu className="w-5 h-5 text-[#C8951E]" />
+          <span className="text-xs font-bold font-display text-[#F3E5AB] hidden sm:inline">Menu</span>
         </button>
       </div>
 
@@ -246,14 +247,14 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 bg-black/60 z-40 md:hidden"
+              className="fixed inset-0 bg-black/70 z-40 lg:hidden backdrop-blur-sm"
             />
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 320, damping: 32 }}
-              className="fixed inset-y-0 left-0 w-72 z-50 md:hidden bg-[#110D09] border-r border-white/5 flex flex-col"
+              className="fixed inset-y-0 left-0 w-80 z-50 lg:hidden bg-[#110D09] border-r border-[#C8951E]/30 flex flex-col shadow-2xl"
             >
               <div className="absolute top-3 right-3">
                 <button onClick={() => setMobileOpen(false)} className="p-2 text-white/40 hover:text-white">
@@ -270,8 +271,8 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
 
       {/* ─── MAIN CONTENT CONTAINER ─── */}
       <main className="relative z-10 flex-1 flex flex-col min-h-screen w-full min-w-0">
-        {/* Top Navigation Header (FIXED STICKY TOP) with Universal Back Button, Company Name Badge, Logged-in User Badge & Role Switcher */}
-        <div className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-white/10 bg-[#110D09]/90 backdrop-blur-xl sticky top-0 z-30">
+        {/* Top Navigation Header (FIXED STICKY TOP AT 1024px+) */}
+        <div className="hidden lg:flex items-center justify-between px-8 py-3.5 border-b border-white/10 bg-[#110D09]/90 backdrop-blur-xl sticky top-0 z-30">
           <div className="flex items-center gap-3">
             {pathname !== '/dashboard' && <BackButton fallbackUrl="/dashboard" />}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/30 text-white text-xs font-bold font-display shadow-sm">
