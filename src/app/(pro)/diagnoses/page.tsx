@@ -101,6 +101,9 @@ export default function ProDiagnosesPage() {
   const [mockResult, setMockResult] = useState<any>(null);
   const [scanStep, setScanStep] = useState(0);
   const [selectedPhototype, setSelectedPhototype] = useState<string>('V');
+  const [selectedZone, setSelectedZone] = useState<string>('visage');
+  const [capturedPhotos, setCapturedPhotos] = useState<string[]>([]);
+  const [activePhotoIdx, setActivePhotoIdx] = useState<number>(0);
 
   // Request Camera Access
   const startCamera = async () => {
@@ -119,42 +122,88 @@ export default function ProDiagnosesPage() {
     }
   };
 
-  // Capture Photo from Camera
+  // Capture Photo from Camera (Appends to Multi-Photo List)
   const capturePhoto = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
+    let dataUrl = '';
     if (canvas && video && video.videoWidth) {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL('image/jpeg');
-        setCapturedPhoto(dataUrl);
-        if (typeof window !== 'undefined') localStorage.setItem('kene_latest_client_photo', dataUrl);
-        toast({ title: "📸 Photo Capturée !", description: "Photo du visage de la cliente enregistrée pour l'analyse." });
+        dataUrl = canvas.toDataURL('image/jpeg');
       }
-    } else {
-      // Fallback demo photo
-      const fallbackUrl = '/images/afro_beauty_hero_woman.jpg';
-      setCapturedPhoto(fallbackUrl);
-      if (typeof window !== 'undefined') localStorage.setItem('kene_latest_client_photo', fallbackUrl);
-      toast({ title: "📸 Photo Prise avec Succès !", description: "Visage capturé pour l'analyse dermo-biométrique." });
     }
+    if (!dataUrl) {
+      dataUrl = '/images/afro_beauty_hero_woman.jpg';
+    }
+
+    setCapturedPhotos(prev => {
+      const updated = [...prev, dataUrl].slice(0, 5);
+      setActivePhotoIdx(updated.length - 1);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('kene_latest_client_photo', updated[0]);
+        localStorage.setItem('kene_latest_client_photos', JSON.stringify(updated));
+      }
+      return updated;
+    });
+
+    toast({
+      title: "📸 Cliché Capturé !",
+      description: `Photo enregistrée pour l'analyse spectrale (${capturedPhotos.length + 1}/5).`,
+    });
   };
 
-  // Upload Photo File from Storage/Gallery
+  // Upload Multi-Photo Files from Gallery
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const dataUrl = reader.result as string;
-      setCapturedPhoto(dataUrl);
-      if (typeof window !== 'undefined') localStorage.setItem('kene_latest_client_photo', dataUrl);
-      toast({ title: "📁¥ Photo Téléchargée !", description: "Image chargée depuis la galerie pour l'analyse." });
-    };
-    reader.readAsDataURL(file);
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const fileArray = Array.from(files).slice(0, 5 - capturedPhotos.length);
+    let loadedCount = 0;
+
+    fileArray.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUrl = reader.result as string;
+        setCapturedPhotos(prev => {
+          const updated = [...prev, dataUrl].slice(0, 5);
+          setActivePhotoIdx(updated.length - 1);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('kene_latest_client_photo', updated[0]);
+            localStorage.setItem('kene_latest_client_photos', JSON.stringify(updated));
+          }
+          return updated;
+        });
+        loadedCount++;
+        if (loadedCount === fileArray.length) {
+          toast({
+            title: "📁 Photos Téléchargées !",
+            description: `${loadedCount} photo(s) ajoutée(s) à la série du bilan cutané.`,
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removePhoto = (idx: number) => {
+    setCapturedPhotos(prev => {
+      const updated = prev.filter((_, i) => i !== idx);
+      setActivePhotoIdx(Math.max(0, updated.length - 1));
+      if (typeof window !== 'undefined') {
+        if (updated.length > 0) {
+          localStorage.setItem('kene_latest_client_photo', updated[0]);
+          localStorage.setItem('kene_latest_client_photos', JSON.stringify(updated));
+        } else {
+          localStorage.removeItem('kene_latest_client_photo');
+          localStorage.removeItem('kene_latest_client_photos');
+        }
+      }
+      return updated;
+    });
   };
 
   // Detailed Report Modal State
@@ -554,67 +603,129 @@ export default function ProDiagnosesPage() {
             {wizardStep === 2 && (
               <div className="mt-4 space-y-5">
                 {!isScanning && !scanComplete && (
-                  <div className="space-y-2">
-                    <Label className="text-white/60 text-xs flex items-center gap-1">
-                      <Palette className="w-3.5 h-3.5 text-[#C8951E]" /> Étalonnage Phototype Fitzpatrick (I à VI)
-                    </Label>
-                    <div className="flex flex-wrap gap-2">
-                      {['I', 'II', 'III', 'IV', 'V', 'VI'].map(type => (
-                        <button
-                          key={type}
-                          onClick={() => setSelectedPhototype(type)}
-                          className={`w-10 h-10 sm:w-auto sm:h-11 sm:flex-1 rounded-xl border-2 transition-all flex flex-col items-center justify-center font-bold text-[10px] sm:text-xs ${selectedPhototype === type ? 'border-white scale-105 z-10 shadow-lg text-white' : 'border-transparent opacity-70 hover:opacity-100'}`}
-                          style={{ backgroundColor: FITZPATRICK_COLORS[type] }}
-                          title={`Phototype ${type}`}
-                        >
-                          <span className="drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{type}</span>
-                        </button>
-                      ))}
+                  <div className="space-y-4">
+                    {/* Zone du Corps Sélectionnée */}
+                    <div className="space-y-1.5">
+                      <Label className="text-white/70 text-xs flex items-center gap-1 font-bold">
+                        <ScanFace className="w-3.5 h-3.5 text-[#C8951E]" /> Zone Anatomique à Analyser
+                      </Label>
+                      <Select value={selectedZone} onValueChange={setSelectedZone}>
+                        <SelectTrigger className="w-full bg-[#1A1410] border-[#C8951E]/40 text-[#F3E5AB] text-xs font-bold rounded-xl h-10">
+                          <SelectValue placeholder="Choisir la zone anatomique" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#1A1410] border-[#C8951E]/40 text-white">
+                          <SelectItem value="visage">Visage & Cou 💆</SelectItem>
+                          <SelectItem value="cuir_chevelu">Cuir Chevelu & Cuir 💇</SelectItem>
+                          <SelectItem value="buste">Décolleté & Buste 🌸</SelectItem>
+                          <SelectItem value="dos">Dos & Épaules 🌿</SelectItem>
+                          <SelectItem value="bras">Bras & Mains 💅</SelectItem>
+                          <SelectItem value="jambes">Jambes & Pieds 🦶</SelectItem>
+                          <SelectItem value="lesion">Zone Ciblée (Lésion / PIH) 🔍</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-                    <p className="text-[10px] text-white/50 font-mono bg-white/5 p-2 rounded-xl border border-white/5">
-                      💡 {FITZPATRICK_DESCS[selectedPhototype]}
-                    </p>
+
+                    {/* Fitzpatrick Selector */}
+                    <div className="space-y-2">
+                      <Label className="text-white/60 text-xs flex items-center gap-1">
+                        <Palette className="w-3.5 h-3.5 text-[#C8951E]" /> Étalonnage Phototype Fitzpatrick (I à VI)
+                      </Label>
+                      <div className="flex flex-wrap gap-2">
+                        {['I', 'II', 'III', 'IV', 'V', 'VI'].map(type => (
+                          <button
+                            key={type}
+                            onClick={() => setSelectedPhototype(type)}
+                            className={`w-10 h-10 sm:w-auto sm:h-11 sm:flex-1 rounded-xl border-2 transition-all flex flex-col items-center justify-center font-bold text-[10px] sm:text-xs ${selectedPhototype === type ? 'border-white scale-105 z-10 shadow-lg text-white' : 'border-transparent opacity-70 hover:opacity-100'}`}
+                            style={{ backgroundColor: FITZPATRICK_COLORS[type] }}
+                            title={`Phototype ${type}`}
+                          >
+                            <span className="drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{type}</span>
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-white/50 font-mono bg-white/5 p-2 rounded-xl border border-white/5">
+                        💡 {FITZPATRICK_DESCS[selectedPhototype]}
+                      </p>
+                    </div>
                   </div>
                 )}
 
-                {/* Photo Capture & Upload Control Buttons */}
+                {/* Multi-Photo Capture & Upload Control Buttons */}
                 {!isScanning && !scanComplete && (
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <Button 
-                      onClick={() => {
-                        if (!isCameraActive) startCamera();
-                        else capturePhoto();
-                      }}
-                      className="flex-1 bg-[#1A1410] border border-[#C8951E]/40 text-[#F3E5AB] hover:bg-[#C8951E]/20 text-xs font-bold rounded-2xl h-10 cursor-pointer"
-                    >
-                      <Camera className="w-4 h-4 mr-1.5 text-[#C8951E]" />
-                      <span>{isCameraActive ? '📸 Prendre la Photo' : '📷 Activer la Caméra'}</span>
-                    </Button>
+                  <div className="space-y-3">
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button 
+                        onClick={() => {
+                          if (!isCameraActive) startCamera();
+                          else capturePhoto();
+                        }}
+                        disabled={capturedPhotos.length >= 5}
+                        className="flex-1 bg-[#1A1410] border border-[#C8951E]/40 text-[#F3E5AB] hover:bg-[#C8951E]/20 text-xs font-bold rounded-2xl h-10 cursor-pointer disabled:opacity-40"
+                      >
+                        <Camera className="w-4 h-4 mr-1.5 text-[#C8951E]" />
+                        <span>{isCameraActive ? `📸 Prendre Photo (${capturedPhotos.length}/5)` : '📷 Activer la Caméra'}</span>
+                      </Button>
 
-                    <Button 
-                      onClick={() => fileInputRef.current?.click()}
-                      className="flex-1 bg-[#1A1410] border border-white/10 text-white/80 hover:bg-white/10 text-xs font-bold rounded-2xl h-10 cursor-pointer"
-                    >
-                      <span>📁 Télécharger une Photo (Galerie)</span>
-                    </Button>
-                    <input 
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleFileUpload}
-                    />
+                      <Button 
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={capturedPhotos.length >= 5}
+                        className="flex-1 bg-[#1A1410] border border-white/10 text-white/80 hover:bg-white/10 text-xs font-bold rounded-2xl h-10 cursor-pointer disabled:opacity-40"
+                      >
+                        <span>📁 Télécharger Photos (Galerie)</span>
+                      </Button>
+                      <input 
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={handleFileUpload}
+                      />
+                    </div>
+
+                    {/* Multi-Photo Gallery Thumbnails Strip */}
+                    {capturedPhotos.length > 0 && (
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono text-white/50 block">
+                          Clichés enregistrés ({capturedPhotos.length}/5) — Cliquez pour afficher :
+                        </span>
+                        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                          {capturedPhotos.map((photoUrl, idx) => (
+                            <div
+                              key={idx}
+                              onClick={() => setActivePhotoIdx(idx)}
+                              className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 cursor-pointer shrink-0 transition ${activePhotoIdx === idx ? 'border-[#FFD700] scale-105 shadow-md shadow-[#FFD700]/30' : 'border-white/20 opacity-70 hover:opacity-100'}`}
+                            >
+                              <img src={photoUrl} alt={`Cliché ${idx + 1}`} className="w-full h-full object-cover" />
+                              <span className="absolute bottom-0.5 left-0.5 bg-black/70 text-[8px] font-mono text-[#F3E5AB] px-1 rounded">
+                                #{idx + 1}
+                              </span>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removePhoto(idx);
+                                }}
+                                className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-red-600/90 text-white text-[9px] font-bold flex items-center justify-center hover:scale-110"
+                                title="Supprimer ce cliché"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* Camera / Photo preview scan box */}
-                <div className="relative w-full max-w-[90vw] sm:max-w-full h-60 bg-[#0A0603] border border-[#C8951E]/30 rounded-3xl overflow-hidden flex items-center justify-center flex-col shadow-inner mx-auto">
+                <div className="relative w-full max-w-[90vw] sm:max-w-full h-64 bg-[#0A0603] border border-[#C8951E]/30 rounded-3xl overflow-hidden flex items-center justify-center flex-col shadow-inner mx-auto">
                   {/* Hidden Canvas for Photo Capture */}
                   <canvas ref={canvasRef} className="hidden" />
 
                   {/* Captured Photo Preview */}
-                  {capturedPhoto ? (
-                    <img src={capturedPhoto} alt="Visage Capturé" className="w-full h-full object-cover" />
+                  {capturedPhotos.length > 0 ? (
+                    <img src={capturedPhotos[activePhotoIdx] || capturedPhotos[0]} alt="Visage Capturé" className="w-full h-full object-cover" />
                   ) : isCameraActive ? (
                     <video ref={videoRef} playsInline autoPlay muted className="w-full h-full object-cover" />
                   ) : null}
