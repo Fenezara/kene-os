@@ -691,7 +691,7 @@ export default function ProClientsPage() {
                       )}
                       {/* Display Archived Diagnostic Scans (Bilans Cutanés Archivés) */}
                       {(() => {
-                        let archivedDiags = [];
+                        let archivedDiags: any[] = [];
                         try {
                           const saved = localStorage.getItem('kene_client_diagnoses');
                           if (saved) {

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,7 +12,7 @@ import {
 import { Label } from '@/components/ui/label';
 
 // Mappage des 5 Origines & Genres de Produits Cosmétiques
-export const COSMETIC_ORIGINS: Record<string, { label: string; shortLabel: string; emoji: string; badgeStyle: string }> = {
+const COSMETIC_ORIGINS: Record<string, { label: string; shortLabel: string; emoji: string; badgeStyle: string }> = {
   'tradipraticien': { label: '🌿 Tradipraticien / Botanique Ancestral', shortLabel: 'Tradipraticien 🌿', emoji: '🌿', badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
   'pharmaceutique': { label: '💊 Dermo-Pharmaceutique', shortLabel: 'Dermo-Pharmacie 💊', emoji: '💊', badgeStyle: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' },
   'artisanal': { label: '🥣 Fait Maison / Artisanal (Salon)', shortLabel: 'Fait Maison 🥣', emoji: '🥣', badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40' },

@@ -225,7 +225,7 @@ const HOTSPOTS_BY_ZONE: Record<BodyZone, HotspotDetail[]> = {
 };
 
 // ── SVG MESH PAR ZONE ──
-const MESH_SVG: Record<BodyZone, JSX.Element> = {
+const MESH_SVG: Record<BodyZone, React.ReactNode> = {
   visage: (
     <g stroke="#C8951E" strokeWidth="1.2" strokeOpacity="0.7">
       <path d="M150 120 Q 250 180 350 120" /><path d="M130 160 Q 250 230 370 160" />
