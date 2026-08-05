@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -476,7 +476,14 @@ export default function ProClientsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((client, i) => {
               const clientId = client.id || client._id || `client-id-${i}-${client.firstName}-${client.phone}`;
-              const allergies = JSON.parse(client.allergies || '[]');
+              let allergies: string[] = [];
+              try {
+                allergies = typeof client.allergies === 'string' && client.allergies.startsWith('[')
+                  ? JSON.parse(client.allergies)
+                  : client.allergies ? [client.allergies] : [];
+              } catch(e) {
+                allergies = typeof client.allergies === 'string' ? [client.allergies] : [];
+              }
               const fitzColor = FITZPATRICK_COLORS[client.fitzpatrickType] || '#A0522D';
               const skinEmoji = SKIN_TYPE_EMOJI[client.skinType] || 'âœ¨';
               const isExpanded = expandedId === clientId;

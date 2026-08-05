@@ -107,7 +107,14 @@ export function ClientFullDossierModal({
   if (!isOpen || !client) return null;
 
   const fitzColor = client.fitzpatrickType === 'VI' ? '#6B3A2A' : client.fitzpatrickType === 'IV' ? '#CA9B5C' : '#A0522D';
-  const allergies = JSON.parse(client.allergies || '[]');
+  let allergies: string[] = [];
+  try {
+    allergies = typeof client.allergies === 'string' && client.allergies.startsWith('[')
+      ? JSON.parse(client.allergies)
+      : client.allergies ? [client.allergies] : [];
+  } catch (e) {
+    allergies = typeof client.allergies === 'string' ? [client.allergies] : [];
+  }
 
   return (
     <AnimatePresence>
@@ -156,7 +163,7 @@ export function ClientFullDossierModal({
                 <div className="flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs text-white/60 mt-1 flex-wrap font-mono">
                   <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-[#C8951E]" /> {client.phone}</span>
                   {client.email && <span className="hidden md:flex items-center gap-1"><Mail className="w-3 h-3 text-[#C8951E]" /> {client.email}</span>}
-                  <span className="text-[#F3E5AB]">🗓️ {format(new Date(client.createdAt), 'dd/MM/yyyy')}</span>
+                  <span className="text-[#F3E5AB]">🗓️ {client.createdAt ? format(new Date(client.createdAt), 'dd/MM/yyyy') : 'Date inconnue'}</span>
                   <span className="text-emerald-400 font-bold">💰 285 000 FCFA</span>
                 </div>
               </div>
