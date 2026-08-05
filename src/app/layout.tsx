@@ -112,8 +112,10 @@ export default function RootLayout({
             position: 'fixed',
             top: 0,
             left: 0,
-            width: '100vw',
-            height: '100vh',
+            right: 0,
+            bottom: 0,
+            width: '100%',
+            height: '100%',
             backgroundColor: '#0F0A05',
             zIndex: 99999999,
             display: 'flex',
@@ -123,6 +125,9 @@ export default function RootLayout({
             fontFamily: 'system-ui, -apple-system, sans-serif',
             color: '#ffffff',
             userSelect: 'none',
+            touchAction: 'none',
+            overflow: 'hidden',
+            overscrollBehavior: 'contain',
           }}
         >
           <div style={{ position: 'absolute', width: '450px', height: '450px', background: 'rgba(200,149,30,0.18)', borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none', animation: 'keneGlow 3s infinite ease-in-out' }} />

@@ -214,6 +214,9 @@ export default function DiagnosticPage() {
         } catch (e) {}
       }
 
+      // Force 3.4s wait so the 3D Afro-futuristic Hologram loader modal plays completely
+      await new Promise((resolve) => setTimeout(resolve, 3400));
+
       toast({
         title: "✨ Bilan Dermatologique Complété !",
         description: `L'analyse spectrale de vos ${photos.length} clichés a été effectuée.`,
@@ -241,6 +244,9 @@ export default function DiagnosticPage() {
           localStorage.setItem('kene_saved_diagnoses', JSON.stringify([newLocalDiag, ...parsed]));
         } catch (e) {}
       }
+      // Force 3.4s wait on fallback as well
+      await new Promise((resolve) => setTimeout(resolve, 3400));
+
       toast({
         title: "✨ Bilan Dermatologique Complété !",
         description: "L'analyse spectrale cutanée a été finalisée avec succès.",

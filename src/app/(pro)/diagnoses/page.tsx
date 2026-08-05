@@ -588,14 +588,14 @@ export default function ProDiagnosesPage() {
                       className="flex-1 bg-[#1A1410] border border-[#C8951E]/40 text-[#F3E5AB] hover:bg-[#C8951E]/20 text-xs font-bold rounded-2xl h-10 cursor-pointer"
                     >
                       <Camera className="w-4 h-4 mr-1.5 text-[#C8951E]" />
-                      <span>{isCameraActive ? '📸 Prendre la Photo' : '📁¹ Activer la Caméra'}</span>
+                      <span>{isCameraActive ? '📸 Prendre la Photo' : '📷 Activer la Caméra'}</span>
                     </Button>
 
                     <Button 
                       onClick={() => fileInputRef.current?.click()}
                       className="flex-1 bg-[#1A1410] border border-white/10 text-white/80 hover:bg-white/10 text-xs font-bold rounded-2xl h-10 cursor-pointer"
                     >
-                      <span>📁¥ Télécharger une Photo (Galerie)</span>
+                      <span>📁 Télécharger une Photo (Galerie)</span>
                     </Button>
                     <input 
                       ref={fileInputRef}
