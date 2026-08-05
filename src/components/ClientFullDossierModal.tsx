@@ -511,7 +511,7 @@ export function ClientFullDossierModal({
                         <p className="text-xs text-white/80 leading-relaxed">{cons.note}</p>
                         <span className="text-[10px] text-white/40 block font-mono">Praticienne : {cons.doc}</span>
                       </div>
-                      <Button variant="outline" onClick={() => onPrintPassport?.(client)} className="border-white/10 text-xs text-white/70 hover:text-white shrink-0 w-full sm:w-auto">
+                      <Button variant="outline" onClick={() => onPrintPassport ? onPrintPassport(client) : window.print()} className="border-white/10 text-xs text-white/70 hover:text-white shrink-0 w-full sm:w-auto">
                         <Printer className="w-3.5 h-3.5 mr-1" /> Imprimer Rapport
                       </Button>
                     </div>
@@ -624,7 +624,7 @@ export function ClientFullDossierModal({
               <Button variant="outline" onClick={onClose} className="border-white/10 text-white/70 text-xs flex-1 sm:flex-none">
                 Fermer
               </Button>
-              <Button onClick={() => onPrintPassport?.(client)} className="bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] font-black text-xs flex-1 sm:flex-none">
+              <Button onClick={() => onPrintPassport ? onPrintPassport(client) : window.print()} className="bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] font-black text-xs flex-1 sm:flex-none">
                 <Printer className="w-4 h-4 mr-1.5" /> Passeport PDF
               </Button>
             </div>

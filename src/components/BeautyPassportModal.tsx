@@ -75,7 +75,7 @@ export function BeautyPassportModal({
           initial={{ scale: 0.92, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.92, opacity: 0, y: 20 }}
-          className="relative max-w-2xl w-full bg-[#0F0A05] border-2 border-[#C8951E]/60 rounded-3xl p-6 sm:p-8 shadow-2xl text-white space-y-6 overflow-hidden print:p-0 print:border-none print:shadow-none print:bg-white print:text-black"
+          className="kene-beauty-passport kene-printable-document relative max-w-2xl w-full bg-[#0F0A05] border-2 border-[#C8951E]/60 rounded-3xl p-6 sm:p-8 shadow-2xl text-white space-y-6 overflow-hidden print:p-0 print:border-none print:shadow-none print:bg-white print:text-black"
         >
           {/* Background Adinkra Watermark */}
           <div className="absolute top-4 right-4 opacity-5 pointer-events-none print:hidden">
