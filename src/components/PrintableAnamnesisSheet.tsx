@@ -67,7 +67,7 @@ export function PrintableAnamnesisSheet({
       </div>
 
       {/* ── PRINTABLE A4 GRAND FORMAT CONTAINER (Targeted by @media print) ── */}
-      <div className="kene-printable-anamnesis kene-printable-sheet kene-printable-document bg-white text-slate-950 p-8 sm:p-14 rounded-2xl shadow-2xl max-w-5xl mx-auto font-sans relative overflow-hidden text-sm leading-relaxed border-2 border-slate-900 min-h-[1050px]">
+      <div className="kene-printable-anamnesis kene-printable-sheet kene-printable-document bg-white text-slate-950 p-4 sm:p-8 lg:p-12 rounded-2xl shadow-2xl w-full max-w-full lg:max-w-6xl mx-auto font-sans relative overflow-hidden text-sm leading-relaxed border-2 border-slate-900">
         
         {/* Watermark Logo */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
@@ -75,9 +75,9 @@ export function PrintableAnamnesisSheet({
         </div>
 
         {/* ── 1. EN-TÊTE ET BRANDING SALON ── */}
-        <div className="flex justify-between items-start border-b-4 border-slate-900 pb-6 mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start border-b-4 border-slate-900 pb-6 mb-6 gap-4">
           <div className="space-y-1.5">
-            <h1 className="font-display font-black text-3xl text-slate-950 tracking-tight uppercase">
+            <h1 className="font-display font-black text-2xl sm:text-3xl text-slate-950 tracking-tight uppercase">
               {salonName}
             </h1>
             <p className="text-xs text-slate-700 font-bold">{salonAddress} • Tel: {salonPhone}</p>
@@ -113,7 +113,7 @@ export function PrintableAnamnesisSheet({
             <span>👤</span> 1. IDENTITÉ CLIENTE & COORDONNÉES DE CONSULTATION
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-semibold">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs font-semibold">
             <div>
               <span className="text-slate-500 font-bold block text-[10px] uppercase">Nom & Prénom :</span>
               <span className="border-b-2 border-slate-400 block pb-1 pt-0.5 text-slate-900 font-black text-sm">
@@ -143,7 +143,7 @@ export function PrintableAnamnesisSheet({
             <span>🔬</span> 2. ÉTALONNAGE PHOTOTYPE FITZPATRICK & CARACTÉRISTIQUES CUTANÉES
           </h3>
 
-          <div className="grid grid-cols-6 gap-2 text-center text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-center text-xs">
             {[
               { type: 'I', label: 'Très Clair', desc: 'Coup de soleil 100%' },
               { type: 'II', label: 'Clair', desc: 'Brûle facilement' },
@@ -169,8 +169,8 @@ export function PrintableAnamnesisSheet({
             <span>📋</span> 3. QUESTIONNAIRE ANAMNÈSE DE SANTÉ & HISTORIQUE DERMO-COSMÉTIQUE
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <div className="space-y-2 border-r border-slate-200 pr-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div className="space-y-2 border-b md:border-b-0 md:border-r border-slate-200 pb-3 md:pb-0 md:pr-3">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border border-slate-700 rounded flex items-center justify-center font-bold">☐</div>
                 <span>Grossesse ou Allaitement en cours ?</span>
@@ -208,7 +208,7 @@ export function PrintableAnamnesisSheet({
             <span>🌱</span> 4. PROTOCOLE & ORDONNANCE DERMO-BOTANIQUE RECOMMANDÉE
           </h3>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-slate-900 font-bold">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-xs text-slate-900 font-bold">
             <div className="border border-slate-300 p-2.5 rounded-lg bg-white">
               <span>🥣 Karité Brut Korhogo</span>
               <span className="block text-[9px] text-slate-500 font-normal">Régénération lipidique</span>
@@ -229,7 +229,7 @@ export function PrintableAnamnesisSheet({
         </div>
 
         {/* ── 7. SIGNATURE ET VALIDATION MANUELLE/NUMÉRIQUE ── */}
-        <div className="border-t-2 border-slate-900 pt-6 mt-8 grid grid-cols-2 gap-8 text-xs font-semibold">
+        <div className="border-t-2 border-slate-900 pt-6 mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs font-semibold">
           <div>
             <span className="text-slate-600 block text-[10px] uppercase font-bold">Signature de la Cliente :</span>
             <div className="border-b-2 border-slate-400 h-14 mt-1 flex items-end pb-1">
