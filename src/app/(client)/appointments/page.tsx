@@ -156,7 +156,7 @@ export default function AppointmentsPage() {
 
       if (json.success) {
         toast({
-          title: "âŒ Rendez-vous Annulé",
+          title: "❌ Rendez-vous Annulé",
           description: `Votre rendez-vous a été annulé. ${
             json.refundAmount > 0 
               ? `${json.refundAmount.toLocaleString()} F ont été recrédités sur votre portefeuille.` 
@@ -170,7 +170,7 @@ export default function AppointmentsPage() {
       }
     } catch (e: any) {
       toast({
-        title: "âŒ Échec de l'annulation",
+        title: "❌ Échec de l'annulation",
         description: e.message,
         variant: "destructive"
       })
@@ -245,7 +245,7 @@ export default function AppointmentsPage() {
       }
     } catch (e: any) {
       toast({
-        title: "âŒ Échec de la réservation",
+        title: "❌ Échec de la réservation",
         description: e.message,
         variant: "destructive"
       })
@@ -294,7 +294,7 @@ export default function AppointmentsPage() {
         <div className="space-y-1">
           <h4 className="font-bold text-white uppercase tracking-wider">Politique d'Annulation Kènè</h4>
           <p className="text-karite/60 leading-relaxed font-sans">
-            Annulation libre et remboursée à  **100%** à  plus de 72h. Remboursement à  **80%** entre 24h et 72h, et **30%** à  moins de 24h. Aucun remboursement à  moins de 2h. Les remboursements sont crédités instantanément sur votre portefeuille.
+            Annulation libre et remboursée à **100%** à plus de 72h. Remboursement à **80%** entre 24h et 72h, et **30%** à moins de 24h. Aucun remboursement à moins de 2h. Les remboursements sont crédités instantanément sur votre portefeuille.
           </p>
         </div>
       </div>

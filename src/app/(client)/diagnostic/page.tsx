@@ -65,7 +65,7 @@ export default function DiagnosticPage() {
       console.error('Camera access error:', err);
       setIsCameraActive(false);
       setCameraError(
-        "Impossible d'accéder à  la caméra. Utilisez le bouton 'Téléverser des Photos' ci-dessous pour choisir vos clichés depuis votre téléphone ou galerie."
+        "Impossible d'accéder à la caméra. Utilisez le bouton 'Téléverser des Photos' ci-dessous pour choisir vos clichés depuis votre téléphone ou galerie."
       );
     }
   };
@@ -403,7 +403,7 @@ export default function DiagnosticPage() {
             <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center space-y-2">
               <Camera className="w-8 h-8 text-white/30 mx-auto" />
               <p className="text-xs text-white/50 font-sans">
-                Prenez jusqu'à  5 photos sous différents angles (visage face, profils, taches).
+                Prenez jusqu'à 5 photos sous différents angles (visage face, profils, taches).
               </p>
             </div>
           ) : (
@@ -460,7 +460,7 @@ export default function DiagnosticPage() {
           setIsQuestionnaireOpen(false);
           toast({
             title: "✨… Anamnèse Enregistrée !",
-            description: "Passez maintenant à  la capture des photos de peau.",
+            description: "Passez maintenant à la capture des photos de peau.",
           });
         }}
       />

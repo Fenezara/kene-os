@@ -18,11 +18,11 @@ const uemoaCountries = [
   { code: 'CI', name: "Côte d'Ivoire 🇨🇮", dial: '+225' },
   { code: 'SN', name: 'Sénégal 🇸🇳', dial: '+221' },
   { code: 'ML', name: 'Mali 🇲🇱', dial: '+223' },
-  { code: 'BF', name: 'Burkina Faso ðŸ‡§ðŸ‡«', dial: '+226' },
-  { code: 'TG', name: 'Togo ðŸ‡¹ðŸ‡¬', dial: '+228' },
-  { code: 'BJ', name: 'Bénin ðŸ‡§ðŸ‡¯', dial: '+229' },
-  { code: 'NE', name: 'Niger ðŸ‡³ðŸ‡ª', dial: '+227' },
-  { code: 'GN', name: 'Guinée ðŸ‡¬ðŸ‡³', dial: '+224' },
+  { code: 'BF', name: 'Burkina Faso 🇧🇫', dial: '+226' },
+  { code: 'TG', name: 'Togo 🇹🇬', dial: '+228' },
+  { code: 'BJ', name: 'Bénin 🇧🇯', dial: '+229' },
+  { code: 'NE', name: 'Niger 🇳🇪', dial: '+227' },
+  { code: 'GN', name: 'Guinée 🇬🇳', dial: '+224' },
 ];
 
 export default function RegisterPage() {
@@ -292,7 +292,7 @@ export default function RegisterPage() {
                   <Input
                     required
                     type="password"
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="••••••••"
                     value={clientForm.password}
                     onChange={(e) => setClientForm({ ...clientForm, password: e.target.value })}
                     className="bg-[#0A0603] border-white/10 text-white rounded-xl text-xs h-11"
@@ -391,7 +391,7 @@ export default function RegisterPage() {
                   <Input
                     required
                     type="password"
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="••••••••"
                     value={proForm.password}
                     onChange={(e) => setProForm({ ...proForm, password: e.target.value })}
                     className="bg-[#0A0603] border-white/10 text-white rounded-xl text-xs h-11"
@@ -418,7 +418,7 @@ export default function RegisterPage() {
 
           <div className="border-t border-white/10 pt-4 text-center">
             <p className="text-xs text-white/40">
-              Déjà  inscrit ?{' '}
+              Déjà inscrit ?{' '}
               <Link href="/login" className="text-[#C8951E] font-bold hover:underline">
                 Se connecter
               </Link>

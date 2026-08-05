@@ -123,7 +123,7 @@ export default function WalletPage() {
     } catch (e: any) {
       setRecharging(false)
       toast({
-        title: "âŒ Échec de la transaction",
+        title: "❌ Échec de la transaction",
         description: e.message,
         variant: "destructive"
       })
@@ -196,7 +196,7 @@ export default function WalletPage() {
           className="flex-1 bg-black border border-white/20 rounded-xl py-3 flex items-center justify-center gap-2 hover:bg-white/5 transition"
         >
           <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" className="w-4 h-4 invert" />
-          <span className="text-xs font-semibold">Ajouter à  Apple Wallet</span>
+          <span className="text-xs font-semibold">Ajouter à Apple Wallet</span>
         </button>
         <button 
           onClick={() => setShowPassModal(true)}
@@ -230,7 +230,7 @@ export default function WalletPage() {
         <div className="space-y-0.5">
           <h4 className="font-display font-bold text-xs text-white uppercase tracking-wider">Avantage Cashback Automatique</h4>
           <p className="text-[10px] text-karite/60 leading-relaxed font-sans">
-            Bénéficiez de 1% de cashback crédité immédiatement sur votre portefeuille Kènè à  chaque achat de cosmétiques ou soins.
+            Bénéficiez de 1% de cashback crédité immédiatement sur votre portefeuille Kènè à chaque achat de cosmétiques ou soins.
           </p>
         </div>
       </div>
@@ -347,7 +347,7 @@ export default function WalletPage() {
                   <div className="space-y-1 relative z-10">
                     <h3 className="font-display font-bold text-sm text-gold-kene uppercase tracking-wider">Recharge Mobile Money</h3>
                     <p className="text-[10px] text-karite/60 font-sans">
-                      Sélectionnez votre opérateur et le montant à  déposer.
+                      Sélectionnez votre opérateur et le montant à déposer.
                     </p>
                   </div>
 
@@ -375,7 +375,7 @@ export default function WalletPage() {
 
                   {/* Input amount */}
                   <div className="space-y-1 relative z-10">
-                    <label className="text-[9px] uppercase tracking-wider font-semibold text-karite/40 font-display block">Montant à  recharger (FCFA)</label>
+                    <label className="text-[9px] uppercase tracking-wider font-semibold text-karite/40 font-display block">Montant à recharger (FCFA)</label>
                     <input
                       type="number"
                       placeholder="Ex: 10000"

@@ -119,7 +119,7 @@ export default function CheckoutPage() {
     } catch (e: any) {
       setProcessing(false)
       toast({
-        title: "âŒ Échec du paiement",
+        title: "❌ Échec du paiement",
         description: e.message,
         variant: "destructive"
       })
@@ -146,7 +146,7 @@ export default function CheckoutPage() {
           <ShoppingBag className="w-16 h-16 opacity-20 mb-2" />
           <p>Votre panier est vide.</p>
           <Button onClick={() => router.push('/boutique')} variant="secondary" className="bg-[#C8951E]/10 text-[#C8951E] hover:bg-[#C8951E]/20 mt-4 h-10 rounded-xl">
-            Aller à  la boutique
+            Aller à la boutique
           </Button>
         </div>
       ) : (
@@ -162,7 +162,7 @@ export default function CheckoutPage() {
               <div key={item.id} className="bg-[#1A1410] border border-white/5 p-4 rounded-2xl flex justify-between items-center">
                 <div className="flex flex-col">
                   <span className="font-semibold text-xs text-white block">{item.name}</span>
-                  <span className="text-[10px] text-karite/50 font-sans block">Qté: {item.quantity} â€¢ {item.type === 'service' ? 'Soin' : 'Produit'}</span>
+                  <span className="text-[10px] text-karite/50 font-sans block">Qté: {item.quantity} • {item.type === 'service' ? 'Soin' : 'Produit'}</span>
                 </div>
                 <span className="font-mono text-sm font-bold text-gold-kene">
                   {(item.price * item.quantity).toLocaleString()} F
@@ -171,7 +171,7 @@ export default function CheckoutPage() {
             ))}
 
             <div className="bg-[#241C16]/50 border border-gold-kene/20 p-4 rounded-2xl flex justify-between items-center mt-4">
-              <span className="font-display font-bold text-xs uppercase tracking-wider text-white">Total à  payer</span>
+              <span className="font-display font-bold text-xs uppercase tracking-wider text-white">Total à payer</span>
               <span className="font-display text-xl font-bold text-white tracking-wide">
                 {totalAmount.toLocaleString()} F
               </span>

@@ -27,9 +27,9 @@ interface Employee {
 
 // African position emojis
 const POSITION_EMOJI: Record<string, string> = {
-  'Esthéticienne': 'ðŸ’†', 'Coiffeuse': 'ðŸ’‡', 'Maquilleuse': 'ðŸ’„',
-  'Masseuse': '🌿', 'Réceptionniste': '📁ž', 'Caissière': 'ðŸ’µ',
-  'Manager': '👑', 'Praticienne': '✨', 'Gérant': 'ðŸ‘”', 'Comptable': '📁Š'
+  'Esthéticienne': '💆', 'Coiffeuse': '💇', 'Maquilleuse': '💄',
+  'Masseuse': '🌿', 'Réceptionniste': '📁ž', 'Caissière': '💵',
+  'Manager': '👑', 'Praticienne': '✨', 'Gérant': '👔', 'Comptable': '📁Š'
 };
 const getPositionEmoji = (pos: string) =>
   Object.entries(POSITION_EMOJI).find(([k]) => pos.toLowerCase().includes(k.toLowerCase()))?.[1] || '✨‚ï¸';
@@ -42,12 +42,12 @@ const GENDER_BG: Record<string, string> = {
 };
 
 const DEFAULT_PERMISSIONS = [
-  { key: 'pos', label: 'Caisse & Encaissements POS ðŸ’°', desc: 'Saisir les ventes et encaisser Wave/OM' },
+  { key: 'pos', label: 'Caisse & Encaissements POS 💰', desc: 'Saisir les ventes et encaisser Wave/OM' },
   { key: 'agenda', label: 'Agenda & Rendez-Vous Cabine 📁…', desc: 'Gérer les créneaux et rendez-vous clientes' },
   { key: 'lab', label: 'Laboratoire Cosmétique 🧪', desc: 'Préparer les ordonnances et flacons sur-mesure' },
   { key: 'compta', label: 'Comptabilité & Journaux SYSCOHADA 📁Š', desc: 'Accès aux bilans financiers et recettes' },
   { key: 'rh', label: 'Ressources Humaines & Paie CNPS 📁„', desc: 'Gérer les bulletins de paie et contrats' },
-  { key: 'settings', label: 'Paramètres du Salon âš™ï¸', desc: 'Accès à  la configuration globale du salon' },
+  { key: 'settings', label: 'Paramètres du Salon ⚙️', desc: 'Accès à la configuration globale du salon' },
 ];
 
 export default function ProEmployeesPage() {
@@ -121,7 +121,7 @@ export default function ProEmployeesPage() {
   const savePermissions = () => {
     if (!selectedEmployee) return;
     toast({
-      title: "ðŸ” Droits d'Accès Mis à  Jour !",
+      title: "🔐 Droits d'Accès Mis à Jour !",
       description: `Les autorisations de ${selectedEmployee.firstName} ${selectedEmployee.lastName} (Rôle: ${empRole.toUpperCase()}) ont été enregistrées avec succès.`,
     });
     setIsPermissionDialogOpen(false);
@@ -137,7 +137,7 @@ export default function ProEmployeesPage() {
   return (
     <div className="space-y-6 text-white max-w-6xl mx-auto font-sans">
 
-      {/* â”€â”€ HEADER â”€â”€ */}
+      {/* ── HEADER ── */}
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1A1410] border border-white/10 p-5 rounded-3xl shadow-xl">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -164,7 +164,7 @@ export default function ProEmployeesPage() {
           <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl shadow-2xl">
             <DialogHeader>
               <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
-                <span>ðŸ‘©â€ðŸ’¼</span> Ajouter un Employé au Salon
+                <span>👩‍💼</span> Ajouter un Employé au Salon
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleCreateEmployee} className="space-y-4 mt-2">
@@ -221,7 +221,7 @@ export default function ProEmployeesPage() {
         </Dialog>
       </motion.div>
 
-      {/* â”€â”€ PERMISSIONS & ACCESS CONTROL MODAL (FOR SALON MANAGER) â”€â”€ */}
+      {/* ── PERMISSIONS & ACCESS CONTROL MODAL (FOR SALON MANAGER) ── */}
       <Dialog open={isPermissionDialogOpen} onOpenChange={setIsPermissionDialogOpen}>
         <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/40 text-white rounded-3xl shadow-2xl max-w-xl">
           <DialogHeader>
@@ -282,7 +282,7 @@ export default function ProEmployeesPage() {
                         <span className={`text-[10px] font-bold px-2.5 py-1 rounded-xl font-mono ${
                           isEnabled ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-white/5 text-white/30'
                         }`}>
-                          {isEnabled ? 'AUTORISÉ ✨…' : 'REFUSÉ ðŸ”’'}
+                          {isEnabled ? 'AUTORISÉ ✨…' : 'REFUSÉ 🔒'}
                         </span>
                       </div>
                     );
@@ -296,7 +296,7 @@ export default function ProEmployeesPage() {
                   <span className="text-xs font-bold text-white flex items-center gap-1">
                     <Key className="w-3.5 h-3.5 text-[#C8951E]" /> Code PIN d'Accès Caisse & Tablettes :
                   </span>
-                  <p className="text-[10px] text-white/40">Code à  4 chiffres pour déverrouiller la caisse</p>
+                  <p className="text-[10px] text-white/40">Code à 4 chiffres pour déverrouiller la caisse</p>
                 </div>
                 <Input 
                   type="text" 
@@ -320,7 +320,7 @@ export default function ProEmployeesPage() {
         </DialogContent>
       </Dialog>
 
-      {/* â”€â”€ SEARCH BAR â”€â”€ */}
+      {/* ── SEARCH BAR ── */}
       <div className="relative">
         <Search className="absolute left-3.5 top-3 h-4 w-4 text-white/30" />
         <Input 
@@ -331,7 +331,7 @@ export default function ProEmployeesPage() {
         />
       </div>
 
-      {/* â”€â”€ TEAM & ROLES GRID â”€â”€ */}
+      {/* ── TEAM & ROLES GRID ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((emp, i) => {
           const gradientBg = GENDER_BG[emp.gender] || GENDER_BG.F;

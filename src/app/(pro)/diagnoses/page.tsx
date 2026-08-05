@@ -52,12 +52,12 @@ const FITZPATRICK_COLORS: Record<string, string> = {
 };
 
 const FITZPATRICK_DESCS: Record<string, string> = {
-  I: 'Peau très claire Â· Brûle toujours au soleil, ne bronze jamais',
-  II: 'Peau claire Â· Brûle facilement, bronze très peu',
-  III: 'Peau intermédiaire Â· Brûle modérément, bronze progressivement',
-  IV: 'Peau mate Â· Brûle rarement, bronze rapidement',
-  V: 'Peau brune/mélanoderme Â· Très rare coup de soleil, hyper-pigmentation fréquente',
-  VI: 'Peau très foncée/mélanoderme Â· Ne brûle jamais, forte tendance aux taches PIH',
+  I: 'Peau très claire · Brûle toujours au soleil, ne bronze jamais',
+  II: 'Peau claire · Brûle facilement, bronze très peu',
+  III: 'Peau intermédiaire · Brûle modérément, bronze progressivement',
+  IV: 'Peau mate · Brûle rarement, bronze rapidement',
+  V: 'Peau brune/mélanoderme · Très rare coup de soleil, hyper-pigmentation fréquente',
+  VI: 'Peau très foncée/mélanoderme · Ne brûle jamais, forte tendance aux taches PIH',
 };
 
 export default function ProDiagnosesPage() {
@@ -161,11 +161,11 @@ export default function ProDiagnosesPage() {
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
 
   const SCAN_STEPS = [
-    'Intégration du Questionnaire Anamnèse Cliniqueâ€¦',
-    'Étalonnage phototype Fitzpatrick & spectrométrieâ€¦',
-    'Analyse séborrhique & Perte Transepidermique en Eau (PIE)â€¦',
-    'Cartographie de l\'hyper-pigmentation post-inflammatoire (PIH)â€¦',
-    'Génération de l\'ordonnance dermo-botanique Kènèâ€¦'
+    'Intégration du Questionnaire Anamnèse Clinique…',
+    'Étalonnage phototype Fitzpatrick & spectrométrie…',
+    'Analyse séborrhique & Perte Transepidermique en Eau (PIE)…',
+    'Cartographie de l\'hyper-pigmentation post-inflammatoire (PIH)…',
+    'Génération de l\'ordonnance dermo-botanique Kènè…'
   ];
 
   const fetchData = async () => {
@@ -232,8 +232,8 @@ export default function ProDiagnosesPage() {
           barrierIntegrity: Math.min(100, score + 6),
         },
         clinicalNotes: {
-          skinType: selectedPhototype === 'V' || selectedPhototype === 'VI' ? 'Peau Mélanoderme Sensible à  Tendance Séborrhique' : 'Peau Mixte Déshydratée',
-          tewl: '14.2 g/mÂ²/h (Perte transepidermique modérée)',
+          skinType: selectedPhototype === 'V' || selectedPhototype === 'VI' ? 'Peau Mélanoderme Sensible à Tendance Séborrhique' : 'Peau Mixte Déshydratée',
+          tewl: '14.2 g/m²/h (Perte transepidermique modérée)',
           pihRisk: selectedPhototype === 'V' || selectedPhototype === 'VI' ? 'ÉLEVÉ (Hyper-pigmentation post-acnéique décelée)' : 'MODÉRÉ',
         },
         recommendations: needsDermato
@@ -247,7 +247,7 @@ export default function ProDiagnosesPage() {
               'Protocole Cabine : Soin Magistral Éclat Karité & Bissap (60 min)',
               'Sérum Concentré Éclat Bissap & Niacinamide (3 gouttes le soir)',
               'Scellage hydratation avec Huile Pure de Baobab de Korhogo',
-              'Gommage doux à  la poudre de Chébé & Avoine (1× par semaine)',
+              'Gommage doux à la poudre de Chébé & Avoine (1× par semaine)',
             ],
         botanicalPrescription: [
           { ingredient: 'Sérum Bissap Bio', role: 'Anti-taches PIH & Antioxydant puissant' },
@@ -256,7 +256,7 @@ export default function ProDiagnosesPage() {
           { ingredient: 'Extrait de Neem & Moringa', role: 'Régulation séborrhique & anti-bactérien' },
         ],
         dermatoReferral: needsDermato,
-        referralReason: needsDermato ? 'Lésions inflammatoires de type papulo-pustuleuses détectées au scanner Â· Prescription médicale recommandée' : null
+        referralReason: needsDermato ? 'Lésions inflammatoires de type papulo-pustuleuses détectées au scanner · Prescription médicale recommandée' : null
       });
       setIsScanning(false);
       setScanComplete(true);
@@ -316,7 +316,7 @@ export default function ProDiagnosesPage() {
   return (
     <div className="space-y-6 text-white max-w-6xl mx-auto font-sans overflow-x-hidden">
 
-      {/* â”€â”€ HEADER â”€â”€ */}
+      {/* ── HEADER ── */}
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1A1410] border border-white/10 p-5 rounded-3xl shadow-xl">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -327,7 +327,7 @@ export default function ProDiagnosesPage() {
               Diagnostic <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">Anamnèse & Scan IA</span>
             </h1>
           </div>
-          <p className="text-white/50 text-xs ml-11">Questionnaire clinique Â· Analyse biométrique cutanée Â· Phototypes Fitzpatrick I-VI</p>
+          <p className="text-white/50 text-xs ml-11">Questionnaire clinique · Analyse biométrique cutanée · Phototypes Fitzpatrick I-VI</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -335,7 +335,7 @@ export default function ProDiagnosesPage() {
             onClick={() => setIsGalleryModalOpen(true)}
             className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl font-bold text-[10px] sm:text-xs bg-white/5 hover:bg-white/10 text-white border border-white/10 transition cursor-pointer"
           >
-            <span>ðŸ–¼ï¸</span> <span className="hidden sm:inline">Galerie</span> Avant / Après
+            <span>🖼️ï¸</span> <span className="hidden sm:inline">Galerie</span> Avant / Après
           </button>
 
           <button
@@ -388,7 +388,7 @@ export default function ProDiagnosesPage() {
               </button>
             </div>
 
-            {/* â”€â”€ STEP 1: QUESTIONNAIRE ANAMNÈSE â”€â”€ */}
+            {/* ── STEP 1: QUESTIONNAIRE ANAMNÈSE ── */}
             {wizardStep === 1 && (
               <div className="space-y-4 py-2">
                 {/* Client Selection */}
@@ -544,18 +544,18 @@ export default function ProDiagnosesPage() {
                   }}
                   className="w-full bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] text-[#0F0A05] font-bold rounded-xl h-11 text-xs mt-2 cursor-pointer"
                 >
-                  Valider le Questionnaire & Passer au Scan Camera IA â†’
+                  Valider le Questionnaire & Passer au Scan Camera IA →
                 </Button>
               </div>
             )}
 
-            {/* â”€â”€ STEP 2: CAMERA SCAN & FITZPATRICK â”€â”€ */}
+            {/* ── STEP 2: CAMERA SCAN & FITZPATRICK ── */}
             {wizardStep === 2 && (
               <div className="mt-4 space-y-5">
                 {!isScanning && !scanComplete && (
                   <div className="space-y-2">
                     <Label className="text-white/60 text-xs flex items-center gap-1">
-                      <Palette className="w-3.5 h-3.5 text-[#C8951E]" /> Étalonnage Phototype Fitzpatrick (I à  VI)
+                      <Palette className="w-3.5 h-3.5 text-[#C8951E]" /> Étalonnage Phototype Fitzpatrick (I à VI)
                     </Label>
                     <div className="flex flex-wrap gap-2">
                       {['I', 'II', 'III', 'IV', 'V', 'VI'].map(type => (
@@ -571,7 +571,7 @@ export default function ProDiagnosesPage() {
                       ))}
                     </div>
                     <p className="text-[10px] text-white/50 font-mono bg-white/5 p-2 rounded-xl border border-white/5">
-                      ðŸ’¡ {FITZPATRICK_DESCS[selectedPhototype]}
+                      💡 {FITZPATRICK_DESCS[selectedPhototype]}
                     </p>
                   </div>
                 )}
@@ -702,7 +702,7 @@ export default function ProDiagnosesPage() {
                       <div className={`p-4 rounded-2xl border transition-all ${medicalMode ? 'bg-[#C8951E]/10 border-[#C8951E]/40' : 'bg-[#4E9FD1]/10 border-[#4E9FD1]/40'}`}>
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-1.5 text-white">
-                            {medicalMode ? '🔬 Diagnostic Scientifique & Métriques Cliniques :' : 'ðŸ’¬ Explication Simple pour la Cliente :'}
+                            {medicalMode ? '🔬 Diagnostic Scientifique & Métriques Cliniques :' : '💬 Explication Simple pour la Cliente :'}
                           </span>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${medicalMode ? 'bg-[#C8951E] text-[#0F0A05]' : 'bg-[#4E9FD1] text-white'}`}>
                             {medicalMode ? 'Dermo-Clinique V3' : 'Vulgarisé'}
@@ -711,7 +711,7 @@ export default function ProDiagnosesPage() {
                         {medicalMode ? (
                           <div className="space-y-2 text-xs">
                             <p className="text-white/80 font-mono leading-relaxed">
-                              Perte Transepidermique en Eau (TEWL) : <strong className="text-emerald-400">14.2 g/mÂ²/h</strong> Â· Profondeur Hyperpigmentation PIH : <strong className="text-amber-400">0.2mm (Épidermique)</strong> Â· Indice de Mélanine : <strong className="text-[#F3E5AB]">68/100</strong>.
+                              Perte Transepidermique en Eau (TEWL) : <strong className="text-emerald-400">14.2 g/m²/h</strong> · Profondeur Hyperpigmentation PIH : <strong className="text-amber-400">0.2mm (Épidermique)</strong> · Indice de Mélanine : <strong className="text-[#F3E5AB]">68/100</strong>.
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10px] font-mono bg-black/40 p-2.5 rounded-xl border border-white/10">
                               <div><span className="text-white/40 block">Taux Sébum</span><span className="text-emerald-400 font-bold">Équilibré ({mockResult.subScores.sebum}%)</span></div>
@@ -721,7 +721,7 @@ export default function ProDiagnosesPage() {
                           </div>
                         ) : (
                           <p className="text-xs text-white/90 font-sans leading-relaxed">
-                            "Votre peau manque légèrement d'eau mais sécrète la bonne quantité d'huile naturelle. Nous allons appliquer un soin hydratant à  base de Beurre de Karité brut et de Sérum d'Hibiscus pour éclaircir vos taches sombres et redonner de l'éclat à  votre teint."
+                            "Votre peau manque légèrement d'eau mais sécrète la bonne quantité d'huile naturelle. Nous allons appliquer un soin hydratant à base de Beurre de Karité brut et de Sérum d'Hibiscus pour éclaircir vos taches sombres et redonner de l'éclat à votre teint."
                           </p>
                         )}
                       </div>
@@ -738,7 +738,7 @@ export default function ProDiagnosesPage() {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                           <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
-                            <span className="text-emerald-400 font-bold block text-[11px]">ðŸ¥£ Beurre de Karité Brut de Korhogo (45%)</span>
+                            <span className="text-emerald-400 font-bold block text-[11px]">🥣 Beurre de Karité Brut de Korhogo (45%)</span>
                             <span className="text-white/50 text-[10px] block">Restauration lipidique & nutrition intense</span>
                           </div>
                           <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
@@ -763,15 +763,15 @@ export default function ProDiagnosesPage() {
                         </span>
                         <div className="space-y-1.5 text-xs">
                           <div className="bg-[#0A0603] p-2 rounded-xl border border-red-500/20 text-red-200 flex flex-col sm:flex-row sm:items-center justify-between font-mono text-[10px] sm:text-[11px] gap-1">
-                            <span className="break-words">ðŸ”´ Hyperpigmentation post-inflammatoire (PIH)</span>
+                            <span className="break-words">🔴 Hyperpigmentation post-inflammatoire (PIH)</span>
                             <span className="font-bold shrink-0">Profondeur 0.2mm</span>
                           </div>
                           <div className="bg-[#0A0603] p-2 rounded-xl border border-amber-500/20 text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between font-mono text-[10px] sm:text-[11px] gap-1">
-                            <span className="break-words">ðŸŸ¡ Perturbation Transepidermique (TEWL)</span>
-                            <span className="font-bold shrink-0">14.2 g/mÂ²/h</span>
+                            <span className="break-words">🟡 Perturbation Transepidermique (TEWL)</span>
+                            <span className="font-bold shrink-0">14.2 g/m²/h</span>
                           </div>
                           <div className="bg-[#0A0603] p-2 rounded-xl border border-white/10 text-white/80 flex flex-col sm:flex-row sm:items-center justify-between font-mono text-[10px] sm:text-[11px] gap-1">
-                            <span className="break-words">ðŸŸ  Teint Terne & Perte d'Éclat</span>
+                            <span className="break-words">🟠 Teint Terne & Perte d'Éclat</span>
                             <span className="font-bold shrink-0">Kératine en surface</span>
                           </div>
                         </div>
@@ -805,22 +805,22 @@ export default function ProDiagnosesPage() {
                         </div>
                       </div>
 
-                      {/* ðŸŒ… Routine Quotidienne à  Domicile (Matin & Soir) */}
+                      {/* 🌅 Routine Quotidienne à Domicile (Matin & Soir) */}
                       <div className="bg-[#0A0603] border border-[#4E9FD1]/40 p-4 rounded-2xl space-y-3">
                         <span className="text-xs font-bold text-[#4E9FD1] uppercase tracking-widest font-display flex items-center gap-1.5">
-                          ðŸŒ… Routine Dermo-Cosmétique à  Domicile (Matin & Soir)
+                          🌅 Routine Dermo-Cosmétique à Domicile (Matin & Soir)
                         </span>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                           <div className="bg-[#1A1410] p-3 rounded-xl border border-[#4E9FD1]/20 space-y-1.5">
-                            <span className="font-bold text-sky-300 block border-b border-white/5 pb-1">ðŸŒ… Matin (Protection & Hydratation)</span>
+                            <span className="font-bold text-sky-300 block border-b border-white/5 pb-1">🌅 Matin (Protection & Hydratation)</span>
                             <p className="text-[11px] text-white/70 leading-relaxed font-sans">
-                              1. Nettoyage doux à  l'eau d'Aloe Vera<br />
+                              1. Nettoyage doux à l'eau d'Aloe Vera<br />
                               2. 2 gouttes de Sérum Niacinamide 5%<br />
                               3. Écran Solaire Minéral SPF 50+ obligatoire
                             </p>
                           </div>
                           <div className="bg-[#1A1410] p-3 rounded-xl border border-[#C8951E]/20 space-y-1.5">
-                            <span className="font-bold text-[#F3E5AB] block border-b border-white/5 pb-1">ðŸŒ™ Soir (Régénération & Éclat)</span>
+                            <span className="font-bold text-[#F3E5AB] block border-b border-white/5 pb-1">🌙 Soir (Régénération & Éclat)</span>
                             <p className="text-[11px] text-white/70 leading-relaxed font-sans">
                               1. Double nettoyage Huile de Baobab<br />
                               2. Application Sérum Bissap Anti-taches<br />
@@ -842,7 +842,7 @@ export default function ProDiagnosesPage() {
                       className="w-full h-11 rounded-xl font-bold text-sm text-[#0F0A05] flex items-center justify-center gap-2 disabled:opacity-40 cursor-pointer shadow-lg"
                       style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)' }}
                     >
-                      {isScanning ? <><div className="animate-spin w-4 h-4 border-2 border-[#0F0A05]/30 border-t-[#0F0A05] rounded-full" /> Analyse Biométrique en coursâ€¦</> : <><ScanFace className="w-4 h-4" /> Démarrer le Scan Biométrique</>}
+                      {isScanning ? <><div className="animate-spin w-4 h-4 border-2 border-[#0F0A05]/30 border-t-[#0F0A05] rounded-full" /> Analyse Biométrique en cours…</> : <><ScanFace className="w-4 h-4" /> Démarrer le Scan Biométrique</>}
                     </motion.button>
                   ) : (
                     <motion.button
@@ -861,7 +861,7 @@ export default function ProDiagnosesPage() {
         </div>
       </motion.div>
 
-      {/* â”€â”€ DETAILED CLINICAL REPORT MODAL (WITH QUESTIONNAIRE DATA) â”€â”€ */}
+      {/* ── DETAILED CLINICAL REPORT MODAL (WITH QUESTIONNAIRE DATA) ── */}
       <Dialog open={!!viewingReport} onOpenChange={(open) => !open && setViewingReport(null)}>
         <DialogContent className="bg-[#0A0603] border border-[#C8951E]/40 text-white rounded-3xl w-[95vw] max-w-4xl lg:max-w-5xl max-h-[92vh] overflow-y-auto shadow-2xl p-4 sm:p-6">
           {viewingReport && (
@@ -874,7 +874,7 @@ export default function ProDiagnosesPage() {
                     Bilan Cutané & Prescription Botanique
                   </span>
                   <p className="text-[10px] text-white/40 font-mono mt-1">
-                    Émis le {format(new Date(viewingReport.createdAt), 'dd MMMM yyyy à  HH:mm')}
+                    Émis le {format(new Date(viewingReport.createdAt), 'dd MMMM yyyy à HH:mm')}
                   </p>
                 </div>
               </div>
@@ -899,7 +899,7 @@ export default function ProDiagnosesPage() {
                 </button>
               </div>
 
-              {/* â”€â”€ 3D GOLDEN OCTO-SPECTRAL MESH VISUALIZER â”€â”€ */}
+              {/* ── 3D GOLDEN OCTO-SPECTRAL MESH VISUALIZER ── */}
               <div className="my-2">
                 <div className="flex items-center justify-between mb-1.5 px-1">
                   <span className="text-[10px] font-mono font-bold text-[#F3E5AB] uppercase tracking-wider flex items-center gap-1.5">
@@ -940,7 +940,7 @@ export default function ProDiagnosesPage() {
               <div className={`p-4 rounded-2xl border transition-all ${medicalMode ? 'bg-[#C8951E]/10 border-[#C8951E]/40' : 'bg-[#4E9FD1]/10 border-[#4E9FD1]/40'}`}>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-1.5 text-white">
-                    {medicalMode ? '🔬 Diagnostic Scientifique & Métriques Cliniques :' : 'ðŸ’¬ Explication Simple pour la Cliente :'}
+                    {medicalMode ? '🔬 Diagnostic Scientifique & Métriques Cliniques :' : '💬 Explication Simple pour la Cliente :'}
                   </span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${medicalMode ? 'bg-[#C8951E] text-[#0F0A05]' : 'bg-[#4E9FD1] text-white'}`}>
                     {medicalMode ? 'Dermo-Clinique V3' : 'Vulgarisé'}
@@ -949,7 +949,7 @@ export default function ProDiagnosesPage() {
                 {medicalMode ? (
                   <div className="space-y-2 text-xs">
                     <p className="text-white/80 font-mono leading-relaxed">
-                      Perte Transepidermique en Eau (TEWL) : <strong className="text-emerald-400">14.2 g/mÂ²/h</strong> Â· Profondeur Hyperpigmentation PIH : <strong className="text-amber-400">0.2mm (Épidermique)</strong> Â· Indice de Mélanine : <strong className="text-[#F3E5AB]">68/100</strong>.
+                      Perte Transepidermique en Eau (TEWL) : <strong className="text-emerald-400">14.2 g/m²/h</strong> · Profondeur Hyperpigmentation PIH : <strong className="text-amber-400">0.2mm (Épidermique)</strong> · Indice de Mélanine : <strong className="text-[#F3E5AB]">68/100</strong>.
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-[10px] font-mono bg-black/40 p-2.5 rounded-xl border border-white/10">
                       <div><span className="text-white/40 block">Taux Sébum</span><span className="text-emerald-400 font-bold">Équilibré (74%)</span></div>
@@ -959,7 +959,7 @@ export default function ProDiagnosesPage() {
                   </div>
                 ) : (
                   <p className="text-xs text-white/90 font-sans leading-relaxed">
-                    "Votre peau manque légèrement d'eau mais sécrète la bonne quantité d'huile naturelle. Nous allons appliquer un soin hydratant à  base de Beurre de Karité brut et de Sérum d'Hibiscus pour éclaircir vos taches sombres et redonner de l'éclat à  votre teint."
+                    "Votre peau manque légèrement d'eau mais sécrète la bonne quantité d'huile naturelle. Nous allons appliquer un soin hydratant à base de Beurre de Karité brut et de Sérum d'Hibiscus pour éclaircir vos taches sombres et redonner de l'éclat à votre teint."
                   </p>
                 )}
               </div>
@@ -976,7 +976,7 @@ export default function ProDiagnosesPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                   <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
-                    <span className="text-emerald-400 font-bold block text-[11px]">ðŸ¥£ Beurre de Karité Brut de Korhogo (45%)</span>
+                    <span className="text-emerald-400 font-bold block text-[11px]">🥣 Beurre de Karité Brut de Korhogo (45%)</span>
                     <span className="text-white/50 text-[10px] block">Restauration lipidique & nutrition intense</span>
                   </div>
                   <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
@@ -1006,7 +1006,7 @@ export default function ProDiagnosesPage() {
                   </div>
                   <div className="bg-[#0A0603] p-2 rounded-xl border border-white/5">
                     <span className="text-white/40 block text-[10px]">Exposition Solaire / Ecran SPF</span>
-                    <span className="font-bold text-white capitalize">{viewingReport.questionnaireData?.sunExposure || 'Modérée'} Â· SPF {viewingReport.questionnaireData?.useSunscreen || 'Rarement'}</span>
+                    <span className="font-bold text-white capitalize">{viewingReport.questionnaireData?.sunExposure || 'Modérée'} · SPF {viewingReport.questionnaireData?.useSunscreen || 'Rarement'}</span>
                   </div>
                   <div className="col-span-2 bg-[#0A0603] p-2 rounded-xl border border-white/5">
                     <span className="text-white/40 block text-[10px]">Préoccupations Principales</span>
@@ -1051,7 +1051,7 @@ export default function ProDiagnosesPage() {
                         `- Sérum Bissap Bio (Anti-taches PIH)\n` +
                         `- Beurre de Karité Pur Brut (Régénération lipidique)\n` +
                         `- Huile de Baobab Pure (Scellage hydratation)\n\n` +
-                        `Merci de votre confiance â€” Institut Kènè OS`
+                        `Merci de votre confiance — Institut Kènè OS`
                       ], { type: 'text/plain' });
                       const url = URL.createObjectURL(blob);
                       const a = document.createElement('a');
@@ -1073,9 +1073,9 @@ export default function ProDiagnosesPage() {
                         `✨ Bonjour ${viewingReport.client?.firstName || ''},\n\n` +
                         `Voici le bilan de votre Diagnostic Cutané chez Kènè (Score: ${viewingReport.scoreGlobal}/100, Phototype ${viewingReport.phototype || 'V'}).\n\n` +
                         `🌿 Votre ordonnance personnalisée :\n` +
-                        `â€¢ Sérum Bissap Éclat Anti-Taches\n` +
-                        `â€¢ Beurre de Karité Brut de Korhogo\n` +
-                        `â€¢ Huile de Baobab Pure Scellante\n\n` +
+                        `• Sérum Bissap Éclat Anti-Taches\n` +
+                        `• Beurre de Karité Brut de Korhogo\n` +
+                        `• Huile de Baobab Pure Scellante\n\n` +
                         `Consultez votre bilan complet sur votre espace client : https://kene.app/portal`
                       );
                       window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
@@ -1099,7 +1099,7 @@ export default function ProDiagnosesPage() {
         </DialogContent>
       </Dialog>
 
-      {/* â”€â”€ HISTORY LIST â”€â”€ */}
+      {/* ── HISTORY LIST ── */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
         <div className="rounded-3xl border border-white/10 bg-[#1A1410] overflow-hidden shadow-xl">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 p-5 border-b border-white/5">
@@ -1150,7 +1150,7 @@ export default function ProDiagnosesPage() {
                         </span>
                       </div>
                       <div className="text-[10px] text-white/40 font-mono mt-0.5">
-                        Effectué le {format(new Date(diag.createdAt), 'dd/MM/yyyy à  HH:mm')}
+                        Effectué le {format(new Date(diag.createdAt), 'dd/MM/yyyy à HH:mm')}
                       </div>
                     </div>
 
@@ -1183,7 +1183,7 @@ export default function ProDiagnosesPage() {
         clientPhoto={typeof window !== 'undefined' ? localStorage.getItem('kene_latest_client_photo') : null}
       />
 
-      {/* â”€â”€ MODALE IMPRESSION FICHE ANAMNÈSE PAPIER A4 (ACCUEIL) â”€â”€ */}
+      {/* ── MODALE IMPRESSION FICHE ANAMNÈSE PAPIER A4 (ACCUEIL) ── */}
       <Dialog open={showPrintableSheet} onOpenChange={setShowPrintableSheet}>
         <DialogContent className="bg-[#0A0603] border border-[#C8951E]/40 text-white rounded-3xl w-[95vw] max-w-4xl max-h-[92vh] overflow-y-auto shadow-2xl p-4 sm:p-6">
           <PrintableAnamnesisSheet onClose={() => setShowPrintableSheet(false)} />

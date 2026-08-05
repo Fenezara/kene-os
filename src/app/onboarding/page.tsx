@@ -242,7 +242,7 @@ export default function OnboardingPage() {
                       }`}
                     >
                       <h3 className="font-bold text-lg mb-2">Template Pré-rempli</h3>
-                      <p className="text-sm text-white/60">Utiliser notre catalogue standard (Coiffure, Soins Visage, Manucure) adapté à  l'Afrique de l'Ouest.</p>
+                      <p className="text-sm text-white/60">Utiliser notre catalogue standard (Coiffure, Soins Visage, Manucure) adapté à l'Afrique de l'Ouest.</p>
                     </div>
                     <div
                       onClick={() => updateForm('importMethod', 'csv')}

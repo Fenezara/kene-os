@@ -24,11 +24,11 @@ interface Service {
 }
 
 const CATEGORIES = [
-  { name: 'Coiffure', emoji: 'ðŸ’‡', color: 'from-pink-500/20 to-pink-500/5', border: 'border-pink-500/20' },
-  { name: 'Soin Visage', emoji: 'ðŸ’†', color: 'from-blue-500/20 to-blue-500/5', border: 'border-blue-500/20' },
+  { name: 'Coiffure', emoji: '💇', color: 'from-pink-500/20 to-pink-500/5', border: 'border-pink-500/20' },
+  { name: 'Soin Visage', emoji: '💆', color: 'from-blue-500/20 to-blue-500/5', border: 'border-blue-500/20' },
   { name: 'Massage', emoji: '🌿', color: 'from-emerald-500/20 to-emerald-500/5', border: 'border-emerald-500/20' },
-  { name: 'Maquillage', emoji: 'ðŸ’„', color: 'from-red-500/20 to-red-500/5', border: 'border-red-500/20' },
-  { name: 'Onglerie', emoji: 'ðŸ’…', color: 'from-purple-500/20 to-purple-500/5', border: 'border-purple-500/20' },
+  { name: 'Maquillage', emoji: '💄', color: 'from-red-500/20 to-red-500/5', border: 'border-red-500/20' },
+  { name: 'Onglerie', emoji: '💅', color: 'from-purple-500/20 to-purple-500/5', border: 'border-purple-500/20' },
   { name: 'Épilation', emoji: '🌸', color: 'from-fuchsia-500/20 to-fuchsia-500/5', border: 'border-fuchsia-500/20' },
   { name: 'Karité', emoji: '🥜', color: 'from-[var(--gold-kene)]/20 to-[var(--gold-kene)]/5', border: 'border-[var(--gold-kene)]/20' },
   { name: 'Baobab', emoji: '🌳', color: 'from-green-500/20 to-green-500/5', border: 'border-green-500/20' },
@@ -113,18 +113,18 @@ export default function ProServicesPage() {
         body: JSON.stringify(formData)
       });
 
-      toast({ title: "✨… Prestation Enregistrée & Publiée !", description: "Ce soin est désormais disponible à  la réservation en ligne pour les clientes." });
+      toast({ title: "✨… Prestation Enregistrée & Publiée !", description: "Ce soin est désormais disponible à la réservation en ligne pour les clientes." });
       setIsDialogOpen(false);
       setFormData({ name: '', category: 'Coiffure', durationMin: '30', price: '', vatRate: '0.18', commissionRate: '0', description: '' });
     } catch (error) {
-      toast({ title: "âŒ Erreur", description: "Impossible de créer le service.", variant: "destructive" });
+      toast({ title: "❌ Erreur", description: "Impossible de créer le service.", variant: "destructive" });
     }
   };
 
   const toggleActive = (id: string) => {
     // Dans une vraie app, appel API
     setServices(services.map(s => s.id === id ? { ...s, active: !s.active } : s));
-    toast({ title: "✨… Succès", description: "Statut du service mis à  jour." });
+    toast({ title: "✨… Succès", description: "Statut du service mis à jour." });
   };
 
   const filteredServices = services.filter(s => 
@@ -325,10 +325,10 @@ export default function ProServicesPage() {
 
                   <div className="mt-6 flex items-center justify-between z-10">
                     <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/80 font-medium">
-                      â± {service.durationMin} min
+                      ⏱ {service.durationMin} min
                     </div>
                     <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/80 font-medium">
-                      ðŸ¤ {service.commissionRate}%
+                      🤝 {service.commissionRate}%
                     </div>
                   </div>
 
@@ -348,7 +348,7 @@ export default function ProServicesPage() {
           </AnimatePresence>
           {filteredServices.length === 0 && (
             <div className="col-span-full py-20 text-center text-white/40">
-              Aucun service ne correspond à  votre recherche.
+              Aucun service ne correspond à votre recherche.
             </div>
           )}
         </div>

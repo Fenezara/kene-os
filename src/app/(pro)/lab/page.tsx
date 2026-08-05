@@ -83,8 +83,8 @@ const INITIAL_LAB_ORDERS: LabFormulaOrder[] = [
 ];
 
 const RAW_MATERIALS = [
-  { name: 'Beurre de Karité Brut Non Raffiné ðŸ‡¬ðŸ‡­', stock: '12.5 kg', status: 'optimal', category: 'Beurres' },
-  { name: 'Huile de Baobab Pressée à  Froid 🇸🇳', stock: '4.8 Litres', status: 'optimal', category: 'Huiles' },
+  { name: 'Beurre de Karité Brut Non Raffiné 🇬🇭', stock: '12.5 kg', status: 'optimal', category: 'Beurres' },
+  { name: 'Huile de Baobab Pressée à Froid 🇸🇳', stock: '4.8 Litres', status: 'optimal', category: 'Huiles' },
   { name: 'Extrait Concentré de Bissap (Hibiscus) 🇨🇮', stock: '1.2 Litres', status: 'low', category: 'Actifs AHA' },
   { name: 'Poudre de Chébé Authentique 🇹🇩', stock: '2.8 kg', status: 'optimal', category: 'Poudres' },
   { name: 'Niacinamide Pure USP 5%', stock: '850 g', status: 'optimal', category: 'Actifs Dermo' },
@@ -105,8 +105,8 @@ export default function LabPage() {
       setSelectedOrder(prev => ({ ...prev, status: newStatus }));
     }
     toast({
-      title: '🧪 Statut Laboratoire Mis à  Jour',
-      description: `Ordre ${orderId} passé en statut "${newStatus === 'ready' ? 'Prêt pour Flaconnage' : newStatus === 'delivered' ? 'Livré à  la Cliente' : 'En Préparation'}".`,
+      title: '🧪 Statut Laboratoire Mis à Jour',
+      description: `Ordre ${orderId} passé en statut "${newStatus === 'ready' ? 'Prêt pour Flaconnage' : newStatus === 'delivered' ? 'Livré à la Cliente' : 'En Préparation'}".`,
     });
   };
 
@@ -240,7 +240,7 @@ export default function LabPage() {
                     {selectedOrder.formulaName}
                   </h2>
                   <p className="text-xs text-white/60 font-sans mt-0.5">
-                    Cliente : <strong className="text-white">{selectedOrder.clientName}</strong> Â· {selectedOrder.phototype}
+                    Cliente : <strong className="text-white">{selectedOrder.clientName}</strong> · {selectedOrder.phototype}
                   </p>
                 </div>
 
@@ -315,7 +315,7 @@ export default function LabPage() {
                       className="bg-[#C8951E] hover:bg-[#C8951E]/90 text-[#0F0A05] font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-lg shadow-[#C8951E]/20"
                     >
                       <CheckCircle2 className="w-4 h-4" />
-                      Livrer à  la Cliente (Caisse POS)
+                      Livrer à la Cliente (Caisse POS)
                     </Button>
                   )}
                 </div>
@@ -330,7 +330,7 @@ export default function LabPage() {
             <h2 className="font-display font-bold text-lg text-white flex items-center gap-2">
               <Beaker className="text-[#C8951E]" /> Stock des Matières Premières Brutes au Labo
             </h2>
-            <span className="text-xs text-white/40 font-mono">Mis à  jour en temps réel</span>
+            <span className="text-xs text-white/40 font-mono">Mis à jour en temps réel</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -366,7 +366,7 @@ export default function LabPage() {
             <div className="space-y-1 text-xs">
               <p><strong>CLIENTE :</strong> {labelModalOrder.clientName}</p>
               <p><strong>FORMULE :</strong> {labelModalOrder.formulaName}</p>
-              <p><strong>LOT NÂ° :</strong> {labelModalOrder.batchNumber}</p>
+              <p><strong>LOT N° :</strong> {labelModalOrder.batchNumber}</p>
               <p><strong>FLACON :</strong> {labelModalOrder.bottleSize}</p>
               <p><strong>PÉREMPTION :</strong> {labelModalOrder.expiryDate}</p>
             </div>

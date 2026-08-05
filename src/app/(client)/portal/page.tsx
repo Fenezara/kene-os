@@ -1,6 +1,6 @@
 ﻿'use client';
 
-// Kènè OS â€” Client Portal Main Dashboard v2.4 (Fresh Cache Release)
+// Kènè OS — Client Portal Main Dashboard v2.4 (Fresh Cache Release)
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, ScanFace, ChevronRight, Wallet, Activity, ArrowRight, Camera, User, Check, Sparkles, Sprout, Clock, Store, MapPin, Phone, Mail, Send, MessageSquare, Building2, Loader2, FileText } from 'lucide-react';
@@ -59,7 +59,7 @@ export default function ClientPortalPage() {
     setDailySteps(prev => {
       const next = { ...prev, [id]: !prev[id] };
       toast({
-        title: next[id] ? "✨ Étape du Rituel Validée !" : "Rituel mis à  jour",
+        title: next[id] ? "✨ Étape du Rituel Validée !" : "Rituel mis à jour",
         description: next[id] ? "Bravo pour la régularité de votre soin botanique." : "Étape décochée.",
       });
       return next;
@@ -101,7 +101,7 @@ export default function ClientPortalPage() {
           phone: parsed.phone || '',
           email: parsed.email || '',
           skinType: parsed.skinType || 'Peau mélanoderme',
-          fitzpatrickType: parsed.fitzpatrickType || 'Phototype IV à  VI'
+          fitzpatrickType: parsed.fitzpatrickType || 'Phototype IV à VI'
         });
         setClientContactName(fname || fullName || 'Cliente');
         setClientContactPhone(parsed.phone || '');
@@ -141,7 +141,7 @@ export default function ClientPortalPage() {
                 type: tenantObj.identity?.type || 'Institut Dermo-Cosmétique',
                 address: tenantObj.address?.street ? `${tenantObj.address.street}` : 'Abidjan, Côte d\'Ivoire',
                 phone: tenantObj.address?.phone || '+225 07 00 00 00',
-                rating: '5.0 â­ (Entreprise Inscrite)',
+                rating: '5.0 ⭐ (Entreprise Inscrite)',
                 services: ['Soin Karité', 'Diagnostic IA', 'Suivi Dermatologique'],
               });
             }
@@ -161,7 +161,7 @@ export default function ClientPortalPage() {
                 type: 'Cabinet & Institut Dermo',
                 address: 'Abidjan, Côte d\'Ivoire',
                 phone: u.phone || '+225 07 00 00 00',
-                rating: '5.0 â­ (Entreprise Inscrite)',
+                rating: '5.0 ⭐ (Entreprise Inscrite)',
                 services: ['Consultation Dermo', 'Soin Visage', 'Diagnostic IA'],
               });
             }
@@ -191,7 +191,7 @@ export default function ClientPortalPage() {
     setUserProfile(updated);
     setIsProfileModalOpen(false);
     toast({
-      title: "👤 Profil Mis à  Jour !",
+      title: "👤 Profil Mis à Jour !",
       description: "Vos informations personnelles ont été enregistrées avec succès.",
     });
   };
@@ -225,7 +225,7 @@ export default function ClientPortalPage() {
     } catch {
       toast({
         title: "🎉 Demande transmise !",
-        description: `Votre message a été envoyé directement à  "${selectedSalon?.name}".`,
+        description: `Votre message a été envoyé directement à "${selectedSalon?.name}".`,
       });
       setIsContactModalOpen(false);
     } finally {
@@ -252,7 +252,7 @@ export default function ClientPortalPage() {
       setAvatarUrl(base64Data);
       localStorage.setItem('kene_user_avatar', base64Data);
       toast({
-        title: "📸 Photo mise à  jour !",
+        title: "📸 Photo mise à jour !",
         description: "Votre photo de profil Kènè a été enregistrée avec succès.",
       });
     };
@@ -460,7 +460,7 @@ export default function ClientPortalPage() {
         </div>
       </motion.div>
 
-      {/* â”€â”€ HERO VISUEL RITUEL BOTANIQUE AFRICAIN â”€â”€ */}
+      {/* ── HERO VISUEL RITUEL BOTANIQUE AFRICAIN ── */}
       <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.05 }}>
         <Card className="bg-[#1A1410] border border-[var(--gold-kene)]/30 shadow-2xl rounded-3xl overflow-hidden relative group">
           <div className="relative h-44 sm:h-52 w-full overflow-hidden">
@@ -494,7 +494,7 @@ export default function ClientPortalPage() {
         </Card>
       </motion.div>
 
-      {/* â”€â”€ GALERIE INGRÉDIENTS BOTANIQUES SUR-MESURE â”€â”€ */}
+      {/* ── GALERIE INGRÉDIENTS BOTANIQUES SUR-MESURE ── */}
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
         <Card className="bg-[#241C16] border border-white/10 rounded-3xl overflow-hidden shadow-xl">
           <CardContent className="p-5 space-y-4">
@@ -551,21 +551,21 @@ export default function ClientPortalPage() {
         </Card>
       </motion.div>
 
-      {/* â”€â”€ RITUEL DU JOUR & CHECKLIST SKINCARE INTERACTIVE â”€â”€ */}
+      {/* ── RITUEL DU JOUR & CHECKLIST SKINCARE INTERACTIVE ── */}
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
         <Card className="bg-[#1A1410] border border-[var(--gold-kene)]/30 rounded-3xl overflow-hidden shadow-xl">
           <CardContent className="p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono font-bold mb-1">
-                  â˜€ï¸ Mon Rituel Botanique du Jour
+                  ☀️ Mon Rituel Botanique du Jour
                 </Badge>
                 <h3 className="font-display font-bold text-base text-white flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-[var(--gold-kene)]" /> Checklist Quotidienne Peau Éclatante
                 </h3>
               </div>
               <span className="text-xs font-mono font-bold text-[var(--gold-kene)] bg-[var(--gold-kene)]/10 px-3 py-1 rounded-full border border-[var(--gold-kene)]/20">
-                85% Humidité Â· Abidjan 🇨🇮
+                85% Humidité · Abidjan 🇨🇮
               </span>
             </div>
 
@@ -616,7 +616,7 @@ export default function ClientPortalPage() {
                   <Activity className="w-5 h-5 text-[var(--gold-kene)]" />
                   Bilan & Santé Cutanée Kènè
                 </h3>
-                <p className="text-xs text-white/50">Mise à  jour en temps réel selon vos diagnostics & météo</p>
+                <p className="text-xs text-white/50">Mise à jour en temps réel selon vos diagnostics & météo</p>
               </div>
               <Badge className="bg-[var(--gold-kene)]/20 text-[var(--gold-kene)] border border-[var(--gold-kene)]/30 font-mono text-xs">
                 Score : 78/100
@@ -627,11 +627,11 @@ export default function ClientPortalPage() {
             <div className="bg-[#1A1410] border border-white/5 rounded-xl p-3 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg">
-                  â˜€ï¸
+                  ☀️
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-white font-display">Indice UV 8 Â· Modéré/Élevé (Abidjan)</div>
-                  <p className="text-[10px] text-white/50 font-sans">Humidité : 88% â€” Appliquez l'Écran Minéral & le Sérum Baobab</p>
+                  <div className="text-xs font-bold text-white font-display">Indice UV 8 · Modéré/Élevé (Abidjan)</div>
+                  <p className="text-[10px] text-white/50 font-sans">Humidité : 88% — Appliquez l'Écran Minéral & le Sérum Baobab</p>
                 </div>
               </div>
               <a href="/diagnostic/results/demo-diagnosis-01" className="text-xs text-[var(--gold-kene)] font-bold hover:underline shrink-0">
@@ -643,7 +643,7 @@ export default function ClientPortalPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-1">
               {[
                 { label: 'Hydratation', val: 82, color: '#4E9FD1', icon: '💧' },
-                { label: 'Barrière Cutanée', val: 85, color: '#4CAF6E', icon: 'ðŸ›¡ï¸' },
+                { label: 'Barrière Cutanée', val: 85, color: '#4CAF6E', icon: '🛡️ï¸' },
                 { label: 'Éclat du Teint', val: 74, color: '#C8951E', icon: '✨' },
                 { label: 'Équilibre Sébacé', val: 68, color: '#E07A2B', icon: '🌿' },
               ].map((item, idx) => (
@@ -672,7 +672,7 @@ export default function ClientPortalPage() {
                     onClick={() => setIsGalleryModalOpen(true)}
                     className="text-[11px] font-bold text-[#0F0A05] bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md hover:scale-105 transition cursor-pointer"
                   >
-                    <span>ðŸ–¼ï¸</span> Galerie Avant / Après (Évolution)
+                    <span>🖼️ï¸</span> Galerie Avant / Après (Évolution)
                   </button>
                   <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-xl border border-emerald-500/20">
                     +17% Hydratation
@@ -748,9 +748,9 @@ export default function ClientPortalPage() {
                           </div>
                           <div className="text-[10px] text-white/50 font-sans mt-0.5 flex items-center gap-2 flex-wrap">
                             <span>📁… {item.date || safeFormat(item.createdAt, 'dd MMMM yyyy') || 'Récemment'}</span>
-                            <span>â€¢</span>
+                            <span>•</span>
                             <span>🧪 Formule : {item.formula || 'Ordonnance Kènè Bio'}</span>
-                            <span>â€¢</span>
+                            <span>•</span>
                             <span className="text-[var(--gold-kene)] font-semibold">{item.phototype || item.fitzpatrickType || 'Phototype V'}</span>
                           </div>
                         </div>
@@ -763,7 +763,7 @@ export default function ClientPortalPage() {
                         </div>
                         <a href={`/diagnostic/results/${item.id || 'demo-diagnosis-01'}`}>
                           <Button className="h-7 text-[10px] bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold border-none rounded-xl px-3 cursor-pointer shadow-md">
-                            Consulter ðŸ‘ï¸
+                            Consulter 👁️
                           </Button>
                         </a>
                       </div>
@@ -842,13 +842,13 @@ export default function ClientPortalPage() {
         </a>
       </motion.div>
 
-      {/* â”€â”€ SALONS ET ENTREPRISES DISPONIBLES â”€â”€ */}
+      {/* ── SALONS ET ENTREPRISES DISPONIBLES ── */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-white text-sm uppercase tracking-wider font-display flex items-center gap-2">
             <Store className="w-4 h-4 text-[var(--gold-kene)]" /> Instituts & Salons Partenaires ({salons.length})
           </h2>
-          <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">â— Salons Ouverts</span>
+          <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">● Salons Ouverts</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -883,13 +883,13 @@ export default function ClientPortalPage() {
                 <DialogContent className="bg-[#0F0A05] border border-[var(--gold-kene)]/30 text-white rounded-3xl max-w-md p-6">
                   <DialogHeader>
                     <DialogTitle className="font-display text-lg text-white flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5 text-[var(--gold-kene)]" /> Prise de Contact â€” {salon.name}
+                      <MessageSquare className="w-5 h-5 text-[var(--gold-kene)]" /> Prise de Contact — {salon.name}
                     </DialogTitle>
                   </DialogHeader>
 
                   <div className="space-y-3 my-2 text-xs">
                     <p className="text-white/60">
-                      Envoyez votre message ou votre demande de rendez-vous directement à  l'équipe de <strong>{salon.name}</strong>.
+                      Envoyez votre message ou votre demande de rendez-vous directement à l'équipe de <strong>{salon.name}</strong>.
                     </p>
 
                     <div className="space-y-1">
@@ -908,7 +908,7 @@ export default function ClientPortalPage() {
                         rows={3}
                         value={clientContactMessage}
                         onChange={(e) => setClientContactMessage(e.target.value)}
-                        placeholder="ex: Bonjour, je souhaite réserver un Soin Karité Pur et Diagnostic IA ce vendredi à  14h."
+                        placeholder="ex: Bonjour, je souhaite réserver un Soin Karité Pur et Diagnostic IA ce vendredi à 14h."
                         className="w-full bg-[#1A1410] border border-white/10 text-white p-2.5 rounded-xl text-xs outline-none focus:border-[var(--gold-kene)]"
                       />
                     </div>
@@ -919,7 +919,7 @@ export default function ClientPortalPage() {
                       className="w-full h-10 bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-lg cursor-pointer mt-1"
                     >
                       {isSubmittingContact ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Send className="w-3.5 h-3.5 mr-1" />}
-                      Envoyer ma Demande à  l'Établissement
+                      Envoyer ma Demande à l'Établissement
                     </Button>
                   </div>
                 </DialogContent>
@@ -954,7 +954,7 @@ export default function ClientPortalPage() {
                   <h3 className="font-semibold text-white text-sm">{nextAppt.service?.name || 'Soin Botanique'}</h3>
                   <div className="flex items-center gap-2 mt-1">
                     <Calendar className="w-3 h-3 text-[var(--gold-kene)]" />
-                    <span className="text-xs text-white/60">{safeFormat(nextAppt.startAt, 'HH:mm')} â€¢ {nextAppt.tenant?.name || 'Institut Partner'}</span>
+                    <span className="text-xs text-white/60">{safeFormat(nextAppt.startAt, 'HH:mm')} • {nextAppt.tenant?.name || 'Institut Partner'}</span>
                   </div>
                 </div>
               </div>
@@ -970,7 +970,7 @@ export default function ClientPortalPage() {
           <Card className="border-dashed border-white/10 bg-[#241C16]/40 text-white rounded-2xl shadow-none">
             <CardContent className="p-6 flex flex-col items-center justify-center text-center">
               <Calendar className="w-8 h-8 text-white/30 mb-2" />
-              <p className="text-xs text-white/60 mb-4">Aucun rendez-vous à  venir.</p>
+              <p className="text-xs text-white/60 mb-4">Aucun rendez-vous à venir.</p>
               <a href="/checkout" className="w-full">
                 <Button className="bg-[var(--gold-kene)] text-[#1A1410] hover:bg-gold-kene/90 font-bold rounded-xl shadow-md w-full text-xs">
                   Réserver un Soin
@@ -994,7 +994,7 @@ export default function ClientPortalPage() {
               📁œ Historique de Mes Scans & Bilan Octo-Spectral
             </h3>
             <a href="/diagnostic/results/demo-diagnosis-01" className="text-[var(--gold-kene)] text-xs font-semibold hover:underline">
-              Voir Bilan 360Â°
+              Voir Bilan 360°
             </a>
           </div>
 
@@ -1011,7 +1011,7 @@ export default function ClientPortalPage() {
                     </div>
                     <div>
                       <div className="font-bold text-xs text-white group-hover:text-[var(--gold-kene)] transition-colors">
-                        Scan du {diag.date} Â· {diag.zone}
+                        Scan du {diag.date} · {diag.zone}
                       </div>
                       <div className="text-[10px] text-white/40 font-sans mt-0.5">
                         Prescription : {diag.active}

@@ -17,11 +17,11 @@ import { DigitalReceiptModal } from '@/components/pos/DigitalReceiptModal';
 import { OfflineSyncBanner } from '@/components/pos/OfflineSyncBanner';
 
 const PAYMENT_METHODS = [
-  { value: 'cash', label: 'Espèces', icon: 'ðŸ’µ', color: '#4CAF6E', badge: 'bg-emerald-500/10 text-emerald-400' },
-  { value: 'wave', label: 'Wave', icon: 'ðŸŒŠ', color: '#00B4D8', badge: 'bg-blue-500/10 text-blue-400' },
-  { value: 'orange', label: 'Orange Money', icon: 'ðŸŸ ', color: '#FF6B00', badge: 'bg-orange-500/10 text-orange-400' },
+  { value: 'cash', label: 'Espèces', icon: '💵', color: '#4CAF6E', badge: 'bg-emerald-500/10 text-emerald-400' },
+  { value: 'wave', label: 'Wave', icon: '🌊', color: '#00B4D8', badge: 'bg-blue-500/10 text-blue-400' },
+  { value: 'orange', label: 'Orange Money', icon: '🟠', color: '#FF6B00', badge: 'bg-orange-500/10 text-orange-400' },
   { value: 'mtn', label: 'MTN MoMo', icon: '📁±', color: '#FFCB00', badge: 'bg-yellow-500/10 text-yellow-400' },
-  { value: 'card', label: 'Carte Bancaire', icon: 'ðŸ’³', color: '#8B5CF6', badge: 'bg-purple-500/10 text-purple-400' },
+  { value: 'card', label: 'Carte Bancaire', icon: '💳', color: '#8B5CF6', badge: 'bg-purple-500/10 text-purple-400' },
 ]
 
 export default function ProPOSPage() {
@@ -123,7 +123,7 @@ export default function ProPOSPage() {
 
       <OfflineSyncBanner />
 
-      {/* â”€â”€ HEADER â”€â”€ */}
+      {/* ── HEADER ── */}
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -160,12 +160,12 @@ export default function ProPOSPage() {
             <div className="h-0.5 bg-gradient-to-r from-transparent via-[#C8951E] to-transparent -mt-[1px] mx-6 rounded-full" />
             <DialogHeader className="pt-2">
               <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
-                <span className="text-2xl">ðŸ’°</span> Encaisser une prestation
+                <span className="text-2xl">💰</span> Encaisser une prestation
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleCreateSale} className="space-y-4 mt-2">
               <div className="space-y-1.5">
-                <Label className="text-white/50 text-xs">Lier à  un RDV (Optionnel)</Label>
+                <Label className="text-white/50 text-xs">Lier à un RDV (Optionnel)</Label>
                 <Select value={formData.appointmentId} onValueChange={handleAppointmentChange}>
                   <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-xl">
                     <SelectValue placeholder="Sélectionner un RDV en attente..." />
@@ -174,7 +174,7 @@ export default function ProPOSPage() {
                     <SelectItem value="none">Aucun (Vente directe)</SelectItem>
                     {appointments.map((a: any) => (
                       <SelectItem key={a.id} value={a.id}>
-                        {format(new Date(a.startAt), 'dd/MM HH:mm')} Â· {a.client?.firstName} Â· {a.amount.toLocaleString()} F
+                        {format(new Date(a.startAt), 'dd/MM HH:mm')} · {a.client?.firstName} · {a.amount.toLocaleString()} F
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -301,7 +301,7 @@ export default function ProPOSPage() {
         </div>
       </motion.div>
 
-      {/* â”€â”€ KPI TOP BAR â”€â”€ */}
+      {/* ── KPI TOP BAR ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -323,7 +323,7 @@ export default function ProPOSPage() {
         ))}
       </motion.div>
 
-      {/* â”€â”€ SALES TABLE â”€â”€ */}
+      {/* ── SALES TABLE ── */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
         <div className="rounded-3xl border border-white/5 bg-[#1A1410] overflow-hidden">
           {/* Table header bar */}
@@ -352,7 +352,7 @@ export default function ProPOSPage() {
             </div>
           ) : filteredSales.length === 0 ? (
             <div className="text-center py-16 text-white/20 text-xs font-sans">
-              <div className="text-4xl mb-3">ðŸ›’</div>
+              <div className="text-4xl mb-3">🛒</div>
               Aucune vente enregistrée.
             </div>
           ) : (
@@ -377,7 +377,7 @@ export default function ProPOSPage() {
                         </span>
                       </div>
                       <div className="text-[11px] text-white/60 mt-0.5">
-                        {sale.client ? `${sale.client.firstName} ${sale.client.lastName}` : 'Client de passage'} Â· {format(new Date(sale.createdAt), 'dd/MM/yyyy HH:mm')}
+                        {sale.client ? `${sale.client.firstName} ${sale.client.lastName}` : 'Client de passage'} · {format(new Date(sale.createdAt), 'dd/MM/yyyy HH:mm')}
                       </div>
                     </div>
 
@@ -400,13 +400,13 @@ export default function ProPOSPage() {
 
       <DigitalReceiptModal isOpen={isReceiptOpen} onClose={() => setIsReceiptOpen(false)} sale={selectedReceipt} />
 
-      {/* ðŸ§¾ MODAL RAPPORT Z FIN DE JOURNÉE & CLÔTURE CAISSE */}
+      {/* 🧾 MODAL RAPPORT Z FIN DE JOURNÉE & CLÔTURE CAISSE */}
       <Dialog open={isZReportOpen} onOpenChange={setIsZReportOpen}>
         <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/40 text-white rounded-3xl max-w-md p-6 shadow-2xl">
           <DialogHeader>
             <DialogTitle className="font-display text-xl text-white flex items-center justify-between">
               <span className="flex items-center gap-2">
-                <Receipt className="w-5 h-5 text-[#C8951E]" /> Rapport Z â€” Clôture Caisse
+                <Receipt className="w-5 h-5 text-[#C8951E]" /> Rapport Z — Clôture Caisse
               </span>
               <Badge className="bg-[#C8951E]/15 text-[#F3E5AB] border border-[#C8951E]/30 text-[10px] font-mono font-bold">
                 {format(new Date(), 'dd/MM/yyyy')}

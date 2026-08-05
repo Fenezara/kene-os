@@ -79,7 +79,7 @@ export default function ProClientsPage() {
       setIsConsultationOpen(false);
       setConsultationNotes('');
     } catch {
-      toast({ title: "Enregistré", description: "Consultation mise à  jour localement." });
+      toast({ title: "Enregistré", description: "Consultation mise à jour localement." });
       setIsConsultationOpen(false);
     }
   };
@@ -169,7 +169,7 @@ export default function ProClientsPage() {
       setIsAiProcessing(false);
       toast({
         title: "✨ IA Kènè Data Cleaner Effectué !",
-        description: `${cleanedResults.length} fiches clientes analysées, nettoyées et prêtes à  être intégrées.`,
+        description: `${cleanedResults.length} fiches clientes analysées, nettoyées et prêtes à être intégrées.`,
       });
     }, 1000);
   };
@@ -252,7 +252,7 @@ export default function ProClientsPage() {
   return (
     <div className="space-y-6 text-white max-w-5xl mx-auto">
 
-      {/* â”€â”€ HEADER â”€â”€ */}
+      {/* ── HEADER ── */}
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -263,7 +263,7 @@ export default function ProClientsPage() {
               Base <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">Clientes CRM</span>
             </h1>
           </div>
-          <p className="text-white/40 text-xs ml-10">{clients.length} clientes enregistrées Â· Profils dermatologiques OHADA</p>
+          <p className="text-white/40 text-xs ml-10">{clients.length} clientes enregistrées · Profils dermatologiques OHADA</p>
         </div>
 
         <div className="flex gap-2 flex-wrap">
@@ -321,7 +321,7 @@ export default function ProClientsPage() {
                         <div key={i} className="bg-[#1A1410] border border-white/10 p-3 rounded-xl flex items-center justify-between text-xs">
                           <div>
                             <div className="font-bold text-white">{c.firstName} {c.lastName}</div>
-                            <div className="text-[10px] text-white/50 font-mono">{c.phone} Â· {c.email || 'Pas d\'email'}</div>
+                            <div className="text-[10px] text-white/50 font-mono">{c.phone} · {c.email || 'Pas d\'email'}</div>
                             <div className="text-[9px] text-[#C8951E] font-mono mt-0.5">{c.aiNotes}</div>
                           </div>
                           <Badge className="bg-[#C8951E]/15 text-[#F3E5AB] text-[10px]">Type {c.fitzpatrickType}</Badge>
@@ -437,7 +437,7 @@ export default function ProClientsPage() {
         </div>
       </motion.div>
 
-      {/* â”€â”€ SEARCH BAR + STATS â”€â”€ */}
+      {/* ── SEARCH BAR + STATS ── */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex flex-col md:flex-row gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3.5 top-3 h-4 w-4 text-white/30" />
@@ -461,7 +461,7 @@ export default function ProClientsPage() {
         </div>
       </motion.div>
 
-      {/* â”€â”€ CLIENT CARDS GRID â”€â”€ */}
+      {/* ── CLIENT CARDS GRID ── */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
         {loading ? (
           <div className="flex justify-center py-16">
@@ -532,7 +532,7 @@ export default function ProClientsPage() {
                         );
                       })()}
                       <span className="text-[10px] font-bold text-[#F3E5AB] bg-[#C8951E]/20 border border-[#C8951E]/40 px-2 py-0.5 rounded-lg group-hover:bg-[#C8951E] group-hover:text-[#0F0A05] transition-all flex items-center gap-1">
-                        <span>ðŸ” Ouvrir</span> <ChevronRight className="w-3 h-3" />
+                        <span>🔍 Ouvrir</span> <ChevronRight className="w-3 h-3" />
                       </span>
                     </div>
                   </div>
@@ -562,7 +562,7 @@ export default function ProClientsPage() {
                   )}
 
                   <div className="flex items-center justify-between text-[10px] text-white/60 font-mono border-t border-white/10 pt-3">
-                    <span className="flex items-center gap-1"><span className="text-[#C8951E]">ðŸ—“ï¸</span> Inscrite le {format(new Date(client.createdAt), 'dd/MM/yyyy')}</span>
+                    <span className="flex items-center gap-1"><span className="text-[#C8951E]">🗓️ï¸</span> Inscrite le {format(new Date(client.createdAt), 'dd/MM/yyyy')}</span>
                     <a
                       href={`https://wa.me/${client.phone.replace(/[^0-9]/g, '')}`}
                       target="_blank"
@@ -720,7 +720,7 @@ export default function ProClientsPage() {
                               <span className="text-[10px] font-bold text-[#F3E5AB] uppercase tracking-wider block font-mono">
                                 🔬 Bilans Cutanés Archivés & Historique 3D ({archivedDiags.length}) :
                               </span>
-                              <span className="text-[9px] text-emerald-400 font-mono font-bold">ðŸ”’ Archive Sécurisée</span>
+                              <span className="text-[9px] text-emerald-400 font-mono font-bold">🔒 Archive Sécurisée</span>
                             </div>
 
                             {archivedDiags.map((diag: any, dIdx: number) => (
@@ -771,7 +771,7 @@ export default function ProClientsPage() {
                         <div className="pt-1 bg-white/5 p-2.5 rounded-xl border border-white/5 space-y-2">
                           <span className="text-[#C8951E] font-bold block">Prescription & Recommandations Praticienne :</span>
                           <p className="text-[11px] text-white/70 leading-relaxed font-sans">
-                            Phototype {client.fitzpatrickType} Â· Tendance hyperpigmentation (PIH). Appliquer 3 gouttes de sérum Niacinamide & Baobab le soir. Écran solaire minéral SPF 50 obligatoire.
+                            Phototype {client.fitzpatrickType} · Tendance hyperpigmentation (PIH). Appliquer 3 gouttes de sérum Niacinamide & Baobab le soir. Écran solaire minéral SPF 50 obligatoire.
                           </p>
                         </div>
 
@@ -782,7 +782,7 @@ export default function ProClientsPage() {
                               📸 Évolution du Teint & Traitement (Avant / Après)
                             </span>
                             <span className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
-                              Éclat +42% Â· Taches -65%
+                              Éclat +42% · Taches -65%
                             </span>
                           </div>
 
@@ -794,11 +794,11 @@ export default function ProClientsPage() {
                               </span>
                               <div className="w-full h-24 rounded-lg bg-gradient-to-br from-[#362A21] to-[#1A1410] flex items-center justify-center border border-white/5">
                                 <div className="text-center space-y-0.5">
-                                  <span className="text-xl">ðŸ”</span>
+                                  <span className="text-xl">🔍</span>
                                   <p className="text-[9px] text-white/50 font-sans">Taches PIH Marquées</p>
                                 </div>
                               </div>
-                              <p className="text-[9px] text-white/40 font-mono">15/06/2026 Â· Initial</p>
+                              <p className="text-[9px] text-white/40 font-mono">15/06/2026 · Initial</p>
                             </div>
 
                             {/* Photo J-30 (Après) */}
@@ -812,7 +812,7 @@ export default function ProClientsPage() {
                                   <p className="text-[9px] text-emerald-400 font-bold font-display">Teint Nourri & Unifié</p>
                                 </div>
                               </div>
-                              <p className="text-[9px] text-emerald-400/80 font-mono">15/07/2026 Â· Post-Soin</p>
+                              <p className="text-[9px] text-emerald-400/80 font-mono">15/07/2026 · Post-Soin</p>
                             </div>
                           </div>
                         </div>
@@ -826,7 +826,7 @@ export default function ProClientsPage() {
         )}
       </motion.div>
 
-      {/* â”€â”€ PLEIN ÉCRAN / DÉDIÉ DOSSIER CLIENT COMPLET â”€â”€ */}
+      {/* ── PLEIN ÉCRAN / DÉDIÉ DOSSIER CLIENT COMPLET ── */}
       <ClientFullDossierModal
         isOpen={Boolean(fullDossierClient)}
         onClose={() => setFullDossierClient(null)}

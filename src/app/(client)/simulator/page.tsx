@@ -16,7 +16,7 @@ export default function SalonSimulatorPage() {
 
   // Financial calculations
   const monthlyGrossRevenue = appointmentsPerDay * averageTicketPrice * workingDays;
-  const timeSavedHoursPerMonth = employeeCount * 12; // 12h économisées par employé / mois grâce à  l'agenda auto
+  const timeSavedHoursPerMonth = employeeCount * 12; // 12h économisées par employé / mois grâce à l'agenda auto
   const noShowReductionRevenueGain = Math.round(monthlyGrossRevenue * 0.15); // +15% de revenus récupérés via acomptes MoMo
   const projectedMonthlyProfitBoost = noShowReductionRevenueGain + (timeSavedHoursPerMonth * 2500);
   const annualTotalGain = projectedMonthlyProfitBoost * 12;

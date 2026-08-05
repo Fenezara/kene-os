@@ -185,7 +185,7 @@ function CustomizerContent() {
       }
     } catch (err: any) {
       toast({
-        title: "âŒ Échec de la transaction",
+        title: "❌ Échec de la transaction",
         description: err.message,
         variant: "destructive",
       })
@@ -471,7 +471,7 @@ function CustomizerContent() {
                     }}
                     className="w-full bg-gold-kene hover:bg-gold-kene/90 text-[#1A1410] text-xs font-semibold py-2 rounded-xl cursor-pointer"
                   >
-                    Retour à  l'Accueil
+                    Retour à l'Accueil
                   </Button>
                 </div>
               )}
@@ -518,7 +518,7 @@ function ARMirrorContent() {
         .catch(() => {
           toast({
             title: "📸 Erreur Caméra",
-            description: "Impossible d'accéder à  la caméra. Utilisation du modèle par défaut.",
+            description: "Impossible d'accéder à la caméra. Utilisation du modèle par défaut.",
             variant: "destructive"
           })
         })

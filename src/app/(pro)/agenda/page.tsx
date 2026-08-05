@@ -59,7 +59,7 @@ export default function ProAgendaPage() {
       });
       const data = await res.json();
       if (data.success) {
-        toast({ title: "✨… RDV confirmé", description: "Rendez-vous ajouté à  l'agenda." });
+        toast({ title: "✨… RDV confirmé", description: "Rendez-vous ajouté à l'agenda." });
         setIsDialogOpen(false);
         fetchData();
       } else throw new Error(data.error);
@@ -82,7 +82,7 @@ export default function ProAgendaPage() {
   return (
     <div className="space-y-6 text-white max-w-4xl mx-auto">
 
-      {/* â”€â”€ HEADER â”€â”€ */}
+      {/* ── HEADER ── */}
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -93,7 +93,7 @@ export default function ProAgendaPage() {
               Agenda & <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">Réservations</span>
             </h1>
           </div>
-          <p className="text-white/40 text-xs ml-10">{appointments.length} RDV total Â· {todayAppts.length} aujourd'hui Â· {pendingCount} en attente</p>
+          <p className="text-white/40 text-xs ml-10">{appointments.length} RDV total · {todayAppts.length} aujourd'hui · {pendingCount} en attente</p>
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -128,7 +128,7 @@ export default function ProAgendaPage() {
                 <Select value={formData.serviceId} onValueChange={(v) => setFormData({ ...formData, serviceId: v })} required>
                   <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-xl"><SelectValue placeholder="Choisir un service..." /></SelectTrigger>
                   <SelectContent className="bg-[#1A1410] border-[#362A21] text-white max-h-52">
-                    {metadata.services.map((s: any) => <SelectItem key={s.id} value={s.id}>{s.name} Â· {s.price?.toLocaleString()} FCFA</SelectItem>)}
+                    {metadata.services.map((s: any) => <SelectItem key={s.id} value={s.id}>{s.name} · {s.price?.toLocaleString()} FCFA</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -162,7 +162,7 @@ export default function ProAgendaPage() {
         </Dialog>
       </motion.div>
 
-      {/* â”€â”€ STATUS FILTER PILLS & TABS â”€â”€ */}
+      {/* ── STATUS FILTER PILLS & TABS ── */}
       <div className="space-y-4">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex gap-2 flex-wrap">
           {[
@@ -211,7 +211,7 @@ export default function ProAgendaPage() {
         </motion.div>
       </div>
 
-      {/* â”€â”€ APPOINTMENTS LIST â”€â”€ */}
+      {/* ── APPOINTMENTS LIST ── */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
         <div className="rounded-3xl border border-white/5 bg-[#1A1410] overflow-hidden">
           {loading ? (
@@ -264,7 +264,7 @@ export default function ProAgendaPage() {
                     <div className="flex-1 min-w-0 space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-xs font-bold text-white font-mono">
-                          {format(apptDate, 'HH:mm')} â€“ {appt.endAt ? format(new Date(appt.endAt), 'HH:mm') : 'â€”'}
+                          {format(apptDate, 'HH:mm')} – {appt.endAt ? format(new Date(appt.endAt), 'HH:mm') : '—'}
                         </span>
                         <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full ${s.bg} ${s.text}`}>
                           <span className={`w-1 h-1 rounded-full ${s.dot}`} />
@@ -291,10 +291,10 @@ export default function ProAgendaPage() {
                         <button
                           onClick={() => {
                             const clientPhone = (appt.client?.phone || '+22507000000').replace(/\D/g, '');
-                            const msg = encodeURIComponent(`Bonjour ${appt.client?.firstName || 'Chère Cliente'}, votre rendez-vous chez Institut Beauté Kènè pour "${appt.service?.name}" est prévu à  ${format(apptDate, 'HH:mm')}. Merci de répondre OUI pour me confirmer votre présence ! 🌿`);
+                            const msg = encodeURIComponent(`Bonjour ${appt.client?.firstName || 'Chère Cliente'}, votre rendez-vous chez Institut Beauté Kènè pour "${appt.service?.name}" est prévu à ${format(apptDate, 'HH:mm')}. Merci de répondre OUI pour me confirmer votre présence ! 🌿`);
                             if (typeof window !== 'undefined') {
                               window.open(`https://wa.me/${clientPhone}?text=${msg}`, '_blank');
-                              toast({ title: "📁² Rappel WhatsApp Envoyé !", description: `Message de confirmation 2h avant transmis à  ${appt.client?.firstName || 'la cliente'}.` });
+                              toast({ title: "📁² Rappel WhatsApp Envoyé !", description: `Message de confirmation 2h avant transmis à ${appt.client?.firstName || 'la cliente'}.` });
                             }
                           }}
                           className="flex items-center gap-1 text-[10px] font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2 py-1 rounded-xl hover:bg-emerald-500/30 transition cursor-pointer shadow-sm"

@@ -17,7 +17,7 @@ const TRANSFORMATIONS = [
     phototype: 'Phototype V (Afro-Subsaharien)',
     activeIngredients: ['Bissap AHA (Hibiscus)', 'Niacinamide 5%', 'Baume Karité Brut'],
     scoreGain: '+48% d\'Éclat Cutané',
-    beforeDesc: 'Hyperpigmentation marquée sur les joues suite à  des lésions d\'acné rétentionnelle.',
+    beforeDesc: 'Hyperpigmentation marquée sur les joues suite à des lésions d\'acné rétentionnelle.',
     afterDesc: 'Atténuation nette des macules pigmentaires et teint unifié sans hydroquinone.',
     certified: true,
     likes: 245,
@@ -33,7 +33,7 @@ const TRANSFORMATIONS = [
     phototype: 'Cheveux 4C Très Crépus',
     activeIngredients: ['Huile de Baobab Purifiée', 'Poudre de Chébé', 'Massage Stimulant Moringa'],
     scoreGain: '+62% de Densité Capillaire',
-    beforeDesc: 'Recul de la ligne frontale suite à  des tresses trop serrées répétées.',
+    beforeDesc: 'Recul de la ligne frontale suite à des tresses trop serrées répétées.',
     afterDesc: 'Repousse visible des follicules sur la zone temporale et cuir chevelu apaisé.',
     certified: true,
     likes: 312,
@@ -162,7 +162,7 @@ export default function PortfolioPage() {
                   {t.title}
                 </h3>
                 <p className="text-[11px] text-white/40 font-sans mt-0.5">
-                  Par <strong className="text-white/80">{t.practitioner}</strong> Â· {t.salon}
+                  Par <strong className="text-white/80">{t.practitioner}</strong> · {t.salon}
                 </p>
               </div>
 

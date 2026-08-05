@@ -66,7 +66,7 @@ export default function HairDiagnosticPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-center text-xs text-white/70 max-w-lg mx-auto pt-2">
                 <div className="p-3 bg-[#1A1410] border border-white/5 rounded-2xl">
-                  <span className="text-lg block mb-1">âž°</span>
+                  <span className="text-lg block mb-1">➰</span>
                   <strong>Type 4A</strong>
                   <p className="text-[10px] text-white/40 mt-0.5">Boucles resserrées en S</p>
                 </div>
@@ -112,7 +112,7 @@ export default function HairDiagnosticPage() {
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] font-bold text-[var(--gold-kene)] uppercase tracking-wider font-display">Votre Profil Capillaire</span>
-                <h2 className="text-2xl font-display font-bold text-white mt-1">Cheveux Type {hairType} Â· Porosité {porosity}</h2>
+                <h2 className="text-2xl font-display font-bold text-white mt-1">Cheveux Type {hairType} · Porosité {porosity}</h2>
               </div>
               <Badge className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-3 py-1 font-bold">
                 Cuir Chevelu Sain (89/100)
@@ -135,7 +135,7 @@ export default function HairDiagnosticPage() {
               <div className="bg-[#1A1410] border border-white/5 p-4 rounded-2xl space-y-1">
                 <span className="text-xs text-white/50">Niveau d'Élasticité</span>
                 <div className="text-lg font-bold text-amber-400 font-display">Optimal (84%)</div>
-                <p className="text-[10px] text-white/40">Excellente résistance à  la casse</p>
+                <p className="text-[10px] text-white/40">Excellente résistance à la casse</p>
               </div>
             </div>
 

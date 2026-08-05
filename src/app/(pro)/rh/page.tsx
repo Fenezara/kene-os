@@ -96,7 +96,7 @@ export default function RhPage() {
       }
     } catch (e: any) {
       toast({
-        title: "âŒ Erreur",
+        title: "❌ Erreur",
         description: e.message,
         variant: "destructive",
       })
@@ -221,7 +221,7 @@ export default function RhPage() {
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center text-xl">
-                      ðŸ‘©ðŸ½â€ðŸ’¼
+                      👩🏽‍💼
                     </div>
                     <div>
                       <h4 className="font-display font-bold text-base text-white">{pr.employee.firstName} {pr.employee.lastName}</h4>
@@ -241,7 +241,7 @@ export default function RhPage() {
                     <div className="font-mono text-sm text-white">{pr.grossSalary.toLocaleString()} F</div>
                   </div>
                   <div>
-                    <span className="text-[10px] text-white/40">Net à  payer</span>
+                    <span className="text-[10px] text-white/40">Net à payer</span>
                     <div className="font-mono text-lg font-bold text-emerald-400">{pr.netPay.toLocaleString()} F</div>
                   </div>
                 </div>
@@ -279,7 +279,7 @@ export default function RhPage() {
                   <div>
                     <h3 className="font-display font-black text-xl uppercase">KÈNÈ BEAUTÉ</h3>
                     <p className="text-xs text-gray-600">Abidjan, Cocody Mermoz</p>
-                    <p className="text-xs text-gray-600 font-mono">NÂ° Employeur: 458-92831</p>
+                    <p className="text-xs text-gray-600 font-mono">N° Employeur: 458-92831</p>
                   </div>
                   <div className="text-right">
                     <h2 className="font-bold text-lg">BULLETIN DE PAIE</h2>
@@ -334,7 +334,7 @@ export default function RhPage() {
 
                 <div className="flex justify-end mt-8">
                   <div className="border-2 border-black rounded-xl p-4 w-64">
-                    <p className="text-xs uppercase font-bold text-gray-500 mb-1">Net à  Payer</p>
+                    <p className="text-xs uppercase font-bold text-gray-500 mb-1">Net à Payer</p>
                     <p className="text-2xl font-mono font-black">{showSlipModal.netPay.toLocaleString()} <span className="text-sm">XOF</span></p>
                   </div>
                 </div>

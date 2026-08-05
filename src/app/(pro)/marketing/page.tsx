@@ -15,19 +15,19 @@ import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 
 const CHANNEL_META: Record<string, { color: string; bg: string; icon: string }> = {
-  WhatsApp: { color: '#25D366', bg: 'bg-emerald-500/10 text-emerald-400', icon: 'ðŸ’¬' },
+  WhatsApp: { color: '#25D366', bg: 'bg-emerald-500/10 text-emerald-400', icon: '💬' },
   SMS:      { color: '#4E9FD1', bg: 'bg-blue-500/10 text-blue-400',    icon: '📁±' },
 };
 const SEGMENT_META: Record<string, { label: string; color: string; emoji: string }> = {
-  inactifs: { label: 'Clients Inactifs +30j', color: 'text-orange-400', emoji: 'ðŸ˜´' },
+  inactifs: { label: 'Clients Inactifs +30j', color: 'text-orange-400', emoji: '😴' },
   vip:      { label: 'Clients VIP / Fidèles',  color: 'text-[#C8951E]',  emoji: '👑' },
-  tous:     { label: 'Toute la base',          color: 'text-white/70',   emoji: 'ðŸŒ' },
+  tous:     { label: 'Toute la base',          color: 'text-white/70',   emoji: '🌍' },
 };
 
 const WHATSAPP_TEMPLATES = [
   { id: 'relance', label: 'Relance RDV', msg: 'Bonjour {prenom} ! Ça fait un moment qu\'on ne vous a pas vue au salon Kènè. Prenez soin de vous et réservez votre prochain instant beauté : https://kene.app/rdv' },
   { id: 'karite', label: 'Promotion Soin Karité', msg: 'Bonjour {prenom} ! Votre peau mérite le meilleur 🌿. Profitez de -20% sur votre prochain Soin Karité ce jeudi au salon Kènè. Réservez ici : https://kene.app/rdv' },
-  { id: 'anniv', label: 'Anniversaire Cliente', msg: 'Joyeux anniversaire {prenom} ðŸŽ‚ ! Le salon Kènè vous offre un soin visage éclat pour célébrer cette journée spéciale. Venez en profiter ce mois-ci !' },
+  { id: 'anniv', label: 'Anniversaire Cliente', msg: 'Joyeux anniversaire {prenom} 🎂 ! Le salon Kènè vous offre un soin visage éclat pour célébrer cette journée spéciale. Venez en profiter ce mois-ci !' },
   { id: 'parrainage', label: 'Programme Parrainage', msg: 'Coucou {prenom} ✨ ! Parrainez une amie au salon Kènè et recevez chacune -15% sur votre prochaine prestation. Partagez votre code : {nom}15 !' }
 ];
 
@@ -39,7 +39,7 @@ function WaPreview({ message, channel }: { message: string; channel: string }) {
     <div className="bg-[#0F0A05] rounded-2xl p-4 border border-white/5">
       <div className="flex items-center gap-2 mb-3">
         <span className="text-sm">{channelMeta.icon}</span>
-        <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Aperçu Â· {channel}</span>
+        <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Aperçu · {channel}</span>
         <div className="ml-auto flex gap-0.5">
           {[1,2,3].map(i => <div key={i} className="w-1 h-1 rounded-full" style={{ background: channelMeta.color, opacity: 0.3 + i * 0.25 }} />)}
         </div>
@@ -104,7 +104,7 @@ export default function ProMarketingPage() {
       });
       const data = await res.json();
       if (data.success) {
-        toast({ title: "ðŸš€ Campagne envoyée !", description: `Messages transmis via ${formData.channel}.` });
+        toast({ title: "🚀 Campagne envoyée !", description: `Messages transmis via ${formData.channel}.` });
         setIsDialogOpen(false);
         fetchData();
       } else throw new Error(data.error);
@@ -123,7 +123,7 @@ export default function ProMarketingPage() {
   return (
     <div className="space-y-6 text-white max-w-5xl mx-auto">
 
-      {/* â”€â”€ HEADER â”€â”€ */}
+      {/* ── HEADER ── */}
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -134,7 +134,7 @@ export default function ProMarketingPage() {
               Marketing <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">WhatsApp & SMS</span>
             </h1>
           </div>
-          <p className="text-white/40 text-xs ml-10">Relancez vos clientes inactives Â· Comblez les créneaux vides automatiquement</p>
+          <p className="text-white/40 text-xs ml-10">Relancez vos clientes inactives · Comblez les créneaux vides automatiquement</p>
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -163,7 +163,7 @@ export default function ProMarketingPage() {
                   <Select value={formData.channel} onValueChange={(v) => setFormData({ ...formData, channel: v })}>
                     <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-xl"><SelectValue /></SelectTrigger>
                     <SelectContent className="bg-[#1A1410] border-[#362A21] text-white">
-                      <SelectItem value="WhatsApp">ðŸ’¬ WhatsApp Business</SelectItem>
+                      <SelectItem value="WhatsApp">💬 WhatsApp Business</SelectItem>
                       <SelectItem value="SMS">📁± SMS Direct</SelectItem>
                     </SelectContent>
                   </Select>
@@ -173,9 +173,9 @@ export default function ProMarketingPage() {
                   <Select value={formData.targetSegment} onValueChange={(v) => setFormData({ ...formData, targetSegment: v })}>
                     <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-xl"><SelectValue /></SelectTrigger>
                     <SelectContent className="bg-[#1A1410] border-[#362A21] text-white">
-                      <SelectItem value="inactifs">ðŸ˜´ Inactifs +30j</SelectItem>
+                      <SelectItem value="inactifs">😴 Inactifs +30j</SelectItem>
                       <SelectItem value="vip">👑 VIP / Fidèles</SelectItem>
-                      <SelectItem value="tous">ðŸŒ Toute la base</SelectItem>
+                      <SelectItem value="tous">🌍 Toute la base</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -196,7 +196,7 @@ export default function ProMarketingPage() {
               </div>
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Label className="text-white/50 text-xs">Message Â· Variables : {'{prenom}'} {'{nom}'}</Label>
+                  <Label className="text-white/50 text-xs">Message · Variables : {'{prenom}'} {'{nom}'}</Label>
                   <span className="text-[9px] font-mono text-white/20">{formData.message.length} car.</span>
                 </div>
                 <Textarea
@@ -236,7 +236,7 @@ export default function ProMarketingPage() {
         </Dialog>
       </motion.div>
 
-      {/* â”€â”€ KPI HERO BAND â”€â”€ */}
+      {/* ── KPI HERO BAND ── */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
         <div className="relative rounded-3xl overflow-hidden border border-[#25D366]/15 p-5" style={{ background: 'linear-gradient(135deg, #040D07 0%, #0A1F10 100%)' }}>
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#25D366] to-transparent" />
@@ -245,7 +245,7 @@ export default function ProMarketingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { label: 'Ouverture WhatsApp', value: stats?.averageOpenRate || '94.2%', icon: '📁¬', color: '#25D366' },
-              { label: 'Clients Inactifs',    value: `${stats?.inactiveClientsCount || 45}`, suffix: 'clients', icon: 'ðŸ˜´', color: '#F97316' },
+              { label: 'Clients Inactifs',    value: `${stats?.inactiveClientsCount || 45}`, suffix: 'clients', icon: '😴', color: '#F97316' },
               { label: 'Clientes VIP',        value: `${stats?.vipClientsCount || 28}`, suffix: 'VIP', icon: '👑', color: '#C8951E' },
               { label: 'Campagnes Envoyées',  value: campaigns.length, suffix: 'total', icon: '📁£', color: '#4E9FD1' },
             ].map((kpi, i) => (
@@ -259,7 +259,7 @@ export default function ProMarketingPage() {
         </div>
       </motion.div>
 
-      {/* â”€â”€ ðŸ¤– KÈNÈ AUTOPILOT ENGINE â”€â”€ */}
+      {/* ── 🤖 KÈNÈ AUTOPILOT ENGINE ── */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
         <div className="rounded-3xl border border-[#C8951E]/30 bg-gradient-to-br from-[#1A1410] via-[#241C16] to-[#0F0A05] p-5 shadow-2xl space-y-4 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-[#FFD700] via-[#C8951E] to-[#D4AF37]" />
@@ -270,7 +270,7 @@ export default function ProMarketingPage() {
                 <Zap className="w-5 h-5 text-[var(--gold-kene)] animate-pulse" />
                 <h3 className="font-display font-black text-lg text-white">Kènè Autopilot Engine 1.0</h3>
                 <span className="text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">
-                  â— Mode Autopilote Actif
+                  ● Mode Autopilote Actif
                 </span>
               </div>
               <p className="text-xs text-white/50">Automatisez la fidélisation, les rappels de RDV et la clôture comptable sans intervention humaine.</p>
@@ -284,7 +284,7 @@ export default function ProMarketingPage() {
                   const json = await res.json();
                   if (json.success) {
                     toast({
-                      title: "ðŸš€ Autopilote Exécuté avec Succès !",
+                      title: "🚀 Autopilote Exécuté avec Succès !",
                       description: `${json.summary.remindersSent} rappels WhatsApp envoyés, ${json.summary.marketingOffersSent} offres transmises, caisse clôturée (${json.summary.totalRevenueClosed}).`,
                     });
                   }
@@ -302,8 +302,8 @@ export default function ProMarketingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
             {[
               { title: '📁² Rappels RDV WhatsApp', desc: 'Rappels automatiques 24h & 2h avant le soin', status: 'Actif (24/7)', color: 'border-emerald-500/30 text-emerald-400' },
-              { title: 'ðŸŽ‚ Offres & Relances 45j', desc: 'Anniversaires & relance des clientes inactives', status: 'Actif (9h00)', color: 'border-amber-500/30 text-amber-400' },
-              { title: '📁‘ Clôture Caisse SYSCOHADA', desc: 'Rapport quotidien & écritures de caisse à  21h', status: 'Actif (21h00)', color: 'border-blue-500/30 text-blue-400' },
+              { title: '🎂 Offres & Relances 45j', desc: 'Anniversaires & relance des clientes inactives', status: 'Actif (9h00)', color: 'border-amber-500/30 text-amber-400' },
+              { title: '📁‘ Clôture Caisse SYSCOHADA', desc: 'Rapport quotidien & écritures de caisse à 21h', status: 'Actif (21h00)', color: 'border-blue-500/30 text-blue-400' },
             ].map((mod, idx) => (
               <div key={idx} className="bg-[#140E09] border border-white/10 rounded-2xl p-3 space-y-1 relative">
                 <div className="flex items-center justify-between">
