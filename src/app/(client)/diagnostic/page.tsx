@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { AnamnesisQuestionnaire, AnamnesisData } from '@/components/AnamnesisQuestionnaire';
+import { AfroFuturisticScanLoaderModal } from '@/components/AfroFuturisticScanLoaderModal';
 
 export default function DiagnosticPage() {
   const router = useRouter();
@@ -491,10 +492,17 @@ export default function DiagnosticPage() {
           setAnamnesisData(data);
           setIsQuestionnaireOpen(false);
           toast({
-            title: "✨… Anamnèse Enregistrée !",
+            title: "✨ Anamnèse Enregistrée !",
             description: "Passez maintenant à la capture des photos de peau.",
           });
         }}
+      />
+
+      {/* Afro-Futuristic 3D Scanning Loader Modal */}
+      <AfroFuturisticScanLoaderModal
+        isOpen={loading}
+        title="Analyse Cutanée Spectrale & VLM-IA"
+        subtitle="Extraction de la cartographie 3D, mesure TEWL et formulation sur-mesure..."
       />
     </div>
   );

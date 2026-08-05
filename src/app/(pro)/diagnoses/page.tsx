@@ -16,6 +16,7 @@ import { KeneLogo } from '@/components/ui/logo';
 import { BeforeAfterGalleryModal } from '@/components/BeforeAfterGalleryModal';
 import { SpectralScanOverlay } from '@/components/SpectralScanOverlay';
 import { PrintableAnamnesisSheet } from '@/components/PrintableAnamnesisSheet';
+import { AfroFuturisticScanLoaderModal } from '@/components/AfroFuturisticScanLoaderModal';
 
 // Score gauge component
 function ScoreGauge({ score, size = 120 }: { score: number; size?: number }) {
@@ -1189,6 +1190,13 @@ export default function ProDiagnosesPage() {
           <PrintableAnamnesisSheet onClose={() => setShowPrintableSheet(false)} />
         </DialogContent>
       </Dialog>
+
+      {/* Afro-Futuristic 3D Biometric Loader Modal */}
+      <AfroFuturisticScanLoaderModal
+        isOpen={isScanning}
+        title="Analyse Biométrique & Spectrale Pro"
+        subtitle="Extraction des sous-scores d'hydratation, TEWL et cartographie PIH..."
+      />
     </div>
   );
 }
