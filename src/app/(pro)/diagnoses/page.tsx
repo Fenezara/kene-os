@@ -619,20 +619,71 @@ export default function ProDiagnosesPage() {
                     <video ref={videoRef} playsInline autoPlay muted className="w-full h-full object-cover" />
                   ) : null}
 
-                  {/* Laser Beam Overlay during scanning */}
+                  {/* 3D Afro-Futuristic Holographic Particle Matrix Overlay during scanning */}
                   {isScanning && (
-                    <>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 bg-gradient-to-b from-[#0F0A05]/90 via-[#0F0A05]/95 to-[#0A0603]/98 z-30 flex flex-col items-center justify-between p-4 border-2 border-[#C8951E]/60 rounded-3xl overflow-hidden backdrop-blur-md select-none"
+                    >
+                      {/* Sweeping Laser Beam Line */}
                       <motion.div
-                        className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#4E9FD1] to-transparent z-20"
-                        style={{ boxShadow: '0 0 25px #4E9FD1, 0 0 50px #4E9FD1' }}
-                        animate={{ y: [-110, 110, -110] }}
-                        transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                        className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FFD700] via-[#00E5FF] to-transparent z-40"
+                        style={{ boxShadow: '0 0 30px #FFD700, 0 0 60px #00E5FF' }}
+                        animate={{ y: [0, 220, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                       />
-                      <div className="absolute inset-0 bg-black/40 z-10 flex flex-col items-center justify-center">
-                        <ScanFace className="w-16 h-16 text-[#4E9FD1] animate-pulse mb-2" />
-                        <p className="text-xs font-mono font-bold text-[#4E9FD1] text-center px-4">{SCAN_STEPS[Math.min(scanStep, SCAN_STEPS.length - 1)]}</p>
+
+                      {/* HUD Corner Anchors */}
+                      <div className="w-full flex justify-between items-center text-[9px] font-mono text-[#FFD700] font-bold z-40 border-b border-white/10 pb-1.5">
+                        <span className="flex items-center gap-1"><Cpu className="w-3 h-3 text-[#00E5FF] animate-spin" /> KÈNÈ 3D SPECTRAL ENGINE</span>
+                        <span className="text-[#00E5FF]">VLM-2026 • 60 FPS</span>
                       </div>
-                    </>
+
+                      {/* Center 3D Reticle & Dynamic Percentage Counter */}
+                      <div className="relative z-40 flex flex-col items-center my-auto">
+                        <div className="relative w-28 h-28 flex items-center justify-center">
+                          {/* Outer Rotating Ring */}
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+                            className="absolute inset-0 rounded-full border-2 border-dashed border-[#FFD700]/70 shadow-[0_0_20px_#FFD700]"
+                          />
+                          {/* Inner Counter-Rotating Ring */}
+                          <motion.div
+                            animate={{ rotate: -360 }}
+                            transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+                            className="absolute inset-2 rounded-full border border-dotted border-[#00E5FF]/80"
+                          />
+                          {/* Center Icon */}
+                          <ScanFace className="w-12 h-12 text-[#FFD700] animate-pulse" />
+                        </div>
+
+                        {/* Live Step Description */}
+                        <p className="mt-3 text-xs font-mono font-bold text-[#F3E5AB] text-center px-4 max-w-xs drop-shadow-md">
+                          {SCAN_STEPS[Math.min(scanStep, SCAN_STEPS.length - 1)]}
+                        </p>
+                      </div>
+
+                      {/* Audio-Visual Bio-Frequency Equalizer (432Hz) & Footnote */}
+                      <div className="w-full space-y-2 z-40 border-t border-white/10 pt-2">
+                        <div className="flex items-center justify-center gap-1.5">
+                          <span className="text-[8px] font-mono text-white/40 uppercase">Bio-Fréquence 432Hz :</span>
+                          {[40, 75, 55, 90, 65, 80, 45, 95, 60, 30].map((h, idx) => (
+                            <motion.div
+                              key={idx}
+                              animate={{ height: [4, h / 4, 4] }}
+                              transition={{ duration: 0.5 + idx * 0.08, repeat: Infinity, ease: 'easeInOut' }}
+                              className="w-1 rounded-full bg-gradient-to-t from-[#C8951E] to-[#00E5FF]"
+                            />
+                          ))}
+                        </div>
+                        <p className="text-[9px] font-mono text-emerald-400 text-center font-bold">
+                          ✨ Cartographie Biométrique PIH & TEWL en cours...
+                        </p>
+                      </div>
+                    </motion.div>
                   )}
 
                   {!isScanning && scanComplete && mockResult ? (
@@ -843,7 +894,17 @@ export default function ProDiagnosesPage() {
                       className="w-full h-11 rounded-xl font-bold text-sm text-[#0F0A05] flex items-center justify-center gap-2 disabled:opacity-40 cursor-pointer shadow-lg"
                       style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)' }}
                     >
-                      {isScanning ? <><div className="animate-spin w-4 h-4 border-2 border-[#0F0A05]/30 border-t-[#0F0A05] rounded-full" /> Analyse Biométrique en cours…</> : <><ScanFace className="w-4 h-4" /> Démarrer le Scan Biométrique</>}
+                      {isScanning ? (
+                        <span className="flex items-center justify-center gap-2 text-[#0F0A05]">
+                          <Cpu className="w-4 h-4 animate-spin text-[#0F0A05]" />
+                          <span>Analyse Biométrique IA en cours...</span>
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center gap-2">
+                          <ScanFace className="w-4 h-4" />
+                          <span>Démarrer le Scan Biométrique</span>
+                        </span>
+                      )}
                     </motion.button>
                   ) : (
                     <motion.button
