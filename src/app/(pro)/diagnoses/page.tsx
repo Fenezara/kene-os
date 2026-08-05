@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Search, Camera, CheckCircle2, AlertCircle, ScanFace, Sparkles, Printer, Palette, Leaf, ShieldAlert, FileText, Droplets, Sun, Sparkle, Stethoscope, ChevronRight, X, ClipboardList, HelpCircle, CheckSquare } from 'lucide-react';
+import { Activity, Search, Camera, CheckCircle2, AlertCircle, ScanFace, Sparkles, Printer, Palette, Leaf, ShieldAlert, FileText, Droplets, Sun, Sparkle, Stethoscope, ChevronRight, X, ClipboardList, HelpCircle, CheckSquare, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
