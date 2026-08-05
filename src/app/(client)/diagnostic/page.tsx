@@ -28,11 +28,11 @@ export default function DiagnosticPage() {
   const [brightness, setBrightness] = useState<number>(85);
   const [isTooDark, setIsTooDark] = useState<boolean>(false);
 
-  // 2-Step Sequential Workflow: Step 1 Questionnaire AnamnÃ¨se -> Step 2 Camera Scan
+  // 2-Step Sequential Workflow: Step 1 Questionnaire Anamnèse -> Step 2 Camera Scan
   const [isQuestionnaireOpen, setIsQuestionnaireOpen] = useState(true);
   const [anamnesisData, setAnamnesisData] = useState<AnamnesisData | null>(null);
 
-  // KÃ¨nÃ¨ Mirror Smart Features
+  // Kènè Mirror Smart Features
   const [alignmentScore, setAlignmentScore] = useState<number>(95);
   const [selectedZone, setSelectedZone] = useState<'visage' | 'profil_gauche' | 'profil_droit' | 'zone_t' | 'cuir_chevelu'>('visage');
 
@@ -65,7 +65,7 @@ export default function DiagnosticPage() {
       console.error('Camera access error:', err);
       setIsCameraActive(false);
       setCameraError(
-        "Impossible d'accÃ©der Ã  la camÃ©ra. Utilisez le bouton 'TÃ©lÃ©verser des Photos' ci-dessous pour choisir vos clichÃ©s depuis votre tÃ©lÃ©phone ou galerie."
+        "Impossible d'accéder à  la caméra. Utilisez le bouton 'Téléverser des Photos' ci-dessous pour choisir vos clichés depuis votre téléphone ou galerie."
       );
     }
   };
@@ -116,15 +116,15 @@ export default function DiagnosticPage() {
           ctx.fillRect(0, 0, size, size);
           ctx.fillStyle = '#C8951E';
           ctx.font = '24px sans-serif';
-          ctx.fillText(`KÃ¨nÃ¨ Scan Zone: ${selectedZone}`, 40, size / 2);
+          ctx.fillText(`Kènè Scan Zone: ${selectedZone}`, 40, size / 2);
         }
 
         const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
         setPhotos(prev => [...prev, dataUrl].slice(0, 5));
 
         toast({
-          title: "ðŸ“¸ Photo CapturÃ©e avec SuccÃ¨s !",
-          description: `Angle/Zone enregistrÃ© (${selectedZone}). ClichÃ© #${photos.length + 1}.`,
+          title: "📸 Photo Capturée avec Succès !",
+          description: `Angle/Zone enregistré (${selectedZone}). Cliché #${photos.length + 1}.`,
         });
       }
     }
@@ -141,8 +141,8 @@ export default function DiagnosticPage() {
         reader.readAsDataURL(file);
       });
       toast({
-        title: "ðŸ“ Photo TÃ©lÃ©versÃ©e !",
-        description: `${files.length} clichÃ©(s) ajoutÃ©(s) au bilan de peau.`,
+        title: "📁 Photo Téléversée !",
+        description: `${files.length} cliché(s) ajouté(s) au bilan de peau.`,
       });
     }
   };
@@ -159,8 +159,8 @@ export default function DiagnosticPage() {
   const submitDiagnosis = async () => {
     if (photos.length === 0) {
       toast({
-        title: "âš ï¸ Aucune photo enregistrÃ©e",
-        description: "Veuillez prendre ou tÃ©lÃ©verser au moins une photo pour lancer l'analyse IA.",
+        title: "⚠️ï¸ Aucune photo enregistrée",
+        description: "Veuillez prendre ou téléverser au moins une photo pour lancer l'analyse IA.",
         variant: "destructive",
       });
       return;
@@ -201,8 +201,8 @@ export default function DiagnosticPage() {
             title: `Bilan Diagnostic Scan (${selectedZone === 'visage' ? 'Visage' : selectedZone})`,
             phototype: 'Phototype V',
             hydration: '82%',
-            formula: 'SÃ©rum Baobab & Niacinamide Bio',
-            status: 'RÃ©sultat EnregistrÃ© âœ¨',
+            formula: 'Sérum Baobab & Niacinamide Bio',
+            status: 'Résultat Enregistré ✨',
             scoreGlobal: data.diagnosis?.scoreGlobal || 82,
             photos: photos && photos.length > 0 ? photos : ['/images/afro_skin_spectral_scanner.jpg']
           };
@@ -214,8 +214,8 @@ export default function DiagnosticPage() {
       }
 
       toast({
-        title: "âœ¨ Bilan Dermatologique ComplÃ©tÃ© !",
-        description: `L'analyse spectrale de vos ${photos.length} clichÃ©s a Ã©tÃ© effectuÃ©e.`,
+        title: "✨ Bilan Dermatologique Complété !",
+        description: `L'analyse spectrale de vos ${photos.length} clichés a été effectuée.`,
       });
 
       router.push(`/diagnostic/results/${targetId}`);
@@ -227,11 +227,11 @@ export default function DiagnosticPage() {
             id: fallbackId,
             createdAt: new Date().toISOString(),
             date: 'Aujourd\'hui',
-            title: 'Bilan Diagnostic Scan CutanÃ©',
+            title: 'Bilan Diagnostic Scan Cutané',
             phototype: 'Phototype V',
             hydration: '82%',
-            formula: 'SÃ©rum Baobab & Niacinamide Bio',
-            status: 'RÃ©sultat EnregistrÃ© âœ¨',
+            formula: 'Sérum Baobab & Niacinamide Bio',
+            status: 'Résultat Enregistré ✨',
             scoreGlobal: 82,
             photos: photos && photos.length > 0 ? photos : ['/images/afro_skin_spectral_scanner.jpg']
           };
@@ -241,8 +241,8 @@ export default function DiagnosticPage() {
         } catch (e) {}
       }
       toast({
-        title: "âœ¨ Bilan Dermatologique ComplÃ©tÃ© !",
-        description: "L'analyse spectrale cutanÃ©e a Ã©tÃ© finalisÃ©e avec succÃ¨s.",
+        title: "✨ Bilan Dermatologique Complété !",
+        description: "L'analyse spectrale cutanée a été finalisée avec succès.",
       });
       router.push(`/diagnostic/results/${fallbackId}`);
     } finally {
@@ -256,10 +256,10 @@ export default function DiagnosticPage() {
       <header className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border-b border-white/10 bg-[#1A1410] rounded-2xl mb-4 shadow-lg gap-2">
         <div className="min-w-0">
           <h1 className="font-display font-bold text-sm sm:text-lg text-[#C8951E] flex items-center gap-2">
-            <Scan className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" /> <span className="truncate">Miroir Intelligent & Scanner CutanÃ© KÃ¨nÃ¨</span>
+            <Scan className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" /> <span className="truncate">Miroir Intelligent & Scanner Cutané Kènè</span>
           </h1>
           <span className="text-[10px] sm:text-xs text-white/50 font-mono block">
-            {anamnesisData ? 'Ã‰tape 2/2 : Capture & Analyse IA' : 'Ã‰tape 1/2 : AnamnÃ¨se CutanÃ©e'}
+            {anamnesisData ? 'Étape 2/2 : Capture & Analyse IA' : 'Étape 1/2 : Anamnèse Cutanée'}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -269,7 +269,7 @@ export default function DiagnosticPage() {
             className="border-[#C8951E]/40 text-[#C8951E] hover:bg-[#C8951E]/10 text-[10px] sm:text-xs font-bold rounded-xl cursor-pointer"
           >
             <FileText className="w-3.5 h-3.5 mr-1" />
-            AnamnÃ¨se ({anamnesisData ? 'Remplie' : 'Ã€ complÃ©ter'})
+            Anamnèse ({anamnesisData ? 'Remplie' : 'À compléter'})
           </Button>
         </div>
       </header>
@@ -285,7 +285,7 @@ export default function DiagnosticPage() {
               { id: 'profil_gauche', label: 'Profil Gauche' },
               { id: 'profil_droit', label: 'Profil Droit' },
               { id: 'zone_t', label: 'Zone T (Hyperpigmentation)' },
-              { id: 'cuir_chevelu', label: 'Cuir Chevelu / AlopÃ©cie' },
+              { id: 'cuir_chevelu', label: 'Cuir Chevelu / Alopécie' },
             ].map((z) => (
               <button
                 key={z.id}
@@ -337,7 +337,7 @@ export default function DiagnosticPage() {
             <button
               onClick={toggleFacingMode}
               className="absolute top-4 right-4 p-2.5 rounded-xl bg-black/60 border border-white/10 text-white hover:text-[#C8951E] transition backdrop-blur-md cursor-pointer"
-              title="Basculer CamÃ©ra (Avant/ArriÃ¨re)"
+              title="Basculer Caméra (Avant/Arrière)"
             >
               <RefreshCw className="w-4 h-4" />
             </button>
@@ -351,7 +351,7 @@ export default function DiagnosticPage() {
               className="flex-1 bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#C8951E] text-[#0F0A05] font-black text-sm py-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-[#C8951E]/20 hover:brightness-110 cursor-pointer"
             >
               <Camera className="w-5 h-5" />
-              <span>ðŸ“¸ Prendre la Photo</span>
+              <span>📸 Prendre la Photo</span>
             </Button>
 
             <Button
@@ -361,7 +361,7 @@ export default function DiagnosticPage() {
               className="border-white/20 bg-white/5 hover:bg-white/10 text-white text-xs font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 cursor-pointer"
             >
               <Upload className="w-4 h-4 text-[#C8951E]" />
-              <span>ðŸ“ Galerie / Fichier</span>
+              <span>📁 Galerie / Fichier</span>
             </Button>
 
             <input
@@ -387,7 +387,7 @@ export default function DiagnosticPage() {
         <div className="lg:col-span-5 space-y-4 bg-[#1A1410] border border-white/10 p-5 rounded-3xl shadow-xl">
           <div className="flex justify-between items-center border-b border-white/10 pb-3">
             <h2 className="font-display font-bold text-sm text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#C8951E]" /> Galerie des ClichÃ©s ({photos.length}/5)
+              <Sparkles className="w-4 h-4 text-[#C8951E]" /> Galerie des Clichés ({photos.length}/5)
             </h2>
             {photos.length > 0 && (
               <button
@@ -403,7 +403,7 @@ export default function DiagnosticPage() {
             <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center space-y-2">
               <Camera className="w-8 h-8 text-white/30 mx-auto" />
               <p className="text-xs text-white/50 font-sans">
-                Prenez jusqu'Ã  5 photos sous diffÃ©rents angles (visage face, profils, taches).
+                Prenez jusqu'à  5 photos sous différents angles (visage face, profils, taches).
               </p>
             </div>
           ) : (
@@ -418,7 +418,7 @@ export default function DiagnosticPage() {
                     onClick={() => removePhoto(idx)}
                     className="absolute top-1.5 right-1.5 bg-red-500/80 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold opacity-0 group-hover:opacity-100 transition cursor-pointer"
                   >
-                    Ã—
+                    ×
                   </button>
                 </div>
               ))}
@@ -439,14 +439,14 @@ export default function DiagnosticPage() {
               </span>
             ) : (
               <>
-                <span>Lancer le Bilan CutanÃ© IA</span>
+                <span>Lancer le Bilan Cutané IA</span>
                 <CheckCircle2 className="w-5 h-5" />
               </>
             )}
           </Button>
 
           <p className="text-[10px] text-white/40 text-center font-sans">
-            Diagnostic certifiÃ© par le Dr. Dermatologue IA Diallo (RPPS UEMOA/OHADA).
+            Diagnostic certifié par le Dr. Dermatologue IA Diallo (RPPS UEMOA/OHADA).
           </p>
         </div>
       </div>
@@ -459,8 +459,8 @@ export default function DiagnosticPage() {
           setAnamnesisData(data);
           setIsQuestionnaireOpen(false);
           toast({
-            title: "âœ… AnamnÃ¨se EnregistrÃ©e !",
-            description: "Passez maintenant Ã  la capture des photos de peau.",
+            title: "✨… Anamnèse Enregistrée !",
+            description: "Passez maintenant à  la capture des photos de peau.",
           });
         }}
       />

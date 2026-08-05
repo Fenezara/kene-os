@@ -3,14 +3,14 @@ import { motion } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
 
 const MOCK_NOTIFICATIONS = [
-  { id: '1', type: 'appointment', title: 'Nouveau RDV confirmÃ©', desc: 'Aminata Diallo â€” Soin KaritÃ© Â· Demain 14h00', time: '5 min', read: false, icon: 'ðŸ“…' },
-  { id: '2', type: 'payment', title: 'Paiement Wave reÃ§u', desc: '25 000 FCFA Â· Facture FAC-2024-0047', time: '23 min', read: false, icon: 'ðŸ’°' },
-  { id: '3', type: 'stock', title: 'Alerte stock bas', desc: 'Beurre de KaritÃ© Pur â€” Plus que 3 unitÃ©s', time: '1h', read: false, icon: 'âš ï¸' },
-  { id: '4', type: 'review', title: 'Nouvel avis 5 Ã©toiles', desc: 'Fatou KonÃ© a laissÃ© un avis excellent', time: '2h', read: true, icon: 'â­' },
-  { id: '5', type: 'marketing', title: 'Campagne envoyÃ©e', desc: 'WhatsApp Â· 47 destinataires Â· Taux ouverture 94%', time: '3h', read: true, icon: 'ðŸ“£' },
-  { id: '6', type: 'appointment', title: 'RDV annulÃ©', desc: 'Mariam Coulibaly a annulÃ© son RDV 16h30', time: 'Hier', read: true, icon: 'âŒ' },
+  { id: '1', type: 'appointment', title: 'Nouveau RDV confirmé', desc: 'Aminata Diallo â€” Soin Karité Â· Demain 14h00', time: '5 min', read: false, icon: '📁…' },
+  { id: '2', type: 'payment', title: 'Paiement Wave reçu', desc: '25 000 FCFA Â· Facture FAC-2024-0047', time: '23 min', read: false, icon: 'ðŸ’°' },
+  { id: '3', type: 'stock', title: 'Alerte stock bas', desc: 'Beurre de Karité Pur â€” Plus que 3 unités', time: '1h', read: false, icon: '⚠️ï¸' },
+  { id: '4', type: 'review', title: 'Nouvel avis 5 étoiles', desc: 'Fatou Koné a laissé un avis excellent', time: '2h', read: true, icon: 'â­' },
+  { id: '5', type: 'marketing', title: 'Campagne envoyée', desc: 'WhatsApp Â· 47 destinataires Â· Taux ouverture 94%', time: '3h', read: true, icon: '📁£' },
+  { id: '6', type: 'appointment', title: 'RDV annulé', desc: 'Mariam Coulibaly a annulé son RDV 16h30', time: 'Hier', read: true, icon: 'âŒ' },
   { id: '7', type: 'payment', title: 'Paiement Orange Money', desc: '15 000 FCFA Â· Ndeye Sarr', time: 'Hier', read: true, icon: 'ðŸŸ ' },
-  { id: '8', type: 'system', title: 'Sauvegarde automatique', desc: 'DonnÃ©es synchronisÃ©es avec succÃ¨s', time: 'Hier', read: true, icon: 'âœ…' },
+  { id: '8', type: 'system', title: 'Sauvegarde automatique', desc: 'Données synchronisées avec succès', time: 'Hier', read: true, icon: '✨…' },
 ];
 
 export default function NotificationsPage() {
@@ -19,7 +19,7 @@ export default function NotificationsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-display font-black text-white">Notifications</h1>
-          <p className="text-sm text-white/50 mt-1">Vos alertes et mises Ã  jour rÃ©centes</p>
+          <p className="text-sm text-white/50 mt-1">Vos alertes et mises à  jour récentes</p>
         </div>
         
         <motion.button

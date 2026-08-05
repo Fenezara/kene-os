@@ -10,19 +10,19 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 
 const accountTypes = [
-  { key: 'client', label: 'Espace Cliente', icon: 'ðŸŒ¸', subtitle: 'Pour suivre mon bilan de peau, mes soins & RDV' },
-  { key: 'pro', label: 'Salon & Praticien', icon: 'âœ‚ï¸', subtitle: 'Pour gÃ©rer mon salon, ma caisse & mes clientes' },
+  { key: 'client', label: 'Espace Cliente', icon: '🌸', subtitle: 'Pour suivre mon bilan de peau, mes soins & RDV' },
+  { key: 'pro', label: 'Salon & Praticien', icon: '✨‚ï¸', subtitle: 'Pour gérer mon salon, ma caisse & mes clientes' },
 ];
 
 const uemoaCountries = [
-  { code: 'CI', name: "CÃ´te d'Ivoire ðŸ‡¨ðŸ‡®", dial: '+225' },
-  { code: 'SN', name: 'SÃ©nÃ©gal ðŸ‡¸ðŸ‡³', dial: '+221' },
-  { code: 'ML', name: 'Mali ðŸ‡²ðŸ‡±', dial: '+223' },
+  { code: 'CI', name: "Côte d'Ivoire 🇨🇮", dial: '+225' },
+  { code: 'SN', name: 'Sénégal 🇸🇳', dial: '+221' },
+  { code: 'ML', name: 'Mali 🇲🇱', dial: '+223' },
   { code: 'BF', name: 'Burkina Faso ðŸ‡§ðŸ‡«', dial: '+226' },
   { code: 'TG', name: 'Togo ðŸ‡¹ðŸ‡¬', dial: '+228' },
-  { code: 'BJ', name: 'BÃ©nin ðŸ‡§ðŸ‡¯', dial: '+229' },
+  { code: 'BJ', name: 'Bénin ðŸ‡§ðŸ‡¯', dial: '+229' },
   { code: 'NE', name: 'Niger ðŸ‡³ðŸ‡ª', dial: '+227' },
-  { code: 'GN', name: 'GuinÃ©e ðŸ‡¬ðŸ‡³', dial: '+224' },
+  { code: 'GN', name: 'Guinée ðŸ‡¬ðŸ‡³', dial: '+224' },
 ];
 
 export default function RegisterPage() {
@@ -88,7 +88,7 @@ export default function RegisterPage() {
       const user = {
         id: data.account?.id || `usr_${Date.now()}`,
         firstName: clientForm.firstName || 'Cliente',
-        lastName: clientForm.lastName || 'KÃ¨nÃ¨',
+        lastName: clientForm.lastName || 'Kènè',
         phone: clientForm.phone,
         email: clientForm.email,
         role: 'client',
@@ -97,13 +97,13 @@ export default function RegisterPage() {
       document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       setLoading(false);
       toast({
-        title: 'âœ¨ Compte Cliente CrÃ©Ã© avec SuccÃ¨s !',
-        description: `Bienvenue ${user.firstName} sur KÃ¨nÃ¨ OS. Votre compte est sÃ©curisÃ©.`,
+        title: '✨ Compte Cliente Créé avec Succès !',
+        description: `Bienvenue ${user.firstName} sur Kènè OS. Votre compte est sécurisé.`,
       });
       window.location.href = '/portal';
     } catch {
       setLoading(false);
-      toast({ title: 'Erreur', description: 'Ã‰chec de la crÃ©ation de compte.', variant: 'destructive' });
+      toast({ title: 'Erreur', description: 'Échec de la création de compte.', variant: 'destructive' });
     }
   };
 
@@ -111,7 +111,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const salonTitle = proForm.salonName || 'KÃ¨nÃ¨ Institut BeautÃ©';
+      const salonTitle = proForm.salonName || 'Kènè Institut Beauté';
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -133,7 +133,7 @@ export default function RegisterPage() {
       };
       localStorage.setItem('kene_tenant_settings', JSON.stringify(tenantSettings));
       localStorage.setItem('kene_user', JSON.stringify({
-        name: proForm.ownerName || 'GÃ©rant Salon',
+        name: proForm.ownerName || 'Gérant Salon',
         email: proForm.email,
         phone: proForm.phone,
         salonName: salonTitle,
@@ -142,13 +142,13 @@ export default function RegisterPage() {
       document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       setLoading(false);
       toast({
-        title: 'âœ‚ï¸ Espace Salon CrÃ©Ã© avec SuccÃ¨s !',
-        description: `Bienvenue sur KÃ¨nÃ¨ OS, ${proForm.salonName || 'votre salon'}. Votre compte entreprise est validÃ©.`,
+        title: '✨‚ï¸ Espace Salon Créé avec Succès !',
+        description: `Bienvenue sur Kènè OS, ${proForm.salonName || 'votre salon'}. Votre compte entreprise est validé.`,
       });
       window.location.href = data.targetPath || '/dashboard';
     } catch {
       setLoading(false);
-      toast({ title: 'Erreur', description: 'Ã‰chec de la crÃ©ation du compte salon.', variant: 'destructive' });
+      toast({ title: 'Erreur', description: 'Échec de la création du compte salon.', variant: 'destructive' });
     }
   };
 
@@ -189,10 +189,10 @@ export default function RegisterPage() {
             </div>
           </div>
           <h1 className="text-3xl font-display font-black text-white">
-            CrÃ©er mon Compte <span className="text-[#C8951E]">KÃ¨nÃ¨</span>
+            Créer mon Compte <span className="text-[#C8951E]">Kènè</span>
           </h1>
           <p className="text-white/40 text-xs font-sans mt-1">
-            Rejoignez la premiÃ¨re plateforme de beautÃ© & dermo-cosmÃ©tique afro-contemporaine
+            Rejoignez la première plateforme de beauté & dermo-cosmétique afro-contemporaine
           </p>
         </div>
 
@@ -230,7 +230,7 @@ export default function RegisterPage() {
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-xs text-white/70">PrÃ©nom</Label>
+                    <Label className="text-xs text-white/70">Prénom</Label>
                     <Input
                       required
                       placeholder="Aminata"
@@ -252,7 +252,7 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-white/70">NumÃ©ro TÃ©lÃ©phone / WhatsApp</Label>
+                  <Label className="text-xs text-white/70">Numéro Téléphone / WhatsApp</Label>
                   <div className="flex gap-2">
                     <select
                       value={clientForm.country}
@@ -308,7 +308,7 @@ export default function RegisterPage() {
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <>
-                      <span>CrÃ©er mon Compte Cliente</span>
+                      <span>Créer mon Compte Cliente</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -325,10 +325,10 @@ export default function RegisterPage() {
                 className="space-y-4"
               >
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-white/70">Nom du Salon / Ã‰tablissement</Label>
+                  <Label className="text-xs text-white/70">Nom du Salon / Établissement</Label>
                   <Input
                     required
-                    placeholder="KÃ¨nÃ¨ Dermo-Spa & Beauty Institut"
+                    placeholder="Kènè Dermo-Spa & Beauty Institut"
                     value={proForm.salonName}
                     onChange={(e) => setProForm({ ...proForm, salonName: e.target.value })}
                     className="bg-[#0A0603] border-white/10 text-white rounded-xl text-xs h-11"
@@ -340,29 +340,29 @@ export default function RegisterPage() {
                     <Label className="text-xs text-white/70">Nom du Responsable</Label>
                     <Input
                       required
-                      placeholder="Fatou KonÃ©"
+                      placeholder="Fatou Koné"
                       value={proForm.ownerName}
                       onChange={(e) => setProForm({ ...proForm, ownerName: e.target.value })}
                       className="bg-[#0A0603] border-white/10 text-white rounded-xl text-xs h-11"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-xs text-white/70">Type d'Ã‰tablissement</Label>
+                    <Label className="text-xs text-white/70">Type d'Établissement</Label>
                     <select
                       value={proForm.salonType}
                       onChange={(e) => setProForm({ ...proForm, salonType: e.target.value })}
                       className="w-full bg-[#0A0603] border border-white/10 text-white text-xs rounded-xl px-3 h-11 outline-none font-sans"
                     >
-                      <option value="institut" className="bg-[#1A1410]">Institut de BeautÃ©</option>
+                      <option value="institut" className="bg-[#1A1410]">Institut de Beauté</option>
                       <option value="spa" className="bg-[#1A1410]">Dermo-Spa & Massage</option>
                       <option value="coiffure" className="bg-[#1A1410]">Salon de Coiffure Afro</option>
-                      <option value="independent" className="bg-[#1A1410]">Praticienne IndÃ©pendante</option>
+                      <option value="independent" className="bg-[#1A1410]">Praticienne Indépendante</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-white/70">TÃ©lÃ©phone Professionnel (WhatsApp)</Label>
+                  <Label className="text-xs text-white/70">Téléphone Professionnel (WhatsApp)</Label>
                   <div className="flex gap-2">
                     <select
                       value={proForm.country}
@@ -418,7 +418,7 @@ export default function RegisterPage() {
 
           <div className="border-t border-white/10 pt-4 text-center">
             <p className="text-xs text-white/40">
-              DÃ©jÃ  inscrit ?{' '}
+              Déjà  inscrit ?{' '}
               <Link href="/login" className="text-[#C8951E] font-bold hover:underline">
                 Se connecter
               </Link>

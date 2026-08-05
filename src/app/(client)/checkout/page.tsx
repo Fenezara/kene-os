@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 
 const PROVIDERS = {
-  wallet: { label: 'KÃ¨nÃ¨ Pay (Solde)', color: '#C8951E', icon: WalletIcon },
+  wallet: { label: 'Kènè Pay (Solde)', color: '#C8951E', icon: WalletIcon },
   wave: { label: 'Wave', color: '#1BA4FB', icon: Smartphone },
   orange: { label: 'Orange Money', color: '#FF7900', icon: Smartphone },
   mtn: { label: 'MTN Mobile Money', color: '#FFCC00', icon: Smartphone }
@@ -77,11 +77,11 @@ export default function CheckoutPage() {
       const checkoutJson = await checkoutRes.json()
 
       if (!checkoutJson.success) {
-        throw new Error(checkoutJson.error?.message || "Erreur de crÃ©ation de commande.")
+        throw new Error(checkoutJson.error?.message || "Erreur de création de commande.")
       }
 
       if (checkoutJson.status === 'paid') {
-        // Paiement par Wallet rÃ©ussi immÃ©diatement
+        // Paiement par Wallet réussi immédiatement
         setPaymentSuccess(true)
         localStorage.removeItem('kene_cart')
         setCartItems([])
@@ -90,7 +90,7 @@ export default function CheckoutPage() {
            router.push('/wallet') // Redirect back to wallet to see the debit
         }, 2500)
       } else if (checkoutJson.status === 'pending') {
-        // 2. Paiement par Mobile Money : dÃ©clencher la simulation USSD
+        // 2. Paiement par Mobile Money : déclencher la simulation USSD
         const momoRes = await fetch('/api/payments/momo', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -119,7 +119,7 @@ export default function CheckoutPage() {
     } catch (e: any) {
       setProcessing(false)
       toast({
-        title: "âŒ Ã‰chec du paiement",
+        title: "âŒ Échec du paiement",
         description: e.message,
         variant: "destructive"
       })
@@ -146,7 +146,7 @@ export default function CheckoutPage() {
           <ShoppingBag className="w-16 h-16 opacity-20 mb-2" />
           <p>Votre panier est vide.</p>
           <Button onClick={() => router.push('/boutique')} variant="secondary" className="bg-[#C8951E]/10 text-[#C8951E] hover:bg-[#C8951E]/20 mt-4 h-10 rounded-xl">
-            Aller Ã  la boutique
+            Aller à  la boutique
           </Button>
         </div>
       ) : (
@@ -162,7 +162,7 @@ export default function CheckoutPage() {
               <div key={item.id} className="bg-[#1A1410] border border-white/5 p-4 rounded-2xl flex justify-between items-center">
                 <div className="flex flex-col">
                   <span className="font-semibold text-xs text-white block">{item.name}</span>
-                  <span className="text-[10px] text-karite/50 font-sans block">QtÃ©: {item.quantity} â€¢ {item.type === 'service' ? 'Soin' : 'Produit'}</span>
+                  <span className="text-[10px] text-karite/50 font-sans block">Qté: {item.quantity} â€¢ {item.type === 'service' ? 'Soin' : 'Produit'}</span>
                 </div>
                 <span className="font-mono text-sm font-bold text-gold-kene">
                   {(item.price * item.quantity).toLocaleString()} F
@@ -171,7 +171,7 @@ export default function CheckoutPage() {
             ))}
 
             <div className="bg-[#241C16]/50 border border-gold-kene/20 p-4 rounded-2xl flex justify-between items-center mt-4">
-              <span className="font-display font-bold text-xs uppercase tracking-wider text-white">Total Ã  payer</span>
+              <span className="font-display font-bold text-xs uppercase tracking-wider text-white">Total à  payer</span>
               <span className="font-display text-xl font-bold text-white tracking-wide">
                 {totalAmount.toLocaleString()} F
               </span>
@@ -180,7 +180,7 @@ export default function CheckoutPage() {
 
           {/* Payment Selection */}
           <div className="space-y-4 pt-4">
-            <h2 className="font-display font-bold text-sm uppercase tracking-wider text-white mb-2">MÃ©thode de Paiement</h2>
+            <h2 className="font-display font-bold text-sm uppercase tracking-wider text-white mb-2">Méthode de Paiement</h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {(Object.keys(PROVIDERS) as Array<keyof typeof PROVIDERS>).map((pid) => {
@@ -283,21 +283,21 @@ export default function CheckoutPage() {
 
                   <div className="space-y-1">
                     <h3 className="font-display font-bold text-white text-base">
-                      {paymentSuccess ? 'Paiement ConfirmÃ© !' : 
-                        (selectedPayment === 'wallet' ? 'DÃ©bit de votre solde en cours...' : 'En attente de validation USSD')
+                      {paymentSuccess ? 'Paiement Confirmé !' : 
+                        (selectedPayment === 'wallet' ? 'Débit de votre solde en cours...' : 'En attente de validation USSD')
                       }
                     </h3>
                     <p className="text-xs text-karite/60">
                       {paymentSuccess 
                         ? 'Redirection vers votre portefeuille...' 
-                        : (selectedPayment === 'wallet' ? 'Veuillez patienter.' : 'Veuillez confirmer la transaction sur votre tÃ©lÃ©phone.')}
+                        : (selectedPayment === 'wallet' ? 'Veuillez patienter.' : 'Veuillez confirmer la transaction sur votre téléphone.')}
                     </p>
                   </div>
                   
                   {!paymentSuccess && selectedPayment !== 'wallet' && (
                     <div className="flex items-center gap-2 text-[10px] text-karite/40 bg-white/5 px-3 py-1.5 rounded-full mt-4">
                       <Loader2 className="w-3 h-3 animate-spin" />
-                      <span>Ne fermez pas cette fenÃªtre...</span>
+                      <span>Ne fermez pas cette fenêtre...</span>
                     </div>
                   )}
                 </div>

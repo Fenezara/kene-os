@@ -1,6 +1,6 @@
 ﻿'use client';
 
-// KÃ¨nÃ¨ OS â€” Client Portal Main Dashboard v2.4 (Fresh Cache Release)
+// Kènè OS â€” Client Portal Main Dashboard v2.4 (Fresh Cache Release)
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, ScanFace, ChevronRight, Wallet, Activity, ArrowRight, Camera, User, Check, Sparkles, Sprout, Clock, Store, MapPin, Phone, Mail, Send, MessageSquare, Building2, Loader2, FileText } from 'lucide-react';
@@ -43,7 +43,7 @@ export default function ClientPortalPage() {
     lastName: '',
     phone: '',
     email: '',
-    skinType: 'Non spÃ©cifiÃ©',
+    skinType: 'Non spécifié',
     fitzpatrickType: 'Phototype IV - VI'
   });
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -59,8 +59,8 @@ export default function ClientPortalPage() {
     setDailySteps(prev => {
       const next = { ...prev, [id]: !prev[id] };
       toast({
-        title: next[id] ? "âœ¨ Ã‰tape du Rituel ValidÃ©e !" : "Rituel mis Ã  jour",
-        description: next[id] ? "Bravo pour la rÃ©gularitÃ© de votre soin botanique." : "Ã‰tape dÃ©cochÃ©e.",
+        title: next[id] ? "✨ Étape du Rituel Validée !" : "Rituel mis à  jour",
+        description: next[id] ? "Bravo pour la régularité de votre soin botanique." : "Étape décochée.",
       });
       return next;
     });
@@ -100,8 +100,8 @@ export default function ClientPortalPage() {
           lastName: lname,
           phone: parsed.phone || '',
           email: parsed.email || '',
-          skinType: parsed.skinType || 'Peau mÃ©lanoderme',
-          fitzpatrickType: parsed.fitzpatrickType || 'Phototype IV Ã  VI'
+          skinType: parsed.skinType || 'Peau mélanoderme',
+          fitzpatrickType: parsed.fitzpatrickType || 'Phototype IV à  VI'
         });
         setClientContactName(fname || fullName || 'Cliente');
         setClientContactPhone(parsed.phone || '');
@@ -138,11 +138,11 @@ export default function ClientPortalPage() {
                 id: 'local-registered-tenant',
                 name,
                 legalName: tenantObj.identity?.legalName || name,
-                type: tenantObj.identity?.type || 'Institut Dermo-CosmÃ©tique',
-                address: tenantObj.address?.street ? `${tenantObj.address.street}` : 'Abidjan, CÃ´te d\'Ivoire',
+                type: tenantObj.identity?.type || 'Institut Dermo-Cosmétique',
+                address: tenantObj.address?.street ? `${tenantObj.address.street}` : 'Abidjan, Côte d\'Ivoire',
                 phone: tenantObj.address?.phone || '+225 07 00 00 00',
                 rating: '5.0 â­ (Entreprise Inscrite)',
-                services: ['Soin KaritÃ©', 'Diagnostic IA', 'Suivi Dermatologique'],
+                services: ['Soin Karité', 'Diagnostic IA', 'Suivi Dermatologique'],
               });
             }
           } catch (e) {}
@@ -159,7 +159,7 @@ export default function ClientPortalPage() {
                 name: sName,
                 legalName: sName,
                 type: 'Cabinet & Institut Dermo',
-                address: 'Abidjan, CÃ´te d\'Ivoire',
+                address: 'Abidjan, Côte d\'Ivoire',
                 phone: u.phone || '+225 07 00 00 00',
                 rating: '5.0 â­ (Entreprise Inscrite)',
                 services: ['Consultation Dermo', 'Soin Visage', 'Diagnostic IA'],
@@ -191,14 +191,14 @@ export default function ClientPortalPage() {
     setUserProfile(updated);
     setIsProfileModalOpen(false);
     toast({
-      title: "ðŸ‘¤ Profil Mis Ã  Jour !",
-      description: "Vos informations personnelles ont Ã©tÃ© enregistrÃ©es avec succÃ¨s.",
+      title: "👤 Profil Mis à  Jour !",
+      description: "Vos informations personnelles ont été enregistrées avec succès.",
     });
   };
 
   const handleSubmitContactRequest = async () => {
     if (!clientContactName || !clientContactPhone) {
-      toast({ title: "Champ obligatoire", description: "Veuillez saisir votre nom et tÃ©lÃ©phone.", variant: "destructive" });
+      toast({ title: "Champ obligatoire", description: "Veuillez saisir votre nom et téléphone.", variant: "destructive" });
       return;
     }
     setIsSubmittingContact(true);
@@ -216,16 +216,16 @@ export default function ClientPortalPage() {
       const json = await res.json();
       if (json.success) {
         toast({
-          title: "ðŸŽ‰ Demande transmise avec succÃ¨s !",
-          description: `L'entreprise "${selectedSalon?.name}" a bien reÃ§u vos coordonnÃ©es et prendra contact avec vous sous peu !`,
+          title: "🎉 Demande transmise avec succès !",
+          description: `L'entreprise "${selectedSalon?.name}" a bien reçu vos coordonnées et prendra contact avec vous sous peu !`,
         });
         setIsContactModalOpen(false);
         setClientContactMessage('');
       } else throw new Error(json.error);
     } catch {
       toast({
-        title: "ðŸŽ‰ Demande transmise !",
-        description: `Votre message a Ã©tÃ© envoyÃ© directement Ã  "${selectedSalon?.name}".`,
+        title: "🎉 Demande transmise !",
+        description: `Votre message a été envoyé directement à  "${selectedSalon?.name}".`,
       });
       setIsContactModalOpen(false);
     } finally {
@@ -239,7 +239,7 @@ export default function ClientPortalPage() {
 
     if (file.size > 5 * 1024 * 1024) {
       toast({
-        title: "âš ï¸ Fichier trop volumineux",
+        title: "⚠️ï¸ Fichier trop volumineux",
         description: "La taille maximale de la photo est de 5 Mo.",
         variant: "destructive"
       });
@@ -252,8 +252,8 @@ export default function ClientPortalPage() {
       setAvatarUrl(base64Data);
       localStorage.setItem('kene_user_avatar', base64Data);
       toast({
-        title: "ðŸ“¸ Photo mise Ã  jour !",
-        description: "Votre photo de profil KÃ¨nÃ¨ a Ã©tÃ© enregistrÃ©e avec succÃ¨s.",
+        title: "📸 Photo mise à  jour !",
+        description: "Votre photo de profil Kènè a été enregistrée avec succès.",
       });
     };
     reader.readAsDataURL(file);
@@ -292,21 +292,21 @@ export default function ClientPortalPage() {
   
   // Fake last appointment for the Rebook Express feature
   const lastAppt = {
-    serviceName: 'Soin Hydratation KaritÃ©',
+    serviceName: 'Soin Hydratation Karité',
     practitionerName: 'Aissata',
     date: '2026-07-30',
     price: 15000
   };
 
-  const clientName = userProfile?.firstName || 'ChÃ¨re Cliente';
+  const clientName = userProfile?.firstName || 'Chère Cliente';
 
   const handleRebook = () => {
     toast({
-      title: "âœ… Rebook Express",
-      description: "Votre RDV a Ã©tÃ© ajoutÃ© au panier avec succÃ¨s.",
+      title: "✨… Rebook Express",
+      description: "Votre RDV a été ajouté au panier avec succès.",
     });
     setTimeout(() => {
-      window.location.href = '/checkout?service=Soin%20Hydratation%20KaritÃ©';
+      window.location.href = '/checkout?service=Soin%20Hydratation%20Karité';
     }, 1000);
   };
 
@@ -357,7 +357,7 @@ export default function ClientPortalPage() {
                 <div className="space-y-3 my-2 text-xs">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div className="space-y-1">
-                      <Label className="text-white/60 text-[10px]">PrÃ©nom</Label>
+                      <Label className="text-white/60 text-[10px]">Prénom</Label>
                       <Input
                         value={userProfile.firstName}
                         onChange={(e) => setUserProfile({ ...userProfile, firstName: e.target.value })}
@@ -377,7 +377,7 @@ export default function ClientPortalPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-white/60 text-[10px]">TÃ©lÃ©phone (WhatsApp)</Label>
+                    <Label className="text-white/60 text-[10px]">Téléphone (WhatsApp)</Label>
                     <Input
                       value={userProfile.phone}
                       onChange={(e) => setUserProfile({ ...userProfile, phone: e.target.value })}
@@ -432,7 +432,7 @@ export default function ClientPortalPage() {
               className="px-2.5 py-1 rounded-xl bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#C8951E] text-black font-black text-[10px] flex items-center gap-1 shadow-md hover:scale-105 transition cursor-pointer"
             >
               <FileText className="w-3 h-3" />
-              <span>Passeport BeautÃ© PDF</span>
+              <span>Passeport Beauté PDF</span>
             </button>
           </div>
         </div>
@@ -466,7 +466,7 @@ export default function ClientPortalPage() {
           <div className="relative h-44 sm:h-52 w-full overflow-hidden">
             <img 
               src="/images/african_spa_ritual_hero.jpg" 
-              alt="Rituel Botanique KÃ¨nÃ¨" 
+              alt="Rituel Botanique Kènè" 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0F0A05] via-[#0F0A05]/60 to-transparent" />
@@ -475,18 +475,18 @@ export default function ClientPortalPage() {
             <div className="absolute bottom-4 left-5 right-5 flex items-end justify-between">
               <div>
                 <Badge className="bg-[var(--gold-kene)] text-black font-bold text-[10px] uppercase tracking-widest mb-1.5 shadow-md">
-                  ðŸŒ¿ ExpÃ©rience Holistique UEMOA
+                  🌿 Expérience Holistique UEMOA
                 </Badge>
                 <h2 className="font-display font-black text-xl sm:text-2xl text-white drop-shadow-md">
                   L'Alliance de la Botanique Africaine & de la Dermatologie
                 </h2>
                 <p className="text-xs text-white/80 max-w-lg hidden sm:block mt-1">
-                  Des rituels de soin dermatologiques personnalisÃ©s conÃ§us pour sublimer la mÃ©lanine et prÃ©server l'Ã©quilibre cutanÃ©.
+                  Des rituels de soin dermatologiques personnalisés conçus pour sublimer la mélanine et préserver l'équilibre cutané.
                 </p>
               </div>
               <a href="/boutique" className="shrink-0">
                 <Button className="bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-xl hover:scale-105 transition">
-                  ðŸŒ± Explorer la Gamme
+                  🌱 Explorer la Gamme
                 </Button>
               </a>
             </div>
@@ -494,7 +494,7 @@ export default function ClientPortalPage() {
         </Card>
       </motion.div>
 
-      {/* â”€â”€ GALERIE INGRÃ‰DIENTS BOTANIQUES SUR-MESURE â”€â”€ */}
+      {/* â”€â”€ GALERIE INGRÉDIENTS BOTANIQUES SUR-MESURE â”€â”€ */}
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
         <Card className="bg-[#241C16] border border-white/10 rounded-3xl overflow-hidden shadow-xl">
           <CardContent className="p-5 space-y-4">
@@ -502,12 +502,12 @@ export default function ClientPortalPage() {
               <div>
                 <h3 className="font-display font-bold text-base text-white flex items-center gap-2">
                   <Sprout className="w-5 h-5 text-emerald-400" />
-                  MatiÃ¨res PremiÃ¨res Botaniques d'Afrique de l'Ouest
+                  Matières Premières Botaniques d'Afrique de l'Ouest
                 </h3>
-                <p className="text-xs text-white/50">Extraits purs certifiÃ©s bio de Korhogo, Tambacounda & Sikasso</p>
+                <p className="text-xs text-white/50">Extraits purs certifiés bio de Korhogo, Tambacounda & Sikasso</p>
               </div>
               <a href="/traceability" className="text-xs text-[var(--gold-kene)] font-bold hover:underline">
-                TraÃ§abilitÃ© 100%
+                Traçabilité 100%
               </a>
             </div>
 
@@ -515,24 +515,24 @@ export default function ClientPortalPage() {
               <div className="md:col-span-1 rounded-2xl overflow-hidden border border-white/10 h-36 relative group">
                 <img 
                   src="/images/botanical_ingredients_flatlay.jpg" 
-                  alt="IngrÃ©dients Botaniques" 
+                  alt="Ingrédients Botaniques" 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
                   <span className="text-[10px] font-bold text-[var(--gold-kene)] font-mono">
-                    ðŸŒ¿ Formulations 100% Naturelles
+                    🌿 Formulations 100% Naturelles
                   </span>
                 </div>
               </div>
 
               <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {[
-                  { name: 'Beurre de KaritÃ© Brut', region: 'Korhogo ðŸ‡¨ðŸ‡®', icon: 'ðŸ¥œ', desc: 'Hydratation profonde & barriÃ¨re lipidique' },
-                  { name: 'Huile Pure de Baobab', region: 'Tambacounda ðŸ‡¸ðŸ‡³', icon: 'ðŸŒ³', desc: 'RÃ©gÃ©nÃ©ration Ã©pidermique & Ã©lasticitÃ©' },
-                  { name: 'Fleurs d\'Hibiscus (Bissap)', region: 'Sikasso ðŸ‡²ðŸ‡±', icon: 'ðŸŒº', desc: 'AHA naturels & Ã©clat du teint' },
-                  { name: 'Poudre de ChÃ©bÃ©', region: 'Sahel ðŸ‡¹ðŸ‡©', icon: 'ðŸŒ¾', desc: 'Scellage fortifiant cuir chevelu' },
-                  { name: 'Gel d\'Aloe Vera Bio', region: 'Dakar ðŸ‡¸ðŸ‡³', icon: 'ðŸŒ±', desc: 'Apaisement PIH & anti-inflammation' },
-                  { name: 'Extrait de Neem & Moringa', region: 'FerkessÃ©dougou ðŸ‡¨ðŸ‡®', icon: 'ðŸŒ¿', desc: 'Purification sÃ©borrhique & pores' },
+                  { name: 'Beurre de Karité Brut', region: 'Korhogo 🇨🇮', icon: '🥜', desc: 'Hydratation profonde & barrière lipidique' },
+                  { name: 'Huile Pure de Baobab', region: 'Tambacounda 🇸🇳', icon: '🌳', desc: 'Régénération épidermique & élasticité' },
+                  { name: 'Fleurs d\'Hibiscus (Bissap)', region: 'Sikasso 🇲🇱', icon: '🌺', desc: 'AHA naturels & éclat du teint' },
+                  { name: 'Poudre de Chébé', region: 'Sahel 🇹🇩', icon: '🌾', desc: 'Scellage fortifiant cuir chevelu' },
+                  { name: 'Gel d\'Aloe Vera Bio', region: 'Dakar 🇸🇳', icon: '🌱', desc: 'Apaisement PIH & anti-inflammation' },
+                  { name: 'Extrait de Neem & Moringa', region: 'Ferkessédougou 🇨🇮', icon: '🌿', desc: 'Purification séborrhique & pores' },
                 ].map((ing, i) => (
                   <div key={i} className="bg-[#1A1410] border border-white/10 rounded-2xl p-2.5 space-y-1 hover:border-[var(--gold-kene)]/40 transition-colors">
                     <div className="flex items-center justify-between">
@@ -561,19 +561,19 @@ export default function ClientPortalPage() {
                   â˜€ï¸ Mon Rituel Botanique du Jour
                 </Badge>
                 <h3 className="font-display font-bold text-base text-white flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[var(--gold-kene)]" /> Checklist Quotidienne Peau Ã‰clatante
+                  <Sparkles className="w-4 h-4 text-[var(--gold-kene)]" /> Checklist Quotidienne Peau Éclatante
                 </h3>
               </div>
               <span className="text-xs font-mono font-bold text-[var(--gold-kene)] bg-[var(--gold-kene)]/10 px-3 py-1 rounded-full border border-[var(--gold-kene)]/20">
-                85% HumiditÃ© Â· Abidjan ðŸ‡¨ðŸ‡®
+                85% Humidité Â· Abidjan 🇨🇮
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
               {[
-                { id: 'morning_cleanser', title: '1. Nettoyage Doux', desc: 'Gel Moringa & Neem (Matin)', icon: 'ðŸŒ¿' },
-                { id: 'hydration_serum', title: '2. SÃ©rum Hydratant', desc: 'SÃ©rum Baobab 10% Niacinamide', icon: 'ðŸ§ª' },
-                { id: 'lipids_seal', title: '3. Scellage Lipidique', desc: 'Beurre de KaritÃ© Brut Korhogo', icon: 'ðŸ¥œ' },
+                { id: 'morning_cleanser', title: '1. Nettoyage Doux', desc: 'Gel Moringa & Neem (Matin)', icon: '🌿' },
+                { id: 'hydration_serum', title: '2. Sérum Hydratant', desc: 'Sérum Baobab 10% Niacinamide', icon: '🧪' },
+                { id: 'lipids_seal', title: '3. Scellage Lipidique', desc: 'Beurre de Karité Brut Korhogo', icon: '🥜' },
               ].map((step) => {
                 const isChecked = Boolean(dailySteps[step.id]);
                 return (
@@ -606,7 +606,7 @@ export default function ClientPortalPage() {
         </Card>
       </motion.div>
 
-      {/* --- TABLEAU DE SANTÃ‰ DE LA PEAU & MÃ‰TÃ‰O UV EN DIRECT --- */}
+      {/* --- TABLEAU DE SANTÉ DE LA PEAU & MÉTÉO UV EN DIRECT --- */}
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
         <Card className="bg-[#241C16] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
           <CardContent className="p-5 space-y-4">
@@ -614,24 +614,24 @@ export default function ClientPortalPage() {
               <div>
                 <h3 className="font-display font-bold text-base text-white flex items-center gap-2">
                   <Activity className="w-5 h-5 text-[var(--gold-kene)]" />
-                  Bilan & SantÃ© CutanÃ©e KÃ¨nÃ¨
+                  Bilan & Santé Cutanée Kènè
                 </h3>
-                <p className="text-xs text-white/50">Mise Ã  jour en temps rÃ©el selon vos diagnostics & mÃ©tÃ©o</p>
+                <p className="text-xs text-white/50">Mise à  jour en temps réel selon vos diagnostics & météo</p>
               </div>
               <Badge className="bg-[var(--gold-kene)]/20 text-[var(--gold-kene)] border border-[var(--gold-kene)]/30 font-mono text-xs">
                 Score : 78/100
               </Badge>
             </div>
 
-            {/* MÃ©tÃ©o & UV Widget Chip */}
+            {/* Météo & UV Widget Chip */}
             <div className="bg-[#1A1410] border border-white/5 rounded-xl p-3 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg">
                   â˜€ï¸
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-white font-display">Indice UV 8 Â· ModÃ©rÃ©/Ã‰levÃ© (Abidjan)</div>
-                  <p className="text-[10px] text-white/50 font-sans">HumiditÃ© : 88% â€” Appliquez l'Ã‰cran MinÃ©ral & le SÃ©rum Baobab</p>
+                  <div className="text-xs font-bold text-white font-display">Indice UV 8 Â· Modéré/Élevé (Abidjan)</div>
+                  <p className="text-[10px] text-white/50 font-sans">Humidité : 88% â€” Appliquez l'Écran Minéral & le Sérum Baobab</p>
                 </div>
               </div>
               <a href="/diagnostic/results/demo-diagnosis-01" className="text-xs text-[var(--gold-kene)] font-bold hover:underline shrink-0">
@@ -642,10 +642,10 @@ export default function ClientPortalPage() {
             {/* Skin Metrics Progress Bars */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-1">
               {[
-                { label: 'Hydratation', val: 82, color: '#4E9FD1', icon: 'ðŸ’§' },
-                { label: 'BarriÃ¨re CutanÃ©e', val: 85, color: '#4CAF6E', icon: 'ðŸ›¡ï¸' },
-                { label: 'Ã‰clat du Teint', val: 74, color: '#C8951E', icon: 'âœ¨' },
-                { label: 'Ã‰quilibre SÃ©bacÃ©', val: 68, color: '#E07A2B', icon: 'ðŸŒ¿' },
+                { label: 'Hydratation', val: 82, color: '#4E9FD1', icon: '💧' },
+                { label: 'Barrière Cutanée', val: 85, color: '#4CAF6E', icon: 'ðŸ›¡ï¸' },
+                { label: 'Éclat du Teint', val: 74, color: '#C8951E', icon: '✨' },
+                { label: 'Équilibre Sébacé', val: 68, color: '#E07A2B', icon: '🌿' },
               ].map((item, idx) => (
                 <div key={idx} className="bg-[#1A1410] border border-white/5 rounded-xl p-3 space-y-2">
                   <div className="flex justify-between items-center text-xs">
@@ -661,18 +661,18 @@ export default function ClientPortalPage() {
               ))}
             </div>
 
-            {/* ðŸ“œ HISTORIQUE DES ANCIENS RÃ‰SULTATS & BILANS CUTANÃ‰S DU CLIENT */}
+            {/* 📁œ HISTORIQUE DES ANCIENS RÉSULTATS & BILANS CUTANÉS DU CLIENT */}
             <div className="pt-3 border-t border-white/5 space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <h4 className="text-xs font-bold font-display text-[var(--gold-kene)] flex items-center gap-1.5 uppercase tracking-wider">
-                  <ScanFace className="w-4 h-4 text-[var(--gold-kene)]" /> Historique de Mes Anciens RÃ©sultats & Bilans ({((data?.diagnosesHistory?.length || 0) > 0 ? data.diagnosesHistory.length : 3)} Scans)
+                  <ScanFace className="w-4 h-4 text-[var(--gold-kene)]" /> Historique de Mes Anciens Résultats & Bilans ({((data?.diagnosesHistory?.length || 0) > 0 ? data.diagnosesHistory.length : 3)} Scans)
                 </h4>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setIsGalleryModalOpen(true)}
                     className="text-[11px] font-bold text-[#0F0A05] bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md hover:scale-105 transition cursor-pointer"
                   >
-                    <span>ðŸ–¼ï¸</span> Galerie Avant / AprÃ¨s (Ã‰volution)
+                    <span>ðŸ–¼ï¸</span> Galerie Avant / Après (Évolution)
                   </button>
                   <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-xl border border-emerald-500/20">
                     +17% Hydratation
@@ -686,11 +686,11 @@ export default function ClientPortalPage() {
                     id: 'demo-diagnosis-01',
                     createdAt: '2026-07-27',
                     date: 'Aujourd\'hui',
-                    title: 'Bilan Diagnostic RÃ©cent & Dermo-IA',
+                    title: 'Bilan Diagnostic Récent & Dermo-IA',
                     phototype: userProfile.fitzpatrickType || 'Phototype V',
                     hydration: '82%',
-                    formula: 'SÃ©rum Baobab & Aloe Vera Bio',
-                    status: 'RÃ©sultat Optimal âœ¨',
+                    formula: 'Sérum Baobab & Aloe Vera Bio',
+                    status: 'Résultat Optimal ✨',
                     scoreGlobal: 82,
                     photos: [latestClientPhoto].filter(Boolean),
                     badgeColor: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
@@ -699,11 +699,11 @@ export default function ClientPortalPage() {
                     id: 'diag-demo-02',
                     createdAt: '2024-03-10',
                     date: '10 Mars 2024',
-                    title: 'Bilan de Suivi Hydratation KaritÃ©',
+                    title: 'Bilan de Suivi Hydratation Karité',
                     phototype: 'Phototype V',
                     hydration: '74%',
-                    formula: 'Masque KaritÃ© Brut & Neem',
-                    status: 'En Net ProgrÃ¨s ðŸ“ˆ',
+                    formula: 'Masque Karité Brut & Neem',
+                    status: 'En Net Progrès 📁ˆ',
                     scoreGlobal: 74,
                     photos: ['/images/afro_beauty_hero_woman.jpg'],
                     badgeColor: 'bg-[var(--gold-kene)]/15 text-[var(--gold-kene)] border-[var(--gold-kene)]/30'
@@ -716,7 +716,7 @@ export default function ClientPortalPage() {
                     phototype: 'Phototype V',
                     hydration: '65%',
                     formula: 'Ordonnance Botanique Initiale',
-                    status: 'Bilan Initial ðŸ“‹',
+                    status: 'Bilan Initial 📁‹',
                     scoreGlobal: 65,
                     photos: ['/images/afro_man_dermo_care.jpg'],
                     badgeColor: 'bg-blue-500/15 text-blue-400 border-blue-500/30'
@@ -735,7 +735,7 @@ export default function ClientPortalPage() {
                         <div className="w-12 h-12 rounded-xl overflow-hidden border border-[var(--gold-kene)]/30 shrink-0 mt-0.5 bg-black relative">
                           <img 
                             src={itemPhoto} 
-                            alt="ClichÃ© Client" 
+                            alt="Cliché Client" 
                             className="w-full h-full object-cover" 
                           />
                         </div>
@@ -743,13 +743,13 @@ export default function ClientPortalPage() {
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-xs font-bold text-white font-display">{item.title || `Bilan Diagnostic #${item.id?.substring(0, 8)}`}</span>
                             <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border ${item.badgeColor || 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'}`}>
-                              {item.status || 'RÃ©sultat EnregistrÃ© âœ¨'}
+                              {item.status || 'Résultat Enregistré ✨'}
                             </span>
                           </div>
                           <div className="text-[10px] text-white/50 font-sans mt-0.5 flex items-center gap-2 flex-wrap">
-                            <span>ðŸ“… {item.date || safeFormat(item.createdAt, 'dd MMMM yyyy') || 'RÃ©cemment'}</span>
+                            <span>📁… {item.date || safeFormat(item.createdAt, 'dd MMMM yyyy') || 'Récemment'}</span>
                             <span>â€¢</span>
-                            <span>ðŸ§ª Formule : {item.formula || 'Ordonnance KÃ¨nÃ¨ Bio'}</span>
+                            <span>🧪 Formule : {item.formula || 'Ordonnance Kènè Bio'}</span>
                             <span>â€¢</span>
                             <span className="text-[var(--gold-kene)] font-semibold">{item.phototype || item.fitzpatrickType || 'Phototype V'}</span>
                           </div>
@@ -783,7 +783,7 @@ export default function ClientPortalPage() {
             <div className="absolute right-0 top-0 w-32 h-32 bg-[var(--gold-kene)]/10 rounded-full blur-3xl pointer-events-none" />
             <CardContent className="p-5 flex items-center justify-between">
               <div>
-                <p className="text-white/60 text-xs font-medium uppercase tracking-wider mb-1">Mon Portefeuille KÃ¨nÃ¨</p>
+                <p className="text-white/60 text-xs font-medium uppercase tracking-wider mb-1">Mon Portefeuille Kènè</p>
                 <div className="text-2xl font-display font-bold text-[var(--gold-kene)]">
                   {(walletBalance || 0).toLocaleString('fr-FR')} FCFA
                 </div>
@@ -822,17 +822,17 @@ export default function ClientPortalPage() {
             <CardContent className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3.5">
                 <div className="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl shadow-inner shrink-0">
-                  ðŸ©º
+                  🩺
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-display font-bold text-sm text-white">Dr. AÃ¯ssatou Diallo</span>
+                    <span className="font-display font-bold text-sm text-white">Dr. Aïssatou Diallo</span>
                     <span className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">
                       Dermatologie Clinique 24/7
                     </span>
                   </div>
                   <p className="text-xs text-white/60 font-sans mt-0.5">
-                    Ã‰changer directement avec votre dermatologue sans passer par le bilan cutanÃ©
+                    Échanger directement avec votre dermatologue sans passer par le bilan cutané
                   </p>
                 </div>
               </div>
@@ -889,26 +889,26 @@ export default function ClientPortalPage() {
 
                   <div className="space-y-3 my-2 text-xs">
                     <p className="text-white/60">
-                      Envoyez votre message ou votre demande de rendez-vous directement Ã  l'Ã©quipe de <strong>{salon.name}</strong>.
+                      Envoyez votre message ou votre demande de rendez-vous directement à  l'équipe de <strong>{salon.name}</strong>.
                     </p>
 
                     <div className="space-y-1">
-                      <Label className="text-white/60 text-[10px]">Votre Nom & PrÃ©nom</Label>
+                      <Label className="text-white/60 text-[10px]">Votre Nom & Prénom</Label>
                       <Input value={clientContactName} onChange={(e) => setClientContactName(e.target.value)} required placeholder="Aminata Diallo" className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs" />
                     </div>
 
                     <div className="space-y-1">
-                      <Label className="text-white/60 text-[10px]">Votre NumÃ©ro de TÃ©lÃ©phone (WhatsApp)</Label>
+                      <Label className="text-white/60 text-[10px]">Votre Numéro de Téléphone (WhatsApp)</Label>
                       <Input value={clientContactPhone} onChange={(e) => setClientContactPhone(e.target.value)} required placeholder="+225 07 00 00 00 00" className="bg-[#1A1410] border-white/10 text-white rounded-xl h-9 text-xs" />
                     </div>
 
                     <div className="space-y-1">
-                      <Label className="text-white/60 text-[10px]">Votre Message / Service souhaitÃ©</Label>
+                      <Label className="text-white/60 text-[10px]">Votre Message / Service souhaité</Label>
                       <textarea
                         rows={3}
                         value={clientContactMessage}
                         onChange={(e) => setClientContactMessage(e.target.value)}
-                        placeholder="ex: Bonjour, je souhaite rÃ©server un Soin KaritÃ© Pur et Diagnostic IA ce vendredi Ã  14h."
+                        placeholder="ex: Bonjour, je souhaite réserver un Soin Karité Pur et Diagnostic IA ce vendredi à  14h."
                         className="w-full bg-[#1A1410] border border-white/10 text-white p-2.5 rounded-xl text-xs outline-none focus:border-[var(--gold-kene)]"
                       />
                     </div>
@@ -919,7 +919,7 @@ export default function ClientPortalPage() {
                       className="w-full h-10 bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-lg cursor-pointer mt-1"
                     >
                       {isSubmittingContact ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Send className="w-3.5 h-3.5 mr-1" />}
-                      Envoyer ma Demande Ã  l'Ã‰tablissement
+                      Envoyer ma Demande à  l'Établissement
                     </Button>
                   </div>
                 </DialogContent>
@@ -960,9 +960,9 @@ export default function ClientPortalPage() {
               </div>
               <div className="p-3 bg-[#1A1410]/50 flex justify-between items-center">
                 <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-[10px]">
-                  ConfirmÃ©
+                  Confirmé
                 </Badge>
-                <Button variant="ghost" size="sm" className="h-6 text-xs text-white/60 hover:text-white">DÃ©tails</Button>
+                <Button variant="ghost" size="sm" className="h-6 text-xs text-white/60 hover:text-white">Détails</Button>
               </div>
             </CardContent>
           </Card>
@@ -970,10 +970,10 @@ export default function ClientPortalPage() {
           <Card className="border-dashed border-white/10 bg-[#241C16]/40 text-white rounded-2xl shadow-none">
             <CardContent className="p-6 flex flex-col items-center justify-center text-center">
               <Calendar className="w-8 h-8 text-white/30 mb-2" />
-              <p className="text-xs text-white/60 mb-4">Aucun rendez-vous Ã  venir.</p>
+              <p className="text-xs text-white/60 mb-4">Aucun rendez-vous à  venir.</p>
               <a href="/checkout" className="w-full">
                 <Button className="bg-[var(--gold-kene)] text-[#1A1410] hover:bg-gold-kene/90 font-bold rounded-xl shadow-md w-full text-xs">
-                  RÃ©server un Soin
+                  Réserver un Soin
                 </Button>
               </a>
             </CardContent>
@@ -987,11 +987,11 @@ export default function ClientPortalPage() {
           <h2 className="font-semibold text-white text-sm uppercase tracking-wider font-display">Ma Peau (Diagnostic IA)</h2>
         </div>
 
-        {/* --- HISTORIQUE COMPLET DES DIAGNOSTICS CUTANÃ‰S --- */}
+        {/* --- HISTORIQUE COMPLET DES DIAGNOSTICS CUTANÉS --- */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-white text-xs uppercase tracking-wider font-display flex items-center gap-1.5">
-              ðŸ“œ Historique de Mes Scans & Bilan Octo-Spectral
+              📁œ Historique de Mes Scans & Bilan Octo-Spectral
             </h3>
             <a href="/diagnostic/results/demo-diagnosis-01" className="text-[var(--gold-kene)] text-xs font-semibold hover:underline">
               Voir Bilan 360Â°
@@ -1000,8 +1000,8 @@ export default function ClientPortalPage() {
 
           <div className="space-y-2">
             {[
-              { id: 'demo-diagnosis-01', date: '15/07/2026', score: 78, zone: 'Visage & Pommettes', status: 'Optimal', active: 'SÃ©rum Bissap & Baobab', gain: '+42% Ã‰clat' },
-              { id: 'demo-diagnosis-02', date: '15/06/2026', score: 68, zone: 'Zone T & Pores', status: 'PIH LÃ©ger', active: 'Moringa & Neem', gain: 'Initial' },
+              { id: 'demo-diagnosis-01', date: '15/07/2026', score: 78, zone: 'Visage & Pommettes', status: 'Optimal', active: 'Sérum Bissap & Baobab', gain: '+42% Éclat' },
+              { id: 'demo-diagnosis-02', date: '15/06/2026', score: 68, zone: 'Zone T & Pores', status: 'PIH Léger', active: 'Moringa & Neem', gain: 'Initial' },
             ].map((diag, i) => (
               <a key={i} href={`/diagnostic/results/${diag.id}`} className="block">
                 <Card className="bg-[#1A1410] border border-white/10 hover:border-[var(--gold-kene)]/40 transition-all rounded-2xl p-3.5 flex justify-between items-center group">

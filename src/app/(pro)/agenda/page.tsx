@@ -16,10 +16,10 @@ import { fr } from 'date-fns/locale';
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string; dot: string }> = {
   pending:   { label: 'En attente',  bg: 'bg-yellow-500/10', text: 'text-yellow-400', dot: 'bg-yellow-400' },
-  confirmed: { label: 'ConfirmÃ©',    bg: 'bg-blue-500/10',   text: 'text-blue-400',   dot: 'bg-blue-400' },
+  confirmed: { label: 'Confirmé',    bg: 'bg-blue-500/10',   text: 'text-blue-400',   dot: 'bg-blue-400' },
   in_progress: { label: 'En Soin',   bg: 'bg-purple-500/10', text: 'text-purple-400', dot: 'bg-purple-400' },
-  completed: { label: 'TerminÃ©',     bg: 'bg-emerald-500/10',text: 'text-emerald-400',dot: 'bg-emerald-400' },
-  cancelled: { label: 'AnnulÃ©',      bg: 'bg-red-500/10',    text: 'text-red-400',    dot: 'bg-red-400' },
+  completed: { label: 'Terminé',     bg: 'bg-emerald-500/10',text: 'text-emerald-400',dot: 'bg-emerald-400' },
+  cancelled: { label: 'Annulé',      bg: 'bg-red-500/10',    text: 'text-red-400',    dot: 'bg-red-400' },
 };
 
 export default function ProAgendaPage() {
@@ -59,12 +59,12 @@ export default function ProAgendaPage() {
       });
       const data = await res.json();
       if (data.success) {
-        toast({ title: "âœ… RDV confirmÃ©", description: "Rendez-vous ajoutÃ© Ã  l'agenda." });
+        toast({ title: "✨… RDV confirmé", description: "Rendez-vous ajouté à  l'agenda." });
         setIsDialogOpen(false);
         fetchData();
       } else throw new Error(data.error);
     } catch {
-      toast({ title: "Erreur", description: "Impossible de crÃ©er le RDV.", variant: "destructive" });
+      toast({ title: "Erreur", description: "Impossible de créer le RDV.", variant: "destructive" });
     }
   };
 
@@ -90,7 +90,7 @@ export default function ProAgendaPage() {
               <CalendarIcon className="w-4 h-4 text-[#0F0A05]" />
             </div>
             <h1 className="text-2xl font-display font-black text-white tracking-tight">
-              Agenda & <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">RÃ©servations</span>
+              Agenda & <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">Réservations</span>
             </h1>
           </div>
           <p className="text-white/40 text-xs ml-10">{appointments.length} RDV total Â· {todayAppts.length} aujourd'hui Â· {pendingCount} en attente</p>
@@ -110,7 +110,7 @@ export default function ProAgendaPage() {
             <div className="h-0.5 bg-gradient-to-r from-transparent via-[#C8951E] to-transparent -mt-[1px] mx-6 rounded-full" />
             <DialogHeader className="pt-2">
               <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
-                <span className="text-2xl">ðŸ“…</span> Nouveau Rendez-vous
+                <span className="text-2xl">📁…</span> Nouveau Rendez-vous
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleCreateAppointment} className="space-y-4 mt-2">
@@ -154,7 +154,7 @@ export default function ProAgendaPage() {
               <DialogFooter className="mt-4 flex gap-2">
                 <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)} className="text-white/40 hover:text-white rounded-xl">Annuler</Button>
                 <motion.button whileTap={{ scale: 0.97 }} type="submit" className="flex-1 h-11 rounded-xl font-bold text-sm text-[#0F0A05] cursor-pointer" style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)' }}>
-                  âœ… Confirmer le RDV
+                  ✨… Confirmer le RDV
                 </motion.button>
               </DialogFooter>
             </form>
@@ -168,10 +168,10 @@ export default function ProAgendaPage() {
           {[
             { key: 'all', label: 'Tous', count: appointments.length },
             { key: 'pending', label: 'En attente', count: appointments.filter(a => a.status === 'pending').length },
-            { key: 'confirmed', label: 'ConfirmÃ©s', count: appointments.filter(a => a.status === 'confirmed').length },
+            { key: 'confirmed', label: 'Confirmés', count: appointments.filter(a => a.status === 'confirmed').length },
             { key: 'in_progress', label: 'En Soin', count: appointments.filter(a => a.status === 'in_progress').length },
-            { key: 'completed', label: 'TerminÃ©s', count: appointments.filter(a => a.status === 'completed').length },
-            { key: 'cancelled', label: 'AnnulÃ©s', count: appointments.filter(a => a.status === 'cancelled').length },
+            { key: 'completed', label: 'Terminés', count: appointments.filter(a => a.status === 'completed').length },
+            { key: 'cancelled', label: 'Annulés', count: appointments.filter(a => a.status === 'cancelled').length },
           ].map(f => (
             <button
               key={f.key}
@@ -220,8 +220,8 @@ export default function ProAgendaPage() {
             </div>
           ) : sortedFiltered.length === 0 ? (
             <div className="text-center py-16 text-white/20 text-xs">
-              <div className="text-4xl mb-3">ðŸ“…</div>
-              Aucun rendez-vous dans cette catÃ©gorie.
+              <div className="text-4xl mb-3">📁…</div>
+              Aucun rendez-vous dans cette catégorie.
             </div>
           ) : (
             <div className="divide-y divide-white/5 relative">
@@ -278,7 +278,7 @@ export default function ProAgendaPage() {
                       </div>
                       <div className="flex items-center gap-4 text-[10px] text-white/40">
                         <span className="flex items-center gap-1"><User className="w-3 h-3" />{appt.client?.firstName} {appt.client?.lastName}</span>
-                        {appt.employee && <span className="flex items-center gap-1">âœ‚ï¸ {appt.employee.firstName}</span>}
+                        {appt.employee && <span className="flex items-center gap-1">✨‚ï¸ {appt.employee.firstName}</span>}
                       </div>
                     </div>
 
@@ -291,16 +291,16 @@ export default function ProAgendaPage() {
                         <button
                           onClick={() => {
                             const clientPhone = (appt.client?.phone || '+22507000000').replace(/\D/g, '');
-                            const msg = encodeURIComponent(`Bonjour ${appt.client?.firstName || 'ChÃ¨re Cliente'}, votre rendez-vous chez Institut BeautÃ© KÃ¨nÃ¨ pour "${appt.service?.name}" est prÃ©vu Ã  ${format(apptDate, 'HH:mm')}. Merci de rÃ©pondre OUI pour me confirmer votre prÃ©sence ! ðŸŒ¿`);
+                            const msg = encodeURIComponent(`Bonjour ${appt.client?.firstName || 'Chère Cliente'}, votre rendez-vous chez Institut Beauté Kènè pour "${appt.service?.name}" est prévu à  ${format(apptDate, 'HH:mm')}. Merci de répondre OUI pour me confirmer votre présence ! 🌿`);
                             if (typeof window !== 'undefined') {
                               window.open(`https://wa.me/${clientPhone}?text=${msg}`, '_blank');
-                              toast({ title: "ðŸ“² Rappel WhatsApp EnvoyÃ© !", description: `Message de confirmation 2h avant transmis Ã  ${appt.client?.firstName || 'la cliente'}.` });
+                              toast({ title: "📁² Rappel WhatsApp Envoyé !", description: `Message de confirmation 2h avant transmis à  ${appt.client?.firstName || 'la cliente'}.` });
                             }
                           }}
                           className="flex items-center gap-1 text-[10px] font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2 py-1 rounded-xl hover:bg-emerald-500/30 transition cursor-pointer shadow-sm"
                           title="Envoyer un rappel de confirmation WhatsApp 2h avant le RDV"
                         >
-                          <span>ðŸ“² Rappel 2H</span>
+                          <span>📁² Rappel 2H</span>
                         </button>
 
                         {appt.status === 'pending' && (

@@ -25,8 +25,8 @@ export default function HairDiagnosticPage() {
       setStep('results');
       setScanning(false);
       toast({
-        title: "âœ¨ Analyse Capillaire TerminÃ©e !",
-        description: "Votre profil de cheveux et votre porositÃ© ont Ã©tÃ© calculÃ©s avec succÃ¨s.",
+        title: "✨ Analyse Capillaire Terminée !",
+        description: "Votre profil de cheveux et votre porosité ont été calculés avec succès.",
       });
     }, 2500);
   };
@@ -40,7 +40,7 @@ export default function HairDiagnosticPage() {
             <Scissors className="w-6 h-6 text-[var(--gold-kene)]" />
             Scanner de Texture Capillaire 4A / 4B / 4C
           </h1>
-          <p className="text-white/60 text-xs mt-1">Analyse IA de la porositÃ© & santÃ© du cuir chevelu crÃ©pu/frisÃ©.</p>
+          <p className="text-white/60 text-xs mt-1">Analyse IA de la porosité & santé du cuir chevelu crépu/frisé.</p>
         </div>
         <Badge className="bg-[var(--gold-kene)]/20 text-[var(--gold-kene)] border border-[var(--gold-kene)]/30 font-mono text-xs">
           v2.4 Afro-Hair AI
@@ -60,7 +60,7 @@ export default function HairDiagnosticPage() {
               <div>
                 <h3 className="text-lg font-display font-bold text-white">Prenez une photo de vos cheveux ou boucles</h3>
                 <p className="text-xs text-white/50 max-w-md mx-auto mt-2">
-                  Assurez-vous d'avoir un Ã©clairage naturel et de montrer la racine ou les pointes de vos cheveux pour dÃ©tecter la densitÃ© et la porositÃ©.
+                  Assurez-vous d'avoir un éclairage naturel et de montrer la racine ou les pointes de vos cheveux pour détecter la densité et la porosité.
                 </p>
               </div>
 
@@ -68,17 +68,17 @@ export default function HairDiagnosticPage() {
                 <div className="p-3 bg-[#1A1410] border border-white/5 rounded-2xl">
                   <span className="text-lg block mb-1">âž°</span>
                   <strong>Type 4A</strong>
-                  <p className="text-[10px] text-white/40 mt-0.5">Boucles resserrÃ©es en S</p>
+                  <p className="text-[10px] text-white/40 mt-0.5">Boucles resserrées en S</p>
                 </div>
                 <div className="p-3 bg-[#1A1410] border border-white/5 rounded-2xl">
-                  <span className="text-lg block mb-1">âš¡</span>
+                  <span className="text-lg block mb-1">⚡</span>
                   <strong>Type 4B</strong>
                   <p className="text-[10px] text-white/40 mt-0.5">Motif en Z anguleux</p>
                 </div>
                 <div className="p-3 bg-[#1A1410] border border-white/5 rounded-2xl">
-                  <span className="text-lg block mb-1">ðŸ‘‘</span>
+                  <span className="text-lg block mb-1">👑</span>
                   <strong>Type 4C</strong>
-                  <p className="text-[10px] text-white/40 mt-0.5">Spirales trÃ¨s compactes</p>
+                  <p className="text-[10px] text-white/40 mt-0.5">Spirales très compactes</p>
                 </div>
               </div>
 
@@ -99,8 +99,8 @@ export default function HairDiagnosticPage() {
         <Card className="bg-[#241C16] border border-white/10 rounded-3xl p-12 text-center space-y-6">
           <div className="w-16 h-16 border-4 border-[var(--gold-kene)] border-t-transparent rounded-full animate-spin mx-auto" />
           <div>
-            <h3 className="text-xl font-display font-bold text-white">Analyse de la porositÃ© & des boucles...</h3>
-            <p className="text-xs text-white/50 mt-2 font-mono">Calcul des taux d'absorption d'eau & sÃ©rums botaniques</p>
+            <h3 className="text-xl font-display font-bold text-white">Analyse de la porosité & des boucles...</h3>
+            <p className="text-xs text-white/50 mt-2 font-mono">Calcul des taux d'absorption d'eau & sérums botaniques</p>
           </div>
         </Card>
       )}
@@ -112,7 +112,7 @@ export default function HairDiagnosticPage() {
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] font-bold text-[var(--gold-kene)] uppercase tracking-wider font-display">Votre Profil Capillaire</span>
-                <h2 className="text-2xl font-display font-bold text-white mt-1">Cheveux Type {hairType} Â· PorositÃ© {porosity}</h2>
+                <h2 className="text-2xl font-display font-bold text-white mt-1">Cheveux Type {hairType} Â· Porosité {porosity}</h2>
               </div>
               <Badge className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-3 py-1 font-bold">
                 Cuir Chevelu Sain (89/100)
@@ -121,33 +121,33 @@ export default function HairDiagnosticPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-[#1A1410] border border-white/5 p-4 rounded-2xl space-y-1">
-                <span className="text-xs text-white/50">PorositÃ© du Cheveu</span>
+                <span className="text-xs text-white/50">Porosité du Cheveu</span>
                 <div className="text-lg font-bold text-[var(--gold-kene)] font-display">{porosity}</div>
-                <p className="text-[10px] text-white/40">NÃ©cessite des huiles scellantes riches (KaritÃ© & Baobab)</p>
+                <p className="text-[10px] text-white/40">Nécessite des huiles scellantes riches (Karité & Baobab)</p>
               </div>
 
               <div className="bg-[#1A1410] border border-white/5 p-4 rounded-2xl space-y-1">
-                <span className="text-xs text-white/50">DensitÃ© Capillaire</span>
+                <span className="text-xs text-white/50">Densité Capillaire</span>
                 <div className="text-lg font-bold text-emerald-400 font-display">Forte / Forte</div>
-                <p className="text-[10px] text-white/40">IdÃ©al pour tresses Knotless & Fulani Braids</p>
+                <p className="text-[10px] text-white/40">Idéal pour tresses Knotless & Fulani Braids</p>
               </div>
 
               <div className="bg-[#1A1410] border border-white/5 p-4 rounded-2xl space-y-1">
-                <span className="text-xs text-white/50">Niveau d'Ã‰lasticitÃ©</span>
+                <span className="text-xs text-white/50">Niveau d'Élasticité</span>
                 <div className="text-lg font-bold text-amber-400 font-display">Optimal (84%)</div>
-                <p className="text-[10px] text-white/40">Excellente rÃ©sistance Ã  la casse</p>
+                <p className="text-[10px] text-white/40">Excellente résistance à  la casse</p>
               </div>
             </div>
 
-            {/* Recette Botanique RecommandÃ©e */}
+            {/* Recette Botanique Recommandée */}
             <div className="bg-[#1A1410] border border-[var(--gold-kene)]/20 p-5 rounded-2xl space-y-3">
               <h4 className="text-sm font-bold text-[var(--gold-kene)] font-display flex items-center gap-2">
-                <Sparkles className="w-4 h-4" /> Recette Botanique Capillaire RecommandÃ©e
+                <Sparkles className="w-4 h-4" /> Recette Botanique Capillaire Recommandée
               </h4>
               <div className="flex flex-wrap gap-2 text-xs">
-                {['Beurre de KaritÃ© brut', 'Huile de Baobab vierge', 'Gel d\'Aloe Vera pur', 'Poudre de Chebe traditionnelle'].map((ing, i) => (
+                {['Beurre de Karité brut', 'Huile de Baobab vierge', 'Gel d\'Aloe Vera pur', 'Poudre de Chebe traditionnelle'].map((ing, i) => (
                   <span key={i} className="bg-[var(--gold-kene)]/10 text-[var(--gold-kene)] border border-[var(--gold-kene)]/20 px-3 py-1 rounded-xl font-medium">
-                    ðŸŒ¿ {ing}
+                    🌿 {ing}
                   </span>
                 ))}
               </div>

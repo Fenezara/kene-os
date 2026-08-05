@@ -58,15 +58,15 @@ export default function ProReviewsPage() {
     let reply = '';
 
     if (tone === 'chaleureux') {
-      reply = `ChÃ¨re ${clientName}, toute l'Ã©quipe KÃ¨nÃ¨ vous remercie chaleureusement ! ðŸ’› Votre confiance nous touche profondÃ©ment. Au plaisir de vous retrouver pour un nouveau soin dermo-botanique. ðŸŒ¿`;
+      reply = `Chère ${clientName}, toute l'équipe Kènè vous remercie chaleureusement ! ðŸ’› Votre confiance nous touche profondément. Au plaisir de vous retrouver pour un nouveau soin dermo-botanique. 🌿`;
     } else if (tone === 'professionnel') {
-      reply = `Bonjour ${clientName}, nous vous remercions pour votre retour positif. ðŸ‘” Votre satisfaction est la prioritÃ© de notre Ã©tablissement. Ã€ trÃ¨s bientÃ´t au salon KÃ¨nÃ¨.`;
+      reply = `Bonjour ${clientName}, nous vous remercions pour votre retour positif. ðŸ‘” Votre satisfaction est la priorité de notre établissement. À très bientôt au salon Kènè.`;
     } else if (tone === 'commercial') {
-      reply = `Merci infiniment ${clientName} pour vos mots touchants ! âœ¨ Pour vous remercier de votre fidÃ©litÃ©, nous serons ravis de vous offrir -10% sur votre prochain achat de produits cosmÃ©tiques lors de votre visite. ðŸŽ Ã€ trÃ¨s vite !`;
+      reply = `Merci infiniment ${clientName} pour vos mots touchants ! ✨ Pour vous remercier de votre fidélité, nous serons ravis de vous offrir -10% sur votre prochain achat de produits cosmétiques lors de votre visite. ðŸŽ À très vite !`;
     }
 
     setReplyInput({ ...replyInput, [revId]: reply });
-    toast({ title: "âœ¨ RÃ©ponse IA gÃ©nÃ©rÃ©e", description: "VÃ©rifiez ou modifiez avant l'envoi." });
+    toast({ title: "✨ Réponse IA générée", description: "Vérifiez ou modifiez avant l'envoi." });
     setAiModalOpen(false);
   };
 
@@ -80,11 +80,11 @@ export default function ProReviewsPage() {
       });
       const data = await res.json();
       if (data.success) {
-        toast({ title: "âœ… RÃ©ponse publiÃ©e", description: "Votre message a Ã©tÃ© transmis au client." });
+        toast({ title: "✨… Réponse publiée", description: "Votre message a été transmis au client." });
         setReviews(reviews.map(r => r.id === revId ? { ...r, reply: text } : r));
       }
     } catch {
-      toast({ title: "Erreur", description: "Impossible de publier la rÃ©ponse.", variant: "destructive" });
+      toast({ title: "Erreur", description: "Impossible de publier la réponse.", variant: "destructive" });
     }
   };
 
@@ -108,10 +108,10 @@ export default function ProReviewsPage() {
               <Star className="w-4 h-4 text-[#0F0A05]" />
             </div>
             <h1 className="text-2xl font-display font-black text-white tracking-tight">
-              Avis & <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">RÃ©putation</span>
+              Avis & <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">Réputation</span>
             </h1>
           </div>
-          <p className="text-white/40 text-xs ml-10">RÃ©pondez aux clientes avec l'IA Â· GÃ©rez votre image en ligne</p>
+          <p className="text-white/40 text-xs ml-10">Répondez aux clientes avec l'IA Â· Gérez votre image en ligne</p>
         </div>
       </motion.div>
 
@@ -159,12 +159,12 @@ export default function ProReviewsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               { label: 'Satisfaction', value: stats?.satisfactionRate || '96.5%', icon: 'ðŸ˜Š', color: '#4CAF6E' },
-              { label: '5 Ã©toiles', value: stats?.fiveStarPercentage || '85%', icon: 'â­', color: '#C8951E' },
-              { label: 'RÃ©pondu', value: `${reviews.filter(r => r.reply).length}/${totalReviews}`, icon: 'ðŸ’¬', color: '#4E9FD1' },
+              { label: '5 étoiles', value: stats?.fiveStarPercentage || '85%', icon: 'â­', color: '#C8951E' },
+              { label: 'Répondu', value: `${reviews.filter(r => r.reply).length}/${totalReviews}`, icon: 'ðŸ’¬', color: '#4E9FD1' },
               { label: 'Ce mois', value: reviews.filter(r => {
                 const d = new Date(r.date); const now = new Date();
                 return d.getMonth() === now.getMonth();
-              }).length, icon: 'ðŸ“ˆ', color: '#E07A2B' },
+              }).length, icon: '📁ˆ', color: '#E07A2B' },
             ].map((kpi, i) => (
               <div key={i} className="bg-white/5 rounded-2xl p-3 text-center">
                 <div className="text-lg mb-0.5">{kpi.icon}</div>
@@ -214,7 +214,7 @@ export default function ProReviewsPage() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-white/20 text-xs">
             <div className="text-4xl mb-3">â­</div>
-            Aucun avis trouvÃ©.
+            Aucun avis trouvé.
           </div>
         ) : (
           filtered.map((rev, i) => (
@@ -252,14 +252,14 @@ export default function ProReviewsPage() {
                 {rev.reply ? (
                   <div className="bg-emerald-500/5 border border-emerald-500/15 rounded-2xl px-4 py-3">
                     <div className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-bold mb-1.5">
-                      <CheckCircle2 className="w-3 h-3" /> RÃ©ponse du Salon KÃ¨nÃ¨
+                      <CheckCircle2 className="w-3 h-3" /> Réponse du Salon Kènè
                     </div>
                     <p className="text-xs text-white/65">{rev.reply}</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <Label className="text-[10px] text-white/40">RÃ©pondre Ã  {rev.clientName}</Label>
+                      <Label className="text-[10px] text-white/40">Répondre à  {rev.clientName}</Label>
                       <button
                         onClick={() => openAiModal(rev.id, rev.clientName)}
                         className="flex items-center gap-1 text-[10px] font-bold text-[#C8951E] hover:text-[#D4AF37] transition cursor-pointer"
@@ -270,7 +270,7 @@ export default function ProReviewsPage() {
                     <div className="flex gap-2">
                       <Textarea
                         rows={2}
-                        placeholder="RÃ©digez ou modifiez votre rÃ©ponse..."
+                        placeholder="Rédigez ou modifiez votre réponse..."
                         className="bg-white/5 border-white/10 text-white text-xs rounded-xl focus:border-[#C8951E] resize-none flex-1"
                         value={replyInput[rev.id] || ''}
                         onChange={(e) => setReplyInput({ ...replyInput, [rev.id]: e.target.value })}
@@ -299,7 +299,7 @@ export default function ProReviewsPage() {
           <DialogHeader className="pt-2">
             <DialogTitle className="font-display text-lg text-white flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-[#C8951E]" />
-              Choisir le ton de la rÃ©ponse
+              Choisir le ton de la réponse
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3 mt-4">
@@ -309,7 +309,7 @@ export default function ProReviewsPage() {
             >
               <div className="text-left">
                 <div className="font-bold text-sm text-white">Chaleureux ðŸ’›</div>
-                <div className="text-xs text-white/50 mt-1">Empathique, proche du client, remerciements sincÃ¨res.</div>
+                <div className="text-xs text-white/50 mt-1">Empathique, proche du client, remerciements sincères.</div>
               </div>
             </button>
             <button
@@ -318,7 +318,7 @@ export default function ProReviewsPage() {
             >
               <div className="text-left">
                 <div className="font-bold text-sm text-white">Professionnel ðŸ‘”</div>
-                <div className="text-xs text-white/50 mt-1">Formel, respectueux, orientÃ© satisfaction.</div>
+                <div className="text-xs text-white/50 mt-1">Formel, respectueux, orienté satisfaction.</div>
               </div>
             </button>
             <button
@@ -327,7 +327,7 @@ export default function ProReviewsPage() {
             >
               <div className="text-left">
                 <div className="font-bold text-sm text-white">Commercial ðŸŽ</div>
-                <div className="text-xs text-white/50 mt-1">Remerciements avec offre ou rÃ©duction intÃ©grÃ©e.</div>
+                <div className="text-xs text-white/50 mt-1">Remerciements avec offre ou réduction intégrée.</div>
               </div>
             </button>
           </div>

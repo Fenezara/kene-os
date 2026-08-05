@@ -20,7 +20,7 @@ const FITZPATRICK_COLORS: Record<string, string> = {
   I: '#FDDBB4', II: '#F5CBA7', III: '#E59866', IV: '#CA9B5C', V: '#A0522D', VI: '#6B3A2A'
 };
 const SKIN_TYPE_EMOJI: Record<string, string> = {
-  grasse: 'ðŸ’§', seche: 'ðŸŒµ', mixte: 'ðŸŒ—', normale: 'âœ¨', sensible: 'ðŸŒ¸'
+  grasse: '💧', seche: '🌵', mixte: '🌖', normale: '✨', sensible: '🌸'
 };
 
 export default function ProClientsPage() {
@@ -42,11 +42,11 @@ export default function ProClientsPage() {
   // Consultation & Cosmetic Ingredients State
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
   const [selectedClientForConsultation, setSelectedClientForConsultation] = useState<any>(null);
-  const [consultationType, setConsultationType] = useState('ContrÃ´le Dermatologique');
+  const [consultationType, setConsultationType] = useState('Contrôle Dermatologique');
   const [consultationNotes, setConsultationNotes] = useState('');
   const [consultationHydration, setConsultationHydration] = useState('82%');
-  const [consultationSebum, setConsultationSebum] = useState('Ã‰quilibrÃ©');
-  const [cosmeticIngredients, setCosmeticIngredients] = useState('Beurre de KaritÃ© brut, Huile de Baobab, Gel Aloe Vera 99%, Niacinamide 5%');
+  const [consultationSebum, setConsultationSebum] = useState('Équilibré');
+  const [cosmeticIngredients, setCosmeticIngredients] = useState('Beurre de Karité brut, Huile de Baobab, Gel Aloe Vera 99%, Niacinamide 5%');
   const [consultationsHistory, setConsultationsHistory] = useState<Record<string, any[]>>({});
 
   const handleSaveConsultation = async (clientId: string) => {
@@ -55,7 +55,7 @@ export default function ProClientsPage() {
         id: `cons-${Date.now()}`,
         date: new Date().toLocaleDateString('fr-FR'),
         type: consultationType,
-        notes: consultationNotes || 'ContrÃ´le cutanÃ© & suivi de routine cosmÃ©tique.',
+        notes: consultationNotes || 'Contrôle cutané & suivi de routine cosmétique.',
         hydration: consultationHydration,
         sebum: consultationSebum,
         ingredients: cosmeticIngredients.split(',').map(i => i.trim()).filter(Boolean),
@@ -73,23 +73,23 @@ export default function ProClientsPage() {
       });
 
       toast({
-        title: "ðŸ“‹ Consultation Dermatologique EnregistrÃ©e",
-        description: "Bilan mÃ©dical et ingrÃ©dients des produits cosmÃ©tiques sauvegardÃ©s.",
+        title: "📁‹ Consultation Dermatologique Enregistrée",
+        description: "Bilan médical et ingrédients des produits cosmétiques sauvegardés.",
       });
       setIsConsultationOpen(false);
       setConsultationNotes('');
     } catch {
-      toast({ title: "EnregistrÃ©", description: "Consultation mise Ã  jour localement." });
+      toast({ title: "Enregistré", description: "Consultation mise à  jour localement." });
       setIsConsultationOpen(false);
     }
   };
 
   const getLoyaltyTier = (clientId: string) => {
     const spent = clientId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) * 1500;
-    if (spent > 200000) return { name: 'Platine', icon: 'ðŸ’Ž', color: '#E5E4E2' };
-    if (spent > 100000) return { name: 'Or', icon: 'ðŸ¥‡', color: '#FFD700' };
-    if (spent > 50000) return { name: 'Argent', icon: 'ðŸ¥ˆ', color: '#C0C0C0' };
-    return { name: 'Bronze', icon: 'ðŸ¥‰', color: '#CD7F32' };
+    if (spent > 200000) return { name: 'Platine', icon: '💎', color: '#E5E4E2' };
+    if (spent > 100000) return { name: 'Or', icon: '🥇', color: '#FFD700' };
+    if (spent > 50000) return { name: 'Argent', icon: '🥈', color: '#C0C0C0' };
+    return { name: 'Bronze', icon: '🥉', color: '#CD7F32' };
   };
 
   const [formData, setFormData] = useState({
@@ -130,7 +130,7 @@ export default function ProClientsPage() {
         // AI Name Capitalization & Formatting
         const nameTokens = rawName.split(' ').filter(Boolean);
         let firstName = nameTokens[0] || 'Client';
-        let lastName = nameTokens.slice(1).join(' ') || 'ImportÃ©';
+        let lastName = nameTokens.slice(1).join(' ') || 'Importé';
         
         firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
         lastName = lastName.toUpperCase();
@@ -161,15 +161,15 @@ export default function ProClientsPage() {
           email: rawEmail.toLowerCase(),
           skinType,
           fitzpatrickType,
-          aiNotes: `âœ¨ StructurÃ© par IA : Format ${cleanPhone.slice(0, 4)} + Phototype ${fitzpatrickType}`
+          aiNotes: `✨ Structuré par IA : Format ${cleanPhone.slice(0, 4)} + Phototype ${fitzpatrickType}`
         });
       });
 
       setParsedImportClients(cleanedResults);
       setIsAiProcessing(false);
       toast({
-        title: "âœ¨ IA KÃ¨nÃ¨ Data Cleaner EffectuÃ© !",
-        description: `${cleanedResults.length} fiches clientes analysÃ©es, nettoyÃ©es et prÃªtes Ã  Ãªtre intÃ©grÃ©es.`,
+        title: "✨ IA Kènè Data Cleaner Effectué !",
+        description: `${cleanedResults.length} fiches clientes analysées, nettoyées et prêtes à  être intégrées.`,
       });
     }, 1000);
   };
@@ -196,8 +196,8 @@ export default function ProClientsPage() {
         setClients(prev => [...localImported, ...prev]);
       }
       toast({
-        title: "ðŸŽ‰ Importation RÃ©ussie !",
-        description: `${parsedImportClients.length} fiches clientes importÃ©es et structurÃ©es dans votre base KÃ¨nÃ¨.`,
+        title: "🎉 Importation Réussie !",
+        description: `${parsedImportClients.length} fiches clientes importées et structurées dans votre base Kènè.`,
       });
       setIsImportOpen(false);
       setRawTextData('');
@@ -211,8 +211,8 @@ export default function ProClientsPage() {
       }));
       setClients(prev => [...localImported, ...prev]);
       toast({
-        title: "ðŸŽ‰ Importation RÃ©ussie !",
-        description: `${parsedImportClients.length} fiches clientes importÃ©es dans votre base KÃ¨nÃ¨.`,
+        title: "🎉 Importation Réussie !",
+        description: `${parsedImportClients.length} fiches clientes importées dans votre base Kènè.`,
       });
       setIsImportOpen(false);
       setRawTextData('');
@@ -234,13 +234,13 @@ export default function ProClientsPage() {
       });
       const data = await res.json();
       if (data.success) {
-        toast({ title: "âœ… Profil crÃ©Ã©", description: "Nouvelle cliente enregistrÃ©e dans le CRM." });
+        toast({ title: "✨… Profil créé", description: "Nouvelle cliente enregistrée dans le CRM." });
         setIsDialogOpen(false);
         setFormData({ firstName: '', lastName: '', phone: '', email: '', skinType: 'normale', fitzpatrickType: 'V', allergies: '', avatar: '' });
         fetchClients();
       } else throw new Error(data.error);
     } catch {
-      toast({ title: "Erreur", description: "Impossible de crÃ©er le client.", variant: "destructive" });
+      toast({ title: "Erreur", description: "Impossible de créer le client.", variant: "destructive" });
     }
   };
 
@@ -263,7 +263,7 @@ export default function ProClientsPage() {
               Base <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">Clientes CRM</span>
             </h1>
           </div>
-          <p className="text-white/40 text-xs ml-10">{clients.length} clientes enregistrÃ©es Â· Profils dermatologiques OHADA</p>
+          <p className="text-white/40 text-xs ml-10">{clients.length} clientes enregistrées Â· Profils dermatologiques OHADA</p>
         </div>
 
         <div className="flex gap-2 flex-wrap">
@@ -282,13 +282,13 @@ export default function ProClientsPage() {
             <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl p-6">
               <DialogHeader>
                 <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
-                  <FileSpreadsheet className="w-5 h-5 text-[#C8951E]" /> Importation & Nettoyage IA de Base ClientÃ¨le
+                  <FileSpreadsheet className="w-5 h-5 text-[#C8951E]" /> Importation & Nettoyage IA de Base Clientèle
                 </DialogTitle>
               </DialogHeader>
 
               <div className="space-y-4 my-2">
                 <p className="text-xs text-white/60">
-                  Collez ci-dessous votre liste brute de clients (ex: fichier Excel, CSV ou export WhatsApp). L'IA de KÃ¨nÃ¨ va automatiquement formater les noms, corriger les numÃ©ros UEMOA (+225 / +221) et dÃ©duire le phototype cutanÃ©.
+                  Collez ci-dessous votre liste brute de clients (ex: fichier Excel, CSV ou export WhatsApp). L'IA de Kènè va automatiquement formater les noms, corriger les numéros UEMOA (+225 / +221) et déduire le phototype cutané.
                 </p>
 
                 <textarea
@@ -312,8 +312,8 @@ export default function ProClientsPage() {
                 {parsedImportClients.length > 0 && (
                   <div className="space-y-3 pt-2">
                     <div className="flex items-center justify-between text-xs font-bold text-[#F3E5AB]">
-                      <span>2. AperÃ§u des {parsedImportClients.length} Fiches StructurÃ©es :</span>
-                      <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">100% Conforme KÃ¨nÃ¨</Badge>
+                      <span>2. Aperçu des {parsedImportClients.length} Fiches Structurées :</span>
+                      <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">100% Conforme Kènè</Badge>
                     </div>
 
                     <div className="max-h-52 overflow-y-auto space-y-2 pr-1">
@@ -357,7 +357,7 @@ export default function ProClientsPage() {
               <div className="h-0.5 bg-gradient-to-r from-transparent via-[#C8951E] to-transparent -mt-[1px] mx-6 rounded-full" />
               <DialogHeader className="pt-2">
                 <DialogTitle className="font-display text-xl text-white flex items-center gap-2">
-                  <span className="text-2xl">ðŸ‘¤</span> Nouveau profil cliente
+                  <span className="text-2xl">👤</span> Nouveau profil cliente
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleCreateClient} className="space-y-4 mt-2">
@@ -371,7 +371,7 @@ export default function ProClientsPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-white/50 text-xs">PrÃ©nom</Label>
+                    <Label className="text-white/50 text-xs">Prénom</Label>
                     <Input required className="bg-white/5 border-white/10 text-white rounded-xl focus:border-[#C8951E]" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} />
                   </div>
                   <div className="space-y-1.5">
@@ -381,7 +381,7 @@ export default function ProClientsPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-white/50 text-xs">TÃ©lÃ©phone</Label>
+                    <Label className="text-white/50 text-xs">Téléphone</Label>
                     <Input required className="bg-white/5 border-white/10 text-white rounded-xl focus:border-[#C8951E]" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
                   </div>
                   <div className="space-y-1.5">
@@ -420,7 +420,7 @@ export default function ProClientsPage() {
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-white/50 text-xs">Allergies connues (sÃ©parÃ©es par virgules)</Label>
+                    <Label className="text-white/50 text-xs">Allergies connues (séparées par virgules)</Label>
                     <Input className="bg-white/5 border-white/10 text-white rounded-xl focus:border-[#C8951E]" placeholder="ex: Noix, Latex, Parfums..." value={formData.allergies} onChange={(e) => setFormData({ ...formData, allergies: e.target.value })} />
                   </div>
                 </div>
@@ -442,7 +442,7 @@ export default function ProClientsPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3.5 top-3 h-4 w-4 text-white/30" />
           <Input
-            placeholder="Rechercher par nom, tÃ©lÃ©phone..."
+            placeholder="Rechercher par nom, téléphone..."
             className="pl-10 bg-[#1A1410] border-white/10 text-white rounded-2xl h-11 placeholder:text-white/20 focus:border-[#C8951E]"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -469,8 +469,8 @@ export default function ProClientsPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-white/20 text-xs">
-            <div className="text-4xl mb-3">ðŸ‘¥</div>
-            Aucune cliente trouvÃ©e.
+            <div className="text-4xl mb-3">👥</div>
+            Aucune cliente trouvée.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -485,7 +485,7 @@ export default function ProClientsPage() {
                 allergies = typeof client.allergies === 'string' ? [client.allergies] : [];
               }
               const fitzColor = FITZPATRICK_COLORS[client.fitzpatrickType] || '#A0522D';
-              const skinEmoji = SKIN_TYPE_EMOJI[client.skinType] || 'âœ¨';
+              const skinEmoji = SKIN_TYPE_EMOJI[client.skinType] || '✨';
               const isExpanded = expandedId === clientId;
 
               return (
@@ -555,7 +555,7 @@ export default function ProClientsPage() {
                   {allergies.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-3">
                       {allergies.slice(0, 3).map((a: string, idx: number) => (
-                        <span key={idx} className="text-[9px] px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 font-bold">âš ï¸ {a}</span>
+                        <span key={idx} className="text-[9px] px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 font-bold">⚠️ï¸ {a}</span>
                       ))}
                       {allergies.length > 3 && <span className="text-[9px] text-white/30">+{allergies.length - 3}</span>}
                     </div>
@@ -592,19 +592,19 @@ export default function ProClientsPage() {
                         }}>
                           <DialogTrigger asChild>
                             <Button className="h-7 text-[10px] bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 hover:bg-[#C8951E]/30 rounded-xl font-bold cursor-pointer">
-                              + Nouvelle Consultation / ContrÃ´le
+                              + Nouvelle Consultation / Contrôle
                             </Button>
                           </DialogTrigger>
                           <DialogContent className="bg-[#0F0A05] border border-[#C8951E]/30 text-white rounded-3xl max-w-lg p-6">
                             <DialogHeader>
                               <DialogTitle className="font-display text-lg text-white flex items-center gap-2">
-                                ðŸ“‹ Saisie Consultation & IngrÃ©dients CosmÃ©tiques
+                                📁‹ Saisie Consultation & Ingrédients Cosmétiques
                               </DialogTitle>
                             </DialogHeader>
 
                             <div className="space-y-3.5 text-xs my-2">
                               <p className="text-white/60 text-[11px]">
-                                Enregistrez le contrÃ´le mÃ©dical dermatologique de {client.firstName} {client.lastName} et les ingrÃ©dients cosmÃ©tiques de ses produits.
+                                Enregistrez le contrôle médical dermatologique de {client.firstName} {client.lastName} et les ingrédients cosmétiques de ses produits.
                               </p>
 
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -615,10 +615,10 @@ export default function ProClientsPage() {
                                     onChange={(e) => setConsultationType(e.target.value)}
                                     className="w-full bg-[#1A1410] border border-white/10 text-white rounded-xl p-2.5 text-xs font-bold cursor-pointer outline-none focus:border-[#C8951E]"
                                   >
-                                    <option value="ContrÃ´le Dermatologique" className="bg-[#0F0A05] text-white">ContrÃ´le Dermatologique</option>
+                                    <option value="Contrôle Dermatologique" className="bg-[#0F0A05] text-white">Contrôle Dermatologique</option>
                                     <option value="Consultation Initiale" className="bg-[#0F0A05] text-white">Consultation Initiale</option>
                                     <option value="Suivi Hyperpigmentation" className="bg-[#0F0A05] text-white">Suivi Hyperpigmentation</option>
-                                    <option value="Ajustement Routine CosmÃ©tique" className="bg-[#0F0A05] text-white">Ajustement Routine CosmÃ©tique</option>
+                                    <option value="Ajustement Routine Cosmétique" className="bg-[#0F0A05] text-white">Ajustement Routine Cosmétique</option>
                                   </select>
                                 </div>
                                 <div className="space-y-1">
@@ -628,23 +628,23 @@ export default function ProClientsPage() {
                               </div>
 
                               <div className="space-y-1">
-                                <Label className="text-white/60 text-[10px]">IngrÃ©dients des Produits CosmÃ©tiques PrÃ©scrits/UtilisÃ©s</Label>
+                                <Label className="text-white/60 text-[10px]">Ingrédients des Produits Cosmétiques Préscrits/Utilisés</Label>
                                 <textarea
                                   rows={2}
                                   value={cosmeticIngredients}
                                   onChange={(e) => setCosmeticIngredients(e.target.value)}
-                                  placeholder="ex: Beurre de KaritÃ© pur, Huile de Baobab, Gel Aloe Vera 99%, Niacinamide 5%, Acide Kojique..."
+                                  placeholder="ex: Beurre de Karité pur, Huile de Baobab, Gel Aloe Vera 99%, Niacinamide 5%, Acide Kojique..."
                                   className="w-full bg-[#1A1410] border border-white/10 text-white p-2.5 rounded-xl text-xs outline-none focus:border-[#C8951E]"
                                 />
                               </div>
 
                               <div className="space-y-1">
-                                <Label className="text-white/60 text-[10px]">Observations MÃ©dicales & Ã‰volution CutanÃ©e</Label>
+                                <Label className="text-white/60 text-[10px]">Observations Médicales & Évolution Cutanée</Label>
                                 <textarea
                                   rows={3}
                                   value={consultationNotes}
                                   onChange={(e) => setConsultationNotes(e.target.value)}
-                                  placeholder="Observations de la peau lors du contrÃ´le (ex: BarriÃ¨re cutanÃ©e restaurÃ©e, sÃ©bum rÃ©gulÃ©, taches Ã©claircies de 30%)..."
+                                  placeholder="Observations de la peau lors du contrôle (ex: Barrière cutanée restaurée, sébum régulé, taches éclaircies de 30%)..."
                                   className="w-full bg-[#1A1410] border border-white/10 text-white p-2.5 rounded-xl text-xs outline-none focus:border-[#C8951E]"
                                 />
                               </div>
@@ -653,7 +653,7 @@ export default function ProClientsPage() {
                                 onClick={() => handleSaveConsultation(client.id)}
                                 className="w-full h-10 bg-gradient-to-r from-[#C8951E] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-lg cursor-pointer mt-1"
                               >
-                                Enregistrer la Consultation & IngrÃ©dients
+                                Enregistrer la Consultation & Ingrédients
                               </Button>
                             </div>
                           </DialogContent>
@@ -663,25 +663,25 @@ export default function ProClientsPage() {
                       {/* Display Consultation History Entries */}
                       {(consultationsHistory[client.id] || []).length > 0 && (
                         <div className="space-y-2 pt-1">
-                          <span className="text-[10px] font-bold text-[#F3E5AB] uppercase tracking-wider block">Historique des ContrÃ´les EnregistrÃ©s ({consultationsHistory[client.id].length}) :</span>
+                          <span className="text-[10px] font-bold text-[#F3E5AB] uppercase tracking-wider block">Historique des Contrôles Enregistrés ({consultationsHistory[client.id].length}) :</span>
                           {consultationsHistory[client.id].map((entry, idx) => (
                             <div key={idx} className="bg-[#1A1410] border border-[#C8951E]/20 p-3 rounded-xl space-y-1.5">
                               <div className="flex items-center justify-between text-xs">
                                 <span className="font-bold text-white flex items-center gap-1.5">
-                                  <span>ðŸ“‹</span> {entry.type}
+                                  <span>📁‹</span> {entry.type}
                                 </span>
                                 <span className="text-[10px] text-white/40 font-mono">{entry.date}</span>
                               </div>
                               <div className="flex gap-2 text-[9px] font-mono text-emerald-400">
-                                <span>ðŸ’§ Hydratation : {entry.hydration}</span>
-                                <span>ðŸŒ¿ SÃ©bum : {entry.sebum}</span>
+                                <span>💧 Hydratation : {entry.hydration}</span>
+                                <span>🌿 Sébum : {entry.sebum}</span>
                               </div>
                               <p className="text-[11px] text-white/70 font-sans italic">"{entry.notes}"</p>
                               {entry.ingredients && entry.ingredients.length > 0 && (
                                 <div className="flex flex-wrap gap-1 pt-1">
-                                  <span className="text-[9px] text-white/40">IngrÃ©dients :</span>
+                                  <span className="text-[9px] text-white/40">Ingrédients :</span>
                                   {entry.ingredients.map((ing: string, i: number) => (
-                                    <span key={i} className="text-[9px] px-2 py-0.5 rounded-full bg-[#2E5A36]/30 text-emerald-300 font-mono border border-[#2E5A36]/50">ðŸŒ± {ing}</span>
+                                    <span key={i} className="text-[9px] px-2 py-0.5 rounded-full bg-[#2E5A36]/30 text-emerald-300 font-mono border border-[#2E5A36]/50">🌱 {ing}</span>
                                   ))}
                                 </div>
                               )}
@@ -689,7 +689,7 @@ export default function ProClientsPage() {
                           ))}
                         </div>
                       )}
-                      {/* Display Archived Diagnostic Scans (Bilans CutanÃ©s ArchivÃ©s) */}
+                      {/* Display Archived Diagnostic Scans (Bilans Cutanés Archivés) */}
                       {(() => {
                         let archivedDiags = [];
                         try {
@@ -708,7 +708,7 @@ export default function ProClientsPage() {
                               date: '01/08/2026',
                               scoreGlobal: 78,
                               phototype: client.fitzpatrickType || 'V',
-                              clinicalNotes: { skinType: `Peau ${client.skinType || 'Mixte'} DÃ©shydratÃ©e`, pihRisk: 'MODÃ‰RÃ‰' },
+                              clinicalNotes: { skinType: `Peau ${client.skinType || 'Mixte'} Déshydratée`, pihRisk: 'MODÉRÉ' },
                               subScores: { hydration: 82, sebum: 65, brightness: 74 }
                             }
                           ];
@@ -718,17 +718,17 @@ export default function ProClientsPage() {
                           <div className="space-y-2 pt-2 border-t border-white/5">
                             <div className="flex items-center justify-between">
                               <span className="text-[10px] font-bold text-[#F3E5AB] uppercase tracking-wider block font-mono">
-                                ðŸ”¬ Bilans CutanÃ©s ArchivÃ©s & Historique 3D ({archivedDiags.length}) :
+                                🔬 Bilans Cutanés Archivés & Historique 3D ({archivedDiags.length}) :
                               </span>
-                              <span className="text-[9px] text-emerald-400 font-mono font-bold">ðŸ”’ Archive SÃ©curisÃ©e</span>
+                              <span className="text-[9px] text-emerald-400 font-mono font-bold">ðŸ”’ Archive Sécurisée</span>
                             </div>
 
                             {archivedDiags.map((diag: any, dIdx: number) => (
                               <div key={dIdx} className="bg-[#1A1410] border border-[#C8951E]/30 p-3 rounded-2xl space-y-2 shadow-md">
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-2">
-                                    <span className="text-xs">ðŸ”¬</span>
-                                    <span className="font-display font-bold text-xs text-white">Bilan CutanÃ© Octo-Spectral</span>
+                                    <span className="text-xs">🔬</span>
+                                    <span className="font-display font-bold text-xs text-white">Bilan Cutané Octo-Spectral</span>
                                     <span className="text-[9px] px-2 py-0.5 rounded-full bg-[#C8951E]/20 text-[#F3E5AB] font-mono font-bold">
                                       Score: {diag.scoreGlobal}/100
                                     </span>
@@ -739,7 +739,7 @@ export default function ProClientsPage() {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-[9px] font-mono bg-black/40 p-2 rounded-xl border border-white/5">
                                   <div><span className="text-white/40 block">Hydratation</span><span className="text-emerald-400 font-bold">{diag.subScores?.hydration || 80}%</span></div>
                                   <div><span className="text-white/40 block">Phototype</span><span className="text-[#F3E5AB] font-bold">Type {diag.phototype}</span></div>
-                                  <div><span className="text-white/40 block">Risque PIH</span><span className="text-amber-400 font-bold">{diag.clinicalNotes?.pihRisk || 'ModÃ©rÃ©'}</span></div>
+                                  <div><span className="text-white/40 block">Risque PIH</span><span className="text-amber-400 font-bold">{diag.clinicalNotes?.pihRisk || 'Modéré'}</span></div>
                                 </div>
 
                                 <div className="flex justify-between items-center pt-1">
@@ -750,7 +750,7 @@ export default function ProClientsPage() {
                                     }}
                                     className="text-[9px] font-bold px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[#F3E5AB] border border-white/10 flex items-center gap-1 cursor-pointer"
                                   >
-                                    ðŸ–¨ï¸ Consulter / Imprimer Bilan
+                                    🖨️ï¸ Consulter / Imprimer Bilan
                                   </button>
                                 </div>
                               </div>
@@ -761,28 +761,28 @@ export default function ProClientsPage() {
 
                       <div className="space-y-2">
                         <div className="flex justify-between border-b border-white/5 pb-2">
-                          <span>Dernier soin: Hydratation KaritÃ© & Massage Baobab</span>
+                          <span>Dernier soin: Hydratation Karité & Massage Baobab</span>
                           <span className="font-mono text-white/30">Il y a 2 sem.</span>
                         </div>
                         <div className="flex justify-between border-b border-white/5 pb-2">
-                          <span>Motif Consultation: Soin Dermo-CosmÃ©tique & Hyperpigmentation</span>
-                          <span className="font-mono text-emerald-400">ConfirmÃ©</span>
+                          <span>Motif Consultation: Soin Dermo-Cosmétique & Hyperpigmentation</span>
+                          <span className="font-mono text-emerald-400">Confirmé</span>
                         </div>
                         <div className="pt-1 bg-white/5 p-2.5 rounded-xl border border-white/5 space-y-2">
                           <span className="text-[#C8951E] font-bold block">Prescription & Recommandations Praticienne :</span>
                           <p className="text-[11px] text-white/70 leading-relaxed font-sans">
-                            Phototype {client.fitzpatrickType} Â· Tendance hyperpigmentation (PIH). Appliquer 3 gouttes de sÃ©rum Niacinamide & Baobab le soir. Ã‰cran solaire minÃ©ral SPF 50 obligatoire.
+                            Phototype {client.fitzpatrickType} Â· Tendance hyperpigmentation (PIH). Appliquer 3 gouttes de sérum Niacinamide & Baobab le soir. Écran solaire minéral SPF 50 obligatoire.
                           </p>
                         </div>
 
-                        {/* --- GALERIE AVANT / APRÃˆS & Ã‰VOLUTION DU TEINT --- */}
+                        {/* --- GALERIE AVANT / APRÈS & ÉVOLUTION DU TEINT --- */}
                         <div className="pt-2 border-t border-white/5 space-y-2.5">
                           <div className="flex justify-between items-center">
                             <span className="text-[10px] font-bold text-[#C8951E] uppercase tracking-wider font-display flex items-center gap-1">
-                              ðŸ“¸ Ã‰volution du Teint & Traitement (Avant / AprÃ¨s)
+                              📸 Évolution du Teint & Traitement (Avant / Après)
                             </span>
                             <span className="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
-                              Ã‰clat +42% Â· Taches -65%
+                              Éclat +42% Â· Taches -65%
                             </span>
                           </div>
 
@@ -795,21 +795,21 @@ export default function ProClientsPage() {
                               <div className="w-full h-24 rounded-lg bg-gradient-to-br from-[#362A21] to-[#1A1410] flex items-center justify-center border border-white/5">
                                 <div className="text-center space-y-0.5">
                                   <span className="text-xl">ðŸ”</span>
-                                  <p className="text-[9px] text-white/50 font-sans">Taches PIH MarquÃ©es</p>
+                                  <p className="text-[9px] text-white/50 font-sans">Taches PIH Marquées</p>
                                 </div>
                               </div>
                               <p className="text-[9px] text-white/40 font-mono">15/06/2026 Â· Initial</p>
                             </div>
 
-                            {/* Photo J-30 (AprÃ¨s) */}
+                            {/* Photo J-30 (Après) */}
                             <div className="bg-[#1A1410] border border-emerald-500/30 rounded-xl p-2 text-center space-y-1 relative overflow-hidden">
                               <span className="absolute top-1 left-1 text-[8px] font-bold bg-emerald-500 text-[#0F0A05] px-1.5 py-0.5 rounded font-display">
-                                J-30 (AprÃ¨s)
+                                J-30 (Après)
                               </span>
                               <div className="w-full h-24 rounded-lg bg-gradient-to-br from-[#241C16] to-[#0A0603] flex items-center justify-center border border-emerald-500/20">
                                 <div className="text-center space-y-0.5">
-                                  <span className="text-xl">âœ¨</span>
-                                  <p className="text-[9px] text-emerald-400 font-bold font-display">Teint Nourri & UnifiÃ©</p>
+                                  <span className="text-xl">✨</span>
+                                  <p className="text-[9px] text-emerald-400 font-bold font-display">Teint Nourri & Unifié</p>
                                 </div>
                               </div>
                               <p className="text-[9px] text-emerald-400/80 font-mono">15/07/2026 Â· Post-Soin</p>
@@ -826,7 +826,7 @@ export default function ProClientsPage() {
         )}
       </motion.div>
 
-      {/* â”€â”€ PLEIN Ã‰CRAN / DÃ‰DIÃ‰ DOSSIER CLIENT COMPLET â”€â”€ */}
+      {/* â”€â”€ PLEIN ÉCRAN / DÉDIÉ DOSSIER CLIENT COMPLET â”€â”€ */}
       <ClientFullDossierModal
         isOpen={Boolean(fullDossierClient)}
         onClose={() => setFullDossierClient(null)}
@@ -836,7 +836,7 @@ export default function ProClientsPage() {
           setIsConsultationOpen(true);
         }}
         onPrintPassport={() => {
-          toast({ title: "ðŸ–¨ï¸ Passeport BeautÃ© PDF", description: "Impression du passeport de diagnostic." });
+          toast({ title: "🖨️ï¸ Passeport Beauté PDF", description: "Impression du passeport de diagnostic." });
           window.print();
         }}
       />

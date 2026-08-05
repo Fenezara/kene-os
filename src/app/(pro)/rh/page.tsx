@@ -87,8 +87,8 @@ export default function RhPage() {
       const data = await res.json()
       if (data.success) {
         toast({
-          title: "âœ… Bulletins clÃ´turÃ©s",
-          description: `Paie validÃ©e avec succÃ¨s.`,
+          title: "✨… Bulletins clôturés",
+          description: `Paie validée avec succès.`,
         })
         fetchPayroll()
       } else {
@@ -107,9 +107,9 @@ export default function RhPage() {
 
   const getMonthLabel = (mVal: string) => {
     const months: Record<string, string> = {
-      '1': 'Janvier', '2': 'FÃ©vrier', '3': 'Mars', '4': 'Avril',
-      '5': 'Mai', '6': 'Juin', '7': 'Juillet', '8': 'AoÃ»t',
-      '9': 'Septembre', '10': 'Octobre', '11': 'Novembre', '12': 'DÃ©cembre'
+      '1': 'Janvier', '2': 'Février', '3': 'Mars', '4': 'Avril',
+      '5': 'Mai', '6': 'Juin', '7': 'Juillet', '8': 'Août',
+      '9': 'Septembre', '10': 'Octobre', '11': 'Novembre', '12': 'Décembre'
     }
     return months[mVal] || ''
   }
@@ -131,7 +131,7 @@ export default function RhPage() {
               Paie <span className="bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] bg-clip-text text-transparent">& RH Premium</span>
             </h1>
           </div>
-          <p className="text-white/40 text-xs ml-10">Conforme {country === 'SN' ? 'SÃ©nÃ©gal (IPRES/IPM)' : 'CÃ´te d\'Ivoire (CNPS/IGR)'}</p>
+          <p className="text-white/40 text-xs ml-10">Conforme {country === 'SN' ? 'Sénégal (IPRES/IPM)' : 'Côte d\'Ivoire (CNPS/IGR)'}</p>
         </div>
 
         <div className="flex gap-2 flex-wrap">
@@ -140,7 +140,7 @@ export default function RhPage() {
             onClick={() => window.open(`/api/rh/declarations?month=${selectedMonth}&year=${selectedYear}&country=${country}`, '_blank')}
             className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/20 cursor-pointer"
           >
-            <Download className="w-3.5 h-3.5" /> CSV DÃ©claration
+            <Download className="w-3.5 h-3.5" /> CSV Déclaration
           </m.button>
 
           {payrolls.some((p) => !p.isSaved) && payrolls.length > 0 && (
@@ -151,7 +151,7 @@ export default function RhPage() {
               className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-sm text-[#0F0A05] cursor-pointer"
               style={{ background: 'linear-gradient(135deg, #F3E5AB, #C8951E)', boxShadow: '0 4px 20px rgba(200,149,30,0.3)' }}
             >
-              <CheckCircle2 className="w-4 h-4" /> {saving ? 'ClÃ´ture...' : 'ClÃ´turer PÃ©riode'}
+              <CheckCircle2 className="w-4 h-4" /> {saving ? 'Clôture...' : 'Clôturer Période'}
             </m.button>
           )}
         </div>
@@ -171,7 +171,7 @@ export default function RhPage() {
         </div>
         <div className="bg-[#1A1410] border border-white/5 rounded-3xl p-5 relative overflow-hidden">
           <div className="absolute -right-6 -top-6 w-20 h-20 bg-red-500/10 rounded-full blur-2xl" />
-          <h4 className="text-xs text-white/40 font-bold uppercase tracking-wider mb-1">Total IGR (ImpÃ´ts)</h4>
+          <h4 className="text-xs text-white/40 font-bold uppercase tracking-wider mb-1">Total IGR (Impôts)</h4>
           <div className="text-2xl font-display font-black text-red-400">{totalIgr.toLocaleString()} <span className="text-sm">FCFA</span></div>
         </div>
       </m.div>
@@ -185,7 +185,7 @@ export default function RhPage() {
               onClick={() => setCountry(c)}
               className={`flex-1 md:w-24 py-2 text-xs font-bold rounded-xl transition-all ${country === c ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/80'}`}
             >
-              {c === 'CI' ? 'ðŸ‡¨ðŸ‡® CÃ´te d\'Ivoire' : 'ðŸ‡¸ðŸ‡³ SÃ©nÃ©gal'}
+              {c === 'CI' ? '🇨🇮 Côte d\'Ivoire' : '🇸🇳 Sénégal'}
             </button>
           ))}
         </div>
@@ -208,7 +208,7 @@ export default function RhPage() {
         {loading ? (
           <div className="flex justify-center py-16"><div className="animate-spin h-6 w-6 border-2 border-[#C8951E] border-t-transparent rounded-full" /></div>
         ) : payrolls.length === 0 ? (
-          <div className="text-center py-16 text-white/20 text-xs"><div className="text-4xl mb-3">ðŸ“„</div>Aucun salariÃ©.</div>
+          <div className="text-center py-16 text-white/20 text-xs"><div className="text-4xl mb-3">📁„</div>Aucun salarié.</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {payrolls.map((pr, i) => (
@@ -229,7 +229,7 @@ export default function RhPage() {
                     </div>
                   </div>
                   {pr.isSaved ? (
-                    <span className="text-[10px] font-bold px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded-lg">ValidÃ©</span>
+                    <span className="text-[10px] font-bold px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded-lg">Validé</span>
                   ) : (
                     <span className="text-[10px] font-bold px-2 py-1 bg-orange-500/10 text-orange-400 rounded-lg">Brouillon</span>
                   )}
@@ -241,7 +241,7 @@ export default function RhPage() {
                     <div className="font-mono text-sm text-white">{pr.grossSalary.toLocaleString()} F</div>
                   </div>
                   <div>
-                    <span className="text-[10px] text-white/40">Net Ã  payer</span>
+                    <span className="text-[10px] text-white/40">Net à  payer</span>
                     <div className="font-mono text-lg font-bold text-emerald-400">{pr.netPay.toLocaleString()} F</div>
                   </div>
                 </div>
@@ -277,7 +277,7 @@ export default function RhPage() {
               <div className="print-area">
                 <div className="flex justify-between items-start border-b-2 border-black pb-4 mb-6">
                   <div>
-                    <h3 className="font-display font-black text-xl uppercase">KÃˆNÃˆ BEAUTÃ‰</h3>
+                    <h3 className="font-display font-black text-xl uppercase">KÈNÈ BEAUTÉ</h3>
                     <p className="text-xs text-gray-600">Abidjan, Cocody Mermoz</p>
                     <p className="text-xs text-gray-600 font-mono">NÂ° Employeur: 458-92831</p>
                   </div>
@@ -289,7 +289,7 @@ export default function RhPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-6">
                   <div className="border border-gray-200 p-3 rounded-xl">
-                    <p className="text-[10px] uppercase font-bold text-gray-400 mb-1">EmployÃ©</p>
+                    <p className="text-[10px] uppercase font-bold text-gray-400 mb-1">Employé</p>
                     <p className="font-bold">{showSlipModal.employee.firstName} {showSlipModal.employee.lastName}</p>
                     <p className="text-xs text-gray-600">Poste: {showSlipModal.employee.position}</p>
                     <p className="text-xs text-gray-600">Embauche: {new Date(showSlipModal.employee.hireDate).toLocaleDateString()}</p>
@@ -299,7 +299,7 @@ export default function RhPage() {
                 <table className="w-full text-sm mb-6 border-collapse">
                   <thead>
                     <tr className="border-b-2 border-black text-left">
-                      <th className="py-2">DÃ©signation</th>
+                      <th className="py-2">Désignation</th>
                       <th className="py-2 text-right">Base</th>
                       <th className="py-2 text-right text-red-600">Retenues</th>
                     </tr>
@@ -324,7 +324,7 @@ export default function RhPage() {
                     </tr>
                     {showSlipModal.igrTax > 0 && (
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 text-gray-600">ImpÃ´t IGR</td>
+                        <td className="py-2 text-gray-600">Impôt IGR</td>
                         <td className="py-2 text-right font-mono">-</td>
                         <td className="py-2 text-right font-mono text-red-600">{showSlipModal.igrTax.toLocaleString()}</td>
                       </tr>
@@ -334,7 +334,7 @@ export default function RhPage() {
 
                 <div className="flex justify-end mt-8">
                   <div className="border-2 border-black rounded-xl p-4 w-64">
-                    <p className="text-xs uppercase font-bold text-gray-500 mb-1">Net Ã  Payer</p>
+                    <p className="text-xs uppercase font-bold text-gray-500 mb-1">Net à  Payer</p>
                     <p className="text-2xl font-mono font-black">{showSlipModal.netPay.toLocaleString()} <span className="text-sm">XOF</span></p>
                   </div>
                 </div>

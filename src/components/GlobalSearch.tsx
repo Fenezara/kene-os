@@ -80,12 +80,12 @@ export function GlobalSearch() {
           <div className="p-2 max-h-[60vh] overflow-y-auto scrollbar-none">
             {query && filteredActions.length === 0 ? (
               <div className="py-12 text-center text-white/40 text-sm">
-                Aucun rÃ©sultat trouvÃ© pour "{query}"
+                Aucun résultat trouvé pour "{query}"
               </div>
             ) : (
               <div className="space-y-1">
                 <div className="px-3 py-2 text-[10px] font-bold tracking-[0.15em] uppercase text-white/30">
-                  {query ? 'RÃ©sultats' : 'Actions Rapides'}
+                  {query ? 'Résultats' : 'Actions Rapides'}
                 </div>
                 {filteredActions.map((action, i) => (
                   <button

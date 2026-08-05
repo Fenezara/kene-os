@@ -91,7 +91,7 @@ export default function WalletPage() {
     setRechargeSuccess(false)
     
     try {
-      // Appeler la nouvelle passerelle Mobile Money qui simule un dÃ©lai USSD
+      // Appeler la nouvelle passerelle Mobile Money qui simule un délai USSD
       const res = await fetch('/api/payments/momo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -113,17 +113,17 @@ export default function WalletPage() {
           setRecharging(false)
           fetchWallet(userId) // refresh balance
           toast({
-            title: "ðŸ’¸ DÃ©pÃ´t RÃ©ussi",
-            description: `Votre compte KÃ¨nÃ¨ a Ã©tÃ© crÃ©ditÃ© de ${parseFloat(topupAmount).toLocaleString()} F via ${PROVIDERS[momoProvider].label}.`,
+            title: "💸 Dépôt Réussi",
+            description: `Votre compte Kènè a été crédité de ${parseFloat(topupAmount).toLocaleString()} F via ${PROVIDERS[momoProvider].label}.`,
           })
         }, 1500)
       } else {
-        throw new Error(json.error?.message || "Erreur lors du dÃ©pÃ´t.")
+        throw new Error(json.error?.message || "Erreur lors du dépôt.")
       }
     } catch (e: any) {
       setRecharging(false)
       toast({
-        title: "âŒ Ã‰chec de la transaction",
+        title: "âŒ Échec de la transaction",
         description: e.message,
         variant: "destructive"
       })
@@ -133,7 +133,7 @@ export default function WalletPage() {
   const getReasonLabel = (reason: string) => {
     switch (reason) {
       case 'cashback': return 'Cashback 1%'
-      case 'topup': return 'DÃ©pÃ´t Mobile Money'
+      case 'topup': return 'Dépôt Mobile Money'
       case 'payment': return 'Achat de Formules / Soins'
       case 'referral': return 'Bonus Parrainage'
       default: return 'Ajustement Solde'
@@ -152,7 +152,7 @@ export default function WalletPage() {
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="font-display font-bold text-lg text-gold-kene">Mon Portefeuille KÃ¨nÃ¨</h1>
+        <h1 className="font-display font-bold text-lg text-gold-kene">Mon Portefeuille Kènè</h1>
       </header>
 
       {/* Credit Card Graphic Card */}
@@ -167,7 +167,7 @@ export default function WalletPage() {
         <div className="flex justify-between items-start z-10">
           <div className="flex items-center gap-1.5 text-gold-kene">
             <Coins className="w-5 h-5 animate-pulse" />
-            <span className="text-[10px] font-bold font-display uppercase tracking-widest">KÃ¨nÃ¨ Pay</span>
+            <span className="text-[10px] font-bold font-display uppercase tracking-widest">Kènè Pay</span>
           </div>
           <CreditCard className="w-8 h-8 text-white/20" />
         </div>
@@ -184,7 +184,7 @@ export default function WalletPage() {
         </div>
 
         <div className="flex justify-between items-end z-10 text-[9px] font-mono text-white/50">
-          <span>MEMBRE PRIVILÃˆGE</span>
+          <span>MEMBRE PRIVILÈGE</span>
           <span>VALIDE (XOF)</span>
         </div>
       </m.div>
@@ -196,7 +196,7 @@ export default function WalletPage() {
           className="flex-1 bg-black border border-white/20 rounded-xl py-3 flex items-center justify-center gap-2 hover:bg-white/5 transition"
         >
           <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple" className="w-4 h-4 invert" />
-          <span className="text-xs font-semibold">Ajouter Ã  Apple Wallet</span>
+          <span className="text-xs font-semibold">Ajouter à  Apple Wallet</span>
         </button>
         <button 
           onClick={() => setShowPassModal(true)}
@@ -230,7 +230,7 @@ export default function WalletPage() {
         <div className="space-y-0.5">
           <h4 className="font-display font-bold text-xs text-white uppercase tracking-wider">Avantage Cashback Automatique</h4>
           <p className="text-[10px] text-karite/60 leading-relaxed font-sans">
-            BÃ©nÃ©ficiez de 1% de cashback crÃ©ditÃ© immÃ©diatement sur votre portefeuille KÃ¨nÃ¨ Ã  chaque achat de cosmÃ©tiques ou soins.
+            Bénéficiez de 1% de cashback crédité immédiatement sur votre portefeuille Kènè à  chaque achat de cosmétiques ou soins.
           </p>
         </div>
       </div>
@@ -246,7 +246,7 @@ export default function WalletPage() {
           </div>
         ) : !wallet || wallet.transactions.length === 0 ? (
           <div className="text-center py-12 bg-[#1A1410]/40 border border-white/5 rounded-2xl text-karite/40 text-xs italic font-sans">
-            Aucune transaction enregistrÃ©e.
+            Aucune transaction enregistrée.
           </div>
         ) : (
           <div className="space-y-2.5">
@@ -325,19 +325,19 @@ export default function WalletPage() {
 
                   <div className="space-y-1">
                     <h3 className="font-display font-bold text-white text-sm">
-                      {rechargeSuccess ? 'Paiement ValidÃ© !' : 'En attente de validation'}
+                      {rechargeSuccess ? 'Paiement Validé !' : 'En attente de validation'}
                     </h3>
                     <p className="text-xs text-karite/60">
                       {rechargeSuccess 
-                        ? 'Votre compte a Ã©tÃ© crÃ©ditÃ©.' 
-                        : 'Veuillez confirmer la transaction sur votre tÃ©lÃ©phone.'}
+                        ? 'Votre compte a été crédité.' 
+                        : 'Veuillez confirmer la transaction sur votre téléphone.'}
                     </p>
                   </div>
                   
                   {!rechargeSuccess && (
                     <div className="flex items-center gap-2 text-[10px] text-karite/40 bg-white/5 px-3 py-1.5 rounded-full mt-4">
                       <Loader2 className="w-3 h-3 animate-spin" />
-                      <span>Ne fermez pas cette fenÃªtre...</span>
+                      <span>Ne fermez pas cette fenêtre...</span>
                     </div>
                   )}
                 </div>
@@ -347,7 +347,7 @@ export default function WalletPage() {
                   <div className="space-y-1 relative z-10">
                     <h3 className="font-display font-bold text-sm text-gold-kene uppercase tracking-wider">Recharge Mobile Money</h3>
                     <p className="text-[10px] text-karite/60 font-sans">
-                      SÃ©lectionnez votre opÃ©rateur et le montant Ã  dÃ©poser.
+                      Sélectionnez votre opérateur et le montant à  déposer.
                     </p>
                   </div>
 
@@ -375,7 +375,7 @@ export default function WalletPage() {
 
                   {/* Input amount */}
                   <div className="space-y-1 relative z-10">
-                    <label className="text-[9px] uppercase tracking-wider font-semibold text-karite/40 font-display block">Montant Ã  recharger (FCFA)</label>
+                    <label className="text-[9px] uppercase tracking-wider font-semibold text-karite/40 font-display block">Montant à  recharger (FCFA)</label>
                     <input
                       type="number"
                       placeholder="Ex: 10000"
@@ -432,7 +432,7 @@ export default function WalletPage() {
                   <div className="w-8 h-8 bg-[#1A1410] rounded-full flex items-center justify-center">
                     <span className="text-[#C8951E] font-bold text-xs font-display">K</span>
                   </div>
-                  <span className="font-display font-bold text-sm tracking-widest uppercase">KÃ¨nÃ¨ Pro</span>
+                  <span className="font-display font-bold text-sm tracking-widest uppercase">Kènè Pro</span>
                 </div>
                 <Download className="w-5 h-5 opacity-50" />
               </div>
@@ -458,7 +458,7 @@ export default function WalletPage() {
                 <div className="flex items-center justify-between bg-[#1A1410]/10 p-3 rounded-xl">
                   <div className="flex items-center gap-2">
                     <Bell className="w-4 h-4" />
-                    <span className="text-xs font-semibold">Notifications GÃ©olocalisÃ©es</span>
+                    <span className="text-xs font-semibold">Notifications Géolocalisées</span>
                   </div>
                   <button 
                     onClick={() => setGeofencingEnabled(!geofencingEnabled)}
@@ -468,7 +468,7 @@ export default function WalletPage() {
                   </button>
                 </div>
                 <p className="text-[9px] text-[#1A1410]/60 mt-2 text-center">
-                  Recevez une alerte lorsque vous passez prÃ¨s de l'institut.
+                  Recevez une alerte lorsque vous passez près de l'institut.
                 </p>
               </div>
             </m.div>

@@ -26,12 +26,12 @@ interface Service {
 const CATEGORIES = [
   { name: 'Coiffure', emoji: 'ðŸ’‡', color: 'from-pink-500/20 to-pink-500/5', border: 'border-pink-500/20' },
   { name: 'Soin Visage', emoji: 'ðŸ’†', color: 'from-blue-500/20 to-blue-500/5', border: 'border-blue-500/20' },
-  { name: 'Massage', emoji: 'ðŸŒ¿', color: 'from-emerald-500/20 to-emerald-500/5', border: 'border-emerald-500/20' },
+  { name: 'Massage', emoji: '🌿', color: 'from-emerald-500/20 to-emerald-500/5', border: 'border-emerald-500/20' },
   { name: 'Maquillage', emoji: 'ðŸ’„', color: 'from-red-500/20 to-red-500/5', border: 'border-red-500/20' },
   { name: 'Onglerie', emoji: 'ðŸ’…', color: 'from-purple-500/20 to-purple-500/5', border: 'border-purple-500/20' },
-  { name: 'Ã‰pilation', emoji: 'ðŸŒ¸', color: 'from-fuchsia-500/20 to-fuchsia-500/5', border: 'border-fuchsia-500/20' },
-  { name: 'KaritÃ©', emoji: 'ðŸ¥œ', color: 'from-[var(--gold-kene)]/20 to-[var(--gold-kene)]/5', border: 'border-[var(--gold-kene)]/20' },
-  { name: 'Baobab', emoji: 'ðŸŒ³', color: 'from-green-500/20 to-green-500/5', border: 'border-green-500/20' },
+  { name: 'Épilation', emoji: '🌸', color: 'from-fuchsia-500/20 to-fuchsia-500/5', border: 'border-fuchsia-500/20' },
+  { name: 'Karité', emoji: '🥜', color: 'from-[var(--gold-kene)]/20 to-[var(--gold-kene)]/5', border: 'border-[var(--gold-kene)]/20' },
+  { name: 'Baobab', emoji: '🌳', color: 'from-green-500/20 to-green-500/5', border: 'border-green-500/20' },
 ];
 
 const getCategoryStyle = (catName: string) => {
@@ -113,18 +113,18 @@ export default function ProServicesPage() {
         body: JSON.stringify(formData)
       });
 
-      toast({ title: "âœ… Prestation EnregistrÃ©e & PubliÃ©e !", description: "Ce soin est dÃ©sormais disponible Ã  la rÃ©servation en ligne pour les clientes." });
+      toast({ title: "✨… Prestation Enregistrée & Publiée !", description: "Ce soin est désormais disponible à  la réservation en ligne pour les clientes." });
       setIsDialogOpen(false);
       setFormData({ name: '', category: 'Coiffure', durationMin: '30', price: '', vatRate: '0.18', commissionRate: '0', description: '' });
     } catch (error) {
-      toast({ title: "âŒ Erreur", description: "Impossible de crÃ©er le service.", variant: "destructive" });
+      toast({ title: "âŒ Erreur", description: "Impossible de créer le service.", variant: "destructive" });
     }
   };
 
   const toggleActive = (id: string) => {
     // Dans une vraie app, appel API
     setServices(services.map(s => s.id === id ? { ...s, active: !s.active } : s));
-    toast({ title: "âœ… SuccÃ¨s", description: "Statut du service mis Ã  jour." });
+    toast({ title: "✨… Succès", description: "Statut du service mis à  jour." });
   };
 
   const filteredServices = services.filter(s => 
@@ -143,7 +143,7 @@ export default function ProServicesPage() {
           <h1 className="text-4xl font-display font-bold text-white tracking-tight">
             Catalogue de <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F3E5AB] to-[#C8951E]">Services</span>
           </h1>
-          <p className="text-white/60 mt-2">GÃ©rez vos prestations premium, durÃ©es et commissions.</p>
+          <p className="text-white/60 mt-2">Gérez vos prestations premium, durées et commissions.</p>
         </div>
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -176,7 +176,7 @@ export default function ProServicesPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="category" className="text-white/80">CatÃ©gorie</Label>
+                <Label htmlFor="category" className="text-white/80">Catégorie</Label>
                 <select 
                   id="category" 
                   required 
@@ -191,7 +191,7 @@ export default function ProServicesPage() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="duration" className="text-white/80">DurÃ©e (min)</Label>
+                  <Label htmlFor="duration" className="text-white/80">Durée (min)</Label>
                   <Input 
                     id="duration" 
                     type="number" 
@@ -348,7 +348,7 @@ export default function ProServicesPage() {
           </AnimatePresence>
           {filteredServices.length === 0 && (
             <div className="col-span-full py-20 text-center text-white/40">
-              Aucun service ne correspond Ã  votre recherche.
+              Aucun service ne correspond à  votre recherche.
             </div>
           )}
         </div>

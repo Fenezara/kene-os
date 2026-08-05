@@ -16,8 +16,8 @@ export default function SalonSimulatorPage() {
 
   // Financial calculations
   const monthlyGrossRevenue = appointmentsPerDay * averageTicketPrice * workingDays;
-  const timeSavedHoursPerMonth = employeeCount * 12; // 12h Ã©conomisÃ©es par employÃ© / mois grÃ¢ce Ã  l'agenda auto
-  const noShowReductionRevenueGain = Math.round(monthlyGrossRevenue * 0.15); // +15% de revenus rÃ©cupÃ©rÃ©s via acomptes MoMo
+  const timeSavedHoursPerMonth = employeeCount * 12; // 12h économisées par employé / mois grâce à  l'agenda auto
+  const noShowReductionRevenueGain = Math.round(monthlyGrossRevenue * 0.15); // +15% de revenus récupérés via acomptes MoMo
   const projectedMonthlyProfitBoost = noShowReductionRevenueGain + (timeSavedHoursPerMonth * 2500);
   const annualTotalGain = projectedMonthlyProfitBoost * 12;
 
@@ -35,10 +35,10 @@ export default function SalonSimulatorPage() {
             <Calculator className="w-3.5 h-3.5" /> Simulateur Financier B2B
           </div>
           <h1 className="text-3xl md:text-5xl font-display font-bold text-white tracking-tight">
-            Calculez le <span className="text-[var(--gold-kene)]">ROI de votre Salon</span> avec KÃ¨nÃ¨
+            Calculez le <span className="text-[var(--gold-kene)]">ROI de votre Salon</span> avec Kènè
           </h1>
           <p className="text-karite/80 text-sm md:text-base max-w-2xl mx-auto">
-            Estimez le gain de chiffre d'affaires gÃ©nÃ©rÃ© par la rÃ©duction des RDV manquÃ©s (No-Show) et le temps gagnÃ© sur la gestion.
+            Estimez le gain de chiffre d'affaires généré par la réduction des RDV manqués (No-Show) et le temps gagné sur la gestion.
           </p>
         </motion.div>
 
@@ -49,7 +49,7 @@ export default function SalonSimulatorPage() {
             <Card className="bg-[#1A1410] border-[#362A21] text-white shadow-xl">
               <CardHeader>
                 <CardTitle className="font-display text-xl text-[var(--gold-kene)] flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" /> Variables d'ActivitÃ©
+                  <TrendingUp className="w-5 h-5" /> Variables d'Activité
                 </CardTitle>
                 <CardDescription className="text-karite/60">Ajustez les curseurs selon votre institut.</CardDescription>
               </CardHeader>
@@ -87,11 +87,11 @@ export default function SalonSimulatorPage() {
                   />
                 </div>
 
-                {/* Slider 3: Nombre d'employÃ©s */}
+                {/* Slider 3: Nombre d'employés */}
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-sm">
-                    <span className="text-karite font-medium">Nombre de Praticiennes / EmployÃ©s</span>
-                    <span className="font-mono font-bold text-[var(--gold-kene)] text-base">{employeeCount} employÃ©(s)</span>
+                    <span className="text-karite font-medium">Nombre de Praticiennes / Employés</span>
+                    <span className="font-mono font-bold text-[var(--gold-kene)] text-base">{employeeCount} employé(s)</span>
                   </div>
                   <Slider 
                     value={[employeeCount]} 
@@ -130,8 +130,8 @@ export default function SalonSimulatorPage() {
                 <Sparkles className="w-48 h-48 text-[var(--gold-kene)]" />
               </div>
               <CardHeader className="border-b border-[#362A21] pb-4">
-                <CardTitle className="font-display text-xl text-white">RÃ©sultats EstimÃ©s de RentabilitÃ©</CardTitle>
-                <CardDescription className="text-karite/60">Impact financier direct mesurÃ© avec KÃ¨nÃ¨ OS.</CardDescription>
+                <CardTitle className="font-display text-xl text-white">Résultats Estimés de Rentabilité</CardTitle>
+                <CardDescription className="text-karite/60">Impact financier direct mesuré avec Kènè OS.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6 pt-6">
                 
@@ -150,12 +150,12 @@ export default function SalonSimulatorPage() {
                     <div className="text-lg font-bold font-mono text-white">
                       +{noShowReductionRevenueGain.toLocaleString('fr-FR')} F
                     </div>
-                    <span className="text-[10px] text-karite/50 block">GrÃ¢ce aux acomptes MoMo</span>
+                    <span className="text-[10px] text-karite/50 block">Grâce aux acomptes MoMo</span>
                   </div>
 
                   <div className="bg-[#241C16] p-4 rounded-xl border border-[#362A21] space-y-1">
                     <div className="flex items-center gap-1 text-xs text-blue-400 font-semibold">
-                      <Clock className="w-3.5 h-3.5" /> Temps Ã‰conomisÃ©
+                      <Clock className="w-3.5 h-3.5" /> Temps Économisé
                     </div>
                     <div className="text-lg font-bold font-mono text-white">
                       {timeSavedHoursPerMonth}h / mois
@@ -167,19 +167,19 @@ export default function SalonSimulatorPage() {
                 {/* Total Annual Gain Highlight */}
                 <div className="bg-gradient-to-tr from-[#C8951E]/20 via-[#1A1410] to-[#241C16] p-6 rounded-2xl border border-[var(--gold-kene)]/50 space-y-2">
                   <span className="text-xs text-[var(--gold-kene)] uppercase tracking-wider font-bold block">
-                    Impact Financier Annuel EstimÃ©
+                    Impact Financier Annuel Estimé
                   </span>
                   <div className="text-3xl md:text-4xl font-display font-black text-white">
                     +{annualTotalGain.toLocaleString('fr-FR')} FCFA
                   </div>
                   <p className="text-xs text-karite/80 leading-relaxed pt-1">
-                    En automatisant vos rÃ©servations avec acomptes Mobile Money et la relance automatique des clients inactivÃ©s.
+                    En automatisant vos réservations avec acomptes Mobile Money et la relance automatique des clients inactivés.
                   </p>
                 </div>
 
                 <Link href="/dashboard" className="block pt-2">
                   <Button className="w-full bg-[var(--gold-kene)] text-[#1A1410] hover:bg-[#D4AF37]/90 font-bold py-6 text-base shadow-lg flex justify-center items-center gap-2">
-                    <span>Activer KÃ¨nÃ¨ Pro pour mon Salon</span>
+                    <span>Activer Kènè Pro pour mon Salon</span>
                     <ArrowRight className="w-5 h-5" />
                   </Button>
                 </Link>
