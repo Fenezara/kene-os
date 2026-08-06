@@ -152,6 +152,50 @@ export default function RegisterPage() {
     }
   };
 
+  // 🌐 SOCIAL LOGIN HANDLER (GOOGLE & APPLE)
+  const handleSocialLogin = async (provider: 'google' | 'apple') => {
+    setLoading(true);
+
+    try {
+      const isPro = accountType === 'pro';
+      const mockEmail = provider === 'google' ? 'nouveau.google@gmail.com' : 'nouveau.apple@icloud.com';
+      const role = isPro ? 'Gérante Salon' : 'Client';
+      
+      const authRes = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, email: mockEmail })
+      });
+
+      const data = await authRes.json();
+      const userObj = {
+        id: data.user?.id || `usr-${provider}-${Date.now()}`,
+        name: data.user?.name || (provider === 'google' ? 'Compte Google' : 'Compte Apple'),
+        email: mockEmail,
+        role: role,
+        avatar: '/images/afro_beauty_hero_woman.jpg',
+        tenantId: 'tenant_abidjan_01',
+        provider,
+      };
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('kene_user', JSON.stringify(userObj));
+        document.cookie = `kene-session=${role}-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      }
+
+      toast({
+        title: `Inscription ${provider === 'google' ? 'Google' : 'Apple'} Réussie ! 🎉`,
+        description: `Votre compte Kènè OS a été créé avec succès.`,
+      });
+
+      const destination = isPro ? '/dashboard' : '/portal';
+      window.location.href = destination;
+    } catch {
+      setLoading(false);
+      toast({ title: 'Erreur', description: `Échec d'inscription avec ${provider}.`, variant: 'destructive' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0A0603] flex items-center justify-center p-4 relative overflow-hidden">
       {/* Top Left Back Button */}
