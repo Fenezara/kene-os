@@ -105,47 +105,94 @@ export default function ProDiagnosesPage() {
   const [capturedPhotos, setCapturedPhotos] = useState<string[]>([]);
   const [activePhotoIdx, setActivePhotoIdx] = useState<number>(0);
 
-  // Request Camera Access
+  // Helper: Downscale and compress base64 images to prevent mobile QuotaExceededError
+  const compressBase64Image = (dataUrl: string, maxWidth = 800, quality = 0.75): Promise<string> => {
+    return new Promise((resolve) => {
+      if (!dataUrl || !dataUrl.startsWith('data:image')) return resolve(dataUrl);
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        } else {
+          resolve(dataUrl);
+        }
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+  };
+
+  // Request Camera Access with mobile constraint fallback
   const startCamera = async () => {
     setCameraError(null);
+    let mediaStream: MediaStream | null = null;
     try {
-      const constraints = { video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } } };
-      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+      // Attempt 1: soft ideal facingMode constraint for mobile browsers
+      mediaStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: { ideal: 'user' }, width: { ideal: 1280 }, height: { ideal: 720 } } 
+      });
+    } catch {
+      try {
+        // Attempt 2: generic video fallback
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      } catch {
+        setIsCameraActive(false);
+        setCameraError("Caméra non accessible. Utilisez le bouton 'Télécharger une Photo' ci-dessous pour choisir vos clichés.");
+        return;
+      }
+    }
+
+    if (mediaStream) {
       setIsCameraActive(true);
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
         videoRef.current.play().catch(() => {});
       }
-    } catch {
-      setIsCameraActive(false);
-      setCameraError("Caméra non accessible. Utilisez le bouton 'Télécharger une Photo' ci-dessous.");
     }
   };
 
   // Capture Photo from Camera (Appends to Multi-Photo List)
-  const capturePhoto = () => {
+  const capturePhoto = async () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     let dataUrl = '';
     if (canvas && video && video.videoWidth) {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      canvas.width = Math.min(800, video.videoWidth);
+      canvas.height = Math.min(800, video.videoHeight);
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        dataUrl = canvas.toDataURL('image/jpeg');
+        dataUrl = canvas.toDataURL('image/jpeg', 0.75);
       }
     }
     if (!dataUrl) {
       dataUrl = '/images/afro_beauty_hero_woman.jpg';
     }
 
+    const compressed = await compressBase64Image(dataUrl, 800, 0.75);
+
     setCapturedPhotos(prev => {
-      const updated = [...prev, dataUrl].slice(0, 5);
+      const updated = [...prev, compressed].slice(0, 5);
       setActivePhotoIdx(updated.length - 1);
       if (typeof window !== 'undefined') {
-        localStorage.setItem('kene_latest_client_photo', updated[0]);
-        localStorage.setItem('kene_latest_client_photos', JSON.stringify(updated));
+        try {
+          localStorage.setItem('kene_latest_client_photo', updated[0]);
+          localStorage.setItem('kene_latest_client_photos', JSON.stringify(updated));
+        } catch (e) {
+          console.warn('Storage quota caught:', e);
+        }
       }
       return updated;
     });
@@ -167,7 +214,11 @@ export default function ProDiagnosesPage() {
       fileArray.map((file) => {
         return new Promise<string>((resolve) => {
           const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result as string);
+          reader.onloadend = async () => {
+            const raw = reader.result as string;
+            const compressed = await compressBase64Image(raw, 800, 0.75);
+            resolve(compressed);
+          };
           reader.readAsDataURL(file);
         });
       })
@@ -176,8 +227,12 @@ export default function ProDiagnosesPage() {
         const updated = [...prev, ...newPhotos].slice(0, 5);
         setActivePhotoIdx(updated.length - 1);
         if (typeof window !== 'undefined') {
-          localStorage.setItem('kene_latest_client_photo', updated[0]);
-          localStorage.setItem('kene_latest_client_photos', JSON.stringify(updated));
+          try {
+            localStorage.setItem('kene_latest_client_photo', updated[0]);
+            localStorage.setItem('kene_latest_client_photos', JSON.stringify(updated));
+          } catch (e) {
+            console.warn('Storage quota caught:', e);
+          }
         }
         return updated;
       });

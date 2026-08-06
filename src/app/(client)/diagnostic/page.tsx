@@ -37,37 +37,65 @@ export default function DiagnosticPage() {
   const [alignmentScore, setAlignmentScore] = useState<number>(95);
   const [selectedZone, setSelectedZone] = useState<string>('visage');
 
-  // Request camera access
-  const startCamera = async (mode = facingMode) => {
-    setCameraError(null);
-    try {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-
-      const constraints = {
-        video: { 
-          facingMode: mode, 
-          width: { ideal: 1280 }, 
-          height: { ideal: 720 } 
-        },
-        audio: false,
+  // Helper: Downscale and compress base64 images to prevent mobile QuotaExceededError
+  const compressBase64Image = (dataUrl: string, maxWidth = 800, quality = 0.75): Promise<string> => {
+    return new Promise((resolve) => {
+      if (!dataUrl || !dataUrl.startsWith('data:image')) return resolve(dataUrl);
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        } else {
+          resolve(dataUrl);
+        }
       };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+  };
 
-      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+  const startCamera = async () => {
+    setCameraError(null);
+    let mediaStream: MediaStream | null = null;
+    try {
+      // 1st attempt: soft ideal constraints for mobile
+      mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: facingMode }, width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false
+      });
+    } catch {
+      try {
+        // 2nd attempt: generic video fallback
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      } catch (err: any) {
+        console.error('Camera access error:', err);
+        setIsCameraActive(false);
+        setCameraError(
+          "Impossible d'accéder à la caméra. Utilisez le bouton 'Téléverser des Photos' ci-dessous pour choisir vos clichés depuis votre téléphone ou galerie."
+        );
+        return;
+      }
+    }
+
+    if (mediaStream) {
       setStream(mediaStream);
       setIsCameraActive(true);
-
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
         videoRef.current.play().catch(e => console.log('Video play error:', e));
       }
-    } catch (err: any) {
-      console.error('Camera access error:', err);
-      setIsCameraActive(false);
-      setCameraError(
-        "Impossible d'accéder à la caméra. Utilisez le bouton 'Téléverser des Photos' ci-dessous pour choisir vos clichés depuis votre téléphone ou galerie."
-      );
     }
   };
 
@@ -86,8 +114,8 @@ export default function DiagnosticPage() {
     setFacingMode(nextMode);
   };
 
-  // Instant Manual Photo Capture (Guaranteed to work whether video element is initialized or fallback canvas)
-  const capturePhoto = () => {
+  // Instant Manual Photo Capture
+  const capturePhoto = async () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
 
@@ -103,25 +131,25 @@ export default function DiagnosticPage() {
         }
 
         const size = Math.min(width, height);
-        canvas.width = size;
-        canvas.height = size;
+        canvas.width = Math.min(800, size);
+        canvas.height = Math.min(800, size);
 
         const sx = (width - size) / 2;
         const sy = (height - size) / 2;
 
         if (video && isCameraActive) {
-          ctx.drawImage(video, sx, sy, size, size, 0, 0, size, size);
+          ctx.drawImage(video, sx, sy, size, size, 0, 0, canvas.width, canvas.height);
         } else {
-          // Draw high resolution simulated skin texture capture canvas if camera isn't streamable
           ctx.fillStyle = '#1A1410';
-          ctx.fillRect(0, 0, size, size);
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.fillStyle = '#C8951E';
           ctx.font = '24px sans-serif';
-          ctx.fillText(`Kènè Scan Zone: ${selectedZone}`, 40, size / 2);
+          ctx.fillText(`Kènè Scan Zone: ${selectedZone}`, 40, canvas.height / 2);
         }
 
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-        setPhotos(prev => [...prev, dataUrl].slice(0, 5));
+        const rawDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+        const compressed = await compressBase64Image(rawDataUrl, 800, 0.75);
+        setPhotos(prev => [...prev, compressed].slice(0, 5));
 
         toast({
           title: "📸 Photo Capturée avec Succès !",
@@ -132,18 +160,27 @@ export default function DiagnosticPage() {
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(e.target.files || []).slice(0, 5 - photos.length);
     if (files.length > 0) {
-      files.forEach(file => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPhotos(prev => [...prev, reader.result as string].slice(0, 5));
-        };
-        reader.readAsDataURL(file);
-      });
-      toast({
-        title: "📁 Photo Téléversée !",
-        description: `${files.length} cliché(s) ajouté(s) au bilan de peau.`,
+      Promise.all(
+        files.map(file => {
+          return new Promise<string>(resolve => {
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+              const raw = reader.result as string;
+              const compressed = await compressBase64Image(raw, 800, 0.75);
+              resolve(compressed);
+            };
+            reader.readAsDataURL(file);
+          });
+        })
+      ).then(newPhotos => {
+        setPhotos(prev => [...prev, ...newPhotos].slice(0, 5));
+        toast({
+          title: "📁 Photo Téléversée !",
+          description: `${newPhotos.length} cliché(s) ajouté(s) au bilan de peau.`,
+        });
+        if (e.target) e.target.value = '';
       });
     }
   };
@@ -171,8 +208,12 @@ export default function DiagnosticPage() {
 
     try {
       if (typeof window !== 'undefined' && photos.length > 0) {
-        localStorage.setItem('kene_latest_client_photo', photos[0]);
-        localStorage.setItem('kene_latest_client_photos', JSON.stringify(photos));
+        try {
+          localStorage.setItem('kene_latest_client_photo', photos[0]);
+          localStorage.setItem('kene_latest_client_photos', JSON.stringify(photos));
+        } catch (storageErr) {
+          console.warn('Storage quota caught on mobile:', storageErr);
+        }
       }
 
       const user = localStorage.getItem('kene_user');
