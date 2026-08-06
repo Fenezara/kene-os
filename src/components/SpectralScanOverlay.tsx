@@ -472,7 +472,10 @@ export function SpectralScanOverlay({
       {showControls && (
         <div className="bg-[#1A1410] border-b border-white/10 p-2.5 space-y-2">
           {/* Body Zone Selector */}
-          <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 no-scrollbar scrollbar-none scrollbar-hide">
+          <div 
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            className="flex flex-wrap items-center gap-1.5 py-0.5 [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:bg-transparent"
+          >
             <span className="text-[9px] text-white/40 font-mono shrink-0 pr-1">Zone :</span>
             {BODY_ZONES.map((zone) => (
               <button
