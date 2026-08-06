@@ -466,7 +466,7 @@ export function SpectralScanOverlay({
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto rounded-3xl overflow-hidden border-2 border-[#C8951E]/60 bg-[#0F0A05] shadow-[0_0_50px_rgba(200,149,30,0.3)] select-none font-sans">
+    <div className="relative w-full max-w-full mx-auto rounded-3xl overflow-hidden border-2 border-[#C8951E]/60 bg-[#0F0A05] shadow-[0_0_50px_rgba(200,149,30,0.3)] select-none font-sans overflow-x-hidden">
       
       {/* ── HEADER : ZONE CORPORELLE + FILTRES SPECTRAUX ── */}
       {showControls && (

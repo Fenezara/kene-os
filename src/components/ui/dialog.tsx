@@ -60,7 +60,7 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "bg-[#1A1410] text-white border border-[#C8951E]/40 fixed top-[50%] left-[50%] z-[9999] grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-3xl p-6 shadow-2xl duration-200 animate-in fade-in-0 zoom-in-95 font-sans",
+          "bg-[#1A1410] text-white border border-[#C8951E]/40 fixed top-[50%] left-[50%] z-[9999] grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-3xl p-6 shadow-2xl duration-200 animate-in fade-in-0 zoom-in-95 font-sans overflow-x-hidden [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:bg-transparent [scrollbar-width:none] [-ms-overflow-style:none]",
           className?.includes('max-w-') ? '' : 'sm:max-w-lg',
           className
         )}
