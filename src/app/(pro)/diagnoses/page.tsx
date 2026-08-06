@@ -16,7 +16,7 @@ import { KeneLogo } from '@/components/ui/logo';
 import { BeforeAfterGalleryModal } from '@/components/BeforeAfterGalleryModal';
 import { SpectralScanOverlay } from '@/components/SpectralScanOverlay';
 import { PrintableAnamnesisSheet } from '@/components/PrintableAnamnesisSheet';
-import { AfroFuturisticScanLoaderModal } from '@/components/AfroFuturisticScanLoaderModal';
+import { ProAfroFuturisticScanLoaderModal } from '@/components/ProAfroFuturisticScanLoaderModal';
 
 // Score gauge component
 function ScoreGauge({ score, size = 120 }: { score: number; size?: number }) {
@@ -1358,11 +1358,16 @@ export default function ProDiagnosesPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Afro-Futuristic 3D Biometric Loader Modal */}
-      <AfroFuturisticScanLoaderModal
+      {/* Pro Enterprise Afro-Futuristic 3D Holographic Cockpit Loader Modal */}
+      <ProAfroFuturisticScanLoaderModal
         isOpen={isScanning}
-        title="Analyse Biométrique & Spectrale Pro"
-        subtitle="Extraction des sous-scores d'hydratation, TEWL et cartographie PIH..."
+        title="Cabinet Dermo-IA Pro — Scanner Octo-Spectral 3D"
+        subtitle="Calcul biométrique multicouche & télémétrie spectrale avancée..."
+        clientName="Cliente Salon"
+        onComplete={() => {
+          setIsScanning(false);
+          setScanComplete(true);
+        }}
       />
     </div>
   );
