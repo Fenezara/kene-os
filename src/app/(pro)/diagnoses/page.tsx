@@ -1018,6 +1018,7 @@ export default function ProDiagnosesPage() {
                     >
                       <CheckCircle2 className="w-4 h-4" /> Enregistrer la Fiche Médicalisée au Dossier Client
                     </motion.button>
+                  )}
                 </DialogFooter>
               </div>
             )}
