@@ -1031,7 +1031,6 @@ export default function ProDiagnosesPage() {
                   setScanComplete(true);
                 }}
               />
-            )}
           </DialogContent>
         </Dialog>
         </div>
