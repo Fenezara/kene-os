@@ -1018,19 +1018,21 @@ export default function ProDiagnosesPage() {
                     >
                       <CheckCircle2 className="w-4 h-4" /> Enregistrer la Fiche Médicalisée au Dossier Client
                     </motion.button>
-                  )}
                 </DialogFooter>
-              {/* Pro Enterprise Afro-Futuristic 3D Holographic Cockpit Loader Modal */}
-              <ProAfroFuturisticScanLoaderModal
-                isOpen={isScanning}
-                title="Cabinet Dermo-IA Pro — Scanner Octo-Spectral 3D"
-                subtitle="Calcul biométrique multicouche & télémétrie spectrale avancée..."
-                clientName={clients.find(c => c.id === selectedClient) ? `${clients.find(c => c.id === selectedClient)?.firstName} ${clients.find(c => c.id === selectedClient)?.lastName}` : "Cliente Salon"}
-                onComplete={() => {
-                  setIsScanning(false);
-                  setScanComplete(true);
-                }}
-              />
+              </div>
+            )}
+
+            {/* Pro Enterprise Afro-Futuristic 3D Holographic Cockpit Loader Modal */}
+            <ProAfroFuturisticScanLoaderModal
+              isOpen={isScanning}
+              title="Cabinet Dermo-IA Pro — Scanner Octo-Spectral 3D"
+              subtitle="Calcul biométrique multicouche & télémétrie spectrale avancée..."
+              clientName={clients.find(c => c.id === selectedClient) ? `${clients.find(c => c.id === selectedClient)?.firstName} ${clients.find(c => c.id === selectedClient)?.lastName}` : "Cliente Salon"}
+              onComplete={() => {
+                setIsScanning(false);
+                setScanComplete(true);
+              }}
+            />
           </DialogContent>
         </Dialog>
         </div>
