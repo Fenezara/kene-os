@@ -205,6 +205,51 @@ function LoginFormContent() {
     }
   };
 
+  // 🌐 SOCIAL LOGIN HANDLER (GOOGLE & APPLE)
+  const handleSocialLogin = async (provider: 'google' | 'apple') => {
+    setLoading(true);
+    setLoginError(null);
+
+    try {
+      const isPro = activeTab === 'salon';
+      const mockEmail = provider === 'google' ? 'client.google@gmail.com' : 'client.apple@icloud.com';
+      const role = isPro ? 'Gérante Salon' : 'Client';
+      
+      const authRes = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, email: mockEmail })
+      });
+
+      const data = await authRes.json();
+      const userObj = {
+        id: data.user?.id || `usr-${provider}-${Date.now()}`,
+        name: data.user?.name || (provider === 'google' ? 'Compte Google' : 'Compte Apple'),
+        email: mockEmail,
+        role: role,
+        avatar: '/images/afro_beauty_hero_woman.jpg',
+        tenantId: 'tenant_abidjan_01',
+        provider,
+      };
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('kene_user', JSON.stringify(userObj));
+        document.cookie = `kene-session=${role}-${Date.now()}; path=/; max-age=86400; SameSite=Lax`;
+      }
+
+      toast({
+        title: `Connexion ${provider === 'google' ? 'Google' : 'Apple'} Réussie ! 🚀`,
+        description: `Bienvenue sur Kènè OS, ${userObj.name}.`,
+      });
+
+      const destination = isPro ? '/dashboard' : (redirectUrl || '/diagnostic');
+      window.location.href = destination;
+    } catch {
+      setLoading(false);
+      toast({ title: 'Erreur', description: `Échec de connexion avec ${provider}.`, variant: 'destructive' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0A0603] flex items-center justify-center p-4 relative overflow-hidden">
       {/* Top Left Back Button */}
@@ -484,6 +529,45 @@ function LoginFormContent() {
                 </motion.form>
               )}
             </AnimatePresence>
+
+            {/* ── SOCIAL SIGN IN (GOOGLE & APPLE) ── */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/10" />
+              </div>
+              <div className="relative flex justify-center text-[10px] uppercase font-mono tracking-wider">
+                <span className="bg-[#140D08] px-3 text-white/40">ou continuer avec</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => handleSocialLogin('google')}
+                disabled={loading}
+                className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition duration-200 cursor-pointer disabled:opacity-50"
+              >
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                  <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z" />
+                  <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z" />
+                  <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15s.7 5.3 1.9 7.7l3.7-2.9z" />
+                  <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16c1.8 3.7 5.6 7 10.1 7z" />
+                </svg>
+                <span>Google</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSocialLogin('apple')}
+                disabled={loading}
+                className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition duration-200 cursor-pointer disabled:opacity-50"
+              >
+                <svg className="w-4 h-4 shrink-0 fill-current text-white" viewBox="0 0 170 170">
+                  <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.82.13-9.68-1.92-14.58-6.15-3.18-2.76-7.07-7.44-11.67-14.04-6.3-9.06-11.27-19.57-14.92-31.54-3.64-11.96-5.46-23.11-5.46-33.45 0-14.5 3.75-26.17 11.26-35.01 7.51-8.84 16.89-13.38 28.14-13.63 4.7.13 9.77 1.15 15.22 3.06 5.45 1.91 9.4 2.87 11.85 2.87 2.12 0 6.03-.96 11.73-2.87 5.7-1.91 10.59-2.81 14.67-2.69 11.39.63 20.65 4.9 27.79 12.82-10.19 6.16-15.16 14.88-14.91 26.17.25 8.78 3.56 16.27 9.94 22.47 6.38 6.2 14.05 9.8 23.01 10.79-2.45 7.15-5.6 14.28-9.45 21.39zM119.22 31.84c0-7.39 2.68-14.4 8.04-21.03 5.36-6.63 12.15-10.45 20.37-11.46.26 1.01.39 2.02.39 3.03 0 7.39-2.74 14.5-8.22 21.33-5.49 6.83-12.31 10.74-20.47 11.73-.13-1.01-.11-2.22-.11-3.6z" />
+                </svg>
+                <span>Apple</span>
+              </button>
+            </div>
           </div>
 
           {/* Register Link */}
