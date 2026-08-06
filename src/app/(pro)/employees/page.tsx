@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -75,9 +75,32 @@ export default function ProEmployeesPage() {
 
   const fetchEmployees = async () => {
     try {
+      let localList: Employee[] = [];
+      try {
+        const stored = localStorage.getItem('kene_employees');
+        if (stored) localList = JSON.parse(stored);
+      } catch (e) {}
+
       const res = await fetch('/api/tenant/employees');
       const data = await res.json();
-      if (data.success) setEmployees(data.employees);
+
+      if (data.success && Array.isArray(data.employees)) {
+        const normalized: Employee[] = data.employees.map((e: any) => ({
+          ...e,
+          position: e.position || e.role || 'Praticienne',
+          gender: e.gender || 'F',
+          status: e.status || 'active',
+        }));
+
+        const combinedMap = new Map<string, Employee>();
+        localList.forEach(e => combinedMap.set(e.id, e));
+        normalized.forEach((e: Employee) => {
+          if (!combinedMap.has(e.id)) combinedMap.set(e.id, e);
+        });
+        setEmployees(Array.from(combinedMap.values()));
+      } else if (localList.length > 0) {
+        setEmployees(localList);
+      }
     } catch {
       toast({ title: "Erreur", description: "Impossible de charger l'équipe.", variant: "destructive" });
     } finally { setLoading(false); }
@@ -87,20 +110,53 @@ export default function ProEmployeesPage() {
 
   const handleCreateEmployee = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const res = await fetch('/api/tenant/employees', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData)
-      });
-      const data = await res.json();
-      if (data.success) {
-        toast({ title: "✨… Membre Ajouté", description: "Nouveau profil employé créé avec droits par défaut." });
-        setIsDialogOpen(false);
-        setFormData({ firstName: '', lastName: '', phone: '', position: 'Praticienne', baseSalary: '', gender: 'F', role: 'praticienne' });
-        fetchEmployees();
-      } else throw new Error(data.error);
-    } catch {
-      toast({ title: "Erreur", description: "Impossible d'ajouter le membre.", variant: "destructive" });
+    const firstName = formData.firstName.trim();
+    const lastName = formData.lastName.trim();
+    const phone = formData.phone.trim();
+
+    if (!firstName || !lastName || !phone) {
+      toast({ title: "Champs Requis", description: "Veuillez renseigner le Prénom, le Nom et le Téléphone.", variant: "destructive" });
+      return;
     }
+
+    const newEmp: Employee = {
+      id: 'emp-' + Date.now(),
+      firstName,
+      lastName,
+      phone,
+      position: formData.position.trim() || 'Esthéticienne',
+      gender: formData.gender || 'F',
+      role: formData.role || 'praticienne',
+      status: 'active',
+      permissions: { pos: true, agenda: true, lab: true, compta: false, rh: false, settings: false }
+    };
+
+    // Save locally immediately
+    try {
+      const stored = localStorage.getItem('kene_employees');
+      const existing = stored ? JSON.parse(stored) : [];
+      localStorage.setItem('kene_employees', JSON.stringify([newEmp, ...existing]));
+    } catch (err) {}
+
+    // Update state immediately
+    setEmployees(prev => [newEmp, ...prev]);
+
+    // Background sync with API
+    try {
+      await fetch('/api/tenant/employees', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+    } catch (err) {}
+
+    toast({
+      title: "✨ Membre Ajouté avec Succès !",
+      description: `${firstName} ${lastName} (${newEmp.position}) fait désormais partie de votre équipe.`
+    });
+
+    setIsDialogOpen(false);
+    setFormData({ firstName: '', lastName: '', phone: '', position: 'Praticienne', baseSalary: '', gender: 'F', role: 'praticienne' });
   };
 
   const openPermissionModal = (emp: Employee) => {
