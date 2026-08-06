@@ -468,29 +468,9 @@ export function SpectralScanOverlay({
   return (
     <div className="relative w-full max-w-full mx-auto rounded-3xl overflow-hidden border-2 border-[#C8951E]/60 bg-[#0F0A05] shadow-[0_0_50px_rgba(200,149,30,0.3)] select-none font-sans overflow-x-hidden">
       
-      {/* ── HEADER : ZONE CORPORELLE + FILTRES SPECTRAUX ── */}
+      {/* ── HEADER : FILTRES SPECTRAUX & PHOTOS CLIENT ── */}
       {showControls && (
         <div className="bg-[#1A1410] border-b border-white/10 p-2.5 space-y-2">
-          {/* Body Zone Selector */}
-          <div 
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            className="flex flex-wrap items-center gap-1.5 py-0.5 [&::-webkit-scrollbar]:hidden [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:bg-transparent"
-          >
-            <span className="text-[9px] text-white/40 font-mono shrink-0 pr-1">Zone :</span>
-            {BODY_ZONES.map((zone) => (
-              <button
-                key={zone.id}
-                onClick={() => handleZoneChange(zone.id)}
-                className={`shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-lg transition whitespace-nowrap ${
-                  currentZone === zone.id
-                    ? 'bg-gradient-to-r from-[#C8951E] to-[#F3E5AB] text-[#0F0A05] shadow-md'
-                    : 'text-white/50 hover:text-white bg-[#0F0A05] border border-white/10'
-                }`}
-              >
-                {zone.icon} {zone.label}
-              </button>
-            ))}
-          </div>
 
           {/* Multi-Photo + Spectral Modes Row */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
