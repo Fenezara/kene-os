@@ -264,54 +264,50 @@ export default function ProDiagnosesPage() {
       if (step >= SCAN_STEPS.length) clearInterval(stepInterval);
     }, 700);
 
-    setTimeout(() => {
-      clearInterval(stepInterval);
-      const score = Math.floor(Math.random() * 30) + 60;
-      const needsDermato = score < 68 || questionnaire.mainConcerns.includes('acne_severe');
-      
-      setMockResult({
-        scoreGlobal: score,
-        phototype: selectedPhototype,
-        photos: capturedPhotos.length > 0 ? capturedPhotos : ['/images/afro_skin_spectral_scanner.jpg'],
-        questionnaireData: questionnaire,
-        subScores: {
-          hydration: Math.min(100, score + 8),
-          sebum: Math.round(score * 0.85),
-          brightness: Math.max(0, score - 6),
-          pigmentation: Math.round(score * 0.92),
-          elasticity: Math.min(100, score + 4),
-          barrierIntegrity: Math.min(100, score + 6),
-        },
-        clinicalNotes: {
-          skinType: selectedPhototype === 'V' || selectedPhototype === 'VI' ? 'Peau Mélanoderme Sensible à Tendance Séborrhique' : 'Peau Mixte Déshydratée',
-          tewl: '14.2 g/m²/h (Perte transepidermique modérée)',
-          pihRisk: selectedPhototype === 'V' || selectedPhototype === 'VI' ? 'ÉLEVÉ (Hyper-pigmentation post-acnéique décelée)' : 'MODÉRÉ',
-        },
-        recommendations: needsDermato
-          ? [
-              'Consultation spécialisée chez un Dermatologue partenaire recommandée',
-              'Arrêt immédiat des exfoliants physiques abrasifs et savons décapants',
-              'Application matin et soir du Sérum Apaisant Niacinamide 5% & Bissap',
-              'Protection solaire écran fluide minéral SPF 50+ quotidien',
-            ]
-          : [
-              'Protocole Cabine : Soin Magistral Éclat Karité & Bissap (60 min)',
-              'Sérum Concentré Éclat Bissap & Niacinamide (3 gouttes le soir)',
-              'Scellage hydratation avec Huile Pure de Baobab de Korhogo',
-              'Gommage doux à la poudre de Chébé & Avoine (1× par semaine)',
-            ],
-        botanicalPrescription: [
-          { ingredient: 'Sérum Bissap Bio', role: 'Anti-taches PIH & Antioxydant puissant' },
-          { ingredient: 'Beurre de Karité Pur', role: 'Régénération barrière lipidique cutanée' },
-          { ingredient: 'Huile de Baobab', role: 'Scellage de l\'hydratation épidermique' },
-          { ingredient: 'Extrait de Neem & Moringa', role: 'Régulation séborrhique & anti-bactérien' },
-        ],
-        dermatoReferral: needsDermato,
-        referralReason: needsDermato ? 'Lésions inflammatoires de type papulo-pustuleuses détectées au scanner · Prescription médicale recommandée' : null
-      });
-      setIsScanning(false);
-      setScanComplete(true);
-    }, 3500);
+    // Prepare mock result structure for the 3D scan
+    const score = Math.floor(Math.random() * 30) + 60;
+    const needsDermato = score < 68 || questionnaire.mainConcerns.includes('acne_severe');
+    
+    setMockResult({
+      scoreGlobal: score,
+      phototype: selectedPhototype,
+      photos: capturedPhotos.length > 0 ? capturedPhotos : ['/images/afro_skin_spectral_scanner.jpg'],
+      questionnaireData: questionnaire,
+      subScores: {
+        hydration: Math.min(100, score + 8),
+        sebum: Math.round(score * 0.85),
+        brightness: Math.max(0, score - 6),
+        pigmentation: Math.round(score * 0.92),
+        elasticity: Math.min(100, score + 4),
+        barrierIntegrity: Math.min(100, score + 6),
+      },
+      clinicalNotes: {
+        skinType: selectedPhototype === 'V' || selectedPhototype === 'VI' ? 'Peau Mélanoderme Sensible à Tendance Séborrhique' : 'Peau Mixte Déshydratée',
+        tewl: '14.2 g/m²/h (Perte transepidermique modérée)',
+        pihRisk: selectedPhototype === 'V' || selectedPhototype === 'VI' ? 'ÉLEVÉ (Hyper-pigmentation post-acnéique décelée)' : 'MODÉRÉ',
+      },
+      recommendations: needsDermato
+        ? [
+            'Consultation spécialisée chez un Dermatologue partenaire recommandée',
+            'Arrêt immédiat des exfoliants physiques abrasifs et savons décapants',
+            'Application matin et soir du Sérum Apaisant Niacinamide 5% & Bissap',
+            'Protection solaire écran fluide minéral SPF 50+ quotidien',
+          ]
+        : [
+            'Protocole Cabine : Soin Magistral Éclat Karité & Bissap (60 min)',
+            'Sérum Concentré Éclat Bissap & Niacinamide (3 gouttes le soir)',
+            'Scellage hydratation avec Huile Pure de Baobab de Korhogo',
+            'Gommage doux à la poudre de Chébé & Avoine (1× par semaine)',
+          ],
+      botanicalPrescription: [
+        { ingredient: 'Sérum Bissap Bio', role: 'Anti-taches PIH & Antioxydant puissant' },
+        { ingredient: 'Beurre de Karité Pur', role: 'Régénération barrière lipidique cutanée' },
+        { ingredient: 'Huile de Baobab', role: 'Scellage de l\'hydratation épidermique' },
+        { ingredient: 'Extrait de Neem & Moringa', role: 'Régulation séborrhique & anti-bactérien' },
+      ],
+      dermatoReferral: needsDermato,
+      referralReason: needsDermato ? 'Lésions inflammatoires de type papulo-pustuleuses détectées au scanner · Prescription médicale recommandée' : null
+    });
   };
 
   const handleSaveDiagnosis = async () => {
@@ -1024,7 +1020,17 @@ export default function ProDiagnosesPage() {
                     </motion.button>
                   )}
                 </DialogFooter>
-              </div>
+              {/* Pro Enterprise Afro-Futuristic 3D Holographic Cockpit Loader Modal */}
+              <ProAfroFuturisticScanLoaderModal
+                isOpen={isScanning}
+                title="Cabinet Dermo-IA Pro — Scanner Octo-Spectral 3D"
+                subtitle="Calcul biométrique multicouche & télémétrie spectrale avancée..."
+                clientName={clients.find(c => c.id === selectedClient) ? `${clients.find(c => c.id === selectedClient)?.firstName} ${clients.find(c => c.id === selectedClient)?.lastName}` : "Cliente Salon"}
+                onComplete={() => {
+                  setIsScanning(false);
+                  setScanComplete(true);
+                }}
+              />
             )}
           </DialogContent>
         </Dialog>
@@ -1360,17 +1366,7 @@ export default function ProDiagnosesPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Pro Enterprise Afro-Futuristic 3D Holographic Cockpit Loader Modal */}
-      <ProAfroFuturisticScanLoaderModal
-        isOpen={isScanning}
-        title="Cabinet Dermo-IA Pro — Scanner Octo-Spectral 3D"
-        subtitle="Calcul biométrique multicouche & télémétrie spectrale avancée..."
-        clientName="Cliente Salon"
-        onComplete={() => {
-          setIsScanning(false);
-          setScanComplete(true);
-        }}
-      />
+      {/* Printable Anamnesis Sheet Dialog */}
     </div>
   );
 }
