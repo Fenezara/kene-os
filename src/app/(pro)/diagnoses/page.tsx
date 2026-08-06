@@ -162,30 +162,30 @@ export default function ProDiagnosesPage() {
     if (!files || files.length === 0) return;
 
     const fileArray = Array.from(files).slice(0, 5 - capturedPhotos.length);
-    let loadedCount = 0;
 
-    fileArray.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const dataUrl = reader.result as string;
-        setCapturedPhotos(prev => {
-          const updated = [...prev, dataUrl].slice(0, 5);
-          setActivePhotoIdx(updated.length - 1);
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('kene_latest_client_photo', updated[0]);
-            localStorage.setItem('kene_latest_client_photos', JSON.stringify(updated));
-          }
-          return updated;
+    Promise.all(
+      fileArray.map((file) => {
+        return new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(file);
         });
-        loadedCount++;
-        if (loadedCount === fileArray.length) {
-          toast({
-            title: "📁 Photos Téléchargées !",
-            description: `${loadedCount} photo(s) ajoutée(s) à la série du bilan cutané.`,
-          });
+      })
+    ).then((newPhotos) => {
+      setCapturedPhotos(prev => {
+        const updated = [...prev, ...newPhotos].slice(0, 5);
+        setActivePhotoIdx(updated.length - 1);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('kene_latest_client_photo', updated[0]);
+          localStorage.setItem('kene_latest_client_photos', JSON.stringify(updated));
         }
-      };
-      reader.readAsDataURL(file);
+        return updated;
+      });
+      toast({
+        title: "📁 Photos Téléchargées !",
+        description: `${newPhotos.length} photo(s) ajoutée(s) à la série du bilan cutané.`,
+      });
+      if (e.target) e.target.value = '';
     });
   };
 
@@ -272,6 +272,7 @@ export default function ProDiagnosesPage() {
       setMockResult({
         scoreGlobal: score,
         phototype: selectedPhototype,
+        photos: capturedPhotos.length > 0 ? capturedPhotos : ['/images/afro_skin_spectral_scanner.jpg'],
         questionnaireData: questionnaire,
         subScores: {
           hydration: Math.min(100, score + 8),
@@ -847,7 +848,8 @@ export default function ProDiagnosesPage() {
                           </span>
                         </div>
                         <SpectralScanOverlay 
-                          imageSrc={capturedPhoto || '/images/afro_skin_spectral_scanner.jpg'}
+                          imageSrc={capturedPhotos[0] || '/images/afro_skin_spectral_scanner.jpg'}
+                          photos={capturedPhotos}
                           clientName="Aperçu Scan Cliente"
                           hydrationScore={mockResult.subScores.hydration}
                           pihDepth="0.2mm"
