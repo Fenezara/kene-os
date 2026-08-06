@@ -38,8 +38,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Kènè — La beauté mélanoderme, révélée",
-  description: "Plateforme beauté et bien-être : diagnostic IA pour peaux mélanodermes, boutique de cosmétiques botaniques et gestion d'instituts.",
-  keywords: ["Kènè", "beauté mélanoderme", "diagnostic de peau", "cosmétiques botaniques", "baobab", "karité", "moringa", "PWA"],
+  description: "Plateforme beauté et bien-être : diagnostic IA pour peaux mélanodermes, dermo-cosmétique avancée et gestion d'instituts.",
+  keywords: ["Kènè", "beauté mélanoderme", "diagnostic de peau", "dermo-cosmétique", "baobab", "karité", "moringa", "PWA"],
   authors: [{ name: "Kènè Team" }],
   icons: {
     icon: "/images/kene_logo.jpg",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   openGraph: {
     title: "Kènè — La beauté mélanoderme, révélée",
-    description: "Diagnostic de peau IA et cosmétiques botaniques",
+    description: "Diagnostic de peau IA et dermo-cosmétique avancée",
     url: "https://kene.africa",
     siteName: "Kènè",
     type: "website",
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Kènè — La beauté mélanoderme de A à Z",
-    description: "Diagnostic de peau IA et cosmétiques botaniques africains",
+    description: "Diagnostic de peau IA et dermo-cosmétique africaine",
   },
 };
 

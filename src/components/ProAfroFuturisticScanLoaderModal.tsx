@@ -16,7 +16,7 @@ const PRO_ANALYSIS_STEPS = [
   '⚡ [01/05] SIMULATION VLM-KÈNÈ : Étalonnage Dermo-Biométrique 3D (60 FPS)...',
   '🔬 [02/05] CARTOGRAPHIE PIH : Scan Mélanique & Calcul Profondeur (0.2mm - Épidermique)...',
   '💧 [03/05] BARRIÈRE HYDRIQUE : Mesure Perte Transepidermique TEWL (14.2 g/m²/h)...',
-  '🌱 [04/05] PHYTOTHÉRAPIE KÈNÈ LAB : Assemblage Botanique Karité-Baobab-Bissap-Neem...',
+  '✨ [04/05] DERMO-COSMÉTIQUE KÈNÈ LAB : Assemblage Actifs Karité-Baobab-Bissap-Neem...',
   '🩺 [05/05] CONFORMITÉ MÉDICALE : Génération Rapport Certifié UEMOA / OHADA / RPPS...'
 ];
 
@@ -345,7 +345,7 @@ export function ProAfroFuturisticScanLoaderModal({
                   <span className="text-sky-400 font-bold">74% (Hyper-sécrétion Zone T)</span>
                 </div>
                 <div className="bg-white/5 p-2 rounded-xl border border-white/5 space-y-0.5">
-                  <span className="text-white/40 block">Ordonnance Botanique</span>
+                  <span className="text-white/40 block">Soin Dermo-Cosmétique</span>
                   <span className="text-emerald-300 font-bold">Karité + Baobab + Bissap</span>
                 </div>
               </div>

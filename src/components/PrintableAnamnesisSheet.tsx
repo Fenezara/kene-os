@@ -202,10 +202,10 @@ export function PrintableAnamnesisSheet({
           </div>
         </div>
 
-        {/* ── 6. SECTION ORDONNANCE BOTANIQUE KÈNÈ ── */}
+        {/* ── 6. SECTION PRESCRIPTION DERMO-COSMÉTIQUE KÈNÈ ── */}
         <div className="border-2 border-slate-800 rounded-xl p-5 mb-6 space-y-3 bg-slate-50">
           <h3 className="font-display font-bold text-xs text-slate-900 uppercase tracking-wider border-b border-slate-300 pb-2 flex items-center gap-2">
-            <span>🌱</span> 4. PROTOCOLE & ORDONNANCE DERMO-BOTANIQUE RECOMMANDÉE
+            <span>✨</span> 4. PROTOCOLE & PRESCRIPTION DERMO-COSMÉTIQUE RECOMMANDÉE
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-xs text-slate-900 font-bold">

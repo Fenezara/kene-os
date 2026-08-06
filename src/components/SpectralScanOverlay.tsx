@@ -617,7 +617,7 @@ export function SpectralScanOverlay({
         </div>
       </div>
 
-      {/* ── FOOTER : DÉTAILS DE LA ZONE SELECTIONNÉE & ORDONNANCE BOTANIQUE ── */}
+      {/* ── FOOTER : DÉTAILS DE LA ZONE SELECTIONNÉE & PRESCRIPTION DERMO-COSMÉTIQUE ── */}
       {selectedHotspot && (
         <div className="bg-[#1A1410] border-t border-white/10 p-4 space-y-2">
           <div className="flex items-center justify-between">
@@ -637,7 +637,7 @@ export function SpectralScanOverlay({
 
           <div className="bg-[#0F0A05] p-2.5 rounded-xl border border-[#C8951E]/30 flex items-center justify-between gap-2">
             <span className="text-[10px] font-mono text-emerald-400 font-bold flex items-center gap-1">
-              <span>🌱</span> Actif Botanique Prescrit :
+              <span>✨</span> Actif Dermo-Cosmétique Prescrit :
             </span>
             <span className="text-xs font-bold text-white">{selectedHotspot.recommendedBotanical}</span>
           </div>

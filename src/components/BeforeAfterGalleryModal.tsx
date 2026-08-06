@@ -102,7 +102,7 @@ export function BeforeAfterGalleryModal({
               </div>
               <div>
                 <span className="font-bold text-white text-lg block">Galerie Évolution Cutanée Avant / Après</span>
-                <span className="text-white/40 text-xs font-normal">Visualisez les progrès spectaculaires des traitements dermo-botaniques</span>
+                <span className="text-white/40 text-xs font-normal">Visualisez les progrès spectaculaires des traitements dermo-cosmétiques</span>
               </div>
             </div>
             <Badge className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-mono text-xs px-3 py-1">
@@ -282,11 +282,11 @@ export function BeforeAfterGalleryModal({
             </div>
           </div>
 
-          {/* 5. FORMULATION BOTANIQUE RECOMMANDÉE */}
+          {/* 5. FORMULATION DERMO-COSMÉTIQUE RECOMMANDÉE */}
           <div className="bg-gradient-to-r from-[#1A1410] via-[#241B14] to-[#1A1410] border border-[#C8951E]/20 p-4 rounded-2xl flex items-center justify-between flex-wrap gap-3">
             <div className="space-y-1">
               <span className="text-[10px] font-mono text-[#C8951E] font-bold uppercase tracking-wider flex items-center gap-1">
-                <Sparkles className="w-3 h-3" /> Ordonnance Botanique Actuelle
+                <Sparkles className="w-3 h-3" /> Prescription Dermo-Cosmétique Actuelle
               </span>
               <p className="text-xs font-bold text-white">{afterSession.formula}</p>
             </div>

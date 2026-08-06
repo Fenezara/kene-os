@@ -270,7 +270,7 @@ export default function ProDiagnosesPage() {
     'Étalonnage phototype Fitzpatrick & spectrométrie…',
     'Analyse séborrhique & Perte Transepidermique en Eau (PIE)…',
     'Cartographie de l\'hyper-pigmentation post-inflammatoire (PIH)…',
-    'Génération de l\'ordonnance dermo-botanique Kènè…'
+    'Génération de la prescription dermo-cosmétique Kènè…'
   ];
 
   const fetchData = async () => {
@@ -937,11 +937,11 @@ export default function ProDiagnosesPage() {
                         )}
                       </div>
 
-                      {/* Formulation Botanique Sur-Mesure Kènè Lab */}
+                      {/* Formulation Dermo-Cosmétique Sur-Mesure Kènè Lab */}
                       <div className="bg-[#1A1410] border border-[#2E5A36]/50 p-4 rounded-2xl space-y-2.5">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#2E5A36]/40 pb-2 gap-2">
                           <span className="text-[10px] sm:text-xs font-bold text-emerald-400 uppercase tracking-widest font-display flex items-start sm:items-center gap-1.5 min-w-0">
-                            <span className="shrink-0">🌱</span> <span className="break-words leading-tight">Formulation Botanique Sur-Mesure</span>
+                            <span className="shrink-0">✨</span> <span className="break-words leading-tight">Formulation Dermo-Cosmétique Sur-Mesure</span>
                           </span>
                           <span className="text-[9px] bg-[#2E5A36]/30 text-emerald-300 px-2 py-0.5 rounded-full font-mono font-bold">
                             Kènè Lab Certified
@@ -958,7 +958,7 @@ export default function ProDiagnosesPage() {
                           </div>
                           <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
                             <span className="text-emerald-400 font-bold block text-[11px]">🌺 Sérum Concentré d'Hibiscus (20%)</span>
-                            <span className="text-white/50 text-[10px] block">AHA botaniques & anti-taches PIH</span>
+                            <span className="text-white/50 text-[10px] block">AHA dermo-cosmétiques & anti-taches PIH</span>
                           </div>
                           <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
                             <span className="text-emerald-400 font-bold block text-[11px]">✨ Niacinamide Clinique 5% (5%)</span>
@@ -1104,7 +1104,7 @@ export default function ProDiagnosesPage() {
                 <KeneLogo variant="full" size="md" />
                 <div className="text-right">
                   <span className="text-xs font-mono font-bold text-[#C8951E] bg-[#C8951E]/10 border border-[#C8951E]/30 px-3 py-1 rounded-full inline-block">
-                    Bilan Cutané & Prescription Botanique
+                    Bilan Cutané & Prescription Dermo-Cosmétique
                   </span>
                   <p className="text-[10px] text-white/40 font-mono mt-1">
                     Émis le {format(new Date(viewingReport.createdAt), 'dd MMMM yyyy à HH:mm')}
@@ -1197,11 +1197,11 @@ export default function ProDiagnosesPage() {
                 )}
               </div>
 
-              {/* Formulation Botanique Sur-Mesure Kènè Lab */}
+              {/* Formulation Dermo-Cosmétique Sur-Mesure Kènè Lab */}
               <div className="bg-[#1A1410] border border-[#2E5A36]/50 p-4 rounded-2xl space-y-2.5">
                 <div className="flex items-center justify-between border-b border-[#2E5A36]/40 pb-2">
                   <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest font-display flex items-center gap-1.5">
-                    🌱 Formulation Botanique Sur-Mesure & Dosages Précis
+                    ✨ Formulation Dermo-Cosmétique Sur-Mesure & Dosages Précis
                   </span>
                   <span className="text-[9px] bg-[#2E5A36]/30 text-emerald-300 px-2 py-0.5 rounded-full font-mono font-bold">
                     Kènè Lab Certified
@@ -1218,7 +1218,7 @@ export default function ProDiagnosesPage() {
                   </div>
                   <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
                     <span className="text-emerald-400 font-bold block text-[11px]">🌺 Sérum Concentré d'Hibiscus (20%)</span>
-                    <span className="text-white/50 text-[10px] block">AHA botaniques & atténuation des taches PIH</span>
+                    <span className="text-white/50 text-[10px] block">AHA dermo-cosmétiques & atténuation des taches PIH</span>
                   </div>
                   <div className="bg-[#0A0603] p-2.5 rounded-xl border border-white/5 space-y-1">
                     <span className="text-emerald-400 font-bold block text-[11px]">✨ Niacinamide Clinique 5% (5%)</span>
@@ -1274,13 +1274,13 @@ export default function ProDiagnosesPage() {
                   <Button 
                     onClick={() => {
                       const blob = new Blob([
-                        `RAPPORT CLINIQUE & ORDONNANCE DERMO-BOTANIQUE KÈNÈ\n` +
+                        `RAPPORT CLINIQUE & PRESCRIPTION DERMO-COSMÉTIQUE KÈNÈ\n` +
                         `---------------------------------------------------\n` +
                         `Cliente: ${viewingReport.client?.firstName} ${viewingReport.client?.lastName}\n` +
                         `Date: ${format(new Date(viewingReport.createdAt), 'dd/MM/yyyy HH:mm')}\n` +
                         `Phototype: Fitzpatrick Type ${viewingReport.phototype || 'V'}\n` +
                         `Score Global: ${viewingReport.scoreGlobal}/100\n\n` +
-                        `PRESCRIPTION DERMO-BOTANIQUE:\n` +
+                        `PRESCRIPTION DERMO-COSMÉTIQUE:\n` +
                         `- Sérum Bissap Bio (Anti-taches PIH)\n` +
                         `- Beurre de Karité Pur Brut (Régénération lipidique)\n` +
                         `- Huile de Baobab Pure (Scellage hydratation)\n\n` +
@@ -1291,7 +1291,7 @@ export default function ProDiagnosesPage() {
                       a.href = url;
                       a.download = `Rapport_Diagnostic_${viewingReport.client?.firstName || 'Client'}.txt`;
                       a.click();
-                      toast({ title: "📁¥ Document Téléchargé !", description: "Le rapport dermo-botanique a été enregistré." });
+                      toast({ title: "📁 Document Téléchargé !", description: "Le rapport dermo-cosmétique a été enregistré." });
                     }}
                     className="bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl h-11 text-xs cursor-pointer border border-white/10"
                   >

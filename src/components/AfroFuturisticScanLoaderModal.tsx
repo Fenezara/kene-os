@@ -15,7 +15,7 @@ const ANALYSIS_STEPS = [
   '⚡ Step 1/5 : Initialisation du Réseau Biométrique VLM-Kènè (60 FPS)...',
   '🔬 Step 2/5 : Cartographie Pigmentaire PIH & Profondeur de Mélanine (0.2mm)...',
   '💧 Step 3/5 : Mesure de la Perte Transepidermique en Eau (TEWL 14.2 g/m²/h)...',
-  '🌱 Step 4/5 : Formulation Botanique Sur-Mesure (Karité, Baobab, Bissap)...',
+  '✨ Step 4/5 : Formulation Dermo-Cosmétique Sur-Mesure (Karité, Baobab, Bissap)...',
   '✨ Step 5/5 : Diagnostic Certifié & Aligné (RPPS UEMOA/OHADA)...'
 ];
 
@@ -54,7 +54,7 @@ export function AfroFuturisticScanLoaderModal({
   isOpen,
   onComplete,
   title = "Analyse Biométrique & Spectrale IA",
-  subtitle = "Calcul de la cartographie cutanée 3D et formulation dermo-botanique..."
+  subtitle = "Calcul de la cartographie cutanée 3D et formulation dermo-cosmétique..."
 }: AfroFuturisticScanLoaderModalProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [progress, setProgress] = useState(0);
