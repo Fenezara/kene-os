@@ -159,6 +159,18 @@ export default function ProEmployeesPage() {
     setFormData({ firstName: '', lastName: '', phone: '', position: 'Praticienne', baseSalary: '', gender: 'F', role: 'praticienne' });
   };
 
+  const handleDeleteEmployee = (id: string, name: string) => {
+    setEmployees(prev => prev.filter(e => e.id !== id));
+    try {
+      const stored = localStorage.getItem('kene_employees');
+      if (stored) {
+        const existing: Employee[] = JSON.parse(stored);
+        localStorage.setItem('kene_employees', JSON.stringify(existing.filter(e => e.id !== id)));
+      }
+    } catch (e) {}
+    toast({ title: "🗑️ Membre Retiré", description: `${name} a été retiré de l'équipe.` });
+  };
+
   const openPermissionModal = (emp: Employee) => {
     setSelectedEmployee(emp);
     setEmpRole(emp.role || (emp.position?.toLowerCase().includes('manager') ? 'gerant' : 'praticienne'));
@@ -425,13 +437,20 @@ export default function ProEmployeesPage() {
               </div>
 
               {/* Permissions Control Footer */}
-              <div className="pt-3 border-t border-white/5 flex items-center justify-between">
+              <div className="pt-3 border-t border-white/5 flex items-center justify-between gap-2">
                 <button
                   onClick={() => openPermissionModal(emp)}
                   className="flex-1 py-2 px-3 rounded-xl bg-[#C8951E]/10 hover:bg-[#C8951E]/20 text-[#F3E5AB] font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer border border-[#C8951E]/30"
                 >
                   <Lock className="w-3.5 h-3.5 text-[#C8951E]" />
                   <span>Droits & Permissions</span>
+                </button>
+                <button
+                  onClick={() => handleDeleteEmployee(emp.id, `${emp.firstName} ${emp.lastName}`)}
+                  className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition cursor-pointer"
+                  title="Retirer ce membre"
+                >
+                  <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>
