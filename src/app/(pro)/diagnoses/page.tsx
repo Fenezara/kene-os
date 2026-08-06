@@ -657,24 +657,57 @@ export default function ProDiagnosesPage() {
                 {!isScanning && !scanComplete && (
                   <div className="space-y-4">
                     {/* Zone du Corps Sélectionnée */}
-                    <div className="space-y-1.5">
-                      <Label className="text-white/70 text-xs flex items-center gap-1 font-bold">
-                        <ScanFace className="w-3.5 h-3.5 text-[#C8951E]" /> Zone Anatomique à Analyser
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-xs flex items-center justify-between font-bold">
+                        <span className="flex items-center gap-1.5 text-[#C8951E]">
+                          <ScanFace className="w-4 h-4 text-[#C8951E]" /> Zone Anatomique à Analyser
+                        </span>
+                        <span className="text-[10px] font-mono text-[#F3E5AB] bg-[#C8951E]/10 border border-[#C8951E]/30 px-2 py-0.5 rounded-full">
+                          Active: {selectedZone.toUpperCase()}
+                        </span>
                       </Label>
-                      <Select value={selectedZone} onValueChange={setSelectedZone}>
-                        <SelectTrigger className="w-full bg-[#1A1410] border-[#C8951E]/40 text-[#F3E5AB] text-xs font-bold rounded-xl h-10">
-                          <SelectValue placeholder="Choisir la zone anatomique" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-[#1A1410] border-[#C8951E]/40 text-white">
-                          <SelectItem value="visage">Visage & Cou 💆</SelectItem>
-                          <SelectItem value="cuir_chevelu">Cuir Chevelu & Cuir 💇</SelectItem>
-                          <SelectItem value="buste">Décolleté & Buste 🌸</SelectItem>
-                          <SelectItem value="dos">Dos & Épaules 🌿</SelectItem>
-                          <SelectItem value="bras">Bras & Mains 💅</SelectItem>
-                          <SelectItem value="jambes">Jambes & Pieds 🦶</SelectItem>
-                          <SelectItem value="lesion">Zone Ciblée (Lésion / PIH) 🔍</SelectItem>
-                        </SelectContent>
-                      </Select>
+
+                      {/* Native Bulletproof Dropdown */}
+                      <select
+                        value={selectedZone}
+                        onChange={(e) => setSelectedZone(e.target.value)}
+                        className="w-full bg-[#140D08] border-2 border-[#C8951E]/50 text-[#F3E5AB] text-xs font-bold rounded-xl h-11 px-3 appearance-none cursor-pointer focus:border-[#C8951E] focus:ring-2 focus:ring-[#C8951E]/20 transition-all"
+                      >
+                        <option value="visage" className="bg-[#140D08] text-white">Visage & Cou 💆</option>
+                        <option value="cuir_chevelu" className="bg-[#140D08] text-white">Cuir Chevelu & Cheveux 💇</option>
+                        <option value="buste" className="bg-[#140D08] text-white">Décolleté & Buste 🌸</option>
+                        <option value="dos" className="bg-[#140D08] text-white">Dos & Épaules 🌿</option>
+                        <option value="bras" className="bg-[#140D08] text-white">Bras & Mains 💅</option>
+                        <option value="jambes" className="bg-[#140D08] text-white">Jambes & Pieds 🦶</option>
+                        <option value="lesion" className="bg-[#140D08] text-white">Zone Ciblée / Lésion PIH 🔍</option>
+                      </select>
+
+                      {/* Interactive Visual Pills Selector */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-1">
+                        {[
+                          { id: 'visage', label: 'Visage & Cou', icon: '💆' },
+                          { id: 'cuir_chevelu', label: 'Cuir Chevelu', icon: '💇' },
+                          { id: 'buste', label: 'Décolleté', icon: '🌸' },
+                          { id: 'dos', label: 'Dos & Épaules', icon: '🌿' },
+                          { id: 'bras', label: 'Bras & Mains', icon: '💅' },
+                          { id: 'jambes', label: 'Jambes', icon: '🦶' },
+                          { id: 'lesion', label: 'Lésion Ciblée', icon: '🔍' },
+                        ].map((z) => (
+                          <button
+                            key={z.id}
+                            type="button"
+                            onClick={() => setSelectedZone(z.id)}
+                            className={`px-2.5 py-2 rounded-xl text-[11px] font-bold transition flex items-center gap-1.5 cursor-pointer border ${
+                              selectedZone === z.id
+                                ? 'bg-gradient-to-r from-[#C8951E] to-[#D4AF37] text-[#0F0A05] border-[#FFD700] shadow-md scale-[1.02]'
+                                : 'bg-white/5 text-white/60 hover:text-white border-white/10 hover:bg-white/10'
+                            }`}
+                          >
+                            <span>{z.icon}</span>
+                            <span className="truncate">{z.label}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     {/* Fitzpatrick Selector */}
@@ -906,6 +939,7 @@ export default function ProDiagnosesPage() {
                           pihDepth="0.2mm"
                           phototype={`Type ${selectedPhototype}`}
                           showControls={true}
+                          bodyZone={selectedZone as any}
                         />
                       </div>
 

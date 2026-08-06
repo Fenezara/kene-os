@@ -420,6 +420,15 @@ export function SpectralScanOverlay({
   const [isScanning, setIsScanning] = useState(false);
   const [selectedPhotoIdx, setSelectedPhotoIdx] = useState(0);
   const [currentZone, setCurrentZone] = useState<BodyZone>(initialZone);
+  const [customPositions, setCustomPositions] = useState<Record<string, { x: number; y: number }>>({});
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+
+  // ── SYNC PROPS ──
+  useEffect(() => {
+    if (initialZone && initialZone !== currentZone) {
+      setCurrentZone(initialZone as BodyZone);
+    }
+  }, [initialZone]);
 
   // ── AUTOMATIC LOCALSTORAGE PHOTO RESOLUTION ──
   const [resolvedPhotos, setResolvedPhotos] = useState<string[]>([]);
@@ -449,15 +458,59 @@ export function SpectralScanOverlay({
     }
   }, [photos, imageSrc]);
 
-  const hotspots = HOTSPOTS_BY_ZONE[currentZone] || HOTSPOTS_BY_ZONE.visage;
-  const [selectedHotspot, setSelectedHotspot] = useState<HotspotDetail | null>(hotspots[0]);
+  const rawHotspots = HOTSPOTS_BY_ZONE[currentZone] || HOTSPOTS_BY_ZONE.visage;
+  const [selectedHotspot, setSelectedHotspot] = useState<HotspotDetail | null>(rawHotspots[0]);
 
   useEffect(() => {
-    setSelectedHotspot(hotspots[0] || null);
+    setSelectedHotspot(rawHotspots[0] || null);
   }, [currentZone]);
 
   const availablePhotos = resolvedPhotos.length > 0 ? resolvedPhotos : [imageSrc];
   const currentPhoto = availablePhotos[Math.min(selectedPhotoIdx, availablePhotos.length - 1)] || imageSrc;
+
+  // ── DYNAMIC POSITIONAL COMPUTATION ──
+  const getDynamicCoords = (hotspot: HotspotDetail, idx: number) => {
+    if (customPositions[hotspot.id]) {
+      return customPositions[hotspot.id];
+    }
+
+    let modeShiftX = 0;
+    let modeShiftY = 0;
+
+    if (activeMode === 'pih') {
+      modeShiftX = (idx % 2 === 0 ? -7 : 7);
+      modeShiftY = (idx === 0 ? -5 : 6);
+    } else if (activeMode === 'hydration') {
+      modeShiftX = (idx === 1 ? 8 : -5);
+      modeShiftY = -7;
+    } else if (activeMode === 'barrier') {
+      modeShiftX = (idx % 2 === 0 ? 5 : -4);
+      modeShiftY = 8;
+    }
+
+    const photoOffset = (selectedPhotoIdx % 2 === 1 ? 4 : 0);
+
+    const x = Math.min(88, Math.max(12, hotspot.xPercent + modeShiftX + photoOffset));
+    const y = Math.min(85, Math.max(15, hotspot.yPercent + modeShiftY));
+
+    return { x, y };
+  };
+
+  // Allow practitioner to click anywhere on photo to reposition selected hotspot dynamically
+  const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!imageContainerRef.current || !selectedHotspot) return;
+    const rect = imageContainerRef.current.getBoundingClientRect();
+    const clickX = ((e.clientX - rect.left) / rect.width) * 100;
+    const clickY = ((e.clientY - rect.top) / rect.height) * 100;
+
+    setCustomPositions(prev => ({
+      ...prev,
+      [selectedHotspot.id]: {
+        x: Math.min(90, Math.max(10, Math.round(clickX))),
+        y: Math.min(90, Math.max(10, Math.round(clickY)))
+      }
+    }));
+  };
 
   const handleZoneChange = (zone: BodyZone) => {
     setCurrentZone(zone);
@@ -516,7 +569,11 @@ export function SpectralScanOverlay({
       )}
 
       {/* ── IMAGE + MAILLAGE 3D + HOTSPOTS DYNAMIQUES ── */}
-      <div className="relative w-full aspect-[4/5] sm:aspect-[4/3] overflow-hidden bg-[#1A1410]">
+      <div 
+        ref={imageContainerRef}
+        onClick={handleImageClick}
+        className="relative w-full aspect-[4/5] sm:aspect-[4/3] overflow-hidden bg-[#1A1410] cursor-crosshair"
+      >
         <img
           src={currentPhoto}
           alt={`${clientName} — ${BODY_ZONES.find(z => z.id === currentZone)?.label}`}
@@ -528,7 +585,7 @@ export function SpectralScanOverlay({
           onError={(e) => { (e.target as HTMLImageElement).src = '/images/afro_skin_spectral_scanner.jpg'; }}
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0F0A05] via-transparent to-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0F0A05] via-transparent to-black/50 pointer-events-none" />
 
         {/* Laser Scan Animation */}
         <AnimatePresence>
@@ -538,7 +595,7 @@ export function SpectralScanOverlay({
               animate={{ top: '100%' }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1.8, repeat: Infinity, ease: 'linear' }}
-              className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent shadow-[0_0_25px_#FFD700] z-30"
+              className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent shadow-[0_0_25px_#FFD700] z-30 pointer-events-none"
             />
           )}
         </AnimatePresence>
@@ -556,19 +613,24 @@ export function SpectralScanOverlay({
         <HolographicParticleCanvas activeMode={activeMode} isScanning={isScanning} />
 
         {/* DYNAMIC HOTSPOT TARGET NODES POSITIONED OVER PROBLEM AREAS */}
-        <div className="absolute inset-0 z-20">
-          {hotspots.map((hotspot) => {
+        <div className="absolute inset-0 z-20 pointer-events-auto">
+          {rawHotspots.map((hotspot, idx) => {
             const isSelected = selectedHotspot?.id === hotspot.id;
+            const coords = getDynamicCoords(hotspot, idx);
             const dotColor = hotspot.status === 'critical' ? 'bg-red-500' : hotspot.status === 'warning' ? 'bg-amber-400' : 'bg-emerald-400';
             const badgeColor = hotspot.status === 'critical' ? 'border-red-500 text-red-200' :
                              hotspot.status === 'warning' ? 'border-amber-500 text-amber-200' : 'border-emerald-500 text-emerald-200';
 
             return (
-              <div
+              <motion.div
                 key={hotspot.id}
-                style={{ top: `${hotspot.yPercent}%`, left: `${hotspot.xPercent}%` }}
-                className="absolute flex items-center gap-2 group cursor-pointer transition-all duration-500"
-                onClick={() => setSelectedHotspot(hotspot)}
+                animate={{ top: `${coords.y}%`, left: `${coords.x}%` }}
+                transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+                className="absolute flex items-center gap-2 group cursor-grab active:cursor-grabbing"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedHotspot(hotspot);
+                }}
               >
                 <div className="relative">
                   <div className={`w-7 h-7 rounded-full bg-black/70 border-2 flex items-center justify-center animate-pulse ${isSelected ? 'scale-125 border-[#FFD700] shadow-[0_0_15px_#FFD700]' : 'border-white/50'}`}>
@@ -578,9 +640,9 @@ export function SpectralScanOverlay({
                 </div>
                 <div className={`bg-[#0F0A05]/95 border backdrop-blur-md px-2.5 py-1 rounded-xl shadow-xl transition-all ${badgeColor} ${isSelected ? 'ring-2 ring-[#C8951E] scale-105' : 'opacity-85 hover:opacity-100'}`}>
                   <span className="text-[10px] font-mono font-bold block">{hotspot.title}</span>
-                  <span className="text-[9px] font-mono text-white/60 block">{hotspot.metric}</span>
+                  <span className="text-[9px] font-mono text-white/60 block">{hotspot.metric} ({coords.x}%, {coords.y}%)</span>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
 
