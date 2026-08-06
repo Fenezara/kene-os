@@ -34,7 +34,7 @@ export function PrintableAnamnesisSheet({
   };
 
   return (
-    <div className="space-y-4 font-sans select-none">
+    <div className="kene-printable-sheet space-y-4 font-sans select-none">
       {/* ── ACTION BAR (Non-printable controls) ── */}
       <div className="print:hidden bg-[#1A1410] border border-[#C8951E]/40 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-xl">
         <div className="flex items-center gap-2.5">

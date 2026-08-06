@@ -1130,7 +1130,7 @@ export default function ProDiagnosesPage() {
 
       {/* ── DETAILED CLINICAL REPORT MODAL (WITH QUESTIONNAIRE DATA) ── */}
       <Dialog open={!!viewingReport} onOpenChange={(open) => !open && setViewingReport(null)}>
-        <DialogContent className="bg-[#0A0603] border border-[#C8951E]/40 text-white rounded-3xl w-[95vw] max-w-4xl lg:max-w-5xl max-h-[92vh] overflow-y-auto shadow-2xl p-4 sm:p-6">
+        <DialogContent className="kene-printable-document bg-[#0A0603] border border-[#C8951E]/40 text-white rounded-3xl w-[95vw] max-w-4xl lg:max-w-5xl max-h-[92vh] overflow-y-auto shadow-2xl p-4 sm:p-6">
           {viewingReport && (
             <div className="space-y-6">
               {/* Header with Logo & Salon Branding */}
@@ -1423,15 +1423,21 @@ export default function ProDiagnosesPage() {
 
                     <div className="flex items-center gap-2 shrink-0">
                       <button 
-                        onClick={() => window.print()} 
-                        className="p-2 rounded-xl text-white/40 hover:text-white hover:bg-white/10 transition cursor-pointer" 
-                        title="Imprimer le rapport"
+                        onClick={() => {
+                          setViewingReport(diag);
+                          setTimeout(() => {
+                            window.print();
+                          }, 350);
+                        }} 
+                        className="p-2 sm:px-3 sm:py-2 rounded-xl text-[#F3E5AB] bg-[#C8951E]/20 hover:bg-[#C8951E] hover:text-[#0F0A05] border border-[#C8951E]/40 transition cursor-pointer flex items-center gap-1 font-bold text-xs shadow-md" 
+                        title="Imprimer le Bilan Cutané"
                       >
-                        <Printer className="w-4 h-4" />
+                        <Printer className="w-4 h-4 text-[#C8951E]" />
+                        <span className="hidden sm:inline">Imprimer</span>
                       </button>
                       <button 
                         onClick={() => setViewingReport(diag)}
-                        className="text-xs font-bold text-[#F3E5AB] bg-[#C8951E]/20 border border-[#C8951E]/40 hover:bg-[#C8951E] hover:text-[#0F0A05] transition px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1"
+                        className="text-xs font-bold text-[#F3E5AB] bg-[#C8951E]/20 border border-[#C8951E]/40 hover:bg-[#C8951E] hover:text-[#0F0A05] transition px-3 py-2 rounded-xl cursor-pointer flex items-center gap-1 shadow-md"
                       >
                         <span>Voir bilan cutané</span> <ChevronRight className="w-3.5 h-3.5" />
                       </button>
