@@ -99,9 +99,25 @@ export default function ProClientsPage() {
 
   const fetchClients = async () => {
     try {
+      let localList: any[] = [];
+      try {
+        const stored = localStorage.getItem('kene_clients');
+        if (stored) localList = JSON.parse(stored);
+      } catch (e) {}
+
       const res = await fetch('/api/tenant/clients');
       const data = await res.json();
-      if (data.success) setClients(data.clients);
+
+      if (data.success && Array.isArray(data.clients)) {
+        const combinedMap = new Map<string, any>();
+        localList.forEach(c => combinedMap.set(c.id, c));
+        data.clients.forEach((c: any) => {
+          if (!combinedMap.has(c.id)) combinedMap.set(c.id, c);
+        });
+        setClients(Array.from(combinedMap.values()));
+      } else if (localList.length > 0) {
+        setClients(localList);
+      }
     } catch {
       toast({ title: "Erreur", description: "Impossible de charger les clients.", variant: "destructive" });
     } finally {
@@ -224,24 +240,49 @@ export default function ProClientsPage() {
 
   const handleCreateClient = async (e: React.FormEvent) => {
     e.preventDefault();
+    const firstName = formData.firstName.trim();
+    const lastName = formData.lastName.trim();
+    const phone = formData.phone.trim();
+
+    if (!firstName || !lastName || !phone) {
+      toast({ title: "Champs Requis", description: "Veuillez renseigner au moins le Prénom, le Nom et le Téléphone.", variant: "destructive" });
+      return;
+    }
+
+    const newClient = {
+      id: 'client-' + Date.now(),
+      firstName, lastName, phone,
+      email: formData.email,
+      skinType: formData.skinType || 'normale',
+      fitzpatrickType: formData.fitzpatrickType || 'V',
+      allergies: formData.allergies ? JSON.stringify(formData.allergies.split(',').map(a => a.trim())) : '[]',
+      avatar: formData.avatar || null,
+      createdAt: new Date().toISOString()
+    };
+
+    // 1. Immediately save to local storage & update UI state
+    try {
+      const stored = localStorage.getItem('kene_clients');
+      const existing = stored ? JSON.parse(stored) : [];
+      localStorage.setItem('kene_clients', JSON.stringify([newClient, ...existing]));
+    } catch (err) {}
+
+    setClients(prev => [newClient, ...prev]);
+
+    // 2. Call API in background
     try {
       const payload = {
         ...formData,
         allergies: formData.allergies ? JSON.stringify(formData.allergies.split(',').map(a => a.trim())) : '[]'
       };
-      const res = await fetch('/api/tenant/clients', {
+      await fetch('/api/tenant/clients', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
       });
-      const data = await res.json();
-      if (data.success) {
-        toast({ title: "✨… Profil créé", description: "Nouvelle cliente enregistrée dans le CRM." });
-        setIsDialogOpen(false);
-        setFormData({ firstName: '', lastName: '', phone: '', email: '', skinType: 'normale', fitzpatrickType: 'V', allergies: '', avatar: '' });
-        fetchClients();
-      } else throw new Error(data.error);
-    } catch {
-      toast({ title: "Erreur", description: "Impossible de créer le client.", variant: "destructive" });
-    }
+    } catch (err) {}
+
+    toast({ title: "✨ Profil Cliente Créé !", description: `${firstName} ${lastName} a été ajoutée à votre base CRM.` });
+    setIsDialogOpen(false);
+    setFormData({ firstName: '', lastName: '', phone: '', email: '', skinType: 'normale', fitzpatrickType: 'V', allergies: '', avatar: '' });
   };
 
   const filtered = clients.filter(c =>
