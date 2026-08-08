@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react'
+import { motion as m, AnimatePresence } from 'framer-motion'
 import { PlanGuard } from '@/components/PlanGuard'
 import { 
   BookOpen, Calculator, Landmark, ShieldCheck, ChevronDown, 

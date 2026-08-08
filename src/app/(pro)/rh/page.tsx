@@ -7,6 +7,7 @@ import {
   Download, Eye, CheckCircle2, ChevronRight, FileText, Gift 
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/hooks/use-toast'
 import { PlanGuard } from '@/components/PlanGuard'
 
 interface Employee {
