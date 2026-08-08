@@ -30,7 +30,7 @@ export const KENE_PRICING_PLANS: Record<string, PricingPlan> = {
     badge: 'BEST-SELLER ⭐',
     color: '#C8951E',
     description: 'Scanner Biométrique 3D IA + Bilan Cutané A4 + Stocks Produits + Marketing WhatsApp.',
-    allowedModules: ['dashboard', 'agenda', 'pos', 'clients', 'diagnoses', 'inventory', 'marketing', 'reviews', 'referral']
+    allowedModules: ['dashboard', 'agenda', 'pos', 'clients', 'services', 'employees', 'inventory', 'diagnoses', 'marketing', 'reviews', 'referral']
   },
   elite: {
     id: 'elite',
@@ -41,6 +41,6 @@ export const KENE_PRICING_PLANS: Record<string, PricingPlan> = {
     badge: 'EXPERT & MULTI-SITES 👑',
     color: '#8A1C14',
     description: 'Laboratoire Botanique Sur-Mesure + Comptabilité SYSCOHADA + Paie CNPS + Multi-Salons.',
-    allowedModules: ['dashboard', 'agenda', 'pos', 'clients', 'diagnoses', 'inventory', 'marketing', 'reviews', 'referral', 'lab', 'compta', 'rh', 'settings', 'reports', 'wallet']
+    allowedModules: ['dashboard', 'agenda', 'pos', 'clients', 'services', 'employees', 'inventory', 'diagnoses', 'marketing', 'reviews', 'referral', 'lab', 'compta', 'rh', 'settings', 'reports', 'wallet']
   }
 };
