@@ -93,6 +93,26 @@ export default function ProDashboardPage() {
   const [employeeName, setEmployeeName] = useState<string>('Fatou Koné');
   const [loading, setLoading] = useState(true);
   const [activeChartPoint, setActiveChartPoint] = useState<number | null>(5); // Default to Saturday
+  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro');
+
+  useEffect(() => {
+    const updatePlan = () => {
+      try {
+        const stored = localStorage.getItem('kene_active_plan');
+        if (stored && (stored === 'essentiel' || stored === 'pro' || stored === 'elite')) {
+          setActivePlan(stored);
+        }
+      } catch (e) {}
+    };
+
+    updatePlan();
+    window.addEventListener('kene_plan_changed', updatePlan);
+    return () => window.removeEventListener('kene_plan_changed', updatePlan);
+  }, []);
+
+  const isEssentiel = activePlan === 'essentiel';
+  const isPro = activePlan === 'pro';
+  const isElite = activePlan === 'elite';
 
   useEffect(() => {
     let customSalonName = '';
@@ -162,12 +182,33 @@ export default function ProDashboardPage() {
 
   const maxVal = Math.max(...WEEKLY_DATA.map(d => d.val));
 
+  const activeQuickActions = isEssentiel
+    ? [
+        { label: 'Nouveau RDV', href: '/agenda', icon: CalendarCheck, color: 'from-emerald-600 to-emerald-900', textColor: 'text-white' },
+        { label: 'Encaisser POS', href: '/pos', icon: ShoppingCart, color: 'from-emerald-700 to-teal-950', textColor: 'text-emerald-200' },
+        { label: 'Ajouter Cliente', href: '/clients', icon: Users, color: 'from-slate-700 to-slate-900', textColor: 'text-slate-200' },
+        { label: 'Services & Tarifs', href: '/services', icon: Scissors, color: 'from-slate-800 to-slate-950', textColor: 'text-slate-300' },
+      ]
+    : isPro
+    ? [
+        { label: 'Nouveau RDV', href: '/agenda', icon: CalendarCheck, color: 'from-[#C8951E] to-[#8A5C0A]', textColor: 'text-[#0F0A05]' },
+        { label: 'Encaisser POS', href: '/pos', icon: ShoppingCart, color: 'from-[#2E5A36] to-[#1A3820]', textColor: 'text-emerald-200' },
+        { label: 'Diagnostic 3D IA', href: '/diagnoses', icon: ScanFace, color: 'from-[#C8951E]/80 to-[#D4AF37]', textColor: 'text-black' },
+        { label: 'Stocks Produits', href: '/inventory', icon: Package, color: 'from-[#8A3B14] to-[#4A1B07]', textColor: 'text-amber-200' },
+      ]
+    : [
+        { label: 'Labo Sur-Mesure 👑', href: '/lab', icon: FlaskConical, color: 'from-[#FFD700] via-[#C8951E] to-[#8A1C14]', textColor: 'text-black font-black' },
+        { label: 'Compta SYSCOHADA 👑', href: '/compta', icon: BarChart3, color: 'from-[#1E3A5F] to-[#0E1E35]', textColor: 'text-blue-200' },
+        { label: 'Diagnostic 3D IA', href: '/diagnoses', icon: ScanFace, color: 'from-[#C8951E] to-[#8A5C0A]', textColor: 'text-[#0F0A05]' },
+        { label: 'Paie & CNPS 👑', href: '/rh', icon: ShieldCheck, color: 'from-[#8A1C14] to-[#4A0A05]', textColor: 'text-red-200' },
+      ];
+
   const statCards = [
     {
       title: "RDV Aujourd'hui",
       value: stats?.appointmentsToday ?? 8,
       icon: CalendarCheck,
-      accent: '#C8951E',
+      accent: isEssentiel ? '#4CAF6E' : '#C8951E',
       change: '+2 vs hier',
       subtitle: '8 cabines configurées',
       href: '/agenda',
@@ -176,28 +217,28 @@ export default function ProDashboardPage() {
       title: 'Clients Totaux',
       value: stats?.totalClients ?? 142,
       icon: Users,
-      accent: '#4E9FD1',
+      accent: isEssentiel ? '#4CAF6E' : '#4E9FD1',
       change: '+14 ce mois',
       subtitle: 'Taux fidélité 84%',
       href: '/clients',
     },
     {
-      title: 'Revenus (Mois)',
+      title: isEssentiel ? 'Ventes Caisse (Mois)' : isPro ? 'Revenus (Mois)' : 'Journal SYSCOHADA (Acc. 5711)',
       value: stats?.revenue ? `${(stats.revenue).toLocaleString('fr-FR')} F` : '1 850 000 F',
       icon: TrendingUp,
-      accent: '#4CAF6E',
+      accent: isEssentiel ? '#4CAF6E' : isPro ? '#C8951E' : '#FFD700',
       change: '+18.4% vs M-1',
-      subtitle: 'Objectif atteint 82.5%',
-      href: '/compta',
+      subtitle: isElite ? 'Certifié UEMOA 👑' : 'Objectif atteint 82.5%',
+      href: isElite ? '/compta' : '/pos',
     },
     {
-      title: 'Employées Actives',
-      value: stats?.activeEmployees ?? 6,
-      icon: Scissors,
-      accent: '#E07A2B',
-      change: 'Équipe au complet',
-      subtitle: 'Masse salariale validée',
-      href: '/employees',
+      title: isEssentiel ? 'Équipe Salon' : isPro ? 'Scan 3D IA Réalisés' : 'Formulations Labo 👑',
+      value: isEssentiel ? '6 Praticiennes' : isPro ? '48 Diagnostics' : '24 Sérums Sur-Mesure',
+      icon: isEssentiel ? Scissors : isPro ? ScanFace : FlaskConical,
+      accent: isEssentiel ? '#4CAF6E' : isPro ? '#C8951E' : '#FFD700',
+      change: isEssentiel ? 'Actives' : isPro ? '+12 cette semaine' : 'Actifs botaniques 100%',
+      subtitle: isEssentiel ? 'Caisse active' : isPro ? 'Phototypes IV-VI' : 'Laboratoire Kènè',
+      href: isEssentiel ? '/employees' : isPro ? '/diagnoses' : '/lab',
     },
   ];
 
@@ -259,7 +300,7 @@ export default function ProDashboardPage() {
 
           {/* Quick Actions Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-2.5 shrink-0 pt-2 lg:pt-0">
-            {quickActions.map((action) => {
+            {activeQuickActions.map((action) => {
               const Icon = action.icon;
               return (
                 <Link key={action.href} href={action.href}>
