@@ -182,13 +182,28 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
   const [companyName, setCompanyName] = useState<string>('Espace Salon Pro')
   const [userName, setUserName] = useState<string>('Gérant(e)')
   const [userRole, setUserRole] = useState<string>('Gérante Salon')
+  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro')
+
+  React.useEffect(() => {
+    const updatePlan = () => {
+      try {
+        const stored = localStorage.getItem('kene_active_plan');
+        if (stored && (stored === 'essentiel' || stored === 'pro' || stored === 'elite')) {
+          setActivePlan(stored);
+        }
+      } catch (e) {}
+    };
+
+    updatePlan();
+    window.addEventListener('kene_plan_changed', updatePlan);
+    return () => window.removeEventListener('kene_plan_changed', updatePlan);
+  }, []);
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedUser = localStorage.getItem('kene_user');
       const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
 
-      // If no session exists at all, auto-create a clean pro session
       if (!savedUser && !hasCookie) {
         const guestProUser = {
           name: 'Partenaire Salon Kènè',
@@ -240,23 +255,42 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  // Visual Tiering Styling Variables
+  const isEssentiel = activePlan === 'essentiel';
+  const isPro = activePlan === 'pro';
+  const isElite = activePlan === 'elite';
+
+  const containerBg = isEssentiel
+    ? 'bg-[#0B0806]'
+    : isPro
+    ? 'bg-[#0E0A06]'
+    : 'bg-[#120B06]';
+
+  const auraGradient = isEssentiel
+    ? `radial-gradient(ellipse 70% 50% at 80% 0%, rgba(76,175,110,0.05) 0%, transparent 60%)`
+    : isPro
+    ? `radial-gradient(ellipse 80% 60% at 80% 0%, rgba(200,149,30,0.18) 0%, transparent 60%), radial-gradient(ellipse 60% 60% at 0% 100%, rgba(138,59,20,0.12) 0%, transparent 50%)`
+    : `radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255,215,0,0.22) 0%, transparent 60%), radial-gradient(ellipse 70% 70% at 0% 100%, rgba(138,28,20,0.18) 0%, transparent 50%)`;
+
   return (
-    <div className="min-h-screen bg-[#0F0A05] flex flex-col md:flex-row font-sans w-full overflow-x-hidden">
+    <div className={`min-h-screen ${containerBg} flex flex-col md:flex-row font-sans w-full overflow-x-hidden transition-colors duration-500`}>
       <GlobalSearch />
-      {/* Subtle global bg pattern */}
+
+      {/* Dynamic Global Visual Aura */}
       <div
-        className="fixed inset-0 pointer-events-none z-0 opacity-30"
-        style={{
-          backgroundImage: `
-            radial-gradient(ellipse 80% 60% at 80% 0%, rgba(200,149,30,0.08) 0%, transparent 60%),
-            radial-gradient(ellipse 50% 50% at 0% 100%, rgba(138,59,20,0.07) 0%, transparent 50%)
-          `
-        }}
+        className="fixed inset-0 pointer-events-none z-0 transition-opacity duration-700"
+        style={{ backgroundImage: auraGradient }}
       />
+
+      {/* Adinkra Filigree Watermark for Pro & Elite Plans */}
+      {!isEssentiel && (
+        <div className="fixed bottom-4 right-4 pointer-events-none z-0 opacity-5 text-gold text-9xl font-display select-none">
+          {isElite ? '👑' : '⚜️'}
+        </div>
+      )}
 
       {/* ─── DESKTOP SIDEBAR (FIXED STICKY LEFT AT 1024px+) ─── */}
       <aside className="hidden lg:flex flex-col w-60 shrink-0 sticky top-0 h-screen z-20 border-r border-white/5">
-        {/* Glass bg */}
         <div className="absolute inset-0 bg-[#110D09]/90 backdrop-blur-xl" />
         <div className="relative z-10 h-full overflow-hidden">
           <SidebarContent pathname={pathname} />
@@ -317,7 +351,7 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
         )}
       </AnimatePresence>
 
-      {/* ─── MAIN CONTENT CONTAINER ─── */}
+      {/* ─── MAIN CONTENT CONTAINER WITH DYNAMIC TIER BANNER ─── */}
       <main className="relative z-10 flex-1 flex flex-col min-h-screen w-full min-w-0">
         {/* Top Navigation Header (FIXED STICKY TOP AT 1024px+) */}
         <div className="hidden lg:flex items-center justify-between px-8 py-3.5 border-b border-white/10 bg-[#110D09]/90 backdrop-blur-xl sticky top-0 z-30">
@@ -348,6 +382,38 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
               </span>
             </div>
           </div>
+        </div>
+
+        {/* Dynamic Tier Visual Status Banner */}
+        <div className="p-4 lg:px-8 lg:pt-6 lg:pb-0">
+          <motion.div 
+            key={activePlan}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`flex items-center justify-between px-4 py-2.5 rounded-2xl text-xs font-mono border backdrop-blur-md shadow-lg ${
+              isEssentiel
+                ? 'bg-[#4CAF6E]/10 border-[#4CAF6E]/30 text-[#4CAF6E]'
+                : isPro
+                ? 'bg-gradient-to-r from-[#C8951E]/20 via-[#1A1410] to-[#C8951E]/10 border-[#C8951E]/50 text-[#F3E5AB] shadow-[#C8951E]/10'
+                : 'bg-gradient-to-r from-[#FFD700]/25 via-[#8A1C14]/30 to-[#FFD700]/15 border-[#FFD700]/60 text-[#FFD700] shadow-[#FFD700]/20'
+            }`}
+          >
+            <div className="flex items-center gap-2.5 font-bold">
+              <span className="text-lg">{isEssentiel ? '🟢' : isPro ? '⭐' : '👑'}</span>
+              <span>
+                {isEssentiel 
+                  ? 'Mode V1 : Plan Essentiel (7 500 FCFA/mois — Sobriété Tactile & Caisse)' 
+                  : isPro 
+                  ? 'Mode V2 : Plan Pro Dermo-Cosmétique (15 000 FCFA/mois — Scan 3D IA & Gold Glow)' 
+                  : 'Mode V3 : Plan Élite Royal (30 000 FCFA/mois — Marque Blanche 24K & Labo)'}
+              </span>
+            </div>
+
+            <div className="hidden sm:flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-gold" />
+              <span>Thème Visuel Actif</span>
+            </div>
+          </motion.div>
         </div>
 
         <div className="flex-1 p-4 sm:p-6 md:p-8 w-full max-w-full">

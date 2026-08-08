@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 // Kènè OS — Client Portal Main Dashboard v2.4 (Fresh Cache Release)
 import { useState, useEffect, useRef } from 'react';
@@ -47,6 +47,22 @@ export default function ClientPortalPage() {
     fitzpatrickType: 'Phototype IV - VI'
   });
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro');
+
+  useEffect(() => {
+    const updatePlan = () => {
+      try {
+        const stored = localStorage.getItem('kene_active_plan');
+        if (stored && (stored === 'essentiel' || stored === 'pro' || stored === 'elite')) {
+          setActivePlan(stored);
+        }
+      } catch (e) {}
+    };
+
+    updatePlan();
+    window.addEventListener('kene_plan_changed', updatePlan);
+    return () => window.removeEventListener('kene_plan_changed', updatePlan);
+  }, []);
 
   // Daily Botanical Ritual Checklist State
   const [dailySteps, setDailySteps] = useState<Record<string, boolean>>({
@@ -319,6 +335,36 @@ export default function ClientPortalPage() {
         className="hidden"
         onChange={handlePhotoUpload}
       />
+
+      {/* Dynamic Client Experience Tier Banner */}
+      <motion.div 
+        key={activePlan}
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`flex items-center justify-between px-4 py-2.5 rounded-2xl text-xs font-mono border backdrop-blur-md shadow-lg ${
+          activePlan === 'essentiel'
+            ? 'bg-[#4CAF6E]/10 border-[#4CAF6E]/30 text-[#4CAF6E]'
+            : activePlan === 'pro'
+            ? 'bg-gradient-to-r from-[#C8951E]/20 via-[#1A1410] to-[#C8951E]/10 border-[#C8951E]/50 text-[#F3E5AB] shadow-[#C8951E]/10'
+            : 'bg-gradient-to-r from-[#FFD700]/25 via-[#8A1C14]/30 to-[#FFD700]/15 border-[#FFD700]/60 text-[#FFD700] shadow-[#FFD700]/20'
+        }`}
+      >
+        <div className="flex items-center gap-2.5 font-bold">
+          <span className="text-base">{activePlan === 'essentiel' ? '🟢' : activePlan === 'pro' ? '⭐' : '👑'}</span>
+          <span>
+            {activePlan === 'essentiel' 
+              ? 'Espace Cliente V1 : Reçu Numérique & Réservation Express' 
+              : activePlan === 'pro' 
+              ? 'Espace VIP V2 : Passeport Cutané 3D IA & Routine Karité/Baobab ⭐' 
+              : 'Espace Privilège V3 : Miroir Virtuel AR, Carte Apple Wallet & Flacon Sur-Mesure 👑'}
+          </span>
+        </div>
+
+        <div className="hidden sm:flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold">
+          <Sparkles className="w-3.5 h-3.5 text-gold" />
+          <span>Expérience Cliente Active</span>
+        </div>
+      </motion.div>
 
       {/* Profile Header with Photo Upload & Profile Edit Button */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pt-2 flex items-center justify-between">
