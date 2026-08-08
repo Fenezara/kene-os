@@ -261,37 +261,39 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
   const isElite = activePlan === 'elite';
 
   const containerBg = isEssentiel
-    ? 'bg-[#0B0806]'
+    ? 'bg-[#0A0D0B] text-slate-100'
     : isPro
-    ? 'bg-[#0E0A06]'
-    : 'bg-[#120B06]';
+    ? 'bg-[#150F0A] text-amber-50'
+    : 'bg-[#1C1008] text-amber-100';
 
   const auraGradient = isEssentiel
-    ? `radial-gradient(ellipse 70% 50% at 80% 0%, rgba(76,175,110,0.05) 0%, transparent 60%)`
+    ? `radial-gradient(ellipse 90% 70% at 80% 0%, rgba(76,175,110,0.22) 0%, transparent 70%), radial-gradient(ellipse 60% 60% at 0% 100%, rgba(16,185,129,0.12) 0%, transparent 60%)`
     : isPro
-    ? `radial-gradient(ellipse 80% 60% at 80% 0%, rgba(200,149,30,0.18) 0%, transparent 60%), radial-gradient(ellipse 60% 60% at 0% 100%, rgba(138,59,20,0.12) 0%, transparent 50%)`
-    : `radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255,215,0,0.22) 0%, transparent 60%), radial-gradient(ellipse 70% 70% at 0% 100%, rgba(138,28,20,0.18) 0%, transparent 50%)`;
+    ? `radial-gradient(ellipse 100% 80% at 80% 0%, rgba(200,149,30,0.35) 0%, transparent 70%), radial-gradient(ellipse 70% 70% at 0% 100%, rgba(224,122,43,0.20) 0%, transparent 60%)`
+    : `radial-gradient(ellipse 100% 90% at 50% 0%, rgba(255,215,0,0.45) 0%, transparent 70%), radial-gradient(ellipse 80% 80% at 0% 100%, rgba(138,28,20,0.35) 0%, transparent 60%)`;
 
   return (
-    <div className={`min-h-screen ${containerBg} flex flex-col md:flex-row font-sans w-full overflow-x-hidden transition-colors duration-500`}>
+    <div className={`min-h-screen ${containerBg} flex flex-col md:flex-row font-sans w-full overflow-x-hidden transition-all duration-700`}>
       <GlobalSearch />
 
       {/* Dynamic Global Visual Aura */}
       <div
-        className="fixed inset-0 pointer-events-none z-0 transition-opacity duration-700"
+        className="fixed inset-0 pointer-events-none z-0 transition-all duration-700"
         style={{ backgroundImage: auraGradient }}
       />
 
-      {/* Adinkra Filigree Watermark for Pro & Elite Plans */}
-      {!isEssentiel && (
-        <div className="fixed bottom-4 right-4 pointer-events-none z-0 opacity-5 text-gold text-9xl font-display select-none">
-          {isElite ? '👑' : '⚜️'}
-        </div>
-      )}
+      {/* Visual Filigree Watermark according to activePlan */}
+      <div className="fixed bottom-6 right-6 pointer-events-none z-0 opacity-10 text-9xl font-display select-none transition-all duration-500">
+        {isEssentiel ? '🟢' : isPro ? '⚜️' : '👑'}
+      </div>
 
       {/* ─── DESKTOP SIDEBAR (FIXED STICKY LEFT AT 1024px+) ─── */}
-      <aside className="hidden lg:flex flex-col w-60 shrink-0 sticky top-0 h-screen z-20 border-r border-white/5">
-        <div className="absolute inset-0 bg-[#110D09]/90 backdrop-blur-xl" />
+      <aside className={`hidden lg:flex flex-col w-60 shrink-0 sticky top-0 h-screen z-20 transition-all duration-500 ${
+        isEssentiel ? 'border-r border-emerald-500/20' : isPro ? 'border-r border-[#C8951E]/40 shadow-xl shadow-[#C8951E]/10' : 'border-r-2 border-[#FFD700]/60 shadow-2xl shadow-[#FFD700]/20'
+      }`}>
+        <div className={`absolute inset-0 transition-colors duration-500 ${
+          isEssentiel ? 'bg-[#0B0E0C]/95' : isPro ? 'bg-[#150F09]/95 backdrop-blur-xl' : 'bg-[#1D1007]/95 backdrop-blur-2xl'
+        }`} />
         <div className="relative z-10 h-full overflow-hidden">
           <SidebarContent pathname={pathname} />
         </div>
