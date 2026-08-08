@@ -17,6 +17,7 @@ import { BeforeAfterGalleryModal } from '@/components/BeforeAfterGalleryModal';
 import { SpectralScanOverlay } from '@/components/SpectralScanOverlay';
 import { PrintableAnamnesisSheet } from '@/components/PrintableAnamnesisSheet';
 import { ProAfroFuturisticScanLoaderModal } from '@/components/ProAfroFuturisticScanLoaderModal';
+import { PlanGuard } from '@/components/PlanGuard';
 
 // Score gauge component
 function ScoreGauge({ score, size = 120 }: { score: number; size?: number }) {
@@ -416,7 +417,8 @@ export default function ProDiagnosesPage() {
   );
 
   return (
-    <div className="space-y-6 text-white max-w-6xl mx-auto font-sans overflow-x-hidden">
+    <PlanGuard module="diagnoses" moduleName="Diagnostic Cutané 3D IA" requiredPlan="pro">
+      <div className="space-y-6 text-white max-w-6xl mx-auto font-sans overflow-x-hidden">
 
       {/* ── HEADER ── */}
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1A1410] border border-white/10 p-5 rounded-3xl shadow-xl">
@@ -1465,5 +1467,6 @@ export default function ProDiagnosesPage() {
 
       {/* Printable Anamnesis Sheet Dialog */}
     </div>
+    </PlanGuard>
   );
 }

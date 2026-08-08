@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import React, { useState, useEffect } from 'react'
 import { motion as m, AnimatePresence } from 'framer-motion'
@@ -7,7 +7,7 @@ import {
   Download, Eye, CheckCircle2, ChevronRight, FileText, Gift 
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useToast } from '@/hooks/use-toast'
+import { PlanGuard } from '@/components/PlanGuard'
 
 interface Employee {
   id: string
@@ -119,7 +119,8 @@ export default function RhPage() {
   const totalIgr = payrolls.reduce((sum, p) => sum + p.igrTax, 0)
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto text-white">
+    <PlanGuard module="rh" moduleName="Paie Salariale & Déclarations CNPS" requiredPlan="elite">
+      <div className="space-y-6 max-w-5xl mx-auto text-white">
       {/* Header bar */}
       <m.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -360,5 +361,6 @@ export default function RhPage() {
         )}
       </AnimatePresence>
     </div>
+    </PlanGuard>
   )
 }

@@ -1,8 +1,9 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FlaskConical, Beaker, Tag, CheckCircle2, Clock, Printer, Sparkles, AlertCircle, Plus, Search, Filter } from 'lucide-react';
+import { PlanGuard } from '@/components/PlanGuard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -118,7 +119,8 @@ export default function LabPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <PlanGuard module="lab" moduleName="Laboratoire Botanique Sur-Mesure" requiredPlan="elite">
+      <div className="space-y-6">
       {/* Header Banner */}
       <div className="relative rounded-3xl p-6 overflow-hidden shadow-2xl border border-[#C8951E]/40 min-h-[160px] flex items-center">
         <img
@@ -382,5 +384,6 @@ export default function LabPage() {
         </div>
       )}
     </div>
+    </PlanGuard>
   );
 }

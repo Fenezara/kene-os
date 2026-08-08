@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
 import React, { useState, useEffect } from 'react'
-import { motion as m, AnimatePresence } from 'framer-motion'
+import { PlanGuard } from '@/components/PlanGuard'
 import { 
   BookOpen, Calculator, Landmark, ShieldCheck, ChevronDown, 
   ChevronUp, Calendar, Download, RefreshCw, FileText 
@@ -156,7 +156,8 @@ export default function ComptaPage() {
   }, { soinsHT: 0, produitsHT: 0, vatCollected: 0, totalTTC: 0 })
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto text-white">
+    <PlanGuard module="compta" moduleName="Comptabilité SYSCOHADA UEMOA" requiredPlan="elite">
+      <div className="space-y-6 max-w-5xl mx-auto text-white">
       {/* Header bar */}
       <div className="bg-[#1A1410] border border-white/5 p-6 rounded-3xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -765,5 +766,6 @@ export default function ComptaPage() {
         })()}
       </AnimatePresence>
     </div>
+    </PlanGuard>
   )
 }
