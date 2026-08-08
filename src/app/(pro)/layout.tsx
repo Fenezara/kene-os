@@ -21,6 +21,7 @@ import { handleLogout } from '@/lib/logout'
 import { PlanSwitcher } from '@/components/PlanSwitcher'
 import { KENE_PRICING_PLANS } from '@/config/pricing'
 import { Lock } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 
 const navItems = [
   { id: 'dashboard', name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard, group: 'principal' },
@@ -47,6 +48,7 @@ const groupLabels: Record<string, string> = {
 }
 
 function SidebarContent({ pathname }: { pathname: string }) {
+  const { toast } = useToast();
   const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro');
 
   React.useEffect(() => {
@@ -123,7 +125,11 @@ function SidebarContent({ pathname }: { pathname: string }) {
                       <div
                         key={item.href}
                         onClick={() => {
-                          window.dispatchEvent(new CustomEvent('kene_upgrade_needed', { detail: { module: item.name } }));
+                          toast({
+                            title: `🔒 Module "${item.name}" Verrouillé`,
+                            description: `Le module "${item.name}" nécessite la mise à niveau vers un plan supérieur.`,
+                            variant: "destructive"
+                          });
                         }}
                         className="flex items-center gap-3 px-3 py-2 rounded-xl text-[11px] tracking-wide transition-all duration-200 cursor-pointer text-white/25 hover:text-white/40 hover:bg-white/5 font-medium border border-transparent"
                         title={`Module ${item.name} verrouillé en Plan ${activePlan.toUpperCase()}`}
