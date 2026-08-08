@@ -783,41 +783,73 @@ export default function ProDashboardPage() {
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="font-display font-black text-white text-sm uppercase tracking-[0.15em] flex items-center gap-2">
-            <Layers className="w-4 h-4 text-[#C8951E]" /> Modules & Extensions Actives
+            <Layers className="w-4 h-4 text-[#C8951E]" /> Modules & Extensions du Plan
           </h2>
-          <span className="text-[10px] font-mono text-white/40">100% Fonctionnel</span>
+          <span className="text-[10px] font-mono text-[#C8951E] font-bold border border-[#C8951E]/30 bg-[#C8951E]/10 px-2.5 py-0.5 rounded-full">
+            Plan {activePlan.toUpperCase()} Actif
+          </span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
           {[
-            { label: 'Labo Sur-Mesure', href: '/lab', icon: '🧪', desc: 'Formulation botaniques', color: '#C8951E' },
-            { label: 'Diagnostic IA Peau', href: '/diagnoses', icon: '🔬', desc: 'Phototypes Fitzpatrick', color: '#4E9FD1' },
-            { label: 'Marketing WhatsApp', href: '/marketing', icon: '💬', desc: 'Campagnes & relances', color: '#4CAF6E' },
-            { label: 'Paie & CNPS OHADA', href: '/rh', icon: '📋', desc: 'Bulletins conformes', color: '#E07A2B' },
-            { label: 'Avis & Réputation', href: '/reviews', icon: '⭐', desc: 'Gestion des retours', color: '#F3E5AB' },
-            { label: 'Comptabilité', href: '/compta', icon: '📊', desc: 'SYSCOHADA UEMOA', color: '#8A3B14' },
-            { label: 'Signature Tactile', href: '/clients/signature', icon: '✍️', desc: 'Consentements dématérialisés', color: '#6B46C1' },
-            { label: 'Services & Tarifs', href: '/services', icon: '✂️', desc: 'Catalogue & commissions', color: '#5A1E2E' },
-          ].map((mod, i) => (
-            <motion.div key={i} variants={itemVariants}>
-              <Link href={mod.href}>
-                <div className="group p-4 rounded-2xl border border-white/10 bg-[#1A1410] hover:border-[#C8951E]/50 hover:bg-[#201812] transition-all duration-200 cursor-pointer h-full shadow-lg">
-                  <div className="text-2xl mb-2">{mod.icon}</div>
-                  <div className="text-xs font-bold text-white mb-0.5 truncate">{mod.label}</div>
-                  <div className="text-[10px] text-white/40 truncate">{mod.desc}</div>
-                  <div
-                    className="mt-3 h-0.5 rounded-full w-8 transition-all duration-300 group-hover:w-full"
-                    style={{ background: mod.color }}
-                  />
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+            { id: 'lab', label: 'Labo Sur-Mesure', href: '/lab', icon: '🧪', desc: 'Formulation botaniques', color: '#C8951E' },
+            { id: 'diagnoses', label: 'Diagnostic IA Peau', href: '/diagnoses', icon: '🔬', desc: 'Phototypes Fitzpatrick', color: '#4E9FD1' },
+            { id: 'marketing', label: 'Marketing WhatsApp', href: '/marketing', icon: '💬', desc: 'Campagnes & relances', color: '#4CAF6E' },
+            { id: 'rh', label: 'Paie & CNPS OHADA', href: '/rh', icon: '📋', desc: 'Bulletins conformes', color: '#E07A2B' },
+            { id: 'reviews', label: 'Avis & Réputation', href: '/reviews', icon: '⭐', desc: 'Gestion des retours', color: '#F3E5AB' },
+            { id: 'compta', label: 'Comptabilité', href: '/compta', icon: '📊', desc: 'SYSCOHADA UEMOA', color: '#8A3B14' },
+            { id: 'clients', label: 'Signature Tactile', href: '/clients', icon: '✍️', desc: 'Consentements dématérialisés', color: '#6B46C1' },
+            { id: 'services', label: 'Services & Tarifs', href: '/services', icon: '✂️', desc: 'Catalogue & commissions', color: '#5A1E2E' },
+          ].map((mod, i) => {
+            const allowed = KENE_PRICING_PLANS[activePlan]?.allowedModules.includes(mod.id);
+
+            if (!allowed) {
+              return (
+                <motion.div key={i} variants={itemVariants}>
+                  <div 
+                    onClick={() => {
+                      toast({
+                        title: `🔒 Module "${mod.label}" Verrouillé`,
+                        description: `Le module "${mod.label}" nécessite la mise à niveau vers un plan supérieur.`,
+                        variant: "destructive"
+                      });
+                    }}
+                    className="group p-4 rounded-2xl border border-white/5 bg-[#120D09]/60 opacity-60 hover:opacity-100 hover:border-[#C8951E]/40 transition-all duration-200 cursor-pointer h-full relative overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-2xl grayscale group-hover:grayscale-0 transition-all">{mod.icon}</span>
+                      <span className="text-[9px] font-mono font-bold bg-[#C8951E]/20 text-[#F3E5AB] px-1.5 py-0.5 rounded-md border border-[#C8951E]/30 flex items-center gap-1">
+                        🔒 Lock
+                      </span>
+                    </div>
+                    <div className="text-xs font-bold text-white/50 group-hover:text-white mb-0.5 truncate">{mod.label}</div>
+                    <div className="text-[10px] text-white/30 truncate">Inclus dans Plan Supérieur</div>
+                  </div>
+                </motion.div>
+              );
+            }
+
+            return (
+              <motion.div key={i} variants={itemVariants}>
+                <Link href={mod.href}>
+                  <div className={`group p-4 rounded-2xl border transition-all duration-200 cursor-pointer h-full shadow-lg ${cardBgClass}`}>
+                    <div className="text-2xl mb-2">{mod.icon}</div>
+                    <div className="text-xs font-bold text-white mb-0.5 truncate">{mod.label}</div>
+                    <div className="text-[10px] text-white/50 truncate">{mod.desc}</div>
+                    <div
+                      className="mt-3 h-0.5 rounded-full w-8 transition-all duration-300 group-hover:w-full"
+                      style={{ background: mod.color }}
+                    />
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
 
-      {/* ── MOBILE STICKY BOTTOM NAV BAR ── */}
-      <div className="md:hidden fixed bottom-3 left-3 right-3 z-40 bg-[#1A1410]/95 border border-[#C8951E]/40 p-2 rounded-2xl backdrop-blur-2xl shadow-2xl flex items-center justify-around">
+      {/* ── MOBILE & TABLET STICKY BOTTOM NAV BAR (RESPONSIVE PER PLAN) ── */}
+      <div className="md:hidden fixed bottom-3 left-3 right-3 z-40 bg-[#150F0A]/95 border border-[#C8951E]/50 p-2 rounded-2xl backdrop-blur-2xl shadow-2xl flex items-center justify-around">
         <Link href="/agenda" className="flex flex-col items-center text-white/70 hover:text-[#C8951E]">
           <CalendarCheck className="w-5 h-5 text-[#C8951E]" />
           <span className="text-[9px] font-bold font-display mt-0.5">RDV</span>
@@ -826,19 +858,38 @@ export default function ProDashboardPage() {
           <ShoppingCart className="w-5 h-5 text-emerald-400" />
           <span className="text-[9px] font-bold font-display mt-0.5">Caisse POS</span>
         </Link>
-        <Link href="/lab" className="flex flex-col items-center text-white/70 hover:text-[#C8951E]">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] text-[#0F0A05] flex items-center justify-center font-bold shadow-lg -mt-3 border-2 border-[#1A1410]">
-            🧪
-          </div>
-          <span className="text-[9px] font-bold font-display mt-0.5 text-[#C8951E]">Labo</span>
+        
+        {isElite ? (
+          <Link href="/lab" className="flex flex-col items-center text-white/70 hover:text-[#FFD700]">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#FFD700] to-[#C8951E] text-[#0F0A05] flex items-center justify-center font-bold shadow-lg -mt-3 border-2 border-[#150F0A]">
+              🧪
+            </div>
+            <span className="text-[9px] font-bold font-display mt-0.5 text-[#FFD700]">Labo 👑</span>
+          </Link>
+        ) : isPro ? (
+          <Link href="/diagnoses" className="flex flex-col items-center text-white/70 hover:text-[#C8951E]">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] text-[#0F0A05] flex items-center justify-center font-bold shadow-lg -mt-3 border-2 border-[#150F0A]">
+              🔬
+            </div>
+            <span className="text-[9px] font-bold font-display mt-0.5 text-[#C8951E]">Scan 3D ⭐</span>
+          </Link>
+        ) : (
+          <Link href="/services" className="flex flex-col items-center text-white/70 hover:text-emerald-400">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-400 to-teal-600 text-black flex items-center justify-center font-bold shadow-lg -mt-3 border-2 border-[#150F0A]">
+              ✂️
+            </div>
+            <span className="text-[9px] font-bold font-display mt-0.5 text-emerald-400">Tarifs 🟢</span>
+          </Link>
+        )}
+
+        <Link href={isElite ? '/compta' : isPro ? '/inventory' : '/clients'} className="flex flex-col items-center text-white/70 hover:text-blue-400">
+          {isElite ? <BarChart3 className="w-5 h-5 text-[#FFD700]" /> : isPro ? <Package className="w-5 h-5 text-amber-400" /> : <Users className="w-5 h-5 text-emerald-400" />}
+          <span className="text-[9px] font-bold font-display mt-0.5">{isElite ? 'Compta 👑' : isPro ? 'Stocks ⭐' : 'Clientes 🟢'}</span>
         </Link>
-        <Link href="/diagnoses" className="flex flex-col items-center text-white/70 hover:text-blue-400">
-          <ScanFace className="w-5 h-5 text-blue-400" />
-          <span className="text-[9px] font-bold font-display mt-0.5">Diag IA</span>
-        </Link>
+
         <Link href="/clients" className="flex flex-col items-center text-white/70 hover:text-white">
           <Users className="w-5 h-5 text-white/60" />
-          <span className="text-[9px] font-bold font-display mt-0.5">Clients</span>
+          <span className="text-[9px] font-bold font-display mt-0.5">Fiches</span>
         </Link>
       </div>
 
