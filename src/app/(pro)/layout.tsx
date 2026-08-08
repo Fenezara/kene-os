@@ -18,20 +18,24 @@ import { BackButton } from '@/components/ui/back-button'
 import { KeneLogo } from '@/components/ui/logo'
 import { handleLogout } from '@/lib/logout'
 
+import { PlanSwitcher } from '@/components/PlanSwitcher'
+import { KENE_PRICING_PLANS } from '@/config/pricing'
+import { Lock } from 'lucide-react'
+
 const navItems = [
-  { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard, group: 'principal' },
-  { name: 'Agenda & RDV', href: '/agenda', icon: Calendar, group: 'principal' },
-  { name: 'Caisse / POS', href: '/pos', icon: ShoppingCart, group: 'principal' },
-  { name: 'Clients CRM', href: '/clients', icon: Users, group: 'crm' },
-  { name: 'Marketing WhatsApp', href: '/marketing', icon: MessageSquare, group: 'crm' },
-  { name: 'Avis & Réputation', href: '/reviews', icon: Star, group: 'crm' },
-  { name: 'Services & Tarifs', href: '/services', icon: Scissors, group: 'salon' },
-  { name: 'Équipe & RH', href: '/employees', icon: UserCheck, group: 'salon' },
-  { name: 'Stocks & Produits', href: '/inventory', icon: Package, group: 'salon' },
-  { name: 'Bilan Cutané', href: '/diagnoses', icon: ScanFace, group: 'ia' },
-  { name: 'Labo Sur-Mesure', href: '/lab', icon: FlaskConical, group: 'ia' },
-  { name: 'Paie & CNPS', href: '/rh', icon: FileText, group: 'finance' },
-  { name: 'Comptabilité SYSCOHADA', href: '/compta', icon: Calculator, group: 'finance' },
+  { id: 'dashboard', name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard, group: 'principal' },
+  { id: 'agenda', name: 'Agenda & RDV', href: '/agenda', icon: Calendar, group: 'principal' },
+  { id: 'pos', name: 'Caisse / POS', href: '/pos', icon: ShoppingCart, group: 'principal' },
+  { id: 'clients', name: 'Clients CRM', href: '/clients', icon: Users, group: 'crm' },
+  { id: 'marketing', name: 'Marketing WhatsApp', href: '/marketing', icon: MessageSquare, group: 'crm' },
+  { id: 'reviews', name: 'Avis & Réputation', href: '/reviews', icon: Star, group: 'crm' },
+  { id: 'services', name: 'Services & Tarifs', href: '/services', icon: Scissors, group: 'salon' },
+  { id: 'employees', name: 'Équipe & Permissions', href: '/employees', icon: UserCheck, group: 'salon' },
+  { id: 'inventory', name: 'Stocks & Produits', href: '/inventory', icon: Package, group: 'salon' },
+  { id: 'diagnoses', name: 'Bilan Cutané 3D IA', href: '/diagnoses', icon: ScanFace, group: 'ia' },
+  { id: 'lab', name: 'Labo Sur-Mesure', href: '/lab', icon: FlaskConical, group: 'ia' },
+  { id: 'rh', name: 'Paie & CNPS', href: '/rh', icon: FileText, group: 'finance' },
+  { id: 'compta', name: 'Comptabilité SYSCOHADA', href: '/compta', icon: Calculator, group: 'finance' },
 ]
 
 const groupLabels: Record<string, string> = {
@@ -43,12 +47,30 @@ const groupLabels: Record<string, string> = {
 }
 
 function SidebarContent({ pathname }: { pathname: string }) {
+  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro');
+
+  React.useEffect(() => {
+    const updatePlan = () => {
+      try {
+        const stored = localStorage.getItem('kene_active_plan');
+        if (stored && (stored === 'essentiel' || stored === 'pro' || stored === 'elite')) {
+          setActivePlan(stored);
+        }
+      } catch (e) {}
+    };
+
+    updatePlan();
+    window.addEventListener('kene_plan_changed', updatePlan);
+    return () => window.removeEventListener('kene_plan_changed', updatePlan);
+  }, []);
+
+  const allowedModules = KENE_PRICING_PLANS[activePlan]?.allowedModules || KENE_PRICING_PLANS.pro.allowedModules;
   const groups = Array.from(new Set(navItems.map(i => i.group)))
 
   return (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="px-5 pt-6 pb-5">
+      <div className="px-5 pt-6 pb-4">
         <KeneLogo href="/dashboard" subtitle="PRO" size="md" />
 
         {/* Action buttons */}
@@ -67,9 +89,12 @@ function SidebarContent({ pathname }: { pathname: string }) {
         {/* Multi-Salon Branch Switcher */}
         <BranchSwitcher />
 
+        {/* Plan Switcher Feature Flag */}
+        <PlanSwitcher />
+
         <Link
           href="/welcome"
-          className="mt-2 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/40 hover:bg-[#C8951E]/30 text-[#F3E5AB] text-xs font-bold font-mono transition shadow-sm w-full"
+          className="mt-2.5 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/40 hover:bg-[#C8951E]/30 text-[#F3E5AB] text-xs font-bold font-mono transition shadow-sm w-full"
           title="Revoir la page d'accueil 3D & le Micro-Quiz"
         >
           <Sparkles className="w-3.5 h-3.5 text-[#C8951E]" />
@@ -81,6 +106,7 @@ function SidebarContent({ pathname }: { pathname: string }) {
       <nav className="flex-1 overflow-y-auto px-3 pb-4 space-y-5 scrollbar-none">
         {groups.map((group) => {
           const items = navItems.filter(i => i.group === group)
+
           return (
             <div key={group}>
               <div className="px-2 mb-1.5 text-[9px] font-bold tracking-[0.15em] uppercase text-white/20">
@@ -89,7 +115,29 @@ function SidebarContent({ pathname }: { pathname: string }) {
               <div className="space-y-0.5">
                 {items.map((item) => {
                   const isActive = pathname === item.href
+                  const isAllowed = allowedModules.includes(item.id)
                   const Icon = item.icon
+
+                  if (!isAllowed) {
+                    return (
+                      <div
+                        key={item.href}
+                        onClick={() => {
+                          window.dispatchEvent(new CustomEvent('kene_upgrade_needed', { detail: { module: item.name } }));
+                        }}
+                        className="flex items-center gap-3 px-3 py-2 rounded-xl text-[11px] tracking-wide transition-all duration-200 cursor-pointer text-white/25 hover:text-white/40 hover:bg-white/5 font-medium border border-transparent"
+                        title={`Module ${item.name} verrouillé en Plan ${activePlan.toUpperCase()}`}
+                      >
+                        <Icon className="w-3.5 h-3.5 shrink-0 text-white/20" />
+                        <span className="truncate">{item.name}</span>
+                        <div className="ml-auto flex items-center gap-1 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded-md text-[8px] font-mono text-[#C8951E]">
+                          <Lock className="w-2.5 h-2.5" />
+                          <span>Passer au Plan Supérieur</span>
+                        </div>
+                      </div>
+                    );
+                  }
+
                   return (
                     <Link key={item.href} href={item.href}>
                       <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[11px] tracking-wide transition-all duration-200 cursor-pointer ${
