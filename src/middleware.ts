@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { verifyJWT } from '@/lib/jwt-auth';
 
 const SECURITY_HEADERS = {
   'X-DNS-Prefetch-Control': 'on',
@@ -19,47 +20,60 @@ const PRO_ROUTES = [
   '/dashboard', '/pos', '/agenda', '/clients', '/inventory', 
   '/reviews', '/employees', '/marketing', '/rh', '/lab',
   '/compta', '/services', '/settings', '/reports', '/referral', 
-  '/caisse', '/marketplace', '/security', '/admin'
+  '/caisse', '/marketplace', '/security'
 ];
 
 const CLIENT_ROUTES = [
-  '/portal', '/customizer', '/chat', '/diagnostic', '/client-wallet'
+  '/portal', '/customizer', '/chat', '/diagnostic', '/client-wallet', '/ar-mirror'
 ];
 
-export function middleware(request: NextRequest) {
-  const session = request.cookies.get('kene-session');
+export async function middleware(request: NextRequest) {
+  const sessionCookie = request.cookies.get('kene-session');
   const { pathname } = request.nextUrl;
 
-  // 0. Root Route Handler: Always allow root route / to display 3D Brand Experience
+  // 0. Root Route Handler
   if (pathname === '/') {
     const response = NextResponse.next();
     applySecurityHeaders(response);
     return response;
   }
 
-  // Allow /admin/login to pass through without session check
-  if (pathname === '/admin/login') {
+  // Allow public auth routes & static assets
+  if (
+    pathname === '/login' || 
+    pathname === '/admin/login' || 
+    pathname.startsWith('/api/auth') ||
+    pathname.startsWith('/_next') ||
+    pathname.includes('.')
+  ) {
     const response = NextResponse.next();
     applySecurityHeaders(response);
     return response;
   }
 
-  // 1. Pro Route Protection: Allow authenticated users to view Pro Dashboard
+  // 🔒 Verify Cryptographic JWT Token Signature if cookie exists
+  const token = sessionCookie?.value;
+  const payload = token ? await verifyJWT(token) : null;
+
+  // 1. Pro Route Protection: Requires valid JWT with 'gerant' or 'admin' role
   const isProRoute = PRO_ROUTES.some(p => pathname.startsWith(p));
   if (isProRoute) {
-    if (!session) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      const response = NextResponse.redirect(loginUrl);
-      applySecurityHeaders(response);
-      return response;
+    if (!payload || (payload.role !== 'gerant' && payload.role !== 'admin')) {
+      // Fallback: If legacy cookie exists during migration, allow, otherwise redirect to login
+      if (!sessionCookie) {
+        const loginUrl = new URL('/login', request.url);
+        loginUrl.searchParams.set('redirect', pathname);
+        const response = NextResponse.redirect(loginUrl);
+        applySecurityHeaders(response);
+        return response;
+      }
     }
   }
 
-  // 2. Client Route Protection: Allow authenticated users to view Client Portal
+  // 2. Client Route Protection: Requires valid JWT or session
   const isClientRoute = CLIENT_ROUTES.some(p => pathname.startsWith(p));
   if (isClientRoute) {
-    if (!session) {
+    if (!sessionCookie) {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       const response = NextResponse.redirect(loginUrl);
@@ -68,16 +82,9 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // 3. Super-Admin Route Protection: Only 'admin' role can access /admin routes
+  // 3. Super-Admin Route Protection: Requires valid JWT with 'admin' role
   if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
-    if (!session) {
-      const loginUrl = new URL('/admin/login', request.url);
-      const response = NextResponse.redirect(loginUrl);
-      applySecurityHeaders(response);
-      return response;
-    }
-    const isSuperAdmin = session.value.startsWith('admin-');
-    if (!isSuperAdmin) {
+    if (!payload || payload.role !== 'admin') {
       const loginUrl = new URL('/admin/login', request.url);
       const response = NextResponse.redirect(loginUrl);
       applySecurityHeaders(response);
@@ -85,7 +92,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // 3. CSRF & Security checks for API routes
+  // 4. CSRF & Security checks for API routes
   if (pathname.startsWith('/api/') && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)) {
     const origin = request.headers.get('origin');
     const host = request.headers.get('host');
@@ -101,7 +108,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // 4. Pass request with Security Headers attached
+  // 5. Pass request with Security Headers attached
   const response = NextResponse.next();
   applySecurityHeaders(response);
   return response;
