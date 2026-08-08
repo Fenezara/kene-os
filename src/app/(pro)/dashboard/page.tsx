@@ -242,8 +242,66 @@ export default function ProDashboardPage() {
     },
   ];
 
+  const cardBgClass = isEssentiel
+    ? 'bg-[#101512] border-emerald-500/30 hover:border-emerald-500/60 shadow-lg shadow-emerald-950/20'
+    : isPro
+    ? 'bg-gradient-to-b from-[#1C150F] to-[#120D08] border-[#C8951E]/40 hover:border-[#C8951E] shadow-xl shadow-[#C8951E]/10'
+    : 'bg-[#1D1007]/90 border-2 border-[#FFD700]/70 hover:border-[#FFD700] shadow-2xl shadow-[#FFD700]/25 backdrop-blur-xl';
+
   return (
     <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-24 md:pb-8 font-sans">
+
+      {/* ── 0. INTERACTIVE PLAN SWITCHER CONTROL BAR ── */}
+      <div className={`p-4 rounded-3xl border shadow-2xl backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-4 transition-all duration-500 ${
+        isEssentiel ? 'bg-[#0E1511]/90 border-emerald-500/30' : isPro ? 'bg-[#18110B]/90 border-[#C8951E]/40' : 'bg-[#1E1108]/90 border-2 border-[#FFD700]/70'
+      }`}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-[#C8951E]/20 border border-[#C8951E]/40 flex items-center justify-center text-xl shrink-0">
+            {isEssentiel ? '🟢' : isPro ? '⭐' : '👑'}
+          </div>
+          <div>
+            <div className="text-[10px] font-mono text-[#C8951E] uppercase tracking-wider font-bold flex items-center gap-2">
+              <span>Sélecteur de Plan en Direct</span>
+              <span className="text-[9px] bg-white/10 px-2 py-0.2 rounded-full text-white/70">Cliquez pour tester</span>
+            </div>
+            <div className="text-sm font-bold text-white">
+              Plan Actif : <span className="text-[#F3E5AB] font-black">{isEssentiel ? 'Plan 1 — Essentiel (7 500 F)' : isPro ? 'Plan 2 — Pro ⭐ (15 000 F)' : 'Plan 3 — Élite 👑 (30 000 F)'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 w-full md:w-auto">
+          {[
+            { id: 'essentiel', label: 'Plan 1: Essentiel', price: '7 500 F', color: 'border-emerald-500 bg-emerald-500/20 text-emerald-300' },
+            { id: 'pro', label: 'Plan 2: Pro ⭐', price: '15 000 F', color: 'border-[#C8951E] bg-[#C8951E]/25 text-[#F3E5AB]' },
+            { id: 'elite', label: 'Plan 3: Élite 👑', price: '30 000 F', color: 'border-[#FFD700] bg-[#FFD700]/30 text-[#FFD700]' },
+          ].map((plan) => {
+            const isSelected = activePlan === plan.id;
+            return (
+              <button
+                key={plan.id}
+                onClick={() => {
+                  setActivePlan(plan.id as any);
+                  localStorage.setItem('kene_active_plan', plan.id);
+                  window.dispatchEvent(new Event('kene_plan_changed'));
+                  toast({
+                    title: `✨ Plan basculé sur "${plan.label}" !`,
+                    description: `Le tableau de bord et les cartes visuelles ont été adaptés au ${plan.label}.`,
+                  });
+                }}
+                className={`px-3 py-2 rounded-2xl text-xs font-bold font-mono transition-all duration-300 border cursor-pointer ${
+                  isSelected
+                    ? `${plan.color} shadow-lg scale-105 font-black ring-2 ring-white/20`
+                    : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                <div className="truncate">{plan.label}</div>
+                <div className="text-[9px] opacity-75">{plan.price}/mois</div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* ── 1. HERO GREETING BANNER ── */}
       <motion.div
@@ -331,7 +389,7 @@ export default function ProDashboardPage() {
           return (
             <motion.div key={card.title} variants={itemVariants}>
               <Link href={card.href}>
-                <div className="relative group overflow-hidden rounded-3xl p-4 sm:p-5 border border-white/10 bg-[#1A1410] hover:border-[#C8951E]/50 transition-all duration-300 cursor-pointer h-full shadow-xl">
+                <div className={`relative group overflow-hidden rounded-3xl p-4 sm:p-5 border transition-all duration-500 cursor-pointer h-full ${cardBgClass}`}>
                   <div
                     className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity pointer-events-none"
                     style={{ background: card.accent }}
