@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import { KENE_PRICING_PLANS } from '@/config/pricing';
 
 interface TenantStats {
   appointmentsToday: number;
