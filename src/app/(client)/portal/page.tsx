@@ -558,6 +558,43 @@ export default function ClientPortalPage() {
         </div>
       </motion.div>
 
+      {/* ── 🌟 NOUVEAU : MIROIR VIRTUEL AR & ESSAYAGE 3D AFRO-BEAUTY 2026 ── */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04 }}>
+        <Card className="bg-gradient-to-r from-[#1F1208] via-[#2D1B0B] to-[#1F1208] border-2 border-[#FFD700]/70 rounded-3xl p-5 shadow-2xl relative overflow-hidden group">
+          <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#FFD700]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FFD700] via-[#C8951E] to-[#8A1C14] p-[2px] shrink-0 shadow-lg group-hover:scale-105 transition-transform">
+                <div className="w-full h-full rounded-2xl bg-[#0F0A05] flex items-center justify-center text-2xl">
+                  🪞
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/40 text-[9px] font-mono font-bold">
+                    ✨ NOUVEAUTÉ AR 2026/2027
+                  </Badge>
+                  <span className="text-[10px] text-white/50 font-mono hidden sm:inline">Essayage Virtuel en Temps Réel</span>
+                </div>
+                <h3 className="font-display font-black text-lg text-white mt-0.5">
+                  Miroir Virtuel AR & Lookbook Coiffures Afro (Homme & Femme)
+                </h3>
+                <p className="text-xs text-white/70">
+                  Essayez en Réalité Augmentée les Fulani Braids, Knotless, Waves 360°, teints dermo-mélaniques & gloss Hibiscus !
+                </p>
+              </div>
+            </div>
+
+            <Link href="/ar-mirror" className="shrink-0 w-full sm:w-auto">
+              <Button className="w-full sm:w-auto h-11 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-2xl shadow-xl hover:scale-105 transition cursor-pointer px-5 border border-[#FFD700]">
+                <span>Lancer le Miroir AR 🪞</span>
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
+          </div>
+        </Card>
+      </motion.div>
+
       {/* ── HERO VISUEL RITUEL BOTANIQUE AFRICAIN ── */}
       <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.05 }}>
         <Card className="bg-[#1A1410] border border-[var(--gold-kene)]/30 shadow-2xl rounded-3xl overflow-hidden relative group">
