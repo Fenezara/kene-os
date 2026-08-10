@@ -87,22 +87,6 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
           </button>
           <NotificationBell />
         </div>
-
-        {/* Multi-Salon Branch Switcher */}
-        <BranchSwitcher />
-
-        {/* Plan Switcher Feature Flag */}
-        <PlanSwitcher />
-
-        <Link
-          href="/welcome"
-          onClick={onNavigate}
-          className="mt-2.5 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/40 hover:bg-[#C8951E]/30 text-[#F3E5AB] text-xs font-bold font-mono transition shadow-sm w-full"
-          title="Revoir la page d'accueil 3D & le Micro-Quiz"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-[#C8951E]" />
-          <span>Voir l'Accueil 3D</span>
-        </Link>
       </div>
 
       {/* Nav groups */}
@@ -378,38 +362,6 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
               </span>
             </div>
           </div>
-        </div>
-
-        {/* Dynamic Tier Visual Status Banner */}
-        <div className="p-4 lg:px-8 lg:pt-6 lg:pb-0">
-          <motion.div 
-            key={activePlan}
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`flex items-center justify-between px-4 py-2.5 rounded-2xl text-xs font-mono border backdrop-blur-md shadow-lg ${
-              isEssentiel
-                ? 'bg-[#4CAF6E]/10 border-[#4CAF6E]/30 text-[#4CAF6E]'
-                : isPro
-                ? 'bg-gradient-to-r from-[#C8951E]/20 via-[#1A1410] to-[#C8951E]/10 border-[#C8951E]/50 text-[#F3E5AB] shadow-[#C8951E]/10'
-                : 'bg-gradient-to-r from-[#FFD700]/25 via-[#8A1C14]/30 to-[#FFD700]/15 border-[#FFD700]/60 text-[#FFD700] shadow-[#FFD700]/20'
-            }`}
-          >
-            <div className="flex items-center gap-2.5 font-bold">
-              <span className="text-lg">{isEssentiel ? '🟢' : isPro ? '⭐' : '👑'}</span>
-              <span>
-                {isEssentiel 
-                  ? 'Mode V1 : Plan Essentiel (7 500 FCFA/mois — Sobriété Tactile & Caisse)' 
-                  : isPro 
-                  ? 'Mode V2 : Plan Pro Dermo-Cosmétique (15 000 FCFA/mois — Scan 3D IA & Gold Glow)' 
-                  : 'Mode V3 : Plan Élite Royal (30 000 FCFA/mois — Marque Blanche 24K & Labo)'}
-              </span>
-            </div>
-
-            <div className="hidden sm:flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-gold" />
-              <span>Thème Visuel Actif</span>
-            </div>
-          </motion.div>
         </div>
 
         <div className="flex-1 p-4 sm:p-6 md:p-8 w-full max-w-full">
