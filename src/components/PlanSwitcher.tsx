@@ -8,7 +8,7 @@ import { KENE_PRICING_PLANS, PricingPlan } from '@/config/pricing';
 
 export function PlanSwitcher() {
   const pathname = usePathname();
-  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro');
+  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('essentiel');
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {

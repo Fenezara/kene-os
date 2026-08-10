@@ -16,7 +16,7 @@ interface PlanGuardProps {
 }
 
 export function PlanGuard({ module, moduleName, requiredPlan = 'pro', children }: PlanGuardProps) {
-  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro');
+  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('essentiel');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

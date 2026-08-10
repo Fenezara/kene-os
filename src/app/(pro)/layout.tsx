@@ -49,7 +49,7 @@ const groupLabels: Record<string, string> = {
 
 function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
   const { toast } = useToast();
-  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro');
+  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('essentiel');
 
   React.useEffect(() => {
     const updatePlan = () => {
@@ -189,7 +189,7 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
   const [companyName, setCompanyName] = useState<string>('Espace Salon Pro')
   const [userName, setUserName] = useState<string>('Gérant(e)')
   const [userRole, setUserRole] = useState<string>('Gérante Salon')
-  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro')
+  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('essentiel')
 
   React.useEffect(() => {
     const updatePlan = () => {
