@@ -121,41 +121,24 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
                   const isAllowed = allowedModules.includes(item.id)
                   const Icon = item.icon
 
-                  if (!isAllowed) {
-                    return (
-                      <div
-                        key={item.href}
-                        onClick={() => {
-                          toast({
-                            title: `🔒 Module "${item.name}" Verrouillé`,
-                            description: `Le module "${item.name}" nécessite la mise à niveau vers un plan supérieur.`,
-                            variant: "destructive"
-                          });
-                        }}
-                        className="flex items-center gap-3 px-3 py-2 rounded-xl text-[11px] tracking-wide transition-all duration-200 cursor-pointer text-white/25 hover:text-white/40 hover:bg-white/5 font-medium border border-transparent"
-                        title={`Module ${item.name} verrouillé en Plan ${activePlan.toUpperCase()}`}
-                      >
-                        <Icon className="w-3.5 h-3.5 shrink-0 text-white/20" />
-                        <span className="truncate">{item.name}</span>
-                        <div className="ml-auto flex items-center gap-1 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded-md text-[8px] font-mono text-[#C8951E]">
-                          <Lock className="w-2.5 h-2.5" />
-                          <span>Passer au Plan Supérieur</span>
-                        </div>
-                      </div>
-                    );
-                  }
-
                   return (
                     <Link key={item.href} href={item.href} onClick={onNavigate}>
                       <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[11px] tracking-wide transition-all duration-200 cursor-pointer ${
                         isActive
                           ? 'bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black shadow-lg shadow-[#C8951E]/30 border border-[#FFD700]'
-                          : 'text-white/70 hover:text-white hover:bg-white/10 font-semibold'
+                          : isAllowed
+                          ? 'text-white/70 hover:text-white hover:bg-white/10 font-semibold'
+                          : 'text-white/40 hover:text-white hover:bg-white/10 font-medium'
                       }`}>
-                        <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-black font-bold' : 'text-white/40'}`} />
+                        <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-black font-bold' : isAllowed ? 'text-white/40' : 'text-white/20'}`} />
                         <span className={`truncate ${isActive ? 'text-black font-black' : ''}`}>{item.name}</span>
-                        {isActive && (
+                        {isActive ? (
                           <ChevronRight className="w-3 h-3 ml-auto text-black font-bold shrink-0" />
+                        ) : !isAllowed && (
+                          <div className="ml-auto flex items-center gap-1 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded-md text-[8px] font-mono text-[#C8951E]">
+                            <Lock className="w-2.5 h-2.5" />
+                            <span>Pro/Élite</span>
+                          </div>
                         )}
                       </div>
                     </Link>
