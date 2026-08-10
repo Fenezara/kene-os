@@ -336,39 +336,31 @@ export default function ProDashboardPage() {
               </span>
             </div>
 
-            {/* Clean Professional Establishment Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-[#C8951E]/15 border border-[#C8951E]/30 text-[#F3E5AB] text-xs font-bold font-display shadow-md">
               <Building2 className="w-4 h-4 text-[#C8951E]" />
-              <span>Établissement : <strong className="text-white font-black">{tenantName}</strong> • Abidjan 🇨🇮</span>
+              <span>Établissement : <strong className="text-white font-black">{tenantName}</strong></span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-display font-black text-white tracking-tight leading-tight">
               {greeting}, <span className="text-[#F3E5AB]">{employeeName}</span> 👋
             </h1>
-            <p className="text-xs sm:text-sm text-white/60 font-sans max-w-xl">
-              Bienvenue sur votre espace de travail professionnel chez <strong className="text-white">{tenantName}</strong>.
+            <p className="text-xs sm:text-sm text-white/70 font-sans max-w-xl">
+              Que souhaitez-vous effectuer aujourd'hui ?
             </p>
-
-            <div className="mt-3 inline-flex items-center gap-2 bg-[#0F0A05]/80 border border-[#C8951E]/30 rounded-2xl p-2 sm:px-3 sm:py-1.5 backdrop-blur-md max-w-full">
-              <span className="text-base shrink-0">💡</span>
-              <span className="text-[10px] sm:text-[11px] font-medium text-white/80 leading-tight">
-                <strong className="text-[#C8951E]">Météo Abidjan (85% Humidité)</strong> — Période idéale pour proposer le <span className="underline decoration-[#C8951E]">Soin Scellant Karité-Baobab</span>.
-              </span>
-            </div>
           </div>
 
           {/* Quick Actions Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-2.5 shrink-0 pt-2 lg:pt-0">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-3 shrink-0 pt-2 lg:pt-0">
             {activeQuickActions.map((action) => {
               const Icon = action.icon;
               return (
                 <Link
                   key={action.href}
                   href={action.href}
-                  className={`flex items-center gap-2.5 px-3.5 py-3 rounded-2xl bg-gradient-to-br ${action.color} cursor-pointer transition-all shadow-lg border border-white/10 hover:scale-105 active:scale-95`}
+                  className={`flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-2xl bg-gradient-to-br ${action.color} cursor-pointer transition-all shadow-xl border border-white/20 hover:scale-105 active:scale-95`}
                 >
-                  <Icon className={`w-4 h-4 shrink-0 ${action.textColor}`} />
-                  <span className={`text-xs font-bold ${action.textColor} truncate`}>{action.label}</span>
+                  <Icon className={`w-5 h-5 shrink-0 ${action.textColor}`} />
+                  <span className={`text-xs font-black ${action.textColor} truncate`}>{action.label}</span>
                 </Link>
               );
             })}
