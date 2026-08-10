@@ -47,7 +47,7 @@ const groupLabels: Record<string, string> = {
   finance: 'Finance & Paie',
 }
 
-function SidebarContent({ pathname }: { pathname: string }) {
+function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
   const { toast } = useToast();
   const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro');
 
@@ -96,6 +96,7 @@ function SidebarContent({ pathname }: { pathname: string }) {
 
         <Link
           href="/welcome"
+          onClick={onNavigate}
           className="mt-2.5 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/40 hover:bg-[#C8951E]/30 text-[#F3E5AB] text-xs font-bold font-mono transition shadow-sm w-full"
           title="Revoir la page d'accueil 3D & le Micro-Quiz"
         >
@@ -145,7 +146,7 @@ function SidebarContent({ pathname }: { pathname: string }) {
                   }
 
                   return (
-                    <Link key={item.href} href={item.href}>
+                    <Link key={item.href} href={item.href} onClick={onNavigate}>
                       <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[11px] tracking-wide transition-all duration-200 cursor-pointer ${
                         isActive
                           ? 'bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black shadow-lg shadow-[#C8951E]/30 border border-[#FFD700]'
@@ -204,6 +205,10 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
     window.addEventListener('kene_plan_changed', updatePlan);
     return () => window.removeEventListener('kene_plan_changed', updatePlan);
   }, []);
+
+  React.useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -352,7 +357,7 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto">
-                <SidebarContent pathname={pathname} />
+                <SidebarContent pathname={pathname} onNavigate={() => setMobileOpen(false)} />
               </div>
             </motion.div>
           </>

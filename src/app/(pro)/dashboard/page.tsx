@@ -362,15 +362,13 @@ export default function ProDashboardPage() {
             {activeQuickActions.map((action) => {
               const Icon = action.icon;
               return (
-                <Link key={action.href} href={action.href}>
-                  <motion.div
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    className={`flex items-center gap-2.5 px-3.5 py-3 rounded-2xl bg-gradient-to-br ${action.color} cursor-pointer transition-all shadow-lg border border-white/10`}
-                  >
-                    <Icon className={`w-4 h-4 shrink-0 ${action.textColor}`} />
-                    <span className={`text-xs font-bold ${action.textColor} truncate`}>{action.label}</span>
-                  </motion.div>
+                <Link
+                  key={action.href}
+                  href={action.href}
+                  className={`flex items-center gap-2.5 px-3.5 py-3 rounded-2xl bg-gradient-to-br ${action.color} cursor-pointer transition-all shadow-lg border border-white/10 hover:scale-105 active:scale-95`}
+                >
+                  <Icon className={`w-4 h-4 shrink-0 ${action.textColor}`} />
+                  <span className={`text-xs font-bold ${action.textColor} truncate`}>{action.label}</span>
                 </Link>
               );
             })}

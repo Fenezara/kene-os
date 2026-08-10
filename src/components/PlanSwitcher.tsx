@@ -1,13 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Shield, ChevronDown, Check, Lock } from 'lucide-react';
 import { KENE_PRICING_PLANS, PricingPlan } from '@/config/pricing';
 
 export function PlanSwitcher() {
+  const pathname = usePathname();
   const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro');
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     try {
