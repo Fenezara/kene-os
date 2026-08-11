@@ -52,7 +52,7 @@ export default function ClientLayout({
   const navLinks = [
     { href: '/portal', label: 'Accueil', icon: Home },
     { href: '/salons', label: 'Salons & Carte Boutique', icon: MapPin },
-    { href: '/chat?mode=dr_diallo', label: 'Dr. Dermatologie', icon: Stethoscope },
+    { href: '/chat', label: 'Dr. Mama Kènè IA 🩺🎙️', icon: Stethoscope },
     { href: '/diagnostic', label: 'Bilan Cutané', icon: ScanFace },
     { href: '/appointments', label: 'Mes RDV', icon: Calendar },
   ];

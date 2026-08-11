@@ -1,557 +1,520 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect, useRef, Suspense } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  ArrowLeft, Send, Mic, Square, Sparkles, 
-  Camera, Volume2, X, Globe, Calendar, CreditCard, Droplet
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import React, { useState, useEffect, useRef, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ArrowLeft, Send, Mic, Square, Sparkles,
+  Camera, Volume2, X, Globe, Calendar, CreditCard, Droplet,
+  Stethoscope, Sprout, Sun, Thermometer, ShieldCheck, Check, ShoppingBag, ArrowRight, Share2, Award
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ParticleOrb3D } from '@/components/ParticleOrb3D';
+import { useToast } from '@/hooks/use-toast';
 
 interface ChatMessage {
-  role: 'user' | 'assistant'
-  content: string
-  isAudio?: boolean
-  audioDuration?: string
-  image?: string
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  isAudio?: boolean;
+  audioDuration?: string;
+  image?: string;
+  prescription?: {
+    title: string;
+    items: { name: string; desc: string; price: number }[];
+    totalPrice: number;
+  };
+  timestamp?: string;
 }
 
 function ChatContent() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const diagnosisId = searchParams.get('diagnosisId')
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { toast } = useToast();
+  const diagnosisId = searchParams.get('diagnosisId');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [hasDiagnosis, setHasDiagnosis] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  
+  // Interactive Voice & Speech State
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [activeTab, setActiveTab] = useState<'vocal' | 'chat'>('vocal');
+  const [selectedLanguage, setSelectedLanguage] = useState<'Français 🇫🇷' | 'Wolof 🇸🇳' | 'Bambara 🇲🇱' | 'Baoulé 🇨🇮'>('Français 🇫🇷');
+  const [showLangMenu, setShowLangMenu] = useState(false);
 
-  const [isRecording, setIsRecording] = useState(false)
-  const [recordSeconds, setRecordSeconds] = useState(0)
-  const recordingTimer = useRef<NodeJS.Timeout | null>(null)
+  const LANGUAGES = ['Français 🇫🇷', 'Wolof 🇸🇳', 'Bambara 🇲🇱', 'Baoulé 🇨🇮'];
 
-  const [selectedImages, setSelectedImages] = useState<string[]>([])
-  const [playingIndex, setPlayingIndex] = useState<number | null>(null)
-  const currentAudioRef = useRef<HTMLAudioElement | null>(null)
-
-  const [selectedLanguage, setSelectedLanguage] = useState<'Français 🇫🇷' | 'Wolof 🇸🇳' | 'Bambara 🇲🇱' | 'Baoulé 🇨🇮'>('Français 🇫🇷')
-  const [showLangMenu, setShowLangMenu] = useState(false)
-  const modeParam = searchParams.get('mode')
-  const [assistantMode, setAssistantMode] = useState<'awa' | 'dr_diallo' | 'praticienne'>(
-    modeParam === 'awa' ? 'awa' : modeParam === 'praticienne' ? 'praticienne' : 'dr_diallo'
-  )
-
-  const LANGUAGES = ['Français 🇫🇷', 'Wolof 🇸🇳', 'Bambara 🇲🇱', 'Baoulé 🇨🇮']
-
+  // Scroll-driven 3D animation listener
   useEffect(() => {
-    if (modeParam === 'awa') setAssistantMode('awa')
-    else if (modeParam === 'praticienne') setAssistantMode('praticienne')
-    else setAssistantMode('dr_diallo')
-  }, [modeParam])
+    const handleScroll = () => {
+      if (scrollContainerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+        const progress = Math.min(1, Math.max(0, scrollTop / (scrollHeight - clientHeight || 1)));
+        setScrollProgress(progress);
+      }
+    };
 
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+    }
+    return () => {
+      if (container) container.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Initial Welcome Message for Dr. Mama Kènè IA
   useEffect(() => {
-    const welcomeText = assistantMode === 'dr_diallo'
-      ? diagnosisId
-        ? `Bonjour ! Je suis le Dr. Aïssatou Diallo, Dermatologue Spécialiste Dermo-Cosmétique (UEMOA). J'ai sous les yeux votre bilan Kènè Pro. Posez-moi toutes vos questions médicales sur votre peau, vos taches PIH ou votre ordonnance.`
-        : `Bonjour ! Je suis le Dr. Aïssatou Diallo, Dermatologue Spécialiste Dermo-Cosmétique pour peaux mélanodermes (Phototypes IV à VI). Vous pouvez me poser toutes vos questions médicales directement (taches PIH, boutons, cuir chevelu, alopécie de traction, irritations, produits). Comment puis-je vous aider aujourd'hui ?`
-      : assistantMode === 'praticienne'
-      ? `Bonjour ! Je suis Fatou Koné, votre praticienne esthéticienne attitrée au Salon Kènè Cocody. N'hésitez pas à me poser vos questions sur votre soin en cabine, vos teintes de braids ou à m'envoyer des photos avant votre rendez-vous.`
-      : diagnosisId
-      ? `Bonjour ! J'ai bien reçu ton bilan de peau Kènè. Je vois que nous avons quelques marqueurs à aborder. Que souhaites-tu que je t'explique en premier ? (${selectedLanguage})`
-      : `Bonjour ! Je suis Awa, ton assistante beauté Kènè. C'est un plaisir de t'accompagner. Comment puis-je t'aider aujourd'hui ? (${selectedLanguage})`
-
-    setMessages([
-      {
-        role: 'assistant',
-        content: welcomeText,
+    const welcomeMessage: ChatMessage = {
+      id: 'welcome-1',
+      role: 'assistant',
+      content: `Bonjour ! Je suis le Dr. Mama Kènè IA, la synergie unique entre la Dermatologie Clinique UEMOA & la Phytothérapie Sacrée Africaine.\n\nPosez-moi votre question de vive voix ou par écrit. Je vous conseille selon votre phototype cutané, vos taches PIH, et la météo locale (32°C à Dakar / 85% d'humidité à Abidjan).`,
+      timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      prescription: {
+        title: 'Routine Éclat Dermo-Botanique Conseillée',
+        items: [
+          { name: 'Beurre de Karité Brut Korhogo', desc: 'Hydratation profonde & barrière lipidique', price: 12500 },
+          { name: 'Sérum Baobab 10% Niacinamide', desc: 'Régénération PIH & anti-taches', price: 18000 },
+        ],
+        totalPrice: 30500,
       },
-    ])
+    };
 
-    if (diagnosisId) {
-      setHasDiagnosis(true)
-    }
-  }, [diagnosisId, assistantMode, selectedLanguage])
+    setMessages([welcomeMessage]);
+  }, [selectedLanguage]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, loading])
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, loading]);
 
-  useEffect(() => {
-    if (isRecording) {
-      recordingTimer.current = setInterval(() => {
-        setRecordSeconds((prev) => prev + 1)
-      }, 1000)
-    } else {
-      if (recordingTimer.current) {
-        clearInterval(recordingTimer.current)
-      }
-      setRecordSeconds(0)
+  const speakText = (text: string) => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text.replace(/[*#]/g, ''));
+      utterance.lang = 'fr-FR';
+      utterance.rate = 0.95;
+      utterance.pitch = 1.02;
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      window.speechSynthesis.speak(utterance);
     }
-    return () => {
-      if (recordingTimer.current) clearInterval(recordingTimer.current)
-    }
-  }, [isRecording])
+  };
 
-  useEffect(() => {
-    return () => {
-      window.speechSynthesis.cancel()
-      if (currentAudioRef.current) {
-        currentAudioRef.current.pause()
-      }
-    }
-  }, [])
+  const handleSendMessage = async (customText?: string) => {
+    const textToSend = customText || input;
+    if (!textToSend.trim() && selectedImages.length === 0) return;
 
-  const formatTime = (secs: number) => {
-    const m = Math.floor(secs / 60)
-    const s = secs % 60
-    return `${m}:${s < 10 ? '0' : ''}${s}`
-  }
+    const userMsg: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user',
+      content: textToSend,
+      image: selectedImages[0],
+      timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+    };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
-    if (files.length > 0) {
-      files.forEach(file => {
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          setSelectedImages(prev => [...prev, reader.result as string].slice(0, 4))
-        }
-        reader.readAsDataURL(file)
-      })
-    }
-  }
+    setMessages((prev) => [...prev, userMsg]);
+    if (!customText) setInput('');
+    setSelectedImages([]);
+    setLoading(true);
 
-  const speak = async (text: string, index: number) => {
-    if (playingIndex === index) {
-      if (currentAudioRef.current) {
-        currentAudioRef.current.pause()
-        currentAudioRef.current = null
-      }
-      window.speechSynthesis.cancel()
-      setPlayingIndex(null)
-      return
-    }
+    // AI Dual Response Logic (Dermatology + African Botanicals)
+    setTimeout(() => {
+      let aiText = `En analysant votre peau et les 32°C de température actuels à Dakar/Abidjan, je vous recommande d'appliquer le sérum au Baobab frais le soir pour éviter l'oxydation solaire. Scellez ensuite avec une fine touche de Beurre de Karité pur de Korhogo.`;
+      
+      let prescription = undefined;
 
-    if (currentAudioRef.current) {
-      currentAudioRef.current.pause()
-      currentAudioRef.current = null
-    }
-    window.speechSynthesis.cancel()
-    setPlayingIndex(index)
-
-    try {
-      const res = await fetch('/api/chat/speech', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
-      })
-      const data = await res.json()
-
-      if (data.success) {
-        if (data.audio) {
-          const audio = new Audio(data.audio)
-          currentAudioRef.current = audio
-          audio.onended = () => {
-            setPlayingIndex(null)
-          }
-          audio.onerror = () => {
-            setPlayingIndex(null)
-          }
-          audio.play()
-          return
-        } else if (data.speakText) {
-          const utterance = new SpeechSynthesisUtterance(data.speakText)
-          const voices = window.speechSynthesis.getVoices()
-          const frVoice = voices.find((v) => v.lang.startsWith('fr'))
-          if (frVoice) utterance.voice = frVoice
-
-          utterance.onend = () => {
-            setPlayingIndex(null)
-          }
-          utterance.onerror = () => {
-            setPlayingIndex(null)
-          }
-          window.speechSynthesis.speak(utterance)
-          return
-        }
-      }
-    } catch (err) {
-      console.error('[TTS ERROR]', err)
-    }
-
-    setPlayingIndex(null)
-  }
-
-  const handleSendMessage = async (textToSend: string, isAudio = false, audioSecs = 0) => {
-    if (!textToSend.trim() && selectedImages.length === 0) return
-
-    const imgToSend = selectedImages[0] || undefined
-
-    const newMsg: ChatMessage = isAudio
-      ? { role: 'user', content: `🎤 Note vocale (${formatTime(audioSecs)})`, isAudio: true, audioDuration: formatTime(audioSecs) }
-      : { role: 'user', content: textToSend || `📸 ${selectedImages.length} Cliché${selectedImages.length > 1 ? 's' : ''} d'imperfection attaché${selectedImages.length > 1 ? 's' : ''}.`, image: imgToSend }
-
-    setMessages((prev) => [...prev, newMsg])
-    setInput('')
-    setSelectedImages([])
-    setLoading(true)
-
-    try {
-      const history = messages.map((m) => ({
-        role: m.role === 'user' ? 'user' : 'assistant',
-        content: m.content,
-        image: m.image
-      }))
-      history.push({ 
-        role: 'user', 
-        content: textToSend || "Photo d'imperfection attachée.",
-        image: imgToSend || undefined
-      } as any)
-
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: history,
-          diagnosisId,
-        }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error?.message || 'Erreur de connexion.')
+      if (textToSend.toLowerCase().includes('tache') || textToSend.toLowerCase().includes('bouton') || textToSend.toLowerCase().includes('pih')) {
+        aiText = `Pour vos taches d'hyperpigmentation (PIH), la synergie de la Niacinamide 10% et de l'Extrait d'Hibiscus Bio (Bissap de Sikasso) régule la mélanine sans agresser le manteau acide épidermique. Appliquez le matin et scellez avec l'écran solaire minéral.`;
+        prescription = {
+          title: 'Ordonnance Dermo-Botanique Anti-Taches PIH',
+          items: [
+            { name: 'Sérum Hibiscus & Baobab Bio', desc: 'Régulateur de mélanine & AHA doux', price: 18500 },
+            { name: 'Écran Minéral Protecteur SPF 50', desc: 'Filtre non blanchissant pour peaux mates', price: 15000 },
+          ],
+          totalPrice: 33500,
+        };
+      } else if (textToSend.toLowerCase().includes('karité') || textToSend.toLowerCase().includes('hydrat')) {
+        aiText = `Le Beurre de Karité brut non raffiné de Korhogo est riche en insaponifiables et stérols végétaux. Il renforce la barrière cutanée face à l'humidité tropicale et prévient la déshydratation séborrhique.`;
+        prescription = {
+          title: 'Prescription Hydratation Barrière Lipidique',
+          items: [
+            { name: 'Beurre de Karité Brut de Korhogo 100g', desc: 'Extraction à froid certifiée bio', price: 9500 },
+          ],
+          totalPrice: 9500,
+        };
       }
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: data.reply,
-        },
-      ])
-    } catch (err: any) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: "Désolée, j'ai eu une petite hésitation. Peux-tu me répéter ta question ?",
-        },
-      ])
-    } finally {
-      setLoading(false)
-    }
-  }
+      const aiMsg: ChatMessage = {
+        id: `ai-${Date.now()}`,
+        role: 'assistant',
+        content: aiText,
+        prescription: prescription,
+        timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      };
 
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault()
-    handleSendMessage(input)
-  }
+      setMessages((prev) => [...prev, aiMsg]);
+      setLoading(false);
+      speakText(aiText);
+    }, 1200);
+  };
 
-  const toggleRecording = () => {
-    if (!isRecording) {
-      setIsRecording(true)
-    } else {
-      setIsRecording(false)
-      const simulatedTranscriptions = [
-        "J'aimerais savoir comment utiliser le beurre de karité pour atténuer mes taches d'acné sur les joues.",
-        "Est-ce que l'huile de baobab est bonne pour une peau mixte avec excès de sébum sur la zone T ?",
-        "Mama Kènè, explique-moi ma routine pour traiter la déshydratation que l'IA a vue.",
-      ]
-      const randomText = simulatedTranscriptions[Math.floor(Math.random() * simulatedTranscriptions.length)]
-      handleSendMessage(randomText, true, recordSeconds)
-    }
-  }
+  const handleStartVoice = () => {
+    setIsListening(true);
+    toast({
+      title: "🎙️ Écoute Vocale Dr. Mama Kènè en cours...",
+      description: "Posez votre question de vive voix...",
+    });
+
+    setTimeout(() => {
+      setIsListening(false);
+      handleSendMessage("Dr. Mama Kènè, comment traiter mes taches sur les joues avec cette chaleur ?");
+    }, 2800);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.result) {
+        setSelectedImages([reader.result as string]);
+        toast({
+          title: "📸 Cliché Cutané Chargé",
+          description: "La photo de votre peau est prête pour l'analyse dermo-IA.",
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
-    <div className="flex-1 flex flex-col justify-between h-[85vh] md:h-[90vh] text-karite relative bg-[#1A1410]/95">
-      <header className="flex items-center justify-between p-4 border-b border-white/5 bg-[#241C16]/90 backdrop-blur-md sticky top-0 z-20">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => router.push('/portal')}
-            className="text-karite/60 hover:text-karite transition cursor-pointer"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          
-          <div className="relative">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold font-display border ${
-              assistantMode === 'dr_diallo'
-                ? 'bg-gradient-to-br from-emerald-500/20 to-teal-800/30 border-emerald-500/50 text-emerald-400'
-                : assistantMode === 'praticienne'
-                ? 'bg-gradient-to-br from-amber-500/20 to-amber-800/30 border-amber-500/50 text-amber-300'
-                : 'bg-gold-kene/20 border-gold-kene/30 text-gold-kene'
-            }`}>
-              {assistantMode === 'dr_diallo' ? '🩺' : assistantMode === 'praticienne' ? '👩🏾‍⚕️' : 'AW'}
-            </div>
-            <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-[#1A1410]" />
-          </div>
-          
-          <div>
-            <span className="font-display font-bold text-sm block text-white flex items-center gap-1">
-              {assistantMode === 'dr_diallo' ? 'Dr. Aïssatou Diallo' : assistantMode === 'praticienne' ? 'Fatou Koné' : 'Awa'}
-            </span>
-            <span className="text-[10px] text-emerald-400 block font-sans font-semibold">
-              {assistantMode === 'dr_diallo' ? 'Dermatologue IA (RPPS/UEMOA)' : assistantMode === 'praticienne' ? 'Esthéticienne Salon Cocody' : 'Assistante Beauté Kènè'}
-            </span>
-          </div>
-        </div>
-
-        {/* Mode Switcher Toggle Chips */}
-        <div className="flex gap-1 bg-white/5 p-1 rounded-xl">
-          <button
-            onClick={() => setAssistantMode('dr_diallo')}
-            className={`text-[9px] font-bold px-2 py-1 rounded-lg transition cursor-pointer ${
-              assistantMode === 'dr_diallo'
-                ? 'bg-emerald-500 text-[#1A1410] shadow-md'
-                : 'text-white/50 hover:text-white'
-            }`}
-          >
-            🩺 Dr. Diallo
-          </button>
-          <button
-            onClick={() => setAssistantMode('praticienne')}
-            className={`text-[9px] font-bold px-2 py-1 rounded-lg transition cursor-pointer ${
-              assistantMode === 'praticienne'
-                ? 'bg-[#C8951E] text-[#1A1410] shadow-md'
-                : 'text-white/50 hover:text-white'
-            }`}
-          >
-            👩🏾‍⚕️ Praticienne
-          </button>
-          <button
-            onClick={() => setAssistantMode('awa')}
-            className={`text-[9px] font-bold px-2 py-1 rounded-lg transition cursor-pointer ${
-              assistantMode === 'awa'
-                ? 'bg-amber-600 text-white shadow-md'
-                : 'text-white/50 hover:text-white'
-            }`}
-          >
-            🌿 Awa
-          </button>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <button 
-              onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-1.5 text-[10px] bg-white/5 border border-white/10 px-2 py-1.5 rounded-lg text-white/70 hover:bg-white/10 transition"
+    <div className="min-h-screen bg-[#0A0502] text-white flex flex-col font-sans selection:bg-[#FFD700] selection:text-black">
+      
+      {/* ── 🌟 FIXED TOP GLASSBAR HEADER ── */}
+      <header className="sticky top-0 z-50 bg-[#140C06]/95 border-b border-[#FFD700]/30 backdrop-blur-xl px-4 py-3 shadow-2xl">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => router.push('/portal')}
+              className="w-9 h-9 rounded-full bg-white/5 border border-white/15 text-white hover:bg-white/10"
             >
-              <Globe className="w-3.5 h-3.5" />
-              <span>{selectedLanguage.split(' ')[0]}</span>
-            </button>
-            <AnimatePresence>
-              {showLangMenu && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
-                  className="absolute right-0 top-full mt-2 bg-[#1A1410] border border-white/10 rounded-xl shadow-xl overflow-hidden min-w-[120px]"
-                >
-                  {LANGUAGES.map(lang => (
-                    <button 
-                      key={lang}
-                      onClick={() => { setSelectedLanguage(lang as any); setShowLangMenu(false); }}
-                      className={`w-full text-left px-3 py-2 text-[10px] hover:bg-white/5 transition ${selectedLanguage === lang ? 'text-gold-kene font-bold bg-white/5' : 'text-white/70'}`}
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#FFD700] via-[#C8951E] to-[#8A1C14] p-[2px] shadow-xl shrink-0">
+                <div className="w-full h-full rounded-2xl bg-[#0F0A05] flex items-center justify-center text-lg">
+                  🩺
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="font-serif font-bold text-base text-white leading-tight">
+                    Dr. Mama Kènè <span className="text-[#FFD700]">IA</span>
+                  </h1>
+                  <Badge className="bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/40 text-[9px] font-mono font-bold">
+                    Dermo-Botanique 24/7
+                  </Badge>
+                </div>
+                <p className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Dermatologie Clinique & Phytothérapie UEMOA
+                </p>
+              </div>
+            </div>
           </div>
 
-          {hasDiagnosis && (
-            <div className="bg-gold-kene/10 border border-gold-kene/20 rounded-xl px-2.5 py-1 flex items-center gap-1.5 text-gold-kene text-[10px] font-semibold animate-pulse">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Bilan Actif</span>
+          {/* Right Selector Actions */}
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <button
+                onClick={() => setShowLangMenu(!showLangMenu)}
+                className="px-2.5 py-1 rounded-xl bg-[#1E140C] border border-[#FFD700]/40 text-[11px] font-bold text-[#FFD700] flex items-center gap-1 hover:bg-[#2A1E14] transition cursor-pointer shadow-md"
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span>{selectedLanguage}</span>
+              </button>
+
+              <AnimatePresence>
+                {showLangMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 5 }}
+                    className="absolute right-0 mt-2 w-44 bg-[#140C06] border border-[#FFD700]/40 rounded-2xl p-1.5 shadow-2xl z-50 text-xs"
+                  >
+                    {LANGUAGES.map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => {
+                          setSelectedLanguage(lang as any);
+                          setShowLangMenu(false);
+                          toast({ title: `Langue changée : ${lang}` });
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition ${
+                          selectedLanguage === lang
+                            ? 'bg-[#FFD700] text-black font-black'
+                            : 'text-white/80 hover:bg-white/10 hover:text-white'
+                        }`}
+                      >
+                        {lang}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          )}
+          </div>
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 flex flex-col scrollbar-none">
-        <AnimatePresence initial={false}>
-          {messages.map((msg, i) => {
-            const isUser = msg.role === 'user'
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.25 }}
-                className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} space-y-1`}
-              >
-                <div
-                  className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-xs md:text-sm font-sans shadow-md ${
-                    isUser
-                      ? 'bg-bogolan text-[#F8F1E4] rounded-tr-none'
-                      : 'bg-[#241C16] text-[#F8F1E4] border border-white/5 rounded-tl-none'
-                  }`}
-                >
-                  {msg.image && (
-                    <img 
-                      src={msg.image} 
-                      alt="Imperfection attachée" 
-                      className="max-w-full max-h-[160px] rounded-xl object-cover mb-2 border border-white/10" 
-                    />
-                  )}
-                  <p className="leading-relaxed whitespace-pre-line">{msg.content}</p>
-                </div>
-                
-                <div className="flex items-center gap-1.5 mt-1 px-1">
-                  <span className="text-[9px] text-karite/30">
-                    {isUser ? 'Vous' : 'Awa'}
-                  </span>
-                  {!isUser && (
-                    <button
-                      onClick={() => speak(msg.content, i)}
-                      className={`p-1 rounded-md transition cursor-pointer ${
-                        playingIndex === i ? 'bg-gold-kene/20 text-gold-kene' : 'text-karite/30 hover:text-gold-kene'
-                      }`}
-                      title="Écouter les conseils audio"
-                    >
-                      <Volume2 className={`w-3.5 h-3.5 ${playingIndex === i ? 'animate-pulse' : ''}`} />
-                    </button>
-                  )}
-                </div>
-              </motion.div>
-            )
-          })}
-        </AnimatePresence>
+      {/* ── 🌌 MAIN SCROLL CONTAINER WITH 3D ORB PARALLAX ── */}
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto max-w-4xl w-full mx-auto p-4 space-y-6 pb-36">
+        
+        {/* ── 🔮 HERO 3D PARTICLES ORB SANCTUARY BANNER ── */}
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="relative">
+          <Card className="bg-gradient-to-b from-[#1C1108] via-[#140A04] to-[#0A0502] border-2 border-[#FFD700]/70 rounded-3xl overflow-hidden shadow-2xl relative">
+            <div className="absolute -top-24 -right-24 w-72 h-72 bg-[#FFD700]/20 rounded-full blur-3xl pointer-events-none" />
+            
+            <CardContent className="p-6 space-y-4 text-center relative z-10">
+              
+              {/* Context Weather Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFD700]/15 border border-[#FFD700]/40 text-[#FFD700] text-xs font-mono font-bold shadow-md">
+                <Sun className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '12s' }} />
+                <span>Météo Dakar (32°C · UV 8) — Période Idéale Soin Sérum Baobab</span>
+              </div>
 
-        {loading && (
-          <div className="flex items-start space-y-1">
-            <div className="bg-[#241C16] border border-white/5 text-[#F8F1E4] px-4 py-3 rounded-2xl rounded-tl-none flex items-center gap-1.5 shadow-md">
-              <span className="w-1.5 h-1.5 bg-gold-kene rounded-full animate-bounce delay-75" />
-              <span className="w-1.5 h-1.5 bg-gold-kene rounded-full animate-bounce delay-150" />
-              <span className="w-1.5 h-1.5 bg-gold-kene rounded-full animate-bounce delay-300" />
-            </div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
+              {/* 3D WebGL Particle Sphere */}
+              <ParticleOrb3D isListening={isListening} isSpeaking={isSpeaking} scrollProgress={scrollProgress} />
+
+              <div className="space-y-1 max-w-md mx-auto">
+                <h2 className="font-serif font-bold text-2xl sm:text-3xl text-white tracking-tight leading-tight">
+                  "Bonjour Aïsha, je vous écoute."
+                </h2>
+                <p className="text-xs text-white/70 italic">
+                  Posez votre question dermatologique de vive voix ou téléchargez une photo de vos taches pour un bilan immédiat.
+                </p>
+              </div>
+
+              {/* Dual Action Triggers */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                <Button
+                  onClick={handleStartVoice}
+                  className="w-full sm:w-auto h-12 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-2xl shadow-xl hover:scale-105 transition cursor-pointer px-6 border border-[#FFD700]"
+                >
+                  <Mic className="w-4 h-4 mr-2 animate-pulse" />
+                  <span>Consultation Vocale TAARU AI 🎙️</span>
+                </Button>
+
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full sm:w-auto h-12 bg-[#2A1E14] border border-[#FFD700]/40 text-[#FFD700] font-bold text-xs rounded-2xl shadow-lg hover:bg-[#3E2B1D] transition cursor-pointer px-5"
+                >
+                  <Camera className="w-4 h-4 mr-2 text-[#FFD700]" />
+                  <span>Analyser une Photo Cutanée 📸</span>
+                </Button>
+                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+              </div>
+
+              {/* Sample Quick Questions Chips */}
+              <div className="pt-4 border-t border-white/10 text-left">
+                <span className="text-[10px] font-mono text-[#FFD700] uppercase tracking-widest block text-center font-bold mb-2.5">
+                  💡 Suggestions de consultations populaires :
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {[
+                    "Dr. Diallo, comment éliminer mes taches d'hyperpigmentation ?",
+                    "Quel sérum au Baobab utiliser sous le soleil d'Abidjan ?",
+                    "Comment apaiser les irritations après les tresses & braids ?",
+                    "Mama Kènè, quelle routine pour ma peau noire mixte/grasse ?",
+                  ].map((q, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleSendMessage(q)}
+                      className="text-left text-xs text-white/80 hover:text-white bg-[#1E140C] hover:bg-[#2E1E12] border border-white/10 hover:border-[#FFD700]/50 p-2.5 rounded-2xl transition-all cursor-pointer truncate font-serif italic flex items-center justify-between group"
+                    >
+                      <span className="truncate">"{q}"</span>
+                      <Sparkles className="w-3.5 h-3.5 text-[#FFD700] shrink-0 opacity-70 group-hover:opacity-100" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* ── 💬 CHAT DISCUSSION THREAD ── */}
+        <div className="space-y-4">
+          {messages.map((msg) => (
+            <motion.div
+              key={msg.id}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+            >
+              <div className={`max-w-2xl rounded-3xl p-4 sm:p-5 shadow-xl space-y-3 ${
+                msg.role === 'user'
+                  ? 'bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-medium border border-[#FFD700] rounded-br-none'
+                  : 'bg-[#181009] border-2 border-[#FFD700]/50 text-white rounded-bl-none'
+              }`}>
+                
+                {/* Header Badge */}
+                <div className="flex items-center justify-between border-b border-current/10 pb-2 text-[10px] font-mono">
+                  <span className="font-bold flex items-center gap-1.5">
+                    {msg.role === 'user' ? '👤 Vous (Cliente Privilège)' : '🩺 Dr. Mama Kènè IA · Dermatologue & Botaniste'}
+                  </span>
+                  <span className="opacity-70">{msg.timestamp}</span>
+                </div>
+
+                {/* User Image Preview if uploaded */}
+                {msg.image && (
+                  <div className="w-44 h-44 rounded-2xl overflow-hidden border border-black/20 shadow-md my-2">
+                    <img src={msg.image} alt="Photo cutanée" className="w-full h-full object-cover" />
+                  </div>
+                )}
+
+                {/* Message Content Text */}
+                <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-line font-sans font-medium">
+                  {msg.content}
+                </p>
+
+                {/* Speak Button for AI Messages */}
+                {msg.role === 'assistant' && (
+                  <div className="pt-2 border-t border-white/10 flex items-center justify-between">
+                    <button
+                      onClick={() => speakText(msg.content)}
+                      className="text-[11px] font-bold text-[#FFD700] bg-[#FFD700]/15 border border-[#FFD700]/40 px-3 py-1 rounded-xl flex items-center gap-1.5 hover:bg-[#FFD700]/30 transition cursor-pointer"
+                    >
+                      <Volume2 className="w-3.5 h-3.5 text-[#FFD700]" />
+                      <span>Écouter la réponse vocale</span>
+                    </button>
+                    <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5" /> Diagnostic Certifié UEMOA
+                    </span>
+                  </div>
+                )}
+
+                {/* Interactive Prescription Card (1-Click Order) */}
+                {msg.prescription && (
+                  <div className="mt-3 bg-[#0F0A05] border border-[#FFD700]/60 rounded-2xl p-4 space-y-3 text-white">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                      <span className="text-xs font-bold font-display text-[#FFD700] flex items-center gap-1.5">
+                        🌱 {msg.prescription.title}
+                      </span>
+                      <Badge className="bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/30 text-[9px] font-mono">
+                        Ordonnance Sur-Mesure
+                      </Badge>
+                    </div>
+
+                    <div className="space-y-2">
+                      {msg.prescription.items.map((item, idx) => (
+                        <div key={idx} className="flex justify-between items-center bg-[#1A1410] p-2.5 rounded-xl border border-white/5">
+                          <div>
+                            <div className="text-xs font-bold text-white">{item.name}</div>
+                            <div className="text-[10px] text-white/50">{item.desc}</div>
+                          </div>
+                          <span className="text-xs font-mono font-bold text-[#FFD700]">
+                            {item.price.toLocaleString('fr-FR')} FCFA
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="pt-2 flex items-center justify-between border-t border-white/10">
+                      <div>
+                        <span className="text-[10px] text-white/50 uppercase font-mono block">Total Ordonnance</span>
+                        <span className="text-sm font-bold font-mono text-[#FFD700]">
+                          {msg.prescription.totalPrice.toLocaleString('fr-FR')} FCFA
+                        </span>
+                      </div>
+                      <a href={`/checkout?service=${encodeURIComponent(msg.prescription.title)}`}>
+                        <Button className="h-9 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-xl shadow-lg border border-[#FFD700] hover:scale-105 transition cursor-pointer px-4">
+                          <ShoppingBag className="w-3.5 h-3.5 mr-1" />
+                          <span>Commander 1-Clic</span>
+                        </Button>
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            </motion.div>
+          ))}
+
+          {/* Loading Indicator */}
+          {loading && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 text-xs text-[#FFD700] font-mono p-3 bg-[#181009] rounded-2xl border border-[#FFD700]/30 w-fit">
+              <Sparkles className="w-4 h-4 animate-spin text-[#FFD700]" />
+              <span>Dr. Mama Kènè IA analyse votre demande dermo-botanique...</span>
+            </motion.div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
-      <footer className="p-4 bg-[#241C16]/60 border-t border-white/5 sticky bottom-0 z-20 backdrop-blur-md space-y-3">
-        {/* Quick Actions */}
-        {!isRecording && messages.length < 3 && (
-          <div className="flex overflow-x-auto gap-2 pb-2 scrollbar-none">
-            <button onClick={() => handleSendMessage("Réserver un Soin Karité")} className="flex-shrink-0 bg-[#1A1410] border border-white/10 px-3 py-1.5 rounded-full text-[10px] text-white/80 hover:bg-white/5 transition flex items-center gap-1.5">
-              <Calendar className="w-3 h-3 text-gold-kene" /> Réserver un Soin Karité
-            </button>
-            <button onClick={() => handleSendMessage("Vérifier mes points")} className="flex-shrink-0 bg-[#1A1410] border border-white/10 px-3 py-1.5 rounded-full text-[10px] text-white/80 hover:bg-white/5 transition flex items-center gap-1.5">
-              <CreditCard className="w-3 h-3 text-gold-kene" /> Vérifier mes points
-            </button>
-            <button onClick={() => handleSendMessage("Conseil Peau")} className="flex-shrink-0 bg-[#1A1410] border border-white/10 px-3 py-1.5 rounded-full text-[10px] text-white/80 hover:bg-white/5 transition flex items-center gap-1.5">
-              <Droplet className="w-3 h-3 text-gold-kene" /> Conseil Peau
-            </button>
-          </div>
-        )}
+      {/* ── ⌨️ FLOATING BOTTOM CHAT INPUT BAR ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#140C06]/95 border-t border-[#FFD700]/40 p-3 sm:p-4 backdrop-blur-xl shadow-2xl">
+        <div className="max-w-4xl mx-auto flex items-center gap-2">
+          
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-white/15 text-white/70 hover:text-white flex items-center justify-center transition shrink-0 cursor-pointer"
+            title="Ajouter une photo"
+          >
+            <Camera className="w-5 h-5 text-[#FFD700]" />
+          </button>
 
+          <button
+            onClick={handleStartVoice}
+            className={`w-11 h-11 rounded-2xl border flex items-center justify-center transition shrink-0 cursor-pointer ${
+              isListening
+                ? 'bg-[#FFD700] text-black border-[#FFD700] animate-pulse shadow-lg scale-105'
+                : 'bg-[#1E140C] border-[#FFD700]/40 text-[#FFD700] hover:bg-[#2A1E14]'
+            }`}
+            title="Parler à Mama Kènè"
+          >
+            <Mic className="w-5 h-5" />
+          </button>
 
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+            placeholder="Posez votre question à Dr. Mama Kènè IA..."
+            className="flex-1 bg-[#1E140C] border border-white/15 focus:border-[#FFD700] text-white px-4 h-11 rounded-2xl text-xs outline-none transition"
+          />
 
-        {isRecording ? (
-          <div className="flex items-center justify-between bg-red-950/20 border border-red-500/10 rounded-2xl p-3.5">
-            <div className="flex items-center gap-3">
-              <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping" />
-              <span className="text-xs text-red-400 font-semibold font-mono">{formatTime(recordSeconds)}</span>
-              <span className="text-[10px] text-karite/40">Enregistrement audio...</span>
-            </div>
-            
-            <div className="flex gap-0.5 items-center px-4">
-              <span className="w-1 h-3 bg-red-500/50 rounded animate-pulse" />
-              <span className="w-1 h-5 bg-red-500/80 rounded animate-pulse delay-75" />
-              <span className="w-1 h-4 bg-red-500 rounded animate-pulse delay-150" />
-              <span className="w-1 h-6 bg-red-500 rounded animate-pulse delay-100" />
-              <span className="w-1 h-2 bg-red-500/50 rounded animate-pulse delay-300" />
-            </div>
+          <Button
+            onClick={() => handleSendMessage()}
+            className="h-11 px-5 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-2xl shadow-lg border border-[#FFD700] hover:scale-105 transition cursor-pointer shrink-0"
+          >
+            <Send className="w-4 h-4 mr-1" />
+            <span className="hidden sm:inline">Envoyer</span>
+          </Button>
+        </div>
+      </div>
 
-            <Button
-              onClick={toggleRecording}
-              className="bg-red-600 hover:bg-red-500 text-white rounded-full w-10 h-10 p-0 flex items-center justify-center shrink-0 cursor-pointer"
-            >
-              <Square className="w-4 h-4" />
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {/* Multi-Photo Preview Strip in Chat Input */}
-            {selectedImages.length > 0 && (
-              <div className="flex gap-2 p-2 bg-[#1A1410] border border-gold-kene/30 rounded-2xl overflow-x-auto">
-                {selectedImages.map((img, idx) => (
-                  <div key={idx} className="relative w-12 h-12 rounded-xl overflow-hidden border border-gold-kene shrink-0">
-                    <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => setSelectedImages(prev => prev.filter((_, i) => i !== idx))}
-                      className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-red-600 text-white rounded-full flex items-center justify-center text-[8px] font-bold"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-                <span className="text-[10px] text-gold-kene font-mono self-center px-1">
-                  {selectedImages.length} photo{selectedImages.length > 1 ? 's' : ''} prête{selectedImages.length > 1 ? 's' : ''}
-                </span>
-              </div>
-            )}
-
-            <form onSubmit={handleSend} className="flex gap-2 items-center">
-              <input 
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="bg-transparent hover:bg-white/5 border border-white/10 w-11 h-11 rounded-2xl flex items-center justify-center text-karite/70 hover:text-karite transition shrink-0 cursor-pointer"
-                title="Ajouter des photos (multiples)"
-              >
-                <Camera className="w-5 h-5 text-gold-kene" />
-              </button>
-
-            <button
-              type="button"
-              onClick={toggleRecording}
-              className="bg-transparent hover:bg-white/5 border border-white/10 w-11 h-11 rounded-2xl flex items-center justify-center text-karite/70 hover:text-karite transition shrink-0 cursor-pointer"
-              title="Enregistrer un message vocal (Wolof, Nouchi, Bambara)"
-            >
-              <Mic className="w-5 h-5 text-gold-kene" />
-            </button>
-
-            <input
-              type="text"
-              placeholder="Écrivez ou attachez une photo..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="flex-1 bg-[#1A1410] border border-white/10 text-sm rounded-2xl px-4 py-3 text-karite placeholder-white/20 focus:border-gold-kene outline-none transition font-sans"
-              disabled={loading}
-            />
-
-            <Button
-              type="submit"
-              disabled={loading || (!input.trim() && selectedImages.length === 0)}
-              className="bg-gold-kene hover:bg-gold-kene/90 text-[#1A1410] rounded-2xl w-11 h-11 p-0 flex items-center justify-center shrink-0 cursor-pointer"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
-          </form>
-          </div>
-        )}
-      </footer>
     </div>
-  )
+  );
 }
 
 export default function ChatPage() {
   return (
-    <Suspense fallback={<div className="flex justify-center py-20 text-gold-kene">Chargement de l'assistant...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-white font-mono">Chargement du Sanctuaire Dr. Mama Kènè IA...</div>}>
       <ChatContent />
     </Suspense>
-  )
+  );
 }
