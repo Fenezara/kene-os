@@ -5,13 +5,23 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, Send, Mic, Sparkles,
-  Camera, Volume2, Sun, ShieldCheck, ShoppingBag
+  Camera, Volume2, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ParticleOrb3D } from '@/components/ParticleOrb3D';
 import { useToast } from '@/hooks/use-toast';
+
+interface MedicalConsultation {
+  geoContext: string;
+  anamnesis: string;
+  diagnosis: string;
+  probableCauses: string;
+  treatment: string;
+  precautions: string;
+  followUpQuestion: string;
+}
 
 interface Prescription {
   title: string;
@@ -23,7 +33,6 @@ function ChatContent() {
   const router = useRouter();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,22 +40,31 @@ function ChatContent() {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const [currentQuestion, setCurrentQuestion] = useState<string | null>(null);
-  const [aiAnswer, setAiAnswer] = useState<string>(
-    "Bonjour Aïsha ! Je suis le Dr. Mama Kènè IA. Avec les 32°C à Dakar aujourd'hui, je suis à votre écoute. Appuyez sur le micro ci-dessous pour me poser votre question de vive voix."
-  );
+  
+  // Doctor's Structured Clinical Consultation State
+  const [consultation, setConsultation] = useState<MedicalConsultation>({
+    geoContext: "Dakar / Abidjan (32°C · 85% Humidité · Indice UV 8)",
+    anamnesis: "Bonjour Aïsha ! Je suis le Dr. Mama Kènè. En tant que médecin dermatologue spécialiste des peaux mélanodermes en Afrique de l'Ouest, je suis à votre entière écoute.",
+    diagnosis: "Bilan Cutané Préliminaire : Peau soumise aux stress thermo-hygrométriques tropicaux.",
+    probableCauses: "L'exposition aux UV élevés (Indice 8) et la transpiration excessive modifient le pH du film hydrolipidique et stimulent la mélanogénèse.",
+    treatment: "Application quotidienne du Sérum Baobab bio à la Niacinamide 10% le soir + Protection barrière au Karité brut de Korhogo.",
+    precautions: "Évitez toute application d'acides exfoliants forts durant la journée sous 32°C pour prévenir l'oxydation séborrhique et les taches secondaires.",
+    followUpQuestion: "Depuis combien de semaines observez-vous ce changement cutané ? Ressentez-vous des tiraillements ou des démangeaisons ?",
+  });
+
   const [activePrescription, setActivePrescription] = useState<Prescription | null>({
-    title: 'Routine Éclat Dermo-Botanique Recommandée',
+    title: 'Ordonnance Dermo-Botanique Sur-Mesure',
     items: [
-      { name: 'Beurre de Karité Brut Korhogo', desc: 'Hydratation barrière lipidique', price: 9500 },
-      { name: 'Sérum Baobab 10% Niacinamide', desc: 'Anti-taches & régénération PIH', price: 18000 },
+      { name: 'Sérum Baobab 10% Niacinamide Bio', desc: 'Régulateur mélanine & anti-oxydation', price: 18000 },
+      { name: 'Beurre de Karité Brut Korhogo 100g', desc: 'Soin réparateur barrière lipidique', price: 9500 },
     ],
     totalPrice: 27500,
   });
 
   const sampleQuestions = [
-    "Comment éliminer mes taches d'hyperpigmentation ?",
-    "Quel soin Karité utiliser avec cette chaleur ?",
-    "Quelle routine pour apaiser les irritations des tresses ?",
+    "J'ai des taches foncées sur les joues avec la chaleur à Dakar.",
+    "Mon cuir chevelu démange et tiraille après mes tresses.",
+    "Ma peau brille et devient grasse à Abidjan l'après-midi.",
   ];
 
   const speakText = (text: string) => {
@@ -69,52 +87,71 @@ function ChatContent() {
     setInput('');
 
     setTimeout(() => {
-      let response = "En analysant votre peau et les 32°C actuels à Dakar/Abidjan, je vous recommande d'appliquer le sérum au Baobab frais le soir pour éviter l'oxydation solaire, puis d'apaiser avec une touche de Karité pur.";
-      let rx: Prescription = {
-        title: 'Routine Éclat Botanique Bio',
-        items: [
-          { name: 'Sérum Baobab Niacinamide', desc: 'Anti-taches & éclat', price: 18000 },
-        ],
-        totalPrice: 18000,
+      let newConsultation: MedicalConsultation = {
+        geoContext: "Dakar / Abidjan (32°C · 85% Humidité · UV Indice 8)",
+        anamnesis: "Je comprends parfaitement votre préoccupation. En Afrique de l'Ouest, les variations hygrométriques et la forte chaleur influencent directement le comportement de l'épiderme mélanoderme.",
+        diagnosis: "Diagnostic Médical Probable : Hyperpigmentation Post-Inflammatoire (PIH) réactive.",
+        probableCauses: "Les rayons UV tropicaux stimulent excessivement les mélanocytes sur les zones fragilisées (anciens boutons, frottements). La chaleur accélère l'oxydation des sébums.",
+        treatment: "1. Le Soir : Sérum Hibiscus & Baobab Bio (Niacinamide 10%) pour réguler la mélanine.\n2. Le Matin : Écran Solaire Minéral SPF 50 non blanchissant.",
+        precautions: "Règle Médicale d'Or : Ne jamais gratter les lésions et proscrire absolument les produits décapants chimiques acides durant la journée sous le soleil.",
+        followUpQuestion: "Avez-vous appliqué un produit cosmétique particulier récemment avant l'apparition de ces taches ?",
       };
 
-      if (questionText.toLowerCase().includes('tache')) {
-        response = "Pour vos taches d'hyperpigmentation (PIH), l'Extrait d'Hibiscus Bio et la Niacinamide régulent la mélanine sans agresser la peau. Appliquez le matin sous l'écran solaire minéral.";
+      let rx: Prescription = {
+        title: 'Ordonnance Dermo-Botanique Anti-Taches PIH',
+        items: [
+          { name: 'Sérum Hibiscus & Baobab Bio', desc: 'Régulateur mélanine & AHA doux', price: 18500 },
+          { name: 'Écran Minéral Protecteur SPF 50', desc: 'Protection UV spéciale peaux mates', price: 15000 },
+        ],
+        totalPrice: 33500,
+      };
+
+      if (questionText.toLowerCase().includes('chevelu') || questionText.toLowerCase().includes('tresse')) {
+        newConsultation = {
+          geoContext: "Climat Tropical Humide (Sueur & Traction du Cuir Chevelu)",
+          anamnesis: "Les tiraillements post-tressage sont un motif de consultation très fréquent. Il est capital de préserver les follicules pileux pour éviter toute alopécie de traction.",
+          diagnosis: "Diagnostic Médical Probable : Inflammation folliculaire post-traction (Érythème mécanique).",
+          probableCauses: "Tension mécanique excessive exercée sur la racine combinée à l'accumulation de sueur sous les nattes, favorisant la prolifération microbienne.",
+          treatment: "Massage doux quotidien du cuir chevelu avec l'Huile Pure de Baobab & d'Aloe Vera pour apaiser le cuir chevelu en 48h.",
+          precautions: "Demandez à votre coiffeuse de desserrer immédiatement les tresses situées sur les tempes et la ligne frontale.",
+          followUpQuestion: "Depuis combien de jours portez-vous ces tresses ? Sentez-vous de petites papules (boutons) à la racine ?",
+        };
         rx = {
-          title: 'Ordonnance Anti-Taches PIH',
+          title: 'Prescription Apaisante Cuir Chevelu & Anti-Traction',
           items: [
-            { name: 'Sérum Hibiscus & Baobab Bio', desc: 'Régulateur mélanine', price: 18500 },
-            { name: 'Écran Minéral SPF 50', desc: 'Protection anti-taches', price: 15000 },
+            { name: 'Huile Botanique Baobab & Aloe Vera 100ml', desc: 'Soin apaisant & anti-inflammation', price: 11000 },
           ],
-          totalPrice: 33500,
+          totalPrice: 11000,
         };
       }
 
-      setAiAnswer(response);
+      setConsultation(newConsultation);
       setActivePrescription(rx);
       setLoading(false);
-      speakText(response);
-    }, 1000);
+
+      const fullSpeakText = `${newConsultation.anamnesis} ${newConsultation.diagnosis}. ${newConsultation.treatment}. ${newConsultation.precautions}`;
+      speakText(fullSpeakText);
+    }, 1200);
   };
 
   const handleStartVoice = () => {
     setIsListening(true);
     toast({
-      title: "🎙️ Écoute Vocale en cours...",
-      description: "Parlez directement à Dr. Mama Kènè...",
+      title: "🎙️ Écoute Vocale du Médecin en cours...",
+      description: "Expliquez vos symptômes au Dr. Mama Kènè...",
     });
 
     setTimeout(() => {
       setIsListening(false);
-      handleAsk("Comment éliminer mes taches d'hyperpigmentation ?");
-    }, 2500);
+      handleAsk("J'ai des taches foncées sur les joues avec la chaleur à Dakar.");
+    }, 2800);
   };
 
   return (
     <div className="h-[100dvh] max-h-[100dvh] w-full bg-[#0A0502] text-white flex flex-col font-sans selection:bg-[#FFD700] selection:text-black overflow-hidden">
       
-      {/* ── 1. EN-TÊTE ÉPURÉ (0 SCROLL) ── */}
-      <header className="h-14 bg-[#140C06] border-b border-[#FFD700]/30 px-4 flex items-center justify-between shrink-0">
+      {/* ── 1. EN-TÊTE ÉPURÉ DE LA CONSULTATION (0 SCROLL) ── */}
+      <header className="h-14 bg-[#140C06] border-b border-[#FFD700]/30 px-4 flex items-center justify-between shrink-0 shadow-lg">
         <div className="max-w-4xl w-full mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Button
@@ -131,92 +168,123 @@ function ChatContent() {
                 <h1 className="font-serif font-bold text-sm text-white leading-tight">
                   Dr. Mama Kènè <span className="text-[#FFD700]">IA</span>
                 </h1>
-                <p className="text-[10px] text-emerald-400 font-mono">Dermatologie & Botanique UEMOA</p>
+                <p className="text-[10px] text-emerald-400 font-mono">Cabinet Dermatologique UEMOA</p>
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFD700]/15 border border-[#FFD700]/40 text-[#FFD700] text-[10px] font-mono font-bold">
-            <Sun className="w-3 h-3 text-amber-400 animate-spin" style={{ animationDuration: '10s' }} />
-            <span>Dakar (32°C)</span>
+            <MapPin className="w-3 h-3 text-[#FFD700]" />
+            <span>{consultation.geoContext.split(' ')[0]}</span>
           </div>
         </div>
       </header>
 
-      {/* ── 2. PANNEAU UNIQUE CENTRAL (0 SCROLL GLOBAL) ── */}
-      <div className="flex-1 max-w-2xl w-full mx-auto p-3 sm:p-4 flex flex-col justify-between overflow-hidden gap-3">
+      {/* ── 2. PANNEAU CENTRAL CONSULTATION MÉDICALE (0 SCROLL GLOBAL) ── */}
+      <div className="flex-1 max-w-3xl w-full mx-auto p-3 sm:p-4 flex flex-col justify-between overflow-hidden gap-3">
         
-        {/* 🔮 ORBE 3D CENTRAL & MICROPHONE (ÉTAPES 1) */}
-        <Card className="bg-gradient-to-b from-[#1C1108] via-[#140A04] to-[#0A0502] border-2 border-[#FFD700]/60 rounded-3xl p-4 shadow-2xl relative overflow-hidden text-center shrink-0">
+        {/* 🔮 SPHÈRE 3D & MICROPHONE DE CONSULTATION */}
+        <Card className="bg-gradient-to-b from-[#1C1108] via-[#140A04] to-[#0A0502] border-2 border-[#FFD700]/60 rounded-3xl p-3.5 shadow-2xl relative overflow-hidden text-center shrink-0">
           <div className="absolute -top-20 -right-20 w-48 h-48 bg-[#FFD700]/20 rounded-full blur-3xl pointer-events-none" />
 
           {/* 3D WebGL Particle Sphere */}
-          <div className="h-44 sm:h-52 flex items-center justify-center relative z-10">
+          <div className="h-36 sm:h-44 flex items-center justify-center relative z-10">
             <ParticleOrb3D isListening={isListening} isSpeaking={isSpeaking} />
           </div>
 
-          {/* Bouton Principal "Appuyer & Parler" */}
+          {/* Action Vocal "Consulter le Médecin" */}
           <div className="space-y-2 relative z-10">
             <Button
               onClick={handleStartVoice}
-              className={`w-full h-12 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs sm:text-sm rounded-2xl shadow-xl hover:scale-105 transition cursor-pointer border border-[#FFD700] ${
+              className={`w-full h-11 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs sm:text-sm rounded-2xl shadow-xl hover:scale-105 transition cursor-pointer border border-[#FFD700] ${
                 isListening ? 'animate-pulse scale-105' : ''
               }`}
             >
-              <Mic className="w-5 h-5 mr-2 animate-pulse text-black" />
-              <span>{isListening ? 'Écoute en cours...' : 'Appuyer & Parler à Dr. Mama Kènè 🎙️'}</span>
+              <Mic className="w-4 h-4 mr-2 animate-pulse text-black" />
+              <span>{isListening ? 'Le Dr. Mama Kènè vous écoute...' : 'Parler de mes symptômes au Dr. Mama Kènè 🎙️'}</span>
             </Button>
 
-            {/* Questions Rapides en 1-Clic */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 pt-1">
+            {/* Motifs de Consultation Fréquents */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 pt-0.5">
               {sampleQuestions.map((q, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleAsk(q)}
-                  className="text-center text-[10px] text-white/80 hover:text-white bg-[#1E140C] border border-white/10 hover:border-[#FFD700]/50 p-2 rounded-xl transition cursor-pointer truncate font-serif italic"
+                  className="text-center text-[10px] text-white/80 hover:text-white bg-[#1E140C] border border-white/10 hover:border-[#FFD700]/50 p-1.5 rounded-xl transition cursor-pointer truncate font-serif italic"
                 >
-                  "{q.substring(0, 28)}..."
+                  "{q.substring(0, 32)}..."
                 </button>
               ))}
             </div>
           </div>
         </Card>
 
-        {/* 💬 RÉPONSE DE L'IA & ORDONNANCE (ÉTAPES 2 & 3) */}
-        <div className="flex-1 bg-[#140C06] border-2 border-[#FFD700]/50 rounded-3xl p-3.5 sm:p-4 shadow-xl overflow-y-auto space-y-3 flex flex-col justify-between">
+        {/* 🩺 DIAGNOSTIC MÉDICAL STRUCTURÉ (ÉTAPES DU MÉDECIN) */}
+        <div className="flex-1 bg-[#140C06] border-2 border-[#FFD700]/50 rounded-3xl p-3.5 sm:p-4 shadow-xl overflow-y-auto space-y-3 flex flex-col justify-between scrollbar-thin">
           
-          <div className="space-y-2">
+          <div className="space-y-3">
             {currentQuestion && (
-              <p className="text-[11px] italic font-serif text-[#FFD700] bg-[#2A1B10] p-2 rounded-xl border border-[#FFD700]/30 w-fit">
-                {currentQuestion}
-              </p>
+              <div className="text-[11px] italic font-serif text-[#FFD700] bg-[#2A1B10] p-2 rounded-xl border border-[#FFD700]/30 w-fit">
+                Symptôme énoncé : {currentQuestion}
+              </div>
             )}
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#FFD700] flex items-center gap-1.5">
-                  🩺 Dr. Mama Kènè · Conseil Dermo-Botanique
-                </span>
-                <button
-                  onClick={() => speakText(aiAnswer)}
-                  className="text-[10px] font-bold text-[#FFD700] bg-[#FFD700]/15 border border-[#FFD700]/40 px-2 py-0.5 rounded-lg flex items-center gap-1 hover:bg-[#FFD700]/30 transition cursor-pointer"
-                >
-                  <Volume2 className="w-3 h-3 text-[#FFD700]" />
-                  <span>Réécouter</span>
-                </button>
+            {loading ? (
+              <div className="flex items-center gap-2 text-xs text-[#FFD700] font-mono p-3 bg-[#1E140C] rounded-2xl border border-[#FFD700]/30">
+                <Sparkles className="w-4 h-4 animate-spin text-[#FFD700]" />
+                <span>Le Dr. Mama Kènè analyse vos symptômes cutanés...</span>
               </div>
+            ) : (
+              <div className="space-y-3 text-xs leading-relaxed font-sans">
+                
+                {/* 1. Anamnèse & Accueil Médical */}
+                <div className="bg-[#1E140C] border border-white/10 rounded-2xl p-3 space-y-1">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-[#FFD700]">
+                    <span className="flex items-center gap-1.5">
+                      <Stethoscope className="w-3.5 h-3.5 text-[#FFD700]" /> 1. Écoute & Anamnèse Médicale
+                    </span>
+                    <span className="text-[9px] font-mono text-emerald-400">📍 {consultation.geoContext}</span>
+                  </div>
+                  <p className="text-white/90 font-medium">{consultation.anamnesis}</p>
+                </div>
 
-              <p className="text-xs text-white leading-relaxed font-sans font-medium">
-                {loading ? 'Dr. Mama Kènè prépare votre conseil personnalisé...' : aiAnswer}
-              </p>
-            </div>
+                {/* 2. Diagnostic & Causes Probables */}
+                <div className="bg-[#1E140C] border border border-white/10 rounded-2xl p-3 space-y-1.5">
+                  <div className="text-[11px] font-bold text-emerald-400 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 2. Diagnostic & Causes Probables
+                  </div>
+                  <p className="font-bold text-white text-xs">{consultation.diagnosis}</p>
+                  <p className="text-white/80 text-[11px]">{consultation.probableCauses}</p>
+                </div>
+
+                {/* 3. Traitement & Précautions (Conduite à tenir) */}
+                <div className="bg-[#1E140C] border border border-white/10 rounded-2xl p-3 space-y-1.5">
+                  <div className="text-[11px] font-bold text-amber-400 flex items-center gap-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> 3. Traitement Dermo-Botanique & Conduite à Tenir
+                  </div>
+                  <p className="text-white/90 whitespace-pre-line text-[11px]">{consultation.treatment}</p>
+                  <div className="pt-1 text-[11px] text-amber-300 font-medium italic border-t border-white/10 mt-1">
+                    ⚠️ Précautions : {consultation.precautions}
+                  </div>
+                </div>
+
+                {/* 4. Question de Suivi Médical */}
+                <div className="bg-[#2A1B10] border border-[#FFD700]/40 rounded-2xl p-3 space-y-1">
+                  <div className="text-[11px] font-bold text-[#FFD700] flex items-center gap-1.5">
+                    <HelpCircle className="w-3.5 h-3.5 text-[#FFD700]" /> Question de Suivi de votre Médecin :
+                  </div>
+                  <p className="text-white italic font-serif text-[11px]">{consultation.followUpQuestion}</p>
+                </div>
+
+              </div>
+            )}
           </div>
 
-          {/* 🛒 ÉTAPE 3 : BOUTON DE COMMANDE 1-CLIC */}
+          {/* 🛒 ORDONNANCE & PRESCRIPTION 1-CLIC */}
           {activePrescription && !loading && (
-            <div className="bg-[#0F0A05] border border-[#FFD700]/50 rounded-2xl p-3 space-y-2.5 shrink-0">
+            <div className="bg-[#0F0A05] border-2 border-[#FFD700]/60 rounded-2xl p-3 space-y-2 shrink-0">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-[#FFD700]">🌱 {activePrescription.title}</span>
+                <span className="font-bold text-[#FFD700]">📋 {activePrescription.title}</span>
                 <span className="font-mono font-bold text-[#FFD700]">
                   {activePrescription.totalPrice.toLocaleString('fr-FR')} FCFA
                 </span>
@@ -225,7 +293,7 @@ function ChatContent() {
               <a href={`/checkout?service=${encodeURIComponent(activePrescription.title)}`} className="block w-full">
                 <Button className="w-full h-10 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-xl shadow-lg border border-[#FFD700] hover:scale-105 transition cursor-pointer flex items-center justify-center gap-1.5">
                   <ShoppingBag className="w-4 h-4 text-black" />
-                  <span>Commander ma Routine 1-Clic ({activePrescription.totalPrice.toLocaleString('fr-FR')} FCFA)</span>
+                  <span>Commander l'Ordonnance Médicale ({activePrescription.totalPrice.toLocaleString('fr-FR')} FCFA)</span>
                 </Button>
               </a>
             </div>
@@ -233,13 +301,13 @@ function ChatContent() {
 
         </div>
 
-        {/* ⌨️ SAISIE TEXTE DE SECOURS (BAS D'ÉCRAN) */}
+        {/* ⌨️ RÉPONSE / MESSAGE AU MÉDECIN */}
         <div className="flex items-center gap-2 shrink-0">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleAsk(input)}
-            placeholder="Ou tapez votre question ici..."
+            placeholder="Répondre à la question du Dr. Mama Kènè..."
             className="flex-1 bg-[#1E140C] border border-white/15 focus:border-[#FFD700] text-white px-3 h-10 rounded-xl text-xs outline-none transition"
           />
           <Button
@@ -258,7 +326,7 @@ function ChatContent() {
 
 export default function ChatPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-white font-mono">Chargement...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-white font-mono">Chargement du Cabinet Médical...</div>}>
       <ChatContent />
     </Suspense>
   );
