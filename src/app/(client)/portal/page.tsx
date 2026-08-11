@@ -636,8 +636,10 @@ export default function ClientPortalPage() {
                     <div className="h-full rounded-full transition-all duration-500" style={{ width: `${item.val}%`, backgroundColor: item.color }} />
                   </div>
                 </div>
-              ))}
-            </div>
+            {/* HISTORIQUE DES ANCIENS RÉSULTATS & BILANS CUTANÉS DU CLIENT */}
+            <div className="pt-3 border-t border-white/5 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <h4 className="text-xs font-bold font-display text-[var(--gold-kene)] flex items-center gap-1.5 uppercase tracking-wider">
                   <ScanFace className="w-4 h-4 text-[var(--gold-kene)]" /> Historique de Mes Anciens Résultats & Bilans ({((data?.diagnosesHistory?.length || 0) > 0 ? data.diagnosesHistory.length : 3)} Scans)
                 </h4>
                 <div className="flex items-center gap-2">
