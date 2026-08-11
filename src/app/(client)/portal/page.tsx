@@ -636,6 +636,9 @@ export default function ClientPortalPage() {
                     <div className="h-full rounded-full transition-all duration-500" style={{ width: `${item.val}%`, backgroundColor: item.color }} />
                   </div>
                 </div>
+              ))}
+            </div>
+
             {/* HISTORIQUE DES ANCIENS RÉSULTATS & BILANS CUTANÉS DU CLIENT */}
             <div className="pt-3 border-t border-white/5 space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
