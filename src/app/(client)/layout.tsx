@@ -7,6 +7,7 @@ import { Home, Calendar, ScanFace, Wallet, ShoppingBag, Sprout, Bell, User, Spar
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { RoleSwitcher } from '@/components/RoleSwitcher';
+import { PlanSwitcher } from '@/components/PlanSwitcher';
 import { BackButton } from '@/components/ui/back-button';
 import { KeneLogo } from '@/components/ui/logo';
 import { handleLogout } from '@/lib/logout';
@@ -21,7 +22,7 @@ export default function ClientLayout({
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
+  const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('essentiel');
 
   useEffect(() => {
     setMounted(true);
@@ -49,13 +50,36 @@ export default function ClientLayout({
     }
   }, []);
 
-  const navLinks = [
-    { href: '/portal', label: 'Accueil', icon: Home },
-    { href: '/salons', label: 'Salons & Carte Boutique', icon: MapPin },
-    { href: '/chat', label: 'Dr. Mama Kènè IA 🩺🎙️', icon: Stethoscope },
-    { href: '/diagnostic', label: 'Bilan Cutané', icon: ScanFace },
-    { href: '/appointments', label: 'Mes RDV', icon: Calendar },
+  useEffect(() => {
+    const updatePlan = () => {
+      try {
+        const stored = localStorage.getItem('kene_active_plan');
+        if (stored && (stored === 'essentiel' || stored === 'pro' || stored === 'elite')) {
+          setActivePlan(stored);
+        }
+      } catch (e) {}
+    };
+
+    updatePlan();
+    window.addEventListener('kene_plan_changed', updatePlan);
+    return () => window.removeEventListener('kene_plan_changed', updatePlan);
+  }, []);
+
+  // Filter navigation buttons dynamically depending on activePlan selection
+  const allNavLinks = [
+    { href: '/portal', label: 'Accueil', icon: Home, plan: 'essentiel' },
+    { href: '/salons', label: 'Salons & Carte Boutique', icon: MapPin, plan: 'essentiel' },
+    { href: '/appointments', label: 'Mes RDV', icon: Calendar, plan: 'essentiel' },
+    { href: '/diagnostic', label: 'Bilan Cutané', icon: ScanFace, plan: 'pro' },
+    { href: '/chat', label: 'Dr. Mama Kènè IA 🩺🎙️', icon: Stethoscope, plan: 'elite' },
   ];
+
+  const navLinks = allNavLinks.filter((link) => {
+    if (link.plan === 'essentiel') return true;
+    if (link.plan === 'pro') return activePlan === 'pro' || activePlan === 'elite';
+    if (link.plan === 'elite') return activePlan === 'elite';
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-[#0F0A05] text-white flex flex-col font-sans selection:bg-[var(--gold-kene)] selection:text-[#0F0A05]">
@@ -100,6 +124,10 @@ export default function ClientLayout({
 
           {/* Right Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden sm:block w-48">
+              <PlanSwitcher />
+            </div>
+
             <Link
               href="/client-notifications"
               className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition relative"

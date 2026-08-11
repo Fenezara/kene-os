@@ -99,7 +99,8 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
       {/* Dynamic Nav groups according to activePlan */}
       <nav className="flex-1 overflow-y-auto px-3 pb-4 space-y-4 scrollbar-none">
         {groups.map((group) => {
-          const items = navItems.filter(i => i.group === group)
+          const items = navItems.filter(i => i.group === group && allowedModules.includes(i.id))
+          if (items.length === 0) return null;
 
           return (
             <div key={group}>
@@ -109,39 +110,19 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
               <div className="space-y-0.5">
                 {items.map((item) => {
                   const isActive = pathname === item.href
-                  const isAllowed = allowedModules.includes(item.id)
                   const Icon = item.icon
 
                   return (
-                    <Link 
-                      key={item.href} 
-                      href={item.href} 
-                      onClick={(e) => {
-                        if (!isAllowed) {
-                          toast({
-                            title: `🔒 Module réservé au ${item.group === 'expert' ? 'Plan Élite' : 'Plan Pro'}`,
-                            description: "Veuillez changer de plan ci-dessus pour simuler le déverrouillage de ce module.",
-                          });
-                        }
-                        if (onNavigate) onNavigate();
-                      }}
-                    >
+                    <Link key={item.href} href={item.href} onClick={onNavigate}>
                       <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-[11px] tracking-wide transition-all duration-200 cursor-pointer ${
                         isActive
                           ? 'bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black shadow-lg shadow-[#C8951E]/30 border border-[#FFD700]'
-                          : isAllowed
-                          ? 'text-white/80 hover:text-white hover:bg-white/10 font-semibold'
-                          : 'text-white/40 hover:bg-white/5 font-medium'
+                          : 'text-white/80 hover:text-white hover:bg-white/10 font-semibold'
                       }`}>
-                        <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-black font-bold' : isAllowed ? 'text-[#FFD700]' : 'text-white/30'}`} />
+                        <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-black font-bold' : 'text-[#FFD700]'}`} />
                         <span className={`truncate ${isActive ? 'text-black font-black' : ''}`}>{item.name}</span>
-                        {isActive ? (
+                        {isActive && (
                           <ChevronRight className="w-3 h-3 ml-auto text-black font-bold shrink-0" />
-                        ) : !isAllowed && (
-                          <div className="ml-auto flex items-center gap-1 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded-md text-[8px] font-mono text-[#FFD700]/80 shrink-0">
-                            <Lock className="w-2.5 h-2.5" />
-                            <span>{item.group === 'expert' ? 'Élite' : 'Pro'}</span>
-                          </div>
                         )}
                       </div>
                     </Link>
