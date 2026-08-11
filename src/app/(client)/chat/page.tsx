@@ -131,7 +131,7 @@ function ChatContent() {
     setTimeout(() => {
       let aiText = `En analysant votre peau et les 32°C de température actuels à Dakar/Abidjan, je vous recommande d'appliquer le sérum au Baobab frais le soir pour éviter l'oxydation solaire. Scellez ensuite avec une fine touche de Beurre de Karité pur de Korhogo.`;
       
-      let prescription = undefined;
+      let prescription: { title: string; items: { name: string; desc: string; price: number }[]; totalPrice: number } | undefined = undefined;
 
       if (textToSend.toLowerCase().includes('tache') || textToSend.toLowerCase().includes('bouton') || textToSend.toLowerCase().includes('pih')) {
         aiText = `Pour vos taches d'hyperpigmentation (PIH), la synergie de la Niacinamide 10% et de l'Extrait d'Hibiscus Bio (Bissap de Sikasso) régule la mélanine sans agresser le manteau acide épidermique. Appliquez le matin et scellez avec l'écran solaire minéral.`;
