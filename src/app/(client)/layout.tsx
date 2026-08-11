@@ -23,6 +23,7 @@ export default function ClientLayout({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('essentiel');
+  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
