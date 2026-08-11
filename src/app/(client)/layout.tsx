@@ -101,24 +101,6 @@ export default function ClientLayout({
           {/* Right Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
-              href="/welcome"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#C8951E]/15 border border-[#C8951E]/40 hover:bg-[#C8951E]/30 text-[#F3E5AB] text-xs font-bold font-mono transition shadow-sm"
-              title="Revoir la page d'accueil 3D & le Micro-Quiz"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#C8951E]" />
-              <span className="hidden sm:inline">Accueil 3D</span>
-            </Link>
-
-            <button
-              onClick={() => setIsVoiceAssistantOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs transition shadow-lg hover:scale-105 border border-[#FFD700] cursor-pointer"
-              title="Assistante Vocale Mama Kènè TAARU AI"
-            >
-              <Mic className="w-4 h-4 text-black animate-pulse" />
-              <span className="hidden sm:inline font-black">Mama Kènè AI 🎙️</span>
-            </button>
-
-            <Link
               href="/client-notifications"
               className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition relative"
               title="Notifications"
