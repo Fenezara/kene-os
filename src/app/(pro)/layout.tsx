@@ -6,8 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, Calendar, ShoppingCart, Users, Scissors,
-  UserCheck, Package, ScanFace, FileText, Calculator,
-  MessageSquare, Star, LogOut, ChevronRight, Sparkles, Menu, X, Search, ArrowLeft, FlaskConical, Building2, User
+  Settings, LogOut, ChevronRight, Sparkles, Menu, X, Search, ArrowLeft, Building2, User
 } from 'lucide-react'
 
 import { NotificationBell } from '@/components/NotificationBell'
@@ -27,24 +26,13 @@ const navItems = [
   { id: 'dashboard', name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard, group: 'principal' },
   { id: 'agenda', name: 'Agenda & RDV', href: '/agenda', icon: Calendar, group: 'principal' },
   { id: 'pos', name: 'Caisse / POS', href: '/pos', icon: ShoppingCart, group: 'principal' },
-  { id: 'clients', name: 'Clients CRM', href: '/clients', icon: Users, group: 'crm' },
-  { id: 'marketing', name: 'Marketing WhatsApp', href: '/marketing', icon: MessageSquare, group: 'crm' },
-  { id: 'reviews', name: 'Avis & Réputation', href: '/reviews', icon: Star, group: 'crm' },
-  { id: 'services', name: 'Services & Tarifs', href: '/services', icon: Scissors, group: 'salon' },
-  { id: 'employees', name: 'Équipe & Permissions', href: '/employees', icon: UserCheck, group: 'salon' },
-  { id: 'inventory', name: 'Stocks & Produits', href: '/inventory', icon: Package, group: 'salon' },
-  { id: 'diagnoses', name: 'Bilan Cutané 3D IA', href: '/diagnoses', icon: ScanFace, group: 'ia' },
-  { id: 'lab', name: 'Labo Sur-Mesure', href: '/lab', icon: FlaskConical, group: 'ia' },
-  { id: 'rh', name: 'Paie & CNPS', href: '/rh', icon: FileText, group: 'finance' },
-  { id: 'compta', name: 'Comptabilité SYSCOHADA', href: '/compta', icon: Calculator, group: 'finance' },
+  { id: 'clients', name: 'Clients CRM', href: '/clients', icon: Users, group: 'principal' },
+  { id: 'services', name: 'Services & Tarifs', href: '/services', icon: Scissors, group: 'principal' },
+  { id: 'settings', name: 'Paramètres Salon', href: '/settings', icon: Settings, group: 'principal' },
 ]
 
 const groupLabels: Record<string, string> = {
-  principal: 'Principal',
-  crm: 'Clients & Marketing',
-  salon: 'Gestion Salon',
-  ia: 'Expertise Cutanée & Labo',
-  finance: 'Finance & Paie',
+  principal: 'Menu Principal MVP',
 }
 
 function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {

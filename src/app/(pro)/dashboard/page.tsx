@@ -31,10 +31,10 @@ const itemVariants = {
 };
 
 const quickActions = [
-  { label: 'Nouveau RDV', href: '/agenda', icon: CalendarCheck, color: 'from-[#C8951E] to-[#8A5C0A]', textColor: 'text-[#0F0A05]' },
   { label: 'Encaisser POS', href: '/pos', icon: ShoppingCart, color: 'from-[#2E5A36] to-[#1A3820]', textColor: 'text-emerald-200' },
-  { label: 'Labo Sur-Mesure', href: '/lab', icon: FlaskConical, color: 'from-[#8A3B14] to-[#4A1B07]', textColor: 'text-amber-200' },
-  { label: 'Diagnostic IA', href: '/diagnoses', icon: ScanFace, color: 'from-[#1E3A5F] to-[#0E1E35]', textColor: 'text-blue-200' },
+  { label: 'Nouveau RDV', href: '/agenda', icon: CalendarCheck, color: 'from-[#C8951E] to-[#8A5C0A]', textColor: 'text-[#0F0A05]' },
+  { label: 'Ajouter Cliente', href: '/clients', icon: Users, color: 'from-[#1E3A5F] to-[#0E1E35]', textColor: 'text-blue-200' },
+  { label: 'Services & Tarifs', href: '/services', icon: Scissors, color: 'from-[#8A3B14] to-[#4A1B07]', textColor: 'text-amber-200' },
 ];
 
 // Data for Weekly Revenue Chart (FCFA)
