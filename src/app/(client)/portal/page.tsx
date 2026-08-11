@@ -377,12 +377,12 @@ export default function ClientPortalPage() {
                 }}
                 className={`px-3 py-2 rounded-2xl text-xs font-bold font-mono transition-all duration-300 border cursor-pointer ${
                   isSelected
-                    ? `${plan.color} shadow-lg scale-105 font-black ring-2 ring-white/20`
-                    : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:text-white'
+                    ? `${plan.color} shadow-xl scale-105 font-black ring-2 ring-white/30`
+                    : 'bg-[#2A1E17] border-white/20 text-white font-bold hover:bg-[#3E2D22] hover:text-white shadow-md'
                 }`}
               >
-                <div className="truncate">{plan.label}</div>
-                <div className="text-[9px] opacity-75">{plan.desc}</div>
+                <div className="truncate font-black">{plan.label}</div>
+                <div className="text-[10px] text-white/80 font-sans">{plan.desc}</div>
               </button>
             );
           })}
@@ -411,8 +411,8 @@ export default function ClientPortalPage() {
             )}
             <Dialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
               <DialogTrigger asChild>
-                <button className="text-[10px] font-bold text-[var(--gold-kene)] underline hover:text-[var(--gold-kene)]/80 cursor-pointer flex items-center gap-1">
-                  <User className="w-3 h-3" /> Modifier mon profil
+                <button className="text-xs font-black text-[#FFD700] bg-[#FFD700]/15 border border-[#FFD700]/40 px-2.5 py-1 rounded-xl shadow-md hover:bg-[#FFD700]/30 transition cursor-pointer flex items-center gap-1">
+                  <User className="w-3.5 h-3.5" /> Modifier mon profil
                 </button>
               </DialogTrigger>
 
@@ -488,7 +488,7 @@ export default function ClientPortalPage() {
 
                   <Button
                     onClick={handleSaveProfile}
-                    className="w-full h-10 bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-lg cursor-pointer mt-2"
+                    className="w-full h-10 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-xl shadow-lg cursor-pointer mt-2"
                   >
                     <Check className="w-4 h-4 mr-1" /> Enregistrer mes Modifications
                   </Button>
@@ -498,9 +498,9 @@ export default function ClientPortalPage() {
 
             <button
               onClick={() => setIsPassportModalOpen(true)}
-              className="px-2.5 py-1 rounded-xl bg-gradient-to-r from-[#F3E5AB] via-[#D4AF37] to-[#C8951E] text-black font-black text-[10px] flex items-center gap-1 shadow-md hover:scale-105 transition cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs flex items-center gap-1.5 shadow-lg border border-[#FFD700] hover:scale-105 transition cursor-pointer"
             >
-              <FileText className="w-3 h-3" />
+              <FileText className="w-3.5 h-3.5" />
               <span>Passeport Beauté PDF</span>
             </button>
           </div>
@@ -789,7 +789,7 @@ export default function ClientPortalPage() {
             <Store className="w-4 h-4 text-[var(--gold-kene)]" /> Salons Partenaires & Carte Boutique ({salons.length})
           </h2>
           <div className="flex items-center gap-2">
-            <a href="/boutique" className="text-[11px] font-bold text-black bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] px-3 py-1 rounded-xl shadow-md hover:scale-105 transition">
+            <a href="/boutique" className="text-xs font-black text-black bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] px-4 py-1.5 rounded-xl shadow-lg border border-[#FFD700] hover:scale-105 transition">
               🛍️ Explorer la Boutique Botanique
             </a>
             <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">● Salons Ouverts</span>
@@ -821,8 +821,8 @@ export default function ClientPortalPage() {
                 if (open) setSelectedSalon(salon);
               }}>
                 <DialogTrigger asChild>
-                  <Button className="w-full h-8 bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-md cursor-pointer flex items-center justify-center gap-1.5">
-                    <Send className="w-3 h-3" /> Contacter le Salon / Prise de RDV
+                  <Button className="w-full h-10 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-xl shadow-lg cursor-pointer flex items-center justify-center gap-1.5 border border-[#FFD700]">
+                    <Send className="w-4 h-4" /> Contacter le Salon / Prise de RDV
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="bg-[#0F0A05] border border-[var(--gold-kene)]/30 text-white rounded-3xl max-w-md p-6">
@@ -861,7 +861,7 @@ export default function ClientPortalPage() {
                     <Button
                       onClick={handleSubmitContactRequest}
                       disabled={isSubmittingContact}
-                      className="w-full h-10 bg-gradient-to-r from-[var(--gold-kene)] to-[#D4AF37] text-black font-bold text-xs rounded-xl shadow-lg cursor-pointer mt-1"
+                      className="w-full h-10 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-xl shadow-lg cursor-pointer mt-1"
                     >
                       {isSubmittingContact ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Send className="w-3.5 h-3.5 mr-1" />}
                       Envoyer ma Demande à l'Établissement
@@ -880,9 +880,9 @@ export default function ClientPortalPage() {
           <h2 className="font-semibold text-white text-sm uppercase tracking-wider font-display">Vos Rendez-vous</h2>
           <a
             href="/appointments"
-            className="bg-[var(--gold-kene)] hover:bg-[var(--gold-kene)]/90 text-[#1A1410] font-bold text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition shadow-lg shadow-[var(--gold-kene)]/20"
+            className="bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 transition shadow-lg border border-[#FFD700] hover:scale-105"
           >
-            <Calendar className="w-3.5 h-3.5" />
+            <Calendar className="w-4 h-4" />
             + Prendre RDV
           </a>
         </div>
