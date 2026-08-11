@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Calendar, ScanFace, Wallet, ShoppingBag, Sprout, Bell, User, Sparkles, ArrowLeft, LogOut, MapPin, Menu, X, MessageSquare, Stethoscope, FileText } from 'lucide-react';
+import { Home, Calendar, ScanFace, Wallet, ShoppingBag, Sprout, Bell, User, Sparkles, ArrowLeft, LogOut, MapPin, Menu, X, MessageSquare, Stethoscope, FileText, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { RoleSwitcher } from '@/components/RoleSwitcher';
 import { BackButton } from '@/components/ui/back-button';
 import { KeneLogo } from '@/components/ui/logo';
 import { handleLogout } from '@/lib/logout';
+import { MamaKeneVoiceAssistant } from '@/components/MamaKeneVoiceAssistant';
 
 export default function ClientLayout({
   children,
@@ -20,6 +21,7 @@ export default function ClientLayout({
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -106,6 +108,15 @@ export default function ClientLayout({
               <Sparkles className="w-3.5 h-3.5 text-[#C8951E]" />
               <span className="hidden sm:inline">Accueil 3D</span>
             </Link>
+
+            <button
+              onClick={() => setIsVoiceAssistantOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs transition shadow-lg hover:scale-105 border border-[#FFD700] cursor-pointer"
+              title="Assistante Vocale Mama Kènè TAARU AI"
+            >
+              <Mic className="w-4 h-4 text-black animate-pulse" />
+              <span className="hidden sm:inline font-black">Mama Kènè AI 🎙️</span>
+            </button>
 
             <Link
               href="/client-notifications"
@@ -239,6 +250,23 @@ export default function ClientLayout({
         </button>
       </nav>
 
+      {/* Floating Voice Assistant Quick Trigger Button (Bottom Right) */}
+      <button
+        onClick={() => setIsVoiceAssistantOpen(true)}
+        className="fixed bottom-20 right-5 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-[#FFD700] via-[#C8951E] to-[#8A3B14] p-0.5 shadow-2xl border-2 border-[#FFD700] flex items-center justify-center hover:scale-110 active:scale-95 transition cursor-pointer group"
+        title="Ouvrir l'Assistante Vocale Mama Kènè"
+      >
+        <div className="w-full h-full rounded-full bg-[#140B05] flex items-center justify-center text-[#FFD700] group-hover:bg-[#FFD700] group-hover:text-black transition-colors">
+          <Mic className="w-6 h-6 animate-pulse" />
+        </div>
+      </button>
+
+      {/* --- MAMA KÈNÈ VOICE ASSISTANT MODAL --- */}
+      <MamaKeneVoiceAssistant
+        isOpen={isVoiceAssistantOpen}
+        onClose={() => setIsVoiceAssistantOpen(false)}
+      />
+
       {/* --- DESKTOP FOOTER --- */}
       <footer className="hidden md:block border-t border-white/5 bg-[#1A1410] py-6 text-center text-xs text-white/40">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -248,7 +276,6 @@ export default function ClientLayout({
             <Link href="/diagnostic" className="hover:text-white transition">Diagnostic IA</Link>
             <Link href="/chat?mode=dr_diallo" className="hover:text-white transition">Dr. Dermatologue IA</Link>
             <Link href="/boutique" className="hover:text-white transition">Boutique</Link>
-            <Link href="/client-wallet" className="hover:text-white transition">Wallet</Link>
           </div>
         </div>
       </footer>

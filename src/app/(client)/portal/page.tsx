@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, ScanFace, ChevronRight, Wallet, Activity, ArrowRight, Camera, User, Check, Sparkles, Sprout, Clock, Store, MapPin, Phone, Mail, Send, MessageSquare, Building2, Loader2, FileText } from 'lucide-react';
+import { Calendar, ScanFace, ChevronRight, Wallet, Activity, ArrowRight, Camera, User, Check, Sparkles, Sprout, Clock, Store, MapPin, Phone, Mail, Send, MessageSquare, Building2, Loader2, FileText, Mic } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,6 +16,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { BeforeAfterGalleryModal } from '@/components/BeforeAfterGalleryModal';
 import { BeautyPassportModal } from '@/components/BeautyPassportModal';
+import { MamaKeneVoiceAssistant } from '@/components/MamaKeneVoiceAssistant';
 
 export default function ClientPortalPage() {
   const { toast } = useToast();
@@ -23,6 +24,7 @@ export default function ClientPortalPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
   const [latestClientPhoto, setLatestClientPhoto] = useState<string | null>(null);
   const [localDiagnoses, setLocalDiagnoses] = useState<any[]>([]);
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
@@ -529,6 +531,44 @@ export default function ClientPortalPage() {
         </div>
       </motion.div>
 
+      {/* ── 🎙️ ASSISTANTE VOCALE MAMA KÈNÈ (TAARU AI) CARD ── */}
+      <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.04 }}>
+        <Card 
+          onClick={() => setIsVoiceAssistantOpen(true)}
+          className="bg-gradient-to-r from-[#2A170A] via-[#1F1106] to-[#2A170A] border-2 border-[#FFD700] rounded-3xl p-5 shadow-2xl relative overflow-hidden group cursor-pointer hover:border-[#FFD700] transition-all"
+        >
+          <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#FFD700]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#FFD700] via-[#C8951E] to-[#8A1C14] p-0.5 shrink-0 shadow-xl group-hover:scale-110 transition-transform">
+                <div className="w-full h-full rounded-full bg-[#0F0A05] flex items-center justify-center text-[#FFD700]">
+                  <Mic className="w-6 h-6 animate-pulse" />
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/40 text-[10px] font-mono font-bold">
+                    🎙️ ASSISTANTE VOCALE MAMA KÈNÈ
+                  </Badge>
+                  <span className="text-[10px] text-white/60 font-mono hidden sm:inline">TAARU AI Vocal 2026</span>
+                </div>
+                <h3 className="font-serif font-bold text-lg text-white mt-0.5">
+                  "Bonjour Aïsha, je vous écoute."
+                </h3>
+                <p className="text-xs text-white/70 italic">
+                  Posez votre question de vive voix sur votre peau, la météo ou vos soins Karité & Baobab.
+                </p>
+              </div>
+            </div>
+
+            <Button className="w-full sm:w-auto h-11 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-2xl shadow-xl hover:scale-105 transition cursor-pointer px-5 border border-[#FFD700] shrink-0">
+              <Mic className="w-4 h-4 mr-1.5 animate-pulse" />
+              <span>Parler à Mama Kènè 🎙️</span>
+            </Button>
+          </div>
+        </Card>
+      </motion.div>
+
       {/* ── RITUEL DU JOUR & CHECKLIST SKINCARE INTERACTIVE ── */}
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
         <Card className="bg-[#1A1410] border border-[var(--gold-kene)]/30 rounded-3xl overflow-hidden shadow-xl">
@@ -981,6 +1021,11 @@ export default function ClientPortalPage() {
         onClose={() => setIsPassportModalOpen(false)}
         userProfile={userProfile}
         diagnoses={localDiagnoses}
+      />
+
+      <MamaKeneVoiceAssistant
+        isOpen={isVoiceAssistantOpen}
+        onClose={() => setIsVoiceAssistantOpen(false)}
       />
     </div>
   );
