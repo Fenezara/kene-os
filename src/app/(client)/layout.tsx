@@ -53,7 +53,6 @@ export default function ClientLayout({
     { href: '/chat?mode=dr_diallo', label: 'Dr. Dermatologie', icon: Stethoscope },
     { href: '/diagnostic', label: 'Bilan Cutané', icon: ScanFace },
     { href: '/appointments', label: 'Mes RDV', icon: Calendar },
-    { href: '/jardin', label: 'Jardin Botanique', icon: Sprout },
   ];
 
   return (
@@ -107,8 +106,6 @@ export default function ClientLayout({
               <Sparkles className="w-3.5 h-3.5 text-[#C8951E]" />
               <span className="hidden sm:inline">Accueil 3D</span>
             </Link>
-
-            <RoleSwitcher />
 
             <Link
               href="/client-notifications"
