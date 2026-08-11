@@ -337,6 +337,58 @@ export default function ClientPortalPage() {
         onChange={handlePhotoUpload}
       />
 
+      {/* ── CLIENT PORTAL PLAN SWITCHER CONTROL BAR ── */}
+      <div className={`p-4 rounded-3xl border shadow-2xl backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-4 transition-all duration-500 ${
+        activePlan === 'essentiel' ? 'bg-[#0E1511]/90 border-emerald-500/30' : activePlan === 'pro' ? 'bg-[#18110B]/90 border-[#C8951E]/40' : 'bg-[#1E1108]/90 border-2 border-[#FFD700]/70'
+      }`}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-[#C8951E]/20 border border-[#C8951E]/40 flex items-center justify-center text-xl shrink-0">
+            {activePlan === 'essentiel' ? '🟢' : activePlan === 'pro' ? '⭐' : '👑'}
+          </div>
+          <div>
+            <div className="text-[10px] font-mono text-[#C8951E] uppercase tracking-wider font-bold flex items-center gap-2">
+              <span>Sélecteur d'Expérience Cliente</span>
+              <span className="text-[9px] bg-white/10 px-2 py-0.2 rounded-full text-white/70">Test en Direct</span>
+            </div>
+            <div className="text-sm font-bold text-white">
+              Mode Cliente : <span className="text-[#F3E5AB] font-black">{activePlan === 'essentiel' ? 'Plan 1 — V1 Express 🟢' : activePlan === 'pro' ? 'Plan 2 — V2 VIP 3D ⭐' : 'Plan 3 — V3 Privilège 24K 👑'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 w-full md:w-auto">
+          {[
+            { id: 'essentiel', label: 'Client V1: Essentiel 🟢', desc: 'Reçu & RDV', color: 'border-emerald-500 bg-emerald-500/20 text-emerald-300' },
+            { id: 'pro', label: 'Client V2: VIP ⭐', desc: 'Passeport 3D', color: 'border-[#C8951E] bg-[#C8951E]/25 text-[#F3E5AB]' },
+            { id: 'elite', label: 'Client V3: 24K 👑', desc: 'AR & Wallet', color: 'border-[#FFD700] bg-[#FFD700]/30 text-[#FFD700]' },
+          ].map((plan) => {
+            const isSelected = activePlan === plan.id;
+            return (
+              <button
+                key={plan.id}
+                onClick={() => {
+                  setActivePlan(plan.id as any);
+                  localStorage.setItem('kene_active_plan', plan.id);
+                  window.dispatchEvent(new Event('kene_plan_changed'));
+                  toast({
+                    title: `✨ Expérience Cliente basculée sur "${plan.label}" !`,
+                    description: `Le Portail Cliente a été adapté au mode ${plan.label}.`,
+                  });
+                }}
+                className={`px-3 py-2 rounded-2xl text-xs font-bold font-mono transition-all duration-300 border cursor-pointer ${
+                  isSelected
+                    ? `${plan.color} shadow-lg scale-105 font-black ring-2 ring-white/20`
+                    : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                <div className="truncate">{plan.label}</div>
+                <div className="text-[9px] opacity-75">{plan.desc}</div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Profile Header with Photo Upload & Profile Edit Button */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pt-2 flex items-center justify-between">
         <div>
@@ -830,44 +882,24 @@ export default function ClientPortalPage() {
         </Card>
       </motion.div>
 
-      {/* Wallet & Jardin du Glow Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}>
-          <Card className="bg-gradient-to-br from-[#241C16] to-[#1A1410] text-white border border-white/10 shadow-xl overflow-hidden relative rounded-2xl h-full">
-            <div className="absolute right-0 top-0 w-32 h-32 bg-[var(--gold-kene)]/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Jardin du Glow Row */}
+      <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }}>
+        <a href="/jardin">
+          <Card className="bg-[#241C16] border-[var(--gold-kene)]/30 text-white shadow-xl overflow-hidden relative rounded-2xl cursor-pointer hover:border-[var(--gold-kene)] transition-all">
             <CardContent className="p-5 flex items-center justify-between">
               <div>
-                <p className="text-white/60 text-xs font-medium uppercase tracking-wider mb-1">Mon Portefeuille Kènè</p>
-                <div className="text-2xl font-display font-bold text-[var(--gold-kene)]">
-                  {(walletBalance || 0).toLocaleString('fr-FR')} FCFA
+                <p className="text-[var(--gold-kene)] text-xs font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                  <Sprout className="w-3.5 h-3.5" /> Jardin du Glow & Espace Fidélité
+                </p>
+                <div className="text-sm font-bold text-white">
+                  Voir mon Arbre Baobab & Mes Récompenses Botaniques
                 </div>
               </div>
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md">
-                <Wallet className="w-6 h-6 text-[var(--gold-kene)]" />
-              </div>
+              <ChevronRight className="w-5 h-5 text-[var(--gold-kene)]" />
             </CardContent>
           </Card>
-        </motion.div>
-
-        {/* Jardin du Glow Link */}
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }}>
-          <a href="/jardin">
-            <Card className="bg-[#241C16] border-[var(--gold-kene)]/30 text-white shadow-xl overflow-hidden relative rounded-2xl cursor-pointer hover:border-[var(--gold-kene)] transition-all h-full">
-              <CardContent className="p-5 flex items-center justify-between">
-                <div>
-                  <p className="text-[var(--gold-kene)] text-xs font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                    <Sprout className="w-3.5 h-3.5" /> Jardin du Glow
-                  </p>
-                  <div className="text-sm font-bold text-white">
-                    Voir mon Baobab & Mes Cadeaux
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-[var(--gold-kene)]" />
-              </CardContent>
-            </Card>
-          </a>
-        </motion.div>
-      </div>
+        </a>
+      </motion.div>
 
       {/* --- CONSULTATION DIRECTE DR. DERMATOLOGUE IA (DR. DIALLO) --- */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
@@ -896,13 +928,18 @@ export default function ClientPortalPage() {
         </a>
       </motion.div>
 
-      {/* ── SALONS ET ENTREPRISES DISPONIBLES ── */}
+      {/* ── SALONS ET CARTE BOUTIQUE DISPONIBLES ── */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <h2 className="font-semibold text-white text-sm uppercase tracking-wider font-display flex items-center gap-2">
-            <Store className="w-4 h-4 text-[var(--gold-kene)]" /> Instituts & Salons Partenaires ({salons.length})
+            <Store className="w-4 h-4 text-[var(--gold-kene)]" /> Salons Partenaires & Carte Boutique ({salons.length})
           </h2>
-          <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">● Salons Ouverts</span>
+          <div className="flex items-center gap-2">
+            <a href="/boutique" className="text-[11px] font-bold text-black bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] px-3 py-1 rounded-xl shadow-md hover:scale-105 transition">
+              🛍️ Explorer la Boutique Botanique
+            </a>
+            <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">● Salons Ouverts</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
