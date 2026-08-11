@@ -638,20 +638,9 @@ export default function ClientPortalPage() {
                 </div>
               ))}
             </div>
-
-            {/* 📁œ HISTORIQUE DES ANCIENS RÉSULTATS & BILANS CUTANÉS DU CLIENT */}
-            <div className="pt-3 border-t border-white/5 space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <h4 className="text-xs font-bold font-display text-[var(--gold-kene)] flex items-center gap-1.5 uppercase tracking-wider">
                   <ScanFace className="w-4 h-4 text-[var(--gold-kene)]" /> Historique de Mes Anciens Résultats & Bilans ({((data?.diagnosesHistory?.length || 0) > 0 ? data.diagnosesHistory.length : 3)} Scans)
                 </h4>
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setIsGalleryModalOpen(true)}
-                    className="text-[11px] font-bold text-[#0F0A05] bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md hover:scale-105 transition cursor-pointer"
-                  >
-                    <span>🖼️ï¸</span> Galerie Avant / Après (Évolution)
-                  </button>
                   <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-xl border border-emerald-500/20">
                     +17% Hydratation
                   </span>
