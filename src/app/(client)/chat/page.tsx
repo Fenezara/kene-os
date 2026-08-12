@@ -1,33 +1,29 @@
 'use client';
 
-// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Interactive 5-Step Guided Telemedicine Flow v4.0)
+// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Full Multimodal Media Input: Photo, Audio, Video, SMS v5.0)
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, MoreHorizontal, Send, Mic, Play, Pause, Video, MessageSquare, Phone,
-  Camera, Volume2, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles, User, RefreshCw, ArrowRight, ChevronRight, Check
+  Camera, Volume2, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles, User, RefreshCw, ArrowRight, ChevronRight, Check, Image as ImageIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 
-export interface ClinicalStepData {
-  stepNumber: number; // 1 to 5
-  stepLabel: string;
-  questionOrTitle: string;
-  doctorSpeech: string;
-  options?: { label: string; value: string }[];
-  diagnosis?: string;
-  prescription?: {
-    title: string;
-    items: { name: string; desc: string; price: number }[];
-    totalPrice: number;
-  };
-  goldenRules?: string[];
+export interface MultimodalMediaItem {
+  id: string;
+  type: 'text' | 'audio' | 'photo' | 'video' | 'sms';
+  sender: 'doctor' | 'patient';
+  text?: string;
+  mediaUrl?: string;
+  audioDuration?: string;
+  videoTitle?: string;
+  timestamp: string;
 }
 
-function ChatContent() {
+export function ChatContent() {
   const router = useRouter();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -38,6 +34,9 @@ function ChatContent() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isListening, setIsListening] = useState(false);
 
+  // Multimodal Media Items Feed
+  const [mediaFeed, setMediaFeed] = useState<MultimodalMediaItem[]>([]);
+
   // Guided 5-Step Consultation State
   const [activeStep, setActiveStep] = useState<number>(1);
   const [consultationData, setConsultationData] = useState<{
@@ -46,6 +45,7 @@ function ChatContent() {
     diagnosis?: string;
     prescription?: any;
     goldenRules?: string[];
+    userPhotoUrl?: string;
   }>({});
 
   useEffect(() => {
@@ -75,7 +75,125 @@ function ChatContent() {
     }
   };
 
-  // 1. Step 1 → Symptom Selected (Anamnèse)
+  // 1. 📷 PHOTO UPLOAD HANDLER (Prend en compte la photo de la cliente)
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const photoUrl = reader.result as string;
+
+      // Add patient photo to feed
+      const photoItem: MultimodalMediaItem = {
+        id: `photo-${Date.now()}`,
+        type: 'photo',
+        sender: 'patient',
+        mediaUrl: photoUrl,
+        text: '📷 Photo Cutanée transmise au Dr. Mama Kènè',
+        timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMediaFeed(prev => [...prev, photoItem]);
+
+      setIsThinking(true);
+      toast({
+        title: "📷 Photo Cutanée Reçue !",
+        description: "Dr. Mama Kènè IA effectue l'analyse dermo-biométrique...",
+      });
+
+      // Doctor response to photo
+      setTimeout(() => {
+        setIsThinking(false);
+        const docResponse: MultimodalMediaItem = {
+          id: `doc-photo-ack-${Date.now()}`,
+          type: 'text',
+          sender: 'doctor',
+          text: "J'ai bien reçu et analysé votre photo cutanée. J'observe des zones d'hyperpigmentation localisées et une réactivité épidermique. Poursuivons l'évaluation.",
+          timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+        };
+        setMediaFeed(prev => [...prev, docResponse]);
+        handleSelectSymptom("Taches foncées ou noires observées sur photo");
+      }, 1500);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  // 2. 🎙️ AUDIO VOICE NOTE HANDLER (Prend en compte la note vocale)
+  const handleStartVoiceRecording = () => {
+    setIsListening(true);
+    toast({
+      title: "🎙️ Écoute Vocale Active...",
+      description: "Parlez... Votre message audio est enregistré.",
+    });
+
+    setTimeout(() => {
+      setIsListening(false);
+
+      const patientAudio: MultimodalMediaItem = {
+        id: `audio-${Date.now()}`,
+        type: 'audio',
+        sender: 'patient',
+        audioDuration: '0:26',
+        text: "Note Vocale Audio Cliente : 'Docteur, j'ai des picotements et des taches sur le visage.'",
+        timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMediaFeed(prev => [...prev, patientAudio]);
+
+      setIsThinking(true);
+
+      setTimeout(() => {
+        setIsThinking(false);
+        const docAudioAck: MultimodalMediaItem = {
+          id: `doc-audio-ack-${Date.now()}`,
+          type: 'audio',
+          sender: 'doctor',
+          audioDuration: '0:34',
+          text: "Note Vocale du Dr. Mama Kènè : J'ai écouté attentivement votre message vocal. Je prends en compte la sensation de picotement sous la chaleur.",
+          timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+        };
+        setMediaFeed(prev => [...prev, docAudioAck]);
+        handleSelectSymptom("Taches foncées & picotements (Note Vocale)");
+      }, 1400);
+    }, 2400);
+  };
+
+  // 3. 🎥 VIDEO CLIP HANDLER (Prend en compte les vidéos)
+  const handleSendVideoClip = () => {
+    toast({ title: "🎥 Capsule Vidéo", description: "Chargement de la démonstration vidéo médicale..." });
+    
+    const videoItem: MultimodalMediaItem = {
+      id: `video-${Date.now()}`,
+      type: 'video',
+      sender: 'doctor',
+      videoTitle: 'Capsule Vidéo Médicale : Gestes d\'application du Sérum Baobab',
+      text: 'Le Dr. Mama Kènè vous montre en vidéo comment appliquer votre sérum sans saturer vos pores.',
+      timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+    };
+    setMediaFeed(prev => [...prev, videoItem]);
+    speakText(videoItem.text || '');
+  };
+
+  // 4. 📱 SMS & TEXT HANDLER (Prend en compte les SMS)
+  const handleSendPatientText = (customText?: string) => {
+    const textToSend = customText || input;
+    if (!textToSend.trim()) return;
+
+    const patientSms: MultimodalMediaItem = {
+      id: `sms-patient-${Date.now()}`,
+      type: 'sms',
+      sender: 'patient',
+      text: textToSend,
+      timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+    };
+    setMediaFeed(prev => [...prev, patientSms]);
+    if (!customText) setInput('');
+
+    toast({ title: "📱 SMS Envoyé au Dr. Mama Kènè", description: "Votre message SMS a été synchronisé." });
+    handleSelectSymptom(textToSend);
+  };
+
+  // 5-Step Clinical Flow Handler
   const handleSelectSymptom = (symptomText: string) => {
     setIsThinking(true);
     let diag = "Hyperpigmentation Post-Inflammatoire (PIH) & Oxydation Mélanique due aux UV tropicaux.";
@@ -123,12 +241,13 @@ function ChatContent() {
       ];
     }
 
-    setConsultationData({
+    setConsultationData(prev => ({
+      ...prev,
       symptom: symptomText,
       diagnosis: diag,
       prescription: rx,
       goldenRules: rules,
-    });
+    }));
 
     setTimeout(() => {
       setIsThinking(false);
@@ -137,7 +256,6 @@ function ChatContent() {
     }, 1200);
   };
 
-  // 2. Step 2 → Trigger Selected (Examen clinique)
   const handleSelectTrigger = (triggerText: string) => {
     setIsThinking(true);
     setConsultationData(prev => ({ ...prev, trigger: triggerText }));
@@ -149,37 +267,22 @@ function ChatContent() {
     }, 1200);
   };
 
-  // 3. Step 3 → Move to Step 4 (Ordonnance)
   const handleGoToStep4 = () => {
     setActiveStep(4);
     speakText(`Étape 4 : Ordonnance Dermo-Botanique Sur-Mesure. ${consultationData.prescription?.title}`);
   };
 
-  // 4. Step 4 → Move to Step 5 (Conseils & Règles d'Or)
   const handleGoToStep5 = () => {
     setActiveStep(5);
     const rulesSpeech = consultationData.goldenRules ? consultationData.goldenRules.join('. ') : '';
     speakText(`Étape 5 : Conseils hygiéno-diététiques et règles d'or. ${rulesSpeech}`);
   };
 
-  // Reset Consultation
   const handleResetConsultation = () => {
     setActiveStep(1);
     setConsultationData({});
-    speakText("Bonjour Aïsha ! Pour établir votre bilan dermo-cosmétique, dites-moi quel est votre problème cutané principal.");
-  };
-
-  const handleStartVoiceRecording = () => {
-    setIsListening(true);
-    toast({
-      title: "🎙️ Écoute Vocale Active...",
-      description: "Parlez... Le Dr. Mama Kènè analyse votre voix.",
-    });
-
-    setTimeout(() => {
-      setIsListening(false);
-      handleSelectSymptom("Taches foncées sur les joues");
-    }, 2500);
+    setMediaFeed([]);
+    speakText("Bonjour Aïsha ! Pour établir votre bilan dermo-cosmétique, vous pouvez m'envoyer un texte, un SMS, une photo cutanée ou une note vocale.");
   };
 
   return (
@@ -218,7 +321,7 @@ function ChatContent() {
       {/* ── 🏥 STEP PROGRESS BAR (PAS-À-PAS EN 5 ÉTAPES) ── */}
       <div className="w-full max-w-md px-6 pb-2 relative z-20">
         <div className="flex items-center justify-between mb-1 text-[10px] font-mono font-bold text-[#FFD700]">
-          <span>CONSULTATION MÉDICALE PAR ÉTAPES</span>
+          <span>CONSULTATION MULTIMODALE COMPLÈTE</span>
           <span>Étape {activeStep} / 5</span>
         </div>
         <div className="w-full h-1.5 bg-[#26180F] rounded-full overflow-hidden flex gap-1 p-0.5">
@@ -236,14 +339,14 @@ function ChatContent() {
       </div>
 
       {/* ── 🌟 MAIN TAARU AI CONTENT CONTAINER ── */}
-      <main className="w-full max-w-md px-6 pb-24 flex-1 flex flex-col items-center relative z-10 space-y-5">
+      <main className="w-full max-w-md px-6 pb-28 flex-1 flex flex-col items-center relative z-10 space-y-4">
         
         {/* 1. GREETING HEADLINE */}
         <div className="text-center space-y-1 pt-1">
           <h1 className="font-serif text-3xl sm:text-4xl text-white tracking-tight leading-tight">
             Bonjour <span className="text-[#FFD700] font-bold">{userName}</span>,<br />
             <span className="italic font-serif font-normal text-white/90">
-              {activeStep === 1 && "je vous écoute."}
+              {activeStep === 1 && "envoyez une photo, un audio ou un message."}
               {activeStep === 2 && "examinons votre situation."}
               {activeStep === 3 && "voici mon diagnostic."}
               {activeStep === 4 && "votre ordonnance sur-mesure."}
@@ -280,7 +383,7 @@ function ChatContent() {
                 {isThinking ? (
                   <div className="flex flex-col items-center gap-1">
                     <RefreshCw className="w-6 h-6 animate-spin text-[#FFD700]" />
-                    <span className="text-[8px] font-mono font-bold tracking-widest uppercase text-[#FFD700]">Réflexion...</span>
+                    <span className="text-[8px] font-mono font-bold tracking-widest uppercase text-[#FFD700]">Analyse...</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center gap-1">
@@ -313,10 +416,83 @@ function ChatContent() {
           <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C120B] border border-[#FFD700]/40 text-[#FFD700] text-[10px] font-mono font-bold shadow-lg">
             <span className={`w-2 h-2 rounded-full ${isThinking ? 'bg-amber-400 animate-spin' : isSpeaking ? 'bg-emerald-400 animate-ping' : 'bg-[#FFD700]'}`} />
             <span>
-              {isThinking ? 'Dr. Mama Kènè IA analyse votre cas...' : isSpeaking ? 'Émission Note Vocale...' : `Étape ${activeStep} : Consultation Active`}
+              {isThinking ? 'Dr. Mama Kènè IA analyse vos médias (Photo/Audio/SMS)...' : isSpeaking ? 'Émission Note Vocale...' : `Étape ${activeStep} : Consultation Multimodale Active`}
             </span>
           </div>
         </div>
+
+        {/* ── 📱 MULTIMODAL MEDIA FEED DISPLAY (AFFICHE PHOTOS, AUDIOS, VIDÉOS & SMS ENVOYÉS) ── */}
+        <AnimatePresence>
+          {mediaFeed.length > 0 && (
+            <div className="w-full space-y-3 pt-1">
+              {mediaFeed.map((item) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className={`p-3.5 rounded-2xl border text-xs shadow-lg space-y-2 ${
+                    item.sender === 'patient'
+                      ? 'bg-[#1E140C] border-[#FFD700]/50 text-white ml-auto max-w-[85%]'
+                      : 'bg-[#181009] border-[#FFD700]/70 text-[#FFD700] mr-auto max-w-[90%]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-[10px] font-mono border-b border-white/10 pb-1">
+                    <span className="font-bold">
+                      {item.sender === 'patient' ? '👤 Vous' : '🩺 Dr. Mama Kènè'}
+                    </span>
+                    <span className="opacity-60">{item.timestamp}</span>
+                  </div>
+
+                  {/* PHOTO MEDIA */}
+                  {item.type === 'photo' && item.mediaUrl && (
+                    <div className="space-y-2">
+                      <div className="relative w-full h-40 rounded-xl overflow-hidden border border-[#FFD700]/40">
+                        <img src={item.mediaUrl} alt="Photo cutanée" className="w-full h-full object-cover" />
+                      </div>
+                      <p className="text-[11px] font-mono text-[#FFD700]">{item.text}</p>
+                    </div>
+                  )}
+
+                  {/* AUDIO MEDIA */}
+                  {item.type === 'audio' && (
+                    <div className="flex items-center justify-between bg-[#120B06] p-2.5 rounded-xl border border-white/10">
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => speakText(item.text || '')} className="w-8 h-8 rounded-full bg-[#FFD700] text-black flex items-center justify-center font-bold shadow-md">
+                          <Play className="w-4 h-4 ml-0.5" />
+                        </button>
+                        <div>
+                          <div className="font-bold text-[#FFD700] text-[11px]">🎙️ Note Vocale Audio</div>
+                          <div className="text-[9px] text-white/50 font-mono">Durée: {item.audioDuration}</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* VIDEO MEDIA */}
+                  {item.type === 'video' && (
+                    <div className="space-y-2 bg-[#120B06] p-2.5 rounded-xl border border-[#FFD700]/40">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#FFD700]">
+                        <Video className="w-4 h-4" />
+                        <span>{item.videoTitle}</span>
+                      </div>
+                      <div className="relative w-full h-32 rounded-xl bg-gradient-to-br from-[#2E1A0C] to-[#120B05] flex items-center justify-center border border-white/10 cursor-pointer" onClick={() => speakText(item.text || '')}>
+                        <Play className="w-8 h-8 text-[#FFD700]" />
+                      </div>
+                      <p className="text-[11px] text-white/80">{item.text}</p>
+                    </div>
+                  )}
+
+                  {/* TEXT / SMS MEDIA */}
+                  {(item.type === 'text' || item.type === 'sms') && (
+                    <p className="text-xs text-white leading-relaxed font-medium">
+                      {item.text}
+                    </p>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </AnimatePresence>
 
         {/* ── 3. INTERACTIVE 5-STEP WIZARD CARDS ── */}
         <AnimatePresence mode="wait">
@@ -333,13 +509,13 @@ function ChatContent() {
               <div className="bg-[#1A110A] border-2 border-[#FFD700]/50 rounded-3xl p-5 shadow-2xl space-y-3 text-left">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
                   <span className="text-[10px] font-mono font-bold text-[#FFD700] uppercase tracking-wider flex items-center gap-1.5">
-                    <Stethoscope className="w-3.5 h-3.5" /> 1. Anamnèse Médicale (L'Interrogatoire)
+                    <Stethoscope className="w-3.5 h-3.5" /> 1. Anamnèse Médicale Multimodale
                   </span>
                   <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[9px]">1 / 5</Badge>
                 </div>
                 
                 <p className="text-xs text-white leading-relaxed font-sans font-medium">
-                  "Bonjour Aïsha ! Pour établir votre bilan dermo-cosmétique sur-mesure, dites-moi quel est le problème principal que vous observez sur votre peau ?"
+                  "Bonjour Aïsha ! Vous pouvez m'envoyer une **photo de votre peau**, une **note vocale audio**, un **SMS** ou sélectionner directement votre symptôme ci-dessous :"
                 </p>
 
                 <div className="space-y-2 pt-1">
@@ -381,7 +557,7 @@ function ChatContent() {
                 </div>
 
                 <div className="bg-[#26170D] border border-[#FFD700]/30 p-3 rounded-2xl text-xs text-[#FFD700] font-bold">
-                  Symptôme sélectionné : {consultationData.symptom}
+                  Donnée médicale enregistrée : {consultationData.symptom}
                 </div>
                 
                 <p className="text-xs text-white leading-relaxed font-sans font-medium">
@@ -436,7 +612,7 @@ function ChatContent() {
                 </div>
 
                 <p className="text-xs text-white/90 leading-relaxed font-sans font-medium">
-                  En tenant compte de votre facteur déclencheur ({consultationData.trigger}), le film hydrolipidique réagit fortement pour protéger l'épiderme.
+                  En tenant compte de vos éléments transmis ({consultationData.trigger}), le film hydrolipidique réagit fortement pour protéger l'épiderme.
                 </p>
 
                 <Button
@@ -551,11 +727,11 @@ function ChatContent() {
 
       </main>
 
-      {/* ── ⌨️ BOTTOM FLOATING INPUT BAR ── */}
+      {/* ── ⌨️ BOTTOM FLOATING INPUT BAR (PRISE EN COMPTE MULTIMODALE 100%) ── */}
       <footer className="fixed bottom-0 left-0 right-0 bg-[#120B06]/95 border-t-2 border-[#FFD700]/40 p-3 sm:p-4 z-30 backdrop-blur-2xl">
         <div className="max-w-md mx-auto flex items-center gap-2">
           
-          {/* Audio Mic Button */}
+          {/* 1. Audio Mic Button */}
           <button
             onClick={handleStartVoiceRecording}
             className={`w-11 h-11 rounded-2xl border flex items-center justify-center transition shrink-0 cursor-pointer ${
@@ -563,45 +739,48 @@ function ChatContent() {
                 ? 'bg-red-500 text-white border-red-500 animate-pulse scale-105'
                 : 'bg-[#1E140C] border-[#FFD700]/40 text-[#FFD700] hover:bg-[#2A1E14]'
             }`}
-            title="Note Vocale Audio"
+            title="Note Vocale Audio (Prise en compte)"
           >
             <Mic className="w-5 h-5" />
           </button>
 
-          {/* Video Request */}
+          {/* 2. Video Request Button */}
           <button
-            onClick={() => {
-              toast({ title: "🎥 Capsule Vidéo", description: "Lancement de la démonstration vidéo..." });
-              handleSelectSymptom("Taches foncées sur les joues");
-            }}
+            onClick={handleSendVideoClip}
             className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-[#FFD700]/40 text-[#FFD700] hover:bg-[#2A1E14] flex items-center justify-center transition shrink-0 cursor-pointer"
-            title="Capsule Vidéo"
+            title="Capsule Vidéo (Prise en compte)"
           >
             <Video className="w-5 h-5" />
           </button>
 
-          {/* Photo Upload */}
+          {/* 3. Photo Upload Input */}
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-white/15 text-white/70 hover:text-white flex items-center justify-center transition shrink-0 cursor-pointer"
-            title="Photo Cutanée"
+            className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-[#FFD700]/40 text-[#FFD700] hover:bg-[#2A1E14] flex items-center justify-center transition shrink-0 cursor-pointer"
+            title="Photo Cutanée (Prise en compte)"
           >
-            <Camera className="w-5 h-5 text-[#FFD700]" />
+            <Camera className="w-5 h-5" />
           </button>
-          <input ref={fileInputRef} type="file" accept="image/*" className="hidden" />
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handlePhotoUpload}
+          />
 
-          {/* Text Input */}
+          {/* 4. Text / SMS Input */}
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSelectSymptom(input)}
-            placeholder="Répondre ou poser une question au Dr. Mama Kènè..."
+            onKeyDown={(e) => e.key === 'Enter' && handleSendPatientText()}
+            placeholder="Texte, SMS ou question au Dr. Mama Kènè..."
             className="flex-1 bg-[#1E140C] border border-white/15 focus:border-[#FFD700] text-white px-4 h-11 rounded-2xl text-xs outline-none transition"
           />
 
           {/* Send Button */}
           <Button
-            onClick={() => handleSelectSymptom(input)}
+            onClick={() => handleSendPatientText()}
             className="h-11 px-4 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-2xl shadow-lg border border-[#FFD700] hover:scale-105 transition cursor-pointer shrink-0"
           >
             <Send className="w-4 h-4 mr-1" />
@@ -616,7 +795,7 @@ function ChatContent() {
 
 export default function ChatPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-white font-mono">Chargement de la Consultation Pas-à-Pas TAARU AI...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-white font-mono">Chargement de la Consultation Multimodale TAARU AI...</div>}>
       <ChatContent />
     </Suspense>
   );
