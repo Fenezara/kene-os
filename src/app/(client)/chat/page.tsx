@@ -31,6 +31,96 @@ export interface MultimodalChatMessage {
   timestamp: string;
 }
 
+function generateClinicalDoctorResponse(query: string): { text: string; rx?: { title: string; items: { name: string; desc: string; price: number }[]; totalPrice: number } } {
+  const q = query.toLowerCase();
+
+  // 1. Taches / Hyperpigmentation / Masque
+  if (q.includes('tache') || q.includes('taches') || q.includes('noire') || q.includes('foncée') || q.includes('joue') || q.includes('hyperpigmentation') || q.includes('masque') || q.includes('pih')) {
+    return {
+      text: "Diagnostic Médical : Hyperpigmentation Post-Inflammatoire (PIH) & Oxydation Mélanique.\n\nPour atténuer efficacement vos taches foncées : sous le soleil tropical, la mélanine réagit fortement. Je vous prescris le Sérum Hibiscus & Baobab Bio (Niacinamide 10%) à appliquer exclusivement le soir. Chaque matin, appliquez l'Écran Minéral SPF 50 non blanchissant.",
+      rx: {
+        title: 'Ordonnance Anti-Taches PIH Certifiée',
+        items: [
+          { name: 'Sérum Hibiscus & Baobab 10% Bio', desc: 'Inhibiteur tyrosinase & anti-taches', price: 18500 },
+          { name: 'Écran Solaire Minéral SPF 50', desc: 'Protection UV haute tolérance', price: 15000 },
+        ],
+        totalPrice: 33500,
+      }
+    };
+  }
+
+  // 2. Boutons / Acné / Peau Grasse / Sébum
+  if (q.includes('bouton') || q.includes('boutons') || q.includes('acné') || q.includes('brille') || q.includes('grasse') || q.includes('sébum') || q.includes('pore')) {
+    return {
+      text: "Diagnostic Médical : Hyperséborrhée Réactive & Inflammatoire Cutanée.\n\nEn cas de boutons et de brillance : la sueur combinée au sébum obstrue les follicules. Nettoyez votre visage matin et soir avec le Gel Nettoyant Clarifiant Moringa & Baobab, puis purifiez vos pores avec la Lotion Matifiante à la Rose & Niacinamide sans assécher la peau.",
+      rx: {
+        title: 'Ordonnance Anti-Boutons & Matifiante',
+        items: [
+          { name: 'Gel Nettoyant Moringa & Baobab 200ml', desc: 'Nettoyant purifiant doux', price: 12000 },
+          { name: 'Lotion Matifiante Eau de Rose Bio', desc: 'Resserre les pores & équilibre pH', price: 14500 },
+        ],
+        totalPrice: 26500,
+      }
+    };
+  }
+
+  // 3. Cuir Chevelu / Démangeaisons / Tresses / Chute
+  if (q.includes('cheveu') || q.includes('cheveux') || q.includes('cuir') || q.includes('tresse') || q.includes('tresses') || q.includes('démange') || q.includes('picotement') || q.includes('chute') || q.includes('pellicule')) {
+    return {
+      text: "Diagnostic Médical : Tension Folliculaire & Micro-Inflammation du Cuir Chevelu.\n\nPour les démangeaisons et tiraillements après tresses : le cuir chevelu subit un stress mécanique et fongique. Appliquez goutte à goutte l'Élixir Apaisant Nigelle & Karité Liquide directement sur les raies du cuir chevelu sans frotter.",
+      rx: {
+        title: 'Ordonnance Apaisante Cuir Chevelu & Tresses',
+        items: [
+          { name: 'Élixir Apaisant Nigelle & Karité 100ml', desc: 'Calme tiraillements & démangeaisons', price: 16000 },
+          { name: 'Shampoing Doux Purifiant Sans Sulfate', desc: 'Nettoyage apaisant cuir chevelu', price: 11000 },
+        ],
+        totalPrice: 27000,
+      }
+    };
+  }
+
+  // 4. Sécheresse / Tiraillements / Peau Rêche
+  if (q.includes('sèche') || q.includes('sécheresse') || q.includes('tiraille') || q.includes('rêche') || q.includes('déshydratée') || q.includes('karité') || q.includes('brûlure')) {
+    return {
+      text: "Diagnostic Médical : Altération de la Barrière Hydrolipidique Protective.\n\nPour la peau sèche et déshydratée : la barrière de lipides est fragilisée. Appliquez le Beurre de Karité Brut de Korhogo en fine couche protectrice le soir sur peau encore légèrement humide pour emprisonner l'hydratation naturelle.",
+      rx: {
+        title: 'Ordonnance Réparatrice Karité Brut',
+        items: [
+          { name: 'Beurre de Karité Brut Korhogo 100g', desc: 'Régénérateur barrière lipidique', price: 9500 },
+          { name: 'Sérum Nourrissant Huile de Baobab', desc: 'Huile réparatrice profonde', price: 13500 },
+        ],
+        totalPrice: 23000,
+      }
+    };
+  }
+
+  // 5. Rendez-vous / Tarifs / Salons / Consultation
+  if (q.includes('rdv') || q.includes('rendez-vous') || q.includes('tarif') || q.includes('prix') || q.includes('bilan') || q.includes('réservation') || q.includes('salon') || q.includes('institut') || q.includes('adresse')) {
+    return {
+      text: "Consultation & Prise de Rendez-vous en Institut Kènè :\n\nVous pouvez réaliser un Bilan Cutané 3D approfondi et réserver votre Soin Sur-Mesure dans nos salons partenaires certifiés à Dakar et Abidjan.",
+      rx: {
+        title: 'Pass Consultation & Bilan Cutané 3D',
+        items: [
+          { name: 'Bilan Cutané 3D & Diagnostic IA', desc: 'Analyse biométrique complète', price: 15000 },
+        ],
+        totalPrice: 15000,
+      }
+    };
+  }
+
+  // 6. Bonjour / Présentation / Général
+  if (q.includes('bonjour') || q.includes('salut') || q.includes('coucou') || q.includes('hello')) {
+    return {
+      text: "Bonjour ! Je suis ravie de vous accompagner. En tant que médecin dermatologue, dites-moi précisément : s'agit-il de taches foncées, de boutons, de tiraillements sur le visage, ou de démangeaisons du cuir chevelu ?",
+    };
+  }
+
+  // Fallback intelligent
+  return {
+    text: `Analyse Médicale de votre demande ("${query}") :\n\nPour prendre soin au mieux de votre peau sous notre climat, je vous conseille une consultation ciblée. Souffrez-vous de taches pigmentaires, d'imperfections/boutons, d'excès de sébum ou de sensibilité cutanée ?`,
+  };
+}
+
 function ChatContent() {
   const router = useRouter();
   const { toast } = useToast();
@@ -93,36 +183,23 @@ function ChatContent() {
     if (!customText) setInput('');
     setLoading(true);
 
-    // AI Multimodal Doctor Response Simulation
+    // AI Multimodal Doctor Response Simulation using Intent Matching
     setTimeout(() => {
-      let doctorText = "Je comprends tout à fait vos symptômes. En période de forte chaleur, les UV stimulent la mélanogénèse et provoquent une réactivité cutanée (PIH).";
-      let rx: { title: string; items: { name: string; desc: string; price: number }[]; totalPrice: number } | undefined = undefined;
-
-      if (textToSend.toLowerCase().includes('tache') || textToSend.toLowerCase().includes('bouton')) {
-        doctorText = "Diagnostic Médical : Hyperpigmentation Post-Inflammatoire (PIH). Je vous prescris le Sérum Hibiscus & Baobab Bio (Niacinamide 10%) à appliquer le soir, associé à l'Écran Minéral SPF 50 le matin.";
-        rx = {
-          title: 'Ordonnance Anti-Taches PIH Certifiée',
-          items: [
-            { name: 'Sérum Hibiscus & Baobab Bio', desc: 'Régulateur mélanine', price: 18500 },
-            { name: 'Écran Minéral SPF 50', desc: 'Filtre UV peaux mates', price: 15000 },
-          ],
-          totalPrice: 33500,
-        };
-      }
+      const result = generateClinicalDoctorResponse(textToSend);
 
       const doctorMsg: MultimodalChatMessage = {
         id: `msg-doc-${Date.now()}`,
         sender: 'doctor',
         type: 'text',
-        text: doctorText,
-        prescription: rx,
+        text: result.text,
+        prescription: result.rx,
         timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
       };
 
       setMessages((prev) => [...prev, doctorMsg]);
       setLoading(false);
       speakText(doctorMsg.id, doctorMsg.text || '');
-    }, 1200);
+    }, 1000);
   };
 
   const handleRecordAudioNote = () => {
