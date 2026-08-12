@@ -29,9 +29,10 @@ function generateDynamicPathologyFlow(symptomText: string, name: string, bodyZon
   const q = symptomText.toLowerCase();
 
   const humanIntros = [
-    `${name}, je comprends parfaitement votre préoccupation.`,
-    `Rassurez-vous ${name}, nous allons traiter cela ensemble avec douceur.`,
-    `Ah, je vois exactement ce dont vous me parlez ${name}. C'est une réaction très fréquente sous notre climat.`,
+    `${name}, je comprends tellement ce que vous ressentez. Sachez que votre peau est magnifique et que ces petites réactions temporaires ne définissent en rien votre beauté.`,
+    `Rassurez-vous ${name}, nous allons choyer votre peau ensemble avec une immense douceur. La peau se régénère merveilleusement bien quand on l'écoute.`,
+    `Ah, je vois exactement ce dont vous me parlez ${name}. Ne soyez pas dure avec vous-même : c'est une réaction très fréquente sous notre climat et nous allons la surmonter pas à pas.`,
+    `Prenez une grande inspiration ${name}. Votre corps et votre peau méritent toute votre bienveillance aujourd'hui. Je suis là pour vous accompagner.`,
   ];
   const randomIntro = humanIntros[Math.floor(Math.random() * humanIntros.length)];
 
@@ -61,6 +62,7 @@ function generateDynamicPathologyFlow(symptomText: string, name: string, bodyZon
         "Règle d'Or 1 : Changer immédiatement de t-shirt après une séance de sport ou une forte transpiration.",
         "Règle d'Or 2 : Ne pas frotter le dos avec un filet synthétique dur qui irrite les pores.",
         "Règle d'Or 3 : Vaporiser le Spray Moringa chaque soir sur peau propre et sèche.",
+        "💖 Conseil Bien-Être & Sérénité : Ne vous focalisez pas sur les boutons. Le stress sécrète du cortisol qui enflamme les pores : accordez-vous un moment de respiration et soyez fière de votre corps.",
       ]
     };
   }
