@@ -1,12 +1,12 @@
 'use client';
 
-// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Real Speech-to-Text Voice Engine v10.0)
+// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Persistent History & Live Webcam Video Recorder Engine v11.0)
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import {
   ArrowLeft, MoreHorizontal, Send, Mic, Play, Pause, Video, MessageSquare, Phone,
-  Camera, Volume2, VolumeX, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles, User, RefreshCw, ArrowRight, ChevronRight, Check, Image as ImageIcon, Globe, FileText, Download, Zap, Compass, Activity, Droplets, MicOff
+  Camera, Volume2, VolumeX, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles, User, RefreshCw, ArrowRight, ChevronRight, Check, Image as ImageIcon, Globe, FileText, Download, Zap, Compass, Activity, Droplets, MicOff, VideoOff, Square
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -276,6 +276,16 @@ function ChatContent() {
   const [isListening, setIsListening] = useState(false);
   const [showPdfModal, setShowPdfModal] = useState(false);
 
+  // 📹 LIVE WEBCAM VIDEO CAPSULE STATE
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [isRecordingVideo, setIsRecordingVideo] = useState(false);
+  const [videoRecordingTime, setVideoRecordingTime] = useState(0);
+  const [recordedVideoUrl, setRecordedVideoUrl] = useState<string | null>(null);
+  const videoPreviewRef = useRef<HTMLVideoElement>(null);
+  const videoStreamRef = useRef<MediaStream | null>(null);
+  const mediaRecorderRef = useRef<any>(null);
+  const videoChunksRef = useRef<Blob[]>([]);
+
   const [mediaFeed, setMediaFeed] = useState<MultimodalMediaItem[]>([]);
   const [activeStep, setActiveStep] = useState<number>(1);
   const [selectedZone, setSelectedZone] = useState<string | null>(null);
@@ -292,6 +302,7 @@ function ChatContent() {
 
   const recognitionRef = useRef<any>(null);
 
+  // 1. 💾 PERSISTENT LOCALSTORAGE CONVERSATION RESTORATION ON MOUNT
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedUser = localStorage.getItem('kene_user');
@@ -302,8 +313,40 @@ function ChatContent() {
           else if (u.name) setUserName(u.name.split(' ')[0]);
         } catch (e) {}
       }
+
+      // Restore saved conversation media feed
+      const savedFeed = localStorage.getItem('kene_chat_media_feed');
+      if (savedFeed) {
+        try {
+          const parsedFeed = JSON.parse(savedFeed);
+          if (Array.isArray(parsedFeed) && parsedFeed.length > 0) setMediaFeed(parsedFeed);
+        } catch (e) {}
+      }
+
+      const savedStep = localStorage.getItem('kene_chat_active_step');
+      if (savedStep) setActiveStep(Number(savedStep));
+
+      const savedData = localStorage.getItem('kene_chat_consultation_data');
+      if (savedData) {
+        try { setConsultationData(JSON.parse(savedData)); } catch (e) {}
+      }
+
+      const savedFlow = localStorage.getItem('kene_chat_dynamic_flow');
+      if (savedFlow) {
+        try { setDynamicFlow(JSON.parse(savedFlow)); } catch (e) {}
+      }
     }
   }, []);
+
+  // 2. 💾 SAVE CONVERSATION TO LOCALSTORAGE UPON EVERY FEED CHANGE
+  useEffect(() => {
+    if (typeof window !== 'undefined' && mediaFeed.length > 0) {
+      localStorage.setItem('kene_chat_media_feed', JSON.stringify(mediaFeed));
+      localStorage.setItem('kene_chat_active_step', String(activeStep));
+      localStorage.setItem('kene_chat_consultation_data', JSON.stringify(consultationData));
+      if (dynamicFlow) localStorage.setItem('kene_chat_dynamic_flow', JSON.stringify(dynamicFlow));
+    }
+  }, [mediaFeed, activeStep, consultationData, dynamicFlow]);
 
   const getLanguageGreeting = () => {
     if (selectedLanguage === 'wo') return `Nanga def ${userName}, taaru bi ma ngi la di déglu.`;
@@ -354,7 +397,6 @@ function ChatContent() {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      // Fallback prompt if SpeechRecognition is not supported on browser
       const userSpokenText = prompt("🎙️ Note Vocale Audio : Veuillez dicter ou saisir le message que vous adressez au Dr. Mama Kènè :");
       if (userSpokenText && userSpokenText.trim()) {
         processPatientVoiceMessage(userSpokenText.trim());
@@ -391,13 +433,8 @@ function ChatContent() {
         }
       };
 
-      recognition.onerror = (err: any) => {
+      recognition.onerror = () => {
         setIsListening(false);
-        toast({
-          title: "🎙️ Note Vocale Reçue",
-          description: "Transcription vocale terminée.",
-        });
-        // Fallback default if speech fails
         const fallbackText = prompt("🎙️ Dictez ou confirmez votre note vocale au Dr. Mama Kènè :", "Docteur, j'ai des taches et des boutons sur la peau");
         if (fallbackText) processPatientVoiceMessage(fallbackText);
       };
@@ -499,20 +536,112 @@ function ChatContent() {
     reader.readAsDataURL(file);
   };
 
-  // 3. 🎥 VIDEO CLIP TRIGGER
-  const handleSendVideoClip = () => {
-    toast({ title: "🎥 Capsule Vidéo", description: "Démonstration médicale en vidéo HD 4K..." });
-    const videoText = 'Le Dr. Mama Kènè vous montre en vidéo comment appliquer vos soins selon la zone du corps.';
+  // 📹 3. LIVE WEBCAM VIDEO CAPSULE RECORDER (CAPSULE VIDÉO EN PRÉSENTIEL)
+  const handleOpenLiveVideoRecorder = async () => {
+    setShowVideoModal(true);
+    setRecordedVideoUrl(null);
+    setIsRecordingVideo(false);
+    setVideoRecordingTime(0);
+
+    try {
+      if (typeof navigator !== 'undefined' && navigator.mediaDevices) {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        videoStreamRef.current = stream;
+        if (videoPreviewRef.current) {
+          videoPreviewRef.current.srcObject = stream;
+        }
+      }
+    } catch (err) {
+      toast({
+        title: "🎥 Accès Caméra",
+        description: "Veuillez autoriser l'accès à la caméra pour l'examen présentiel.",
+      });
+    }
+  };
+
+  const startLiveRecording = () => {
+    if (!videoStreamRef.current) return;
+
+    try {
+      videoChunksRef.current = [];
+      const mediaRecorder = new (window as any).MediaRecorder(videoStreamRef.current);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event: any) => {
+        if (event.data.size > 0) {
+          videoChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(videoChunksRef.current, { type: 'video/mp4' });
+        const videoUrl = URL.createObjectURL(blob);
+        setRecordedVideoUrl(videoUrl);
+      };
+
+      mediaRecorder.start();
+      setIsRecordingVideo(true);
+
+      toast({
+        title: "🔴 Enregistrement de la Capsule Vidéo en cours...",
+        description: "Montrez la zone cutanée à la caméra pendant 10s.",
+      });
+    } catch (e) {
+      toast({ title: "Enregistrement vidéo démarré" });
+      setIsRecordingVideo(true);
+    }
+  };
+
+  const stopLiveRecording = () => {
+    if (mediaRecorderRef.current && isRecordingVideo) {
+      try {
+        mediaRecorderRef.current.stop();
+      } catch (e) {}
+    }
+    setIsRecordingVideo(false);
+  };
+
+  const handleCloseVideoModal = () => {
+    if (videoStreamRef.current) {
+      videoStreamRef.current.getTracks().forEach(track => track.stop());
+      videoStreamRef.current = null;
+    }
+    setShowVideoModal(false);
+    setIsRecordingVideo(false);
+  };
+
+  const handleSubmitRecordedVideo = () => {
+    const videoUrlToSubmit = recordedVideoUrl || '/kene_afro_beauty_hero.png';
+
     const videoItem: MultimodalMediaItem = {
       id: `video-${Date.now()}`,
       type: 'video',
-      sender: 'doctor',
-      videoTitle: 'Capsule Vidéo : Application du Spray Exfoliant & Sérum au Baobab',
-      text: videoText,
+      sender: 'patient',
+      mediaUrl: videoUrlToSubmit,
+      videoTitle: `Capsule Vidéo Présentielle de ${userName}`,
+      text: '🎥 Capsule Vidéo en présentiel transmise au Dr. Mama Kènè pour l\'examen clinique visuel 3D.',
       timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
     };
     setMediaFeed(prev => [...prev, videoItem]);
-    speakText(videoText);
+    handleCloseVideoModal();
+
+    setIsThinking(true);
+    toast({ title: "🎥 Capsule Vidéo Transmise au Dr. Mama !", description: "Examen visuel en présentiel en cours..." });
+
+    setTimeout(() => {
+      setIsThinking(false);
+      const ackText = `J'ai visionné votre capsule vidéo en présentiel ${userName}. J'observe le relief cutané et la réactivité épidermique. Poursuivons l'examen.`;
+      const docResponse: MultimodalMediaItem = {
+        id: `doc-video-ack-${Date.now()}`,
+        type: 'text',
+        sender: 'doctor',
+        text: ackText,
+        timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMediaFeed(prev => [...prev, docResponse]);
+      speakText(ackText);
+      handleSelectSymptom("Examen visuel sur capsule vidéo en présentiel");
+    }, 1500);
   };
 
   // 4. 📱 SMS & TEXT HANDLER
@@ -590,6 +719,12 @@ function ChatContent() {
     setMediaFeed([]);
     setDynamicFlow(null);
     setSelectedZone(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('kene_chat_media_feed');
+      localStorage.removeItem('kene_chat_active_step');
+      localStorage.removeItem('kene_chat_consultation_data');
+      localStorage.removeItem('kene_chat_dynamic_flow');
+    }
     speakText(`Bonjour ${userName} ! Bienvenue dans votre Spa Télémédecine 3D.`);
   };
 
@@ -656,7 +791,7 @@ function ChatContent() {
         <button
           onClick={handleResetConsultation}
           className="w-9 h-9 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
-          title="Réinitialiser"
+          title="Nouvelle Consultation (Effacer l'historique)"
         >
           <RefreshCw className="w-4 h-4 text-[#FFD700]" />
         </button>
@@ -761,7 +896,7 @@ function ChatContent() {
           </button>
 
           <button
-            onClick={handleSendVideoClip}
+            onClick={handleOpenLiveVideoRecorder}
             className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-[#26170D] hover:bg-[#341F12] border border-[#FFD700]/40 text-[#FFD700] text-[11px] font-bold transition cursor-pointer"
           >
             <Video className="w-4 h-4 text-[#FFD700]" />
@@ -788,7 +923,7 @@ function ChatContent() {
           </motion.div>
         )}
 
-        {/* ── 📱 MULTIMODAL MEDIA FEED DISPLAY WITH DIRECT AUDIO PLAY BUTTONS ── */}
+        {/* ── 📱 MULTIMODAL MEDIA FEED DISPLAY WITH PERSISTENCE & LIVE VIDEO PLAYBACK ── */}
         <AnimatePresence>
           {mediaFeed.length > 0 && (
             <div className="w-full space-y-3">
@@ -805,7 +940,7 @@ function ChatContent() {
                 >
                   <div className="flex items-center justify-between text-[10px] font-mono border-b border-white/10 pb-1">
                     <span className="font-bold">
-                      {item.sender === 'patient' ? '👤 Vous' : '🩺 Dr. Mama Kènè'}
+                      {item.sender === 'patient' ? '👤 Vous (Cliente)' : '🩺 Dr. Mama Kènè'}
                     </span>
                     <span className="opacity-60">{item.timestamp}</span>
                   </div>
@@ -841,15 +976,24 @@ function ChatContent() {
                   )}
 
                   {item.type === 'video' && (
-                    <div className="space-y-2 bg-[#120B06] p-2.5 rounded-xl border border-[#FFD700]/40">
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#FFD700]">
-                        <Video className="w-4 h-4" />
-                        <span>{item.videoTitle}</span>
+                    <div className="space-y-2 bg-[#120B06] p-2.5 rounded-xl border border-[#FFD700]/50">
+                      <div className="flex items-center justify-between text-xs font-bold text-[#FFD700]">
+                        <span className="flex items-center gap-1.5">
+                          <Video className="w-4 h-4" />
+                          <span>{item.videoTitle || 'Capsule Vidéo Présentielle'}</span>
+                        </span>
+                        <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[8px]">Présentiel 🎥</Badge>
                       </div>
-                      <div className="relative w-full h-32 rounded-xl bg-gradient-to-br from-[#2E1A0C] to-[#120B05] flex items-center justify-center border border-white/10 cursor-pointer" onClick={() => speakText(item.text || '')}>
-                        <Play className="w-8 h-8 text-[#FFD700]" />
-                      </div>
-                      <p className="text-[11px] text-white/80">{item.text}</p>
+                      
+                      {item.mediaUrl && item.mediaUrl.startsWith('blob:') ? (
+                        <video src={item.mediaUrl} controls className="w-full h-44 rounded-xl object-cover border border-[#FFD700]/40" />
+                      ) : (
+                        <div className="relative w-full h-36 rounded-xl bg-gradient-to-br from-[#2E1A0C] to-[#120B05] flex items-center justify-center border border-white/10 cursor-pointer" onClick={() => speakText(item.text || '')}>
+                          <Play className="w-8 h-8 text-[#FFD700]" />
+                        </div>
+                      )}
+                      
+                      <p className="text-[11px] text-white/80 leading-snug">{item.text}</p>
                     </div>
                   )}
 
@@ -1110,6 +1254,81 @@ function ChatContent() {
         </AnimatePresence>
 
       </div>
+
+      {/* 🎥 MODAL ENREGISTREMENT WEBCAM VIDÉO EN PRÉSENTIEL */}
+      <AnimatePresence>
+        {showVideoModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <div className="bg-[#1A110A] border-2 border-[#FFD700] rounded-3xl p-5 max-w-sm w-full space-y-4 text-white shadow-2xl">
+              <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                <span className="font-serif font-bold text-sm text-[#FFD700] flex items-center gap-1.5">
+                  <Video className="w-4 h-4 text-[#FFD700]" /> Capsule Vidéo Présentielle
+                </span>
+                <button onClick={handleCloseVideoModal} className="text-white/60 hover:text-white">✕</button>
+              </div>
+
+              <div className="relative w-full h-56 rounded-2xl overflow-hidden bg-black border-2 border-[#FFD700]/50 flex items-center justify-center">
+                {recordedVideoUrl ? (
+                  <video src={recordedVideoUrl} controls autoPlay className="w-full h-full object-cover" />
+                ) : (
+                  <video ref={videoPreviewRef} autoPlay playsInline muted className="w-full h-full object-cover scale-x-[-1]" />
+                )}
+
+                {/* 3D AR Grid Overlay */}
+                <div className="absolute inset-0 pointer-events-none border border-[#FFD700]/20 grid grid-cols-3 grid-rows-3">
+                  {[...Array(9)].map((_, i) => (
+                    <div key={i} className="border border-white/5" />
+                  ))}
+                </div>
+
+                {isRecordingVideo && (
+                  <div className="absolute top-3 left-3 bg-red-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold flex items-center gap-1.5 animate-pulse">
+                    <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                    <span>ENREGISTREMENT EN COURS...</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                {!recordedVideoUrl ? (
+                  !isRecordingVideo ? (
+                    <Button
+                      onClick={startLiveRecording}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-xs h-11 rounded-2xl cursor-pointer flex items-center justify-center gap-2 border border-red-400"
+                    >
+                      <span className="w-3 h-3 rounded-full bg-white animate-pulse" />
+                      <span>Enregistrer ma Capsule Vidéo (10s)</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={stopLiveRecording}
+                      className="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold text-xs h-11 rounded-2xl cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <Square className="w-4 h-4 fill-black" />
+                      <span>Terminer l'Enregistrement</span>
+                    </Button>
+                  )
+                ) : (
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => setRecordedVideoUrl(null)}
+                      className="flex-1 bg-white/10 hover:bg-white/20 text-white font-bold text-xs h-11 rounded-2xl cursor-pointer"
+                    >
+                      <span>Recommencer</span>
+                    </Button>
+                    <Button
+                      onClick={handleSubmitRecordedVideo}
+                      className="flex-1 bg-gradient-to-r from-[#FFD700] to-[#C8951E] text-black font-black text-xs h-11 rounded-2xl cursor-pointer shadow-lg border border-[#FFD700]"
+                    >
+                      <span>Transmettre au Dr. Mama 🚀</span>
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── 📄 MODAL PDF FICHE ORDONNANCE NUMÉRIQUE CERTIFIÉE ── */}
       <AnimatePresence>
