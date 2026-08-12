@@ -47,38 +47,8 @@ function ChatContent() {
       id: 'msg-1',
       sender: 'doctor',
       type: 'text',
-      text: "Bonjour Aïsha ! Je suis le Dr. Mama Kènè, votre médecin dermatologue dermo-cosmétique UEMOA. Je prends connaissance de votre situation géo-climatique (Dakar/Abidjan 32°C). Comment se porte votre peau aujourd'hui ?",
-      timestamp: '14:20',
-    },
-    {
-      id: 'msg-2',
-      sender: 'doctor',
-      type: 'audio',
-      text: "Note Vocale du Dr. Mama Kènè : Explication des effets de la chaleur tropicale et des UV (Indice 8) sur le sébum et l'hyperpigmentation.",
-      audioDuration: '0:45',
-      timestamp: '14:21',
-    },
-    {
-      id: 'msg-3',
-      sender: 'doctor',
-      type: 'prescription',
-      prescription: {
-        title: 'Ordonnance Dermo-Botanique Sur-Mesure',
-        items: [
-          { name: 'Sérum Baobab 10% Niacinamide Bio', desc: 'Régulateur mélanine & anti-oxydation', price: 18000 },
-          { name: 'Beurre de Karité Brut Korhogo 100g', desc: 'Soin réparateur barrière lipidique', price: 9500 },
-        ],
-        totalPrice: 27500,
-      },
-      timestamp: '14:22',
-    },
-    {
-      id: 'msg-4',
-      sender: 'doctor',
-      type: 'sms',
-      text: "Rappel SMS / WhatsApp : Votre consultation médicale et ordonnance ont été synchronisées sur votre téléphone au +221 77 *** ** 89.",
-      smsNumber: '+221 77 *** ** 89',
-      timestamp: '14:23',
+      text: "Bonjour ! Je suis le Dr. Mama Kènè, votre médecin dermatologue dermo-cosmétique UEMOA. Je prends connaissance de votre situation géo-climatique (Dakar/Abidjan 32°C). Comment se porte votre peau aujourd'hui ?",
+      timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
 
