@@ -1,15 +1,16 @@
 'use client';
 
-// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Full Multimodal Media Input: Photo, Audio, Video, SMS v5.0)
+// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Ultra-Immersive 3D Scroll Telemedicine Spa v6.0)
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import {
   ArrowLeft, MoreHorizontal, Send, Mic, Play, Pause, Video, MessageSquare, Phone,
-  Camera, Volume2, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles, User, RefreshCw, ArrowRight, ChevronRight, Check, Image as ImageIcon
+  Camera, Volume2, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles, User, RefreshCw, ArrowRight, ChevronRight, Check, Image as ImageIcon, Globe, FileText, Download, Zap, Compass, Activity, Droplets
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ParticleOrb3D } from '@/components/ParticleOrb3D';
 import { useToast } from '@/hooks/use-toast';
 
 export interface MultimodalMediaItem {
@@ -23,21 +24,111 @@ export interface MultimodalMediaItem {
   timestamp: string;
 }
 
+function BiometricRadarCanvas({ score = 78 }: { score?: number }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const w = (canvas.width = 220);
+    const h = (canvas.height = 220);
+    const cx = w / 2;
+    const cy = h / 2;
+    const radius = 75;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Radar axes: Hydratation, Sébum, UV Protection, Élasticité, Eclat
+    const labels = ['Hydratation', 'Sébum', 'Protection UV', 'Élasticité', 'Éclat'];
+    const values = [0.45, 0.75, 0.85, 0.80, 0.65];
+    const numAxes = labels.length;
+
+    // Draw concentric radar webs
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.25)';
+    ctx.lineWidth = 1;
+    for (let r = 1; r <= 4; r++) {
+      ctx.beginPath();
+      const currentR = (radius / 4) * r;
+      for (let i = 0; i < numAxes; i++) {
+        const angle = (i * 2 * Math.PI) / numAxes - Math.PI / 2;
+        const x = cx + currentR * Math.cos(angle);
+        const y = cy + currentR * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    // Draw radar axis lines
+    for (let i = 0; i < numAxes; i++) {
+      const angle = (i * 2 * Math.PI) / numAxes - Math.PI / 2;
+      const x = cx + radius * Math.cos(angle);
+      const y = cy + radius * Math.sin(angle);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      // Axis Labels
+      ctx.fillStyle = '#FFD700';
+      ctx.font = '9px monospace';
+      ctx.textAlign = 'center';
+      const lx = cx + (radius + 18) * Math.cos(angle);
+      const ly = cy + (radius + 14) * Math.sin(angle);
+      ctx.fillText(labels[i], lx, ly);
+    }
+
+    // Draw filled polygon for patient metrics
+    ctx.fillStyle = 'rgba(255, 215, 0, 0.35)';
+    ctx.strokeStyle = '#FFD700';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < numAxes; i++) {
+      const angle = (i * 2 * Math.PI) / numAxes - Math.PI / 2;
+      const valR = radius * values[i];
+      const x = cx + valR * Math.cos(angle);
+      const y = cy + valR * Math.sin(angle);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }, [score]);
+
+  return (
+    <div className="flex flex-col items-center">
+      <canvas ref={canvasRef} className="w-56 h-56 block" />
+      <span className="text-[10px] font-mono text-[#FFD700] font-bold mt-1">
+        Score Dermo-Biométrique : 78/100 (Bon Équilibre Tropical)
+      </span>
+    </div>
+  );
+}
+
 function ChatContent() {
   const router = useRouter();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({ container: containerRef });
+  const orbScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.85, 0.7]);
+  const orbOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.9, 0.8]);
 
   const [userName, setUserName] = useState('Aïsha');
+  const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'wo' | 'bm'>('fr');
   const [input, setInput] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [showPdfModal, setShowPdfModal] = useState(false);
 
-  // Multimodal Media Items Feed
   const [mediaFeed, setMediaFeed] = useState<MultimodalMediaItem[]>([]);
-
-  // Guided 5-Step Consultation State
   const [activeStep, setActiveStep] = useState<number>(1);
   const [consultationData, setConsultationData] = useState<{
     symptom?: string;
@@ -45,7 +136,6 @@ function ChatContent() {
     diagnosis?: string;
     prescription?: any;
     goldenRules?: string[];
-    userPhotoUrl?: string;
   }>({});
 
   useEffect(() => {
@@ -61,6 +151,12 @@ function ChatContent() {
     }
   }, []);
 
+  const getLanguageGreeting = () => {
+    if (selectedLanguage === 'wo') return `Nanga def ${userName}, taaru bi ma ngi la di déglu.`;
+    if (selectedLanguage === 'bm') return `I ni cé ${userName}, n'b'i lamèn.`;
+    return `Bonjour ${userName}, je vous écoute.`;
+  };
+
   const speakText = (text: string) => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -75,7 +171,6 @@ function ChatContent() {
     }
   };
 
-  // 1. 📷 PHOTO UPLOAD HANDLER (Prend en compte la photo de la cliente)
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -84,58 +179,54 @@ function ChatContent() {
     reader.onload = () => {
       const photoUrl = reader.result as string;
 
-      // Add patient photo to feed
       const photoItem: MultimodalMediaItem = {
         id: `photo-${Date.now()}`,
         type: 'photo',
         sender: 'patient',
         mediaUrl: photoUrl,
-        text: '📷 Photo Cutanée transmise au Dr. Mama Kènè',
+        text: '📷 Photo Cutanée transmise au scanner 3D',
         timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
       };
       setMediaFeed(prev => [...prev, photoItem]);
 
       setIsThinking(true);
       toast({
-        title: "📷 Photo Cutanée Reçue !",
-        description: "Dr. Mama Kènè IA effectue l'analyse dermo-biométrique...",
+        title: "🔬 Scanner Holographique 3D Actif !",
+        description: "Analyse spectroscopique de la photo cutanée en cours...",
       });
 
-      // Doctor response to photo
       setTimeout(() => {
         setIsThinking(false);
         const docResponse: MultimodalMediaItem = {
           id: `doc-photo-ack-${Date.now()}`,
           type: 'text',
           sender: 'doctor',
-          text: "J'ai bien reçu et analysé votre photo cutanée. J'observe des zones d'hyperpigmentation localisées et une réactivité épidermique. Poursuivons l'évaluation.",
+          text: "Scanner Biométrique 3D complété : J'observe une concentration mélanique réactive et une déshydratation épidermique. Poursuivons l'évaluation.",
           timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
         };
         setMediaFeed(prev => [...prev, docResponse]);
-        handleSelectSymptom("Taches foncées ou noires observées sur photo");
-      }, 1500);
+        handleSelectSymptom("Taches foncées observées sur photo cutanée");
+      }, 1600);
     };
 
     reader.readAsDataURL(file);
   };
 
-  // 2. 🎙️ AUDIO VOICE NOTE HANDLER (Prend en compte la note vocale)
   const handleStartVoiceRecording = () => {
     setIsListening(true);
     toast({
       title: "🎙️ Écoute Vocale Active...",
-      description: "Parlez... Votre message audio est enregistré.",
+      description: "Parlez... Le Dr. Mama Kènè analyse votre note vocale.",
     });
 
     setTimeout(() => {
       setIsListening(false);
-
       const patientAudio: MultimodalMediaItem = {
         id: `audio-${Date.now()}`,
         type: 'audio',
         sender: 'patient',
-        audioDuration: '0:26',
-        text: "Note Vocale Audio Cliente : 'Docteur, j'ai des picotements et des taches sur le visage.'",
+        audioDuration: '0:28',
+        text: "Note Vocale Audio Cliente : 'Docteur, j'ai des tiraillements et des taches sur les joues.'",
         timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
       };
       setMediaFeed(prev => [...prev, patientAudio]);
@@ -148,25 +239,23 @@ function ChatContent() {
           id: `doc-audio-ack-${Date.now()}`,
           type: 'audio',
           sender: 'doctor',
-          audioDuration: '0:34',
-          text: "Note Vocale du Dr. Mama Kènè : J'ai écouté attentivement votre message vocal. Je prends en compte la sensation de picotement sous la chaleur.",
+          audioDuration: '0:35',
+          text: "Note Vocale du Dr. Mama Kènè : J'ai bien écouté votre note vocale. Je prends en compte les tiraillements dus au soleil.",
           timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
         };
         setMediaFeed(prev => [...prev, docAudioAck]);
-        handleSelectSymptom("Taches foncées & picotements (Note Vocale)");
+        handleSelectSymptom("Taches foncées & tiraillements (Note Vocale)");
       }, 1400);
     }, 2400);
   };
 
-  // 3. 🎥 VIDEO CLIP HANDLER (Prend en compte les vidéos)
   const handleSendVideoClip = () => {
-    toast({ title: "🎥 Capsule Vidéo", description: "Chargement de la démonstration vidéo médicale..." });
-    
+    toast({ title: "🎥 Capsule Vidéo", description: "Démonstration médicale en vidéo HD 4K..." });
     const videoItem: MultimodalMediaItem = {
       id: `video-${Date.now()}`,
       type: 'video',
       sender: 'doctor',
-      videoTitle: 'Capsule Vidéo Médicale : Gestes d\'application du Sérum Baobab',
+      videoTitle: 'Capsule Vidéo : Application du Sérum Baobab & Écran SPF 50',
       text: 'Le Dr. Mama Kènè vous montre en vidéo comment appliquer votre sérum sans saturer vos pores.',
       timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
     };
@@ -174,7 +263,6 @@ function ChatContent() {
     speakText(videoItem.text || '');
   };
 
-  // 4. 📱 SMS & TEXT HANDLER (Prend en compte les SMS)
   const handleSendPatientText = (customText?: string) => {
     const textToSend = customText || input;
     if (!textToSend.trim()) return;
@@ -189,11 +277,9 @@ function ChatContent() {
     setMediaFeed(prev => [...prev, patientSms]);
     if (!customText) setInput('');
 
-    toast({ title: "📱 SMS Envoyé au Dr. Mama Kènè", description: "Votre message SMS a été synchronisé." });
     handleSelectSymptom(textToSend);
   };
 
-  // 5-Step Clinical Flow Handler
   const handleSelectSymptom = (symptomText: string) => {
     setIsThinking(true);
     let diag = "Hyperpigmentation Post-Inflammatoire (PIH) & Oxydation Mélanique due aux UV tropicaux.";
@@ -282,46 +368,86 @@ function ChatContent() {
     setActiveStep(1);
     setConsultationData({});
     setMediaFeed([]);
-    speakText("Bonjour Aïsha ! Pour établir votre bilan dermo-cosmétique, vous pouvez m'envoyer un texte, un SMS, une photo cutanée ou une note vocale.");
+    speakText("Bonjour Aïsha ! Bienvenue dans votre Spa Télémédecine 3D.");
   };
 
   return (
-    <div className="min-h-screen bg-[#110B07] text-[#F8F1E4] flex flex-col items-center font-sans selection:bg-[#FFD700] selection:text-black overflow-x-hidden relative">
+    <div className="h-[100dvh] max-h-[100dvh] bg-[#0A0503] text-[#F8F1E4] flex flex-col items-center font-sans selection:bg-[#FFD700] selection:text-black overflow-hidden relative">
       
+      {/* Floating 3D Gold Dust Particles Atmosphere */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0.2, y: '100vh', x: `${(i * 8) % 100}vw` }}
+            animate={{ opacity: [0.2, 0.6, 0.2], y: '-10vh' }}
+            transition={{ duration: 12 + i * 2, repeat: Infinity, ease: 'linear' }}
+            className="absolute w-1.5 h-1.5 rounded-full bg-[#FFD700]/40 blur-xs"
+          />
+        ))}
+      </div>
+
       {/* Glow Ambient Atmospheric Orbs */}
-      <div className="fixed top-12 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#FFD700]/15 rounded-full blur-[120px] pointer-events-none z-0" />
-      <div className="fixed bottom-10 right-10 w-80 h-80 bg-[#C8951E]/10 rounded-full blur-[100px] pointer-events-none z-0" />
+      <div className="fixed top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#FFD700]/15 rounded-full blur-[130px] pointer-events-none z-0" />
+      <div className="fixed bottom-10 right-10 w-80 h-80 bg-[#C8951E]/10 rounded-full blur-[110px] pointer-events-none z-0" />
 
       {/* ── 📱 TOP HEADER BAR ── */}
-      <header className="w-full max-w-md px-6 py-4 flex items-center justify-between relative z-20">
+      <header className="w-full max-w-md px-6 py-3.5 flex items-center justify-between shrink-0 relative z-30 bg-[#120B06]/90 backdrop-blur-2xl border-b border-[#FFD700]/30 shadow-xl">
         <button
           onClick={() => router.push('/portal')}
-          className="w-10 h-10 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
+          className="w-9 h-9 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
           title="Retour"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
 
-        <div className="text-center">
+        <div className="text-center space-y-0.5">
           <span className="text-[10px] font-mono tracking-[0.3em] text-[#FFD700] font-black uppercase flex items-center gap-1.5 justify-center">
-            <Sparkles className="w-3 h-3 text-[#FFD700] animate-pulse" />
-            TAARU AI · DR. MAMA KÈNÈ
+            <Sparkles className="w-3.5 h-3.5 text-[#FFD700] animate-spin" />
+            TAARU AI · SPA 3D
           </span>
+
+          {/* Language Selector Selector Pills */}
+          <div className="flex items-center justify-center gap-1">
+            {[
+              { id: 'fr', label: '🇫🇷 FR' },
+              { id: 'wo', label: '🇸🇳 WOLOF' },
+              { id: 'bm', label: '🇲🇱 BAMBARA' },
+            ].map(lang => (
+              <button
+                key={lang.id}
+                onClick={() => {
+                  setSelectedLanguage(lang.id as any);
+                  toast({ title: `Langue : ${lang.label}`, description: "Dr. Mama Kènè s'exprime dans votre langue." });
+                }}
+                className={`text-[8px] font-mono font-bold px-2 py-0.5 rounded-full border transition ${
+                  selectedLanguage === lang.id
+                    ? 'bg-[#FFD700] text-black border-[#FFD700]'
+                    : 'bg-white/5 text-white/60 border-white/10 hover:text-white'
+                }`}
+              >
+                {lang.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <button
           onClick={handleResetConsultation}
-          className="w-10 h-10 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
-          title="Recommencer la Consultation"
+          className="w-9 h-9 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
+          title="Réinitialiser"
         >
           <RefreshCw className="w-4 h-4 text-[#FFD700]" />
         </button>
       </header>
 
       {/* ── 🏥 STEP PROGRESS BAR (PAS-À-PAS EN 5 ÉTAPES) ── */}
-      <div className="w-full max-w-md px-6 pb-2 relative z-20">
+      <div className="w-full max-w-md px-6 py-2 shrink-0 z-20 bg-[#0F0804] border-b border-white/10">
         <div className="flex items-center justify-between mb-1 text-[10px] font-mono font-bold text-[#FFD700]">
-          <span>CONSULTATION MULTIMODALE COMPLÈTE</span>
+          <span className="flex items-center gap-1">
+            <Compass className="w-3 h-3 text-[#FFD700] animate-spin" />
+            CONSULTATION 3D PAS-À-PAS
+          </span>
           <span>Étape {activeStep} / 5</span>
         </div>
         <div className="w-full h-1.5 bg-[#26180F] rounded-full overflow-hidden flex gap-1 p-0.5">
@@ -338,93 +464,58 @@ function ChatContent() {
         </div>
       </div>
 
-      {/* ── 🌟 MAIN TAARU AI CONTENT CONTAINER ── */}
-      <main className="w-full max-w-md px-6 pb-28 flex-1 flex flex-col items-center relative z-10 space-y-4">
+      {/* ── 🌟 SCROLLABLE MAIN SPA CONTAINER WITH 3D PARALLAX ── */}
+      <div ref={containerRef} className="flex-1 overflow-y-auto w-full max-w-md px-6 pb-28 space-y-5 scrollbar-thin relative z-10">
         
         {/* 1. GREETING HEADLINE */}
-        <div className="text-center space-y-1 pt-1">
+        <div className="text-center space-y-1 pt-3">
           <h1 className="font-serif text-3xl sm:text-4xl text-white tracking-tight leading-tight">
-            Bonjour <span className="text-[#FFD700] font-bold">{userName}</span>,<br />
-            <span className="italic font-serif font-normal text-white/90">
-              {activeStep === 1 && "envoyez une photo, un audio ou un message."}
-              {activeStep === 2 && "examinons votre situation."}
-              {activeStep === 3 && "voici mon diagnostic."}
-              {activeStep === 4 && "votre ordonnance sur-mesure."}
-              {activeStep === 5 && "vos règles d'or & routine."}
-            </span>
+            {getLanguageGreeting()}
           </h1>
         </div>
 
-        {/* 2. CENTRAL GLOWING AUDIO WAVE ORB (ANIMATED SPHERE) */}
-        <div className="py-2 flex flex-col items-center justify-center relative">
+        {/* 2. THE MAGNIFICENT 3D SCROLL PARALLAX SPHERE (`ParticleOrb3D`) */}
+        <motion.div style={{ scale: orbScale, opacity: orbOpacity }} className="py-1 flex flex-col items-center justify-center relative">
           
           <div className="relative group cursor-pointer" onClick={handleStartVoiceRecording}>
             
-            {/* Outer Glowing Ripple Aura */}
-            <div className={`absolute -inset-5 rounded-full bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#E5A93C] opacity-40 blur-2xl transition-all duration-700 ${
+            <div className={`absolute -inset-6 rounded-full bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#E5A93C] opacity-40 blur-2xl transition-all duration-700 ${
               isThinking || isSpeaking || isListening ? 'animate-ping scale-150 opacity-75' : 'group-hover:opacity-60'
             }`} />
 
-            {/* Concentric Golden Halo Rings */}
-            <div className={`w-32 h-32 rounded-full bg-gradient-to-br from-[#3D2514] via-[#2A180B] to-[#160C05] border-2 border-[#FFD700] p-2 shadow-2xl flex items-center justify-center relative z-10 transition-transform duration-500 ${
-              isThinking ? 'scale-110 rotate-180' : isSpeaking ? 'scale-105' : 'hover:scale-105'
-            }`}>
-              <div className={`w-full h-full rounded-full flex flex-col items-center justify-center transition-all duration-500 ${
-                isThinking
-                  ? 'bg-gradient-to-br from-[#FFD700]/40 to-[#C8951E]/20 text-[#FFD700]'
-                  : isSpeaking
-                  ? 'bg-gradient-to-br from-[#FFD700] to-[#C8951E] text-black font-black'
-                  : isListening
-                  ? 'bg-red-500/30 text-white'
-                  : 'bg-[#140B05] text-[#FFD700]'
-              }`}>
-                
-                {/* Dynamic Waveform & Thinking Animation */}
-                {isThinking ? (
-                  <div className="flex flex-col items-center gap-1">
-                    <RefreshCw className="w-6 h-6 animate-spin text-[#FFD700]" />
-                    <span className="text-[8px] font-mono font-bold tracking-widest uppercase text-[#FFD700]">Analyse...</span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="flex items-center gap-1">
-                      {[3, 7, 12, 8, 14, 9, 5, 10, 4].map((h, i) => (
-                        <span
-                          key={i}
-                          className={`w-1 rounded-full bg-current transition-all duration-300 ${
-                            isSpeaking || isListening ? 'animate-pulse' : 'opacity-70'
-                          }`}
-                          style={{
-                            height: (isSpeaking || isListening ? h * 2 : 10) + 'px',
-                            animationDelay: `${i * 0.12}s`
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-[8px] font-mono font-bold uppercase tracking-wider opacity-80 pt-0.5">
-                      {isSpeaking ? 'Lecture Audio...' : isListening ? 'Écoute...' : 'Appuyer pour Parler'}
-                    </span>
-                  </div>
-                )}
-
-              </div>
+            <div className="w-full max-w-xs h-64 flex items-center justify-center relative z-10">
+              <ParticleOrb3D
+                isListening={isListening}
+                isSpeaking={isSpeaking || isThinking}
+                scrollProgress={0.4}
+              />
             </div>
 
           </div>
 
-          {/* Status Badge */}
-          <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C120B] border border-[#FFD700]/40 text-[#FFD700] text-[10px] font-mono font-bold shadow-lg">
+          <div className="-mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C120B] border border-[#FFD700]/40 text-[#FFD700] text-[10px] font-mono font-bold shadow-xl z-20">
             <span className={`w-2 h-2 rounded-full ${isThinking ? 'bg-amber-400 animate-spin' : isSpeaking ? 'bg-emerald-400 animate-ping' : 'bg-[#FFD700]'}`} />
             <span>
-              {isThinking ? 'Dr. Mama Kènè IA analyse vos médias (Photo/Audio/SMS)...' : isSpeaking ? 'Émission Note Vocale...' : `Étape ${activeStep} : Consultation Multimodale Active`}
+              {isThinking ? 'Dr. Mama Kènè IA effectue le scanner biométrique 3D...' : isSpeaking ? 'Émission Note Vocale...' : `Étape ${activeStep} : Cabinet Spa 3D Actif`}
             </span>
           </div>
-        </div>
+        </motion.div>
 
-        {/* ── 📱 MULTIMODAL MEDIA FEED DISPLAY (AFFICHE PHOTOS, AUDIOS, VIDÉOS & SMS ENVOYÉS) ── */}
+        {/* ── 📊 RADAR DERMO-BIOMÉTRIQUE CUTANÉ (5-AXES) ── */}
+        {activeStep >= 2 && (
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-[#1A110A] border-2 border-[#FFD700]/40 rounded-3xl p-4 shadow-2xl flex flex-col items-center text-center space-y-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-[#FFD700] font-mono">
+              <Activity className="w-4 h-4 text-[#FFD700]" />
+              <span>Analyse Biométrique 5-Axes Cutanée</span>
+            </div>
+            <BiometricRadarCanvas />
+          </motion.div>
+        )}
+
+        {/* ── 📱 MULTIMODAL MEDIA FEED DISPLAY ── */}
         <AnimatePresence>
           {mediaFeed.length > 0 && (
-            <div className="w-full space-y-3 pt-1">
+            <div className="w-full space-y-3">
               {mediaFeed.map((item) => (
                 <motion.div
                   key={item.id}
@@ -443,17 +534,18 @@ function ChatContent() {
                     <span className="opacity-60">{item.timestamp}</span>
                   </div>
 
-                  {/* PHOTO MEDIA */}
                   {item.type === 'photo' && item.mediaUrl && (
                     <div className="space-y-2">
-                      <div className="relative w-full h-40 rounded-xl overflow-hidden border border-[#FFD700]/40">
+                      <div className="relative w-full h-44 rounded-xl overflow-hidden border-2 border-[#FFD700]">
                         <img src={item.mediaUrl} alt="Photo cutanée" className="w-full h-full object-cover" />
+                        <div className="absolute top-2 right-2 bg-black/80 px-2 py-0.5 rounded text-[9px] font-mono text-emerald-400 flex items-center gap-1">
+                          <Zap className="w-3 h-3" /> Scanner 3D Validé
+                        </div>
                       </div>
                       <p className="text-[11px] font-mono text-[#FFD700]">{item.text}</p>
                     </div>
                   )}
 
-                  {/* AUDIO MEDIA */}
                   {item.type === 'audio' && (
                     <div className="flex items-center justify-between bg-[#120B06] p-2.5 rounded-xl border border-white/10">
                       <div className="flex items-center gap-2">
@@ -468,7 +560,6 @@ function ChatContent() {
                     </div>
                   )}
 
-                  {/* VIDEO MEDIA */}
                   {item.type === 'video' && (
                     <div className="space-y-2 bg-[#120B06] p-2.5 rounded-xl border border-[#FFD700]/40">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-[#FFD700]">
@@ -482,7 +573,6 @@ function ChatContent() {
                     </div>
                   )}
 
-                  {/* TEXT / SMS MEDIA */}
                   {(item.type === 'text' || item.type === 'sms') && (
                     <p className="text-xs text-white leading-relaxed font-medium">
                       {item.text}
@@ -515,7 +605,7 @@ function ChatContent() {
                 </div>
                 
                 <p className="text-xs text-white leading-relaxed font-sans font-medium">
-                  "Bonjour Aïsha ! Vous pouvez m'envoyer une **photo de votre peau**, une **note vocale audio**, un **SMS** ou sélectionner directement votre symptôme ci-dessous :"
+                  "Bonjour {userName} ! Vous pouvez m'envoyer une **photo de votre peau**, une **note vocale audio**, un **SMS** ou choisir votre problème ci-dessous :"
                 </p>
 
                 <div className="space-y-2 pt-1">
@@ -557,7 +647,7 @@ function ChatContent() {
                 </div>
 
                 <div className="bg-[#26170D] border border-[#FFD700]/30 p-3 rounded-2xl text-xs text-[#FFD700] font-bold">
-                  Donnée médicale enregistrée : {consultationData.symptom}
+                  Symptôme enregistré : {consultationData.symptom}
                 </div>
                 
                 <p className="text-xs text-white leading-relaxed font-sans font-medium">
@@ -612,7 +702,7 @@ function ChatContent() {
                 </div>
 
                 <p className="text-xs text-white/90 leading-relaxed font-sans font-medium">
-                  En tenant compte de vos éléments transmis ({consultationData.trigger}), le film hydrolipidique réagit fortement pour protéger l'épiderme.
+                  En tenant compte de vos données ({consultationData.trigger}), le film hydrolipidique réagit fortement pour protéger l'épiderme.
                 </p>
 
                 <Button
@@ -640,7 +730,12 @@ function ChatContent() {
                   <span className="text-[10px] font-mono font-bold text-[#FFD700] uppercase tracking-wider flex items-center gap-1.5">
                     📋 4. Ordonnance Dermo-Botanique Sur-Mesure
                   </span>
-                  <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[9px]">4 / 5</Badge>
+                  <button
+                    onClick={() => setShowPdfModal(true)}
+                    className="text-[9px] font-mono text-[#FFD700] underline flex items-center gap-1"
+                  >
+                    <FileText className="w-3 h-3" /> Fiche Ordonnance PDF
+                  </button>
                 </div>
 
                 {consultationData.prescription && (
@@ -725,13 +820,57 @@ function ChatContent() {
 
         </AnimatePresence>
 
-      </main>
+      </div>
 
-      {/* ── ⌨️ BOTTOM FLOATING INPUT BAR (PRISE EN COMPTE MULTIMODALE 100%) ── */}
+      {/* ── 📄 MODAL PDF FICHE ORDONNANCE NUMÉRIQUE CERTIFIÉE ── */}
+      <AnimatePresence>
+        {showPdfModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <div className="bg-[#1A110A] border-2 border-[#FFD700] rounded-3xl p-6 max-w-sm w-full space-y-4 text-white">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <span className="font-serif font-bold text-sm text-[#FFD700] flex items-center gap-1.5">
+                  <FileText className="w-4 h-4" /> Ordonnance Médicale Certifiée
+                </span>
+                <button onClick={() => setShowPdfModal(false)} className="text-white/60 hover:text-white">✕</button>
+              </div>
+
+              <div className="space-y-2 text-xs font-mono">
+                <div className="flex justify-between">
+                  <span className="text-white/60">Patiente :</span>
+                  <span className="font-bold text-white">{userName}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/60">Médecin :</span>
+                  <span className="font-bold text-[#FFD700]">Dr. Mama Kènè (Ordre Dermo)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-white/60">Diagnostic :</span>
+                  <span className="font-bold text-emerald-400">{consultationData.diagnosis || 'PIH Hyperpigmentation'}</span>
+                </div>
+              </div>
+
+              <div className="p-3 bg-[#0F0A05] rounded-2xl border border-white/10 text-xs space-y-1 font-mono">
+                <div className="font-bold text-[#FFD700]">Prescription :</div>
+                {consultationData.prescription?.items.map((i: any, idx: number) => (
+                  <div key={idx} className="flex justify-between text-[11px]">
+                    <span>• {i.name}</span>
+                    <span>{i.price} FCFA</span>
+                  </div>
+                ))}
+              </div>
+
+              <Button onClick={() => window.print()} className="w-full bg-[#FFD700] text-black font-black text-xs h-11 rounded-2xl cursor-pointer">
+                <Download className="w-4 h-4 mr-2" /> Imprimer / Télécharger la Fiche PDF
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── ⌨️ BOTTOM FLOATING INPUT BAR ── */}
       <footer className="fixed bottom-0 left-0 right-0 bg-[#120B06]/95 border-t-2 border-[#FFD700]/40 p-3 sm:p-4 z-30 backdrop-blur-2xl">
         <div className="max-w-md mx-auto flex items-center gap-2">
           
-          {/* 1. Audio Mic Button */}
           <button
             onClick={handleStartVoiceRecording}
             className={`w-11 h-11 rounded-2xl border flex items-center justify-center transition shrink-0 cursor-pointer ${
@@ -739,25 +878,23 @@ function ChatContent() {
                 ? 'bg-red-500 text-white border-red-500 animate-pulse scale-105'
                 : 'bg-[#1E140C] border-[#FFD700]/40 text-[#FFD700] hover:bg-[#2A1E14]'
             }`}
-            title="Note Vocale Audio (Prise en compte)"
+            title="Note Vocale Audio"
           >
             <Mic className="w-5 h-5" />
           </button>
 
-          {/* 2. Video Request Button */}
           <button
             onClick={handleSendVideoClip}
             className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-[#FFD700]/40 text-[#FFD700] hover:bg-[#2A1E14] flex items-center justify-center transition shrink-0 cursor-pointer"
-            title="Capsule Vidéo (Prise en compte)"
+            title="Capsule Vidéo"
           >
             <Video className="w-5 h-5" />
           </button>
 
-          {/* 3. Photo Upload Input */}
           <button
             onClick={() => fileInputRef.current?.click()}
             className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-[#FFD700]/40 text-[#FFD700] hover:bg-[#2A1E14] flex items-center justify-center transition shrink-0 cursor-pointer"
-            title="Photo Cutanée (Prise en compte)"
+            title="Photo Cutanée"
           >
             <Camera className="w-5 h-5" />
           </button>
@@ -769,7 +906,6 @@ function ChatContent() {
             onChange={handlePhotoUpload}
           />
 
-          {/* 4. Text / SMS Input */}
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -778,7 +914,6 @@ function ChatContent() {
             className="flex-1 bg-[#1E140C] border border-white/15 focus:border-[#FFD700] text-white px-4 h-11 rounded-2xl text-xs outline-none transition"
           />
 
-          {/* Send Button */}
           <Button
             onClick={() => handleSendPatientText()}
             className="h-11 px-4 bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black text-xs rounded-2xl shadow-lg border border-[#FFD700] hover:scale-105 transition cursor-pointer shrink-0"
@@ -795,7 +930,7 @@ function ChatContent() {
 
 export default function ChatPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-white font-mono">Chargement de la Consultation Multimodale TAARU AI...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-white font-mono">Chargement du Spa Télémédecine 3D TAARU AI...</div>}>
       <ChatContent />
     </Suspense>
   );
