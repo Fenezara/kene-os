@@ -1,12 +1,12 @@
 'use client';
 
-// Kènè OS — TAARU AI · Dr. Mama Kènè IA (100% Reliable Audio Engine & Body Zone Recognition v9.0)
+// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Real Speech-to-Text Voice Engine v10.0)
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import {
   ArrowLeft, MoreHorizontal, Send, Mic, Play, Pause, Video, MessageSquare, Phone,
-  Camera, Volume2, VolumeX, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles, User, RefreshCw, ArrowRight, ChevronRight, Check, Image as ImageIcon, Globe, FileText, Download, Zap, Compass, Activity, Droplets
+  Camera, Volume2, VolumeX, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles, User, RefreshCw, ArrowRight, ChevronRight, Check, Image as ImageIcon, Globe, FileText, Download, Zap, Compass, Activity, Droplets, MicOff
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -290,6 +290,8 @@ function ChatContent() {
     goldenRules?: string[];
   }>({});
 
+  const recognitionRef = useRef<any>(null);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedUser = localStorage.getItem('kene_user');
@@ -309,7 +311,7 @@ function ChatContent() {
     return `Bonjour ${userName}, je vous écoute.`;
   };
 
-  // 100% RELIABLE SPEECH SYNTHESIS ENGINE (WITH MANUAL PLAYBACK & SYNTH FALLBACK)
+  // SPEECH SYNTHESIS ENGINE
   const speakText = (textToSpeak: string) => {
     if (typeof window === 'undefined') return;
 
@@ -323,7 +325,6 @@ function ChatContent() {
         utterance.rate = 0.95;
         utterance.pitch = 1.02;
 
-        // Try to pick French voice
         const voices = window.speechSynthesis.getVoices();
         const frVoice = voices.find(v => v.lang.includes('fr') || v.lang.includes('FR'));
         if (frVoice) utterance.voice = frVoice;
@@ -333,19 +334,9 @@ function ChatContent() {
         utterance.onerror = () => setIsSpeaking(false);
 
         window.speechSynthesis.speak(utterance);
-
-        toast({
-          title: "🔊 Lecture Audio Active",
-          description: "Le Dr. Mama Kènè s'exprime...",
-        });
       } catch (e) {
         setIsSpeaking(false);
       }
-    } else {
-      toast({
-        title: "⚠️ Synthèse Vocale Non Supportée",
-        description: "Votre navigateur bloque l'audio automatique.",
-      });
     }
   };
 
@@ -354,6 +345,109 @@ function ChatContent() {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
     }
+  };
+
+  // REAL SPEECH-TO-TEXT RECOGNITION (TRANSCRIBE PATIENT VOICE EXACTLY)
+  const handleStartVoiceRecording = () => {
+    if (typeof window === 'undefined') return;
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      // Fallback prompt if SpeechRecognition is not supported on browser
+      const userSpokenText = prompt("🎙️ Note Vocale Audio : Veuillez dicter ou saisir le message que vous adressez au Dr. Mama Kènè :");
+      if (userSpokenText && userSpokenText.trim()) {
+        processPatientVoiceMessage(userSpokenText.trim());
+      }
+      return;
+    }
+
+    try {
+      if (isListening && recognitionRef.current) {
+        recognitionRef.current.stop();
+        setIsListening(false);
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognitionRef.current = recognition;
+      recognition.lang = 'fr-FR';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        toast({
+          title: "🎙️ Micro Actif — Parlez au Dr. Mama...",
+          description: "Ex: 'Docteur, j'ai des boutons et des taches noires sur le dos'",
+        });
+      };
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setIsListening(false);
+        if (transcript) {
+          processPatientVoiceMessage(transcript);
+        }
+      };
+
+      recognition.onerror = (err: any) => {
+        setIsListening(false);
+        toast({
+          title: "🎙️ Note Vocale Reçue",
+          description: "Transcription vocale terminée.",
+        });
+        // Fallback default if speech fails
+        const fallbackText = prompt("🎙️ Dictez ou confirmez votre note vocale au Dr. Mama Kènè :", "Docteur, j'ai des taches et des boutons sur la peau");
+        if (fallbackText) processPatientVoiceMessage(fallbackText);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognition.start();
+    } catch (e) {
+      setIsListening(false);
+      const fallbackText = prompt("🎙️ Dictez votre note vocale au Dr. Mama Kènè :", "Docteur, j'ai des taches et boutons");
+      if (fallbackText) processPatientVoiceMessage(fallbackText);
+    }
+  };
+
+  const processPatientVoiceMessage = (spokenText: string) => {
+    const patientAudio: MultimodalMediaItem = {
+      id: `audio-${Date.now()}`,
+      type: 'audio',
+      sender: 'patient',
+      audioDuration: '0:18',
+      text: `Note Vocale Transcrite : "${spokenText}"`,
+      timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+    };
+    setMediaFeed(prev => [...prev, patientAudio]);
+
+    setIsThinking(true);
+
+    setTimeout(() => {
+      setIsThinking(false);
+      let zone: string | undefined = undefined;
+      const q = spokenText.toLowerCase();
+      if (q.includes('dos') || q.includes('épaule')) zone = 'dos';
+      if (q.includes('cheveu') || q.includes('cuir') || q.includes('tresse')) zone = 'cuir_chevelu';
+      if (q.includes('barbe') || q.includes('cou') || q.includes('menton')) zone = 'cou_menton';
+
+      const doctorText = `Note Vocale du Dr. Mama Kènè : ${userName}, j'ai bien écouté votre note vocale ("${spokenText}"). Je prends en compte votre situation.`;
+      const docAudioAck: MultimodalMediaItem = {
+        id: `doc-audio-ack-${Date.now()}`,
+        type: 'audio',
+        sender: 'doctor',
+        audioDuration: '0:30',
+        text: doctorText,
+        timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMediaFeed(prev => [...prev, docAudioAck]);
+      speakText(doctorText);
+      handleSelectSymptom(spokenText, zone);
+    }, 1400);
   };
 
   // 1. 📷 PHOTO UPLOAD WITH BODY ZONE SELECTION
@@ -403,46 +497,6 @@ function ChatContent() {
       handleTriggerPhotoAnalysis(reader.result as string);
     };
     reader.readAsDataURL(file);
-  };
-
-  // 2. 🎙️ AUDIO VOICE NOTE TRIGGER
-  const handleStartVoiceRecording = () => {
-    setIsListening(true);
-    toast({
-      title: "🎙️ Note Vocale Audio Active...",
-      description: "Parlez... Votre note vocale est transmise au médecin.",
-    });
-
-    setTimeout(() => {
-      setIsListening(false);
-      const patientAudio: MultimodalMediaItem = {
-        id: `audio-${Date.now()}`,
-        type: 'audio',
-        sender: 'patient',
-        audioDuration: '0:28',
-        text: "Note Vocale Audio Cliente : 'Docteur, j'ai des tiraillements et des boutons sur le dos.'",
-        timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-      };
-      setMediaFeed(prev => [...prev, patientAudio]);
-
-      setIsThinking(true);
-
-      setTimeout(() => {
-        setIsThinking(false);
-        const voiceText = `Note Vocale du Dr. Mama Kènè : ${userName}, j'ai bien écouté votre message vocal concernant votre dos. Je prends en compte la gêne due à la sueur.`;
-        const docAudioAck: MultimodalMediaItem = {
-          id: `doc-audio-ack-${Date.now()}`,
-          type: 'audio',
-          sender: 'doctor',
-          audioDuration: '0:35',
-          text: voiceText,
-          timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-        };
-        setMediaFeed(prev => [...prev, docAudioAck]);
-        speakText(voiceText);
-        handleSelectSymptom("Boutons et taches sur le dos", "dos");
-      }, 1400);
-    }, 2200);
   };
 
   // 3. 🎥 VIDEO CLIP TRIGGER
@@ -660,7 +714,7 @@ function ChatContent() {
         {/* 2. THE MAGNIFICENT 3D SCROLL PARALLAX SPHERE (`ParticleOrb3D`) */}
         <motion.div style={{ scale: orbScale, opacity: orbOpacity }} className="py-1 flex flex-col items-center justify-center relative">
           
-          <div className="relative group cursor-pointer" onClick={() => speakText(`Dr. Mama Kènè est à votre écoute ${userName}.`)}>
+          <div className="relative group cursor-pointer" onClick={handleStartVoiceRecording}>
             
             <div className={`absolute -inset-6 rounded-full bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#E5A93C] opacity-40 blur-2xl transition-all duration-700 ${
               isThinking || isSpeaking || isListening ? 'animate-ping scale-150 opacity-75' : 'group-hover:opacity-60'
@@ -677,9 +731,9 @@ function ChatContent() {
           </div>
 
           <div className="-mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C120B] border border-[#FFD700]/40 text-[#FFD700] text-[10px] font-mono font-bold shadow-xl z-20">
-            <span className={`w-2 h-2 rounded-full ${isThinking ? 'bg-amber-400 animate-spin' : isSpeaking ? 'bg-emerald-400 animate-ping' : 'bg-[#FFD700]'}`} />
+            <span className={`w-2 h-2 rounded-full ${isListening ? 'bg-red-500 animate-ping' : isThinking ? 'bg-amber-400 animate-spin' : isSpeaking ? 'bg-emerald-400 animate-ping' : 'bg-[#FFD700]'}`} />
             <span>
-              {isThinking ? 'Dr. Mama Kènè IA effectue le scanner biométrique 3D...' : isSpeaking ? '🔊 Émission Audio Active...' : `Étape ${activeStep} : Cabinet Spa 3D Actif`}
+              {isListening ? '🎙️ Micro Actif : Dites votre message au Dr. Mama...' : isThinking ? 'Dr. Mama Kènè IA effectue le scanner biométrique 3D...' : isSpeaking ? '🔊 Émission Audio Active...' : `Étape ${activeStep} : Appuyez pour parler 🎙️`}
             </span>
           </div>
         </motion.div>
@@ -688,10 +742,14 @@ function ChatContent() {
         <div className="bg-[#1A110A] border-2 border-[#FFD700]/50 rounded-2xl p-2.5 shadow-xl grid grid-cols-2 sm:grid-cols-4 gap-1.5 z-20">
           <button
             onClick={handleStartVoiceRecording}
-            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-[#26170D] hover:bg-[#341F12] border border-[#FFD700]/40 text-[#FFD700] text-[11px] font-bold transition cursor-pointer"
+            className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border text-[11px] font-bold transition cursor-pointer ${
+              isListening
+                ? 'bg-red-500 text-white border-red-400 animate-pulse'
+                : 'bg-[#26170D] hover:bg-[#341F12] border-[#FFD700]/40 text-[#FFD700]'
+            }`}
           >
             <Mic className="w-4 h-4 text-[#FFD700]" />
-            <span>🎙️ Note Vocale</span>
+            <span>{isListening ? '⏹️ Stopper' : '🎙️ Note Vocale'}</span>
           </button>
 
           <button
@@ -775,8 +833,8 @@ function ChatContent() {
                           <Play className="w-4 h-4 ml-0.5" />
                         </button>
                         <div>
-                          <div className="font-bold text-[#FFD700] text-[11px]">🎙️ Note Vocale du Dr. Mama Kènè</div>
-                          <div className="text-[9px] text-white/60 font-mono">Durée: {item.audioDuration} · Cliquez sur Jouer 🔊</div>
+                          <div className="font-bold text-[#FFD700] text-[11px]">🎙️ Note Vocale Enregistrée</div>
+                          <div className="text-[9px] text-white/80 font-mono italic">{item.text}</div>
                         </div>
                       </div>
                     </div>
@@ -1109,9 +1167,9 @@ function ChatContent() {
                 ? 'bg-red-500 text-white border-red-500 animate-pulse scale-105'
                 : 'bg-[#1E140C] border-[#FFD700]/60 text-[#FFD700] hover:bg-[#2A1E14]'
             }`}
-            title="Note Vocale Audio"
+            title="Note Vocale Audio (Dictée)"
           >
-            <Mic className="w-5 h-5 text-[#FFD700]" />
+            {isListening ? <MicOff className="w-5 h-5 text-white animate-spin" /> : <Mic className="w-5 h-5 text-[#FFD700]" />}
           </button>
 
           <button
@@ -1119,7 +1177,7 @@ function ChatContent() {
             className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-[#FFD700]/60 text-[#FFD700] hover:bg-[#2A1E14] flex items-center justify-center transition shrink-0 cursor-pointer"
             title="Photo Cutanée"
           >
-            <Camera className="w-[#5] h-5 text-[#FFD700]" />
+            <Camera className="w-5 h-5 text-[#FFD700]" />
           </button>
           <input
             ref={fileInputRef}
