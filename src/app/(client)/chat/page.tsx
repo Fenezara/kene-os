@@ -1145,9 +1145,10 @@ function ChatContent() {
                       </span>
                     </div>
                     <ul className="list-disc list-inside space-y-0.5 opacity-90 text-[9px] text-white/80">
-                      <li>Journal of the American Academy of Dermatology (JAAD - Hyperpigmentation Phototypes IV-VI)</li>
-                      <li>Société Française de Dermatologie (SFD - Protocole Dermo-Botanique UEMOA)</li>
-                      <li>Revue Internationale de Dermatologie Tropicale (OMS / WHO Guidelines)</li>
+                      <li>Société Africaine de Dermatologie (SAD - Consensus Pan-Africain Phototypes IV-VI)</li>
+                      <li>Société Ivoirienne de Dermatologie & Vénérologie (SADIV - CHU Treichville/Yopougon)</li>
+                      <li>Pharmacopée Africaine UEMOA / OOAS (Monographies Botaniques Karité & Baobab)</li>
+                      <li>Journal of the American Academy of Dermatology (JAAD - Hyperpigmentation & Melasma)</li>
                     </ul>
                   </div>
                 </div>
