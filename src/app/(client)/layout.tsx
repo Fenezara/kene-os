@@ -70,7 +70,7 @@ export default function ClientLayout({
     { href: '/salons', label: 'Salons & Carte', icon: MapPin, plan: 'essentiel' },
     { href: '/appointments', label: 'Mes RDV', icon: Calendar, plan: 'essentiel' },
     { href: '/diagnostic', label: 'Bilan Cutané', icon: ScanFace, plan: 'pro' },
-    { href: '/chat', label: 'Dr. Mama Kènè IA 🩺🎙️', icon: Stethoscope, plan: 'elite' },
+    { href: '/chat', label: 'Dr. Mama Kènè IA 🩺🎙️', icon: Stethoscope, plan: 'essentiel' },
   ];
 
   const navLinks = allNavLinks.filter((link) => {

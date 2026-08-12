@@ -21,33 +21,33 @@ import { KENE_PRICING_PLANS } from '@/config/pricing'
 import { useToast } from '@/hooks/use-toast'
 
 const navItems = [
-  // Menu Principal (Plan Essentiel 🟢)
+  // 🟢 Menu Principal & Fidélité (Plan Essentiel 7 500 FCFA/mo)
   { id: 'dashboard', name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard, group: 'principal' },
   { id: 'agenda', name: 'Agenda & RDV', href: '/agenda', icon: Calendar, group: 'principal' },
   { id: 'pos', name: 'Caisse / POS', href: '/pos', icon: ShoppingCart, group: 'principal' },
   { id: 'clients', name: 'Clients CRM', href: '/clients', icon: Users, group: 'principal' },
   { id: 'services', name: 'Services & Tarifs', href: '/services', icon: Scissors, group: 'principal' },
+  { id: 'reviews', name: 'Avis Clients', href: '/reviews', icon: Star, group: 'principal' },
+  { id: 'referral', name: 'Programme Parrainage', href: '/referral', icon: Gift, group: 'principal' },
+  { id: 'wallet', name: 'Portefeuille Fidélité', href: '/wallet', icon: Wallet, group: 'principal' },
 
-  // Dermo-IA & Stocks (Plan Pro ⚜️)
+  // ⚜️ Dermo-IA & Stocks (Plan Pro 15 000 FCFA/mo)
   { id: 'inventory', name: 'Stocks & Produits', href: '/inventory', icon: Package, group: 'gestion' },
   { id: 'diagnoses', name: 'Diagnostics Dermo IA', href: '/diagnoses', icon: ScanFace, group: 'gestion' },
   { id: 'marketing', name: 'Marketing WhatsApp', href: '/marketing', icon: MessageSquare, group: 'gestion' },
-  { id: 'reviews', name: 'Avis Clients', href: '/reviews', icon: Star, group: 'gestion' },
 
-  // RH & Finance (Plan Élite 👑)
+  // 👑 Finance & RH (Plan Élite 30 000 FCFA/mo)
   { id: 'rh', name: 'RH & Paie CNPS', href: '/rh', icon: Users, group: 'expert' },
   { id: 'reports', name: 'Rapports & CA', href: '/reports', icon: FileText, group: 'expert' },
-  { id: 'wallet', name: 'Portefeuille Fidélité', href: '/wallet', icon: Wallet, group: 'expert' },
-  { id: 'referral', name: 'Programme Parrainage', href: '/referral', icon: Gift, group: 'expert' },
 
-  // Configuration
+  // ⚙️ Configuration
   { id: 'settings', name: 'Paramètres Salon', href: '/settings', icon: Settings, group: 'config' },
 ]
 
 const groupLabels: Record<string, string> = {
-  principal: 'Menu Principal',
-  gestion: 'Dermo-IA & Stocks (Plan Pro)',
-  expert: 'Finance & RH (Plan Élite)',
+  principal: 'Menu Principal & Fidélité (Essentiel)',
+  gestion: 'Dermo-IA & Stocks (Plan Pro ⚜️)',
+  expert: 'Finance & RH (Plan Élite 👑)',
   config: 'Configuration',
 }
 
