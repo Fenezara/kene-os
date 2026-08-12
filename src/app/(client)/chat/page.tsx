@@ -5,11 +5,12 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, Send, Mic, Play, Pause, Video, MessageSquare, Phone,
-  Camera, Volume2, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone
+  Camera, Volume2, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ParticleOrb3D } from '@/components/ParticleOrb3D';
 import { useToast } from '@/hooks/use-toast';
 
 export interface MultimodalChatMessage {
@@ -229,7 +230,7 @@ function ChatContent() {
                   <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[9px] font-mono">Médical UEMOA</Badge>
                 </h1>
                 <p className="text-[10px] text-emerald-400 font-mono">
-                  En ligne 24/7 · Consultation Multimodale (Texte, Audio, Vidéo, SMS)
+                  En ligne 24/7 · Globe 3D & Consultation Multimodale
                 </p>
               </div>
             </div>
@@ -255,14 +256,21 @@ function ChatContent() {
         </div>
       </header>
 
-      {/* ── 💬 CHAT FEED MULTIMODAL (0 PAGE SCROLL, SCROLL INTERNE SEULEMENT) ── */}
+      {/* ── 💬 CHAT FEED MULTIMODAL + GLOBE 3D EN HAUT DE CHAT ── */}
       <div className="flex-1 overflow-y-auto max-w-3xl w-full mx-auto p-3 sm:p-4 space-y-4 scrollbar-thin">
         
-        {/* Banner Météo & Situation Géo */}
-        <div className="text-center my-1">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFD700]/15 border border-[#FFD700]/40 text-[#FFD700] text-[10px] font-mono font-bold shadow-md">
-            <Sun className="w-3.5 h-3.5 text-amber-400 animate-spin" style={{ animationDuration: '10s' }} />
-            <span>Consultation Médicale Active · Dakar / Abidjan (32°C · UV Indice 8)</span>
+        {/* 🌟 LE MAGNIFIQUE GLOBE 3D PARTICULES INTERACTIF 🌟 */}
+        <div className="flex flex-col items-center justify-center pt-2 pb-1 relative">
+          <div className="relative z-10 w-full max-w-xs h-48 sm:h-56 flex items-center justify-center">
+            <ParticleOrb3D
+              isListening={isRecordingAudio}
+              isSpeaking={playingAudioId !== null || loading}
+            />
+          </div>
+          
+          <div className="-mt-4 flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#181009] border border-[#FFD700]/50 text-[#FFD700] text-[10px] font-mono font-bold shadow-xl z-20">
+            <Sparkles className="w-3 h-3 text-[#FFD700] animate-spin" />
+            <span>Globe IA Biométrique Actif · Dakar / Abidjan (32°C · UV 8)</span>
           </div>
         </div>
 
@@ -478,7 +486,7 @@ function ChatContent() {
 
 export default function ChatPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-white font-mono">Chargement de la Télémédecine...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-white font-mono">Chargement de la Télémédecine 3D...</div>}>
       <ChatContent />
     </Suspense>
   );
