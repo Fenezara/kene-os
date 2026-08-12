@@ -1,6 +1,6 @@
 'use client';
 
-// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Humanized Dynamic Pathology Engine v7.0)
+// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Intelligent Body Zone Recognition & Pathology Engine v8.0)
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
@@ -24,11 +24,10 @@ export interface MultimodalMediaItem {
   timestamp: string;
 }
 
-// 🧠 Dynamic Humanized Pathology Clinical Generator
-function generateDynamicPathologyFlow(symptomText: string, name: string) {
+// 🧠 Dynamic Humanized Pathology & Body Zone Clinical Generator
+function generateDynamicPathologyFlow(symptomText: string, name: string, bodyZone?: string) {
   const q = symptomText.toLowerCase();
 
-  // Warm Human intros
   const humanIntros = [
     `${name}, je comprends parfaitement votre préoccupation.`,
     `Rassurez-vous ${name}, nous allons traiter cela ensemble avec douceur.`,
@@ -36,66 +35,40 @@ function generateDynamicPathologyFlow(symptomText: string, name: string) {
   ];
   const randomIntro = humanIntros[Math.floor(Math.random() * humanIntros.length)];
 
-  // 1. TACHES & HYPERPIGMENTATION
-  if (q.includes('tache') || q.includes('noire') || q.includes('foncée') || q.includes('joue') || q.includes('hyperpigmentation') || q.includes('masque')) {
+  // 1. DOS & ÉPAULES (BACNE & HYPERPIGMENTATION DORSALE)
+  if (bodyZone === 'dos' || q.includes('dos') || q.includes('épaule') || q.includes('dorsal')) {
     return {
-      step2Question: `${randomIntro} Pour ajuster votre diagnostic : s'agit-il plutôt de taches sombres laissées après des boutons récents, ou d'un masque plus diffus apparu progressivement sur vos joues ?`,
+      bodyZoneName: "Dos & Épaules",
+      step2Question: `${randomIntro} L'analyse du DOS montre que la peau y est 2,5 fois plus épaisse que sur le visage. S'agit-il de boutons d'acné du dos (Bacne) provoqués par la sueur, ou de taches foncées persistantes ?`,
       step2Options: [
-        "🔴 Taches sombres post-boutons (PIH réactive)",
-        "🟤 Masque diffus étendu sur les pommettes (Melasma)",
-        "☀️ Taches qui s'accentuent l'après-midi sous le soleil",
-        "✨ Teint terne et pigmenté sans relief",
+        "🔴 Boutons inflammatoires & acné du dos (Bacne)",
+        "🟤 Taches sombres épaisses post-boutons sur le dos",
+        "🔥 Démangeaisons dues aux frottements des vêtements",
+        "🌵 Peau rêche et pores obstrués sur les épaules",
       ],
       diagnosisMap: {
-        default: "Hyperpigmentation Post-Inflammatoire (PIH) & Oxydation Mélanique due aux UV tropicaux.",
+        default: "Hyperpigmentation Dorsale & Folliculite du Dos (Acné Dorsale Réactive).",
       },
       prescription: {
-        title: 'Ordonnance Anti-Taches PIH & Éclat Dermo-Botanique',
+        title: 'Ordonnance Dermo-Botanique Spéciale DOS & ÉPAULES',
         items: [
-          { name: 'Sérum Hibiscus & Baobab 10% Bio', desc: 'Inhibiteur tyrosinase - Appliquer le soir', price: 18500 },
-          { name: 'Écran Solaire Minéral SPF 50', desc: 'Filtre UV peaux mates - Appliquer le matin', price: 15000 },
+          { name: 'Spray Exfoliant Clarifiant Moringa & Baobab 250ml', desc: 'Application facile à 360° sur le dos après la douche', price: 14000 },
+          { name: 'Sérum Concentré Anti-Taches Hibiscus 10%', desc: 'Régulateur mélanique pour peaux épaisses', price: 19500 },
         ],
         totalPrice: 33500,
       },
       goldenRules: [
-        "Règle d'Or 1 : Appliquer le Sérum au Baobab exclusivement le soir pour éviter l'oxydation sous le soleil.",
-        "Règle d'Or 2 : Proscrire absolument les crèmes dépigmentantes hydroquinonées qui aggravent les taches.",
-        "Règle d'Or 3 : Proéger votre visage avec l'Écran Minéral SPF 50 chaque matin dès 8h.",
+        "Règle d'Or 1 : Changer immédiatement de t-shirt après une séance de sport ou une forte transpiration.",
+        "Règle d'Or 2 : Ne pas frotter le dos avec un filet synthétique dur qui irrite les pores.",
+        "Règle d'Or 3 : Vaporiser le Spray Moringa chaque soir sur peau propre et sèche.",
       ]
     };
   }
 
-  // 2. BOUTONS & ACNÉ
-  if (q.includes('bouton') || q.includes('acné') || q.includes('grasse') || q.includes('sébum') || q.includes('brille')) {
+  // 2. CUIR CHEVELU & TEMPES
+  if (bodyZone === 'cuir_chevelu' || q.includes('cheveu') || q.includes('cuir') || q.includes('tresse') || q.includes('tempe')) {
     return {
-      step2Question: `${randomIntro} Précisons l'examen : vos boutons sont-ils plutôt sous forme de kystes sensibles sous la peau, ou de petites imperfections rétentionnelles dues à la sueur et au sébum ?`,
-      step2Options: [
-        "💥 Kystes sensibles sous la peau (Acné kystique)",
-        "🕳️ Points noirs & pores dilatés sur la Zone T",
-        "🧔 Boutons d'irritation folliculaire / rasage",
-        "🔥 Brillance excessive et sueur dès 11h du matin",
-      ],
-      diagnosisMap: {
-        default: "Hyperséborrhée Réactive & Obstruction Folliculaire Inflammatoire.",
-      },
-      prescription: {
-        title: 'Ordonnance Anti-Boutons Purifiante Moringa',
-        items: [
-          { name: 'Gel Nettoyant Clarifiant Moringa & Baobab 200ml', desc: 'Nettoyant purifiant doux matin & soir', price: 12000 },
-          { name: 'Lotion Matifiante Eau de Rose & Niacinamide', desc: 'Resserre les pores & équilibre le pH', price: 14500 },
-        ],
-        totalPrice: 26500,
-      },
-      goldenRules: [
-        "Règle d'Or 1 : Ne jamais percer ni triturer les boutons pour éviter les cicatrices noires définitives.",
-        "Règle d'Or 2 : Nettoyer le visage avec le Gel Moringa matin et soir sans frotter excessivement.",
-      ]
-    };
-  }
-
-  // 3. CUIR CHEVELU & TRESSES
-  if (q.includes('cheveu') || q.includes('cuir') || q.includes('tresse') || q.includes('démange') || q.includes('picotement') || q.includes('chute')) {
-    return {
+      bodyZoneName: "Cuir Chevelu & Tempes",
       step2Question: `${randomIntro} Les tresses serrées sous 32°C sollicitent énormément le cuir chevelu. Ressentez-vous une douleur aiguë au niveau des racines, ou s'agit-il de pellicules et démangeaisons tenaces ?`,
       step2Options: [
         "💆 Douleur & tiraillement intense au niveau des racines",
@@ -115,35 +88,91 @@ function generateDynamicPathologyFlow(symptomText: string, name: string) {
         totalPrice: 27000,
       },
       goldenRules: [
-        "Règle d'Or 1 : Proscrire les tresses trop tendues au niveau des bordures pour préserver les follicules pileux.",
+        "Règle d'Or 1 : Proscrire les tresses trop tendues au niveau des tempes.",
         "Règle d'Or 2 : Appliquer l'Élixir à la Nigelle directement sur le cuir chevelu sans frotter.",
       ]
     };
   }
 
-  // 4. SÉCHERESSE & TIRAILLEMENTS (FALLBACK)
+  // 3. COU & MENTON (FOLLICULITE / PFB)
+  if (bodyZone === 'cou_menton' || q.includes('cou') || q.includes('menton') || q.includes('barbe') || q.includes('rasage')) {
+    return {
+      bodyZoneName: "Cou & Menton",
+      step2Question: `${randomIntro} L'analyse de la zone du COU & MENTON montre des signes de folliculite. Est-ce dû aux poils incarnés après le rasage/épilation, ou à des boutons d'irritation ?`,
+      step2Options: [
+        "🪒 Poils incarnés & boutons de rasage (Pseudofolliculite PFB)",
+        "🔴 Taches noires sous le menton et sur le cou",
+        "🔥 Irritation et brûlure après épilation",
+      ],
+      diagnosisMap: {
+        default: "Pseudofolliculite de Barbe (PFB) & Hyperpigmentation Cervicale.",
+      },
+      prescription: {
+        title: 'Ordonnance Anti-Poils Incarnés Cou & Menton',
+        items: [
+          { name: 'Lotion Apaisante Anti-Poils Incarnés Niacinamide', desc: 'Prévient l\'incarnation pilaire', price: 15500 },
+          { name: 'Baume Réparateur Karité & Baobab', desc: 'Calme l\'inflammation du cou', price: 12500 },
+        ],
+        totalPrice: 28000,
+      },
+      goldenRules: [
+        "Règle d'Or 1 : Ne jamais raser à contre-poil pour éviter que le poil rentre dans le follicule.",
+        "Règle d'Or 2 : Appliquer la Lotion Apaisante après chaque rasage ou épilation.",
+      ]
+    };
+  }
+
+  // 4. BRAS & JAMBES & CORPS
+  if (bodyZone === 'bras_jambes' || q.includes('bras') || q.includes('jambe') || q.includes('corps')) {
+    return {
+      bodyZoneName: "Bras & Jambes",
+      step2Question: `${randomIntro} L'analyse des BRAS et JAMBES montre une déshydratation cutanée. S'agit-il d'une peau croco très sèche, ou de petits boutons granuleux (kératose) ?`,
+      step2Options: [
+        "🍂 Peau effet croco qui pèle et tiraille",
+        "🌵 Petits boutons granuleux sur les bras (Kératose)",
+        "🟤 Taches sombres sur les jambes ou les genoux",
+      ],
+      diagnosisMap: {
+        default: "Déséquilibre Hydrolipidique Corporel & Kératose Pilaire.",
+      },
+      prescription: {
+        title: 'Ordonnance Nutrition Corporelle Karité Brut Korhogo',
+        items: [
+          { name: 'Beurre de Karité Brut Korhogo 200g', desc: 'Nutrition intense longue durée', price: 12500 },
+          { name: 'Huile Nourrissante Baobab & Moringa 100ml', desc: 'Éclat et lissage de la peau croco', price: 14500 },
+        ],
+        totalPrice: 27000,
+      },
+      goldenRules: [
+        "Règle d'Or 1 : Appliquer le Beurre de Karité immédiatement après la douche sur peau encore humide.",
+      ]
+    };
+  }
+
+  // 5. VISAGE & JOUES (PAR DÉFAUT SI VISAGE)
   return {
-    step2Question: `${randomIntro} Quand ressentez-vous la plus forte inconfort : juste après avoir lavé votre visage à l'eau, ou tout au long de la journée sous l'air sec ou la climatisation ?`,
+    bodyZoneName: "Visage & Joues",
+    step2Question: `${randomIntro} Pour le VISAGE : s'agit-il plutôt de taches sombres laissées par des boutons récents, ou d'un masque plus diffus apparu progressivement sur vos joues ?`,
     step2Options: [
-      "🔥 Brûlure et tiraillement immédiat après lavage",
-      "🍂 Peau rêche qui pèle sur les joues et les ailes du nez",
-      "🌵 Sensation d'étau permanent malgré les crèmes classiques",
-      "✨ Envie de retrouver du confort et une souplesse naturelle",
+      "🔴 Taches sombres post-boutons (PIH faciale)",
+      "🟤 Masque diffus étendu sur les pommettes (Melasma)",
+      "☀️ Taches qui s'accentuent sous le soleil 32°C",
+      "✨ Teint terne et pigmenté sur le visage",
     ],
     diagnosisMap: {
-      default: "Altération de la Barrière Hydrolipidique Protective.",
+      default: "Hyperpigmentation Post-Inflammatoire Faciale (PIH) & Oxydation Mélanique.",
     },
     prescription: {
-      title: 'Ordonnance Réparatrice Karité Brut Korhogo',
+      title: 'Ordonnance Anti-Taches Visage & Éclat',
       items: [
-        { name: 'Beurre de Karité Brut Korhogo 100g', desc: 'Soin régénérateur barrière lipidique', price: 9500 },
-        { name: 'Sérum Nourrissant Huile de Baobab Bio', desc: 'Huile réparatrice profonde du soir', price: 13500 },
+        { name: 'Sérum Hibiscus & Baobab 10% Bio', desc: 'Appliquer le soir sur les taches', price: 18500 },
+        { name: 'Écran Solaire Minéral SPF 50', desc: 'Appliquer chaque matin', price: 15000 },
       ],
-      totalPrice: 23000,
+      totalPrice: 33500,
     },
     goldenRules: [
-      "Règle d'Or 1 : Appliquer le Beurre de Karité brut en compresse le soir sur peau légèrement humide.",
-      "Règle d'Or 2 : Rincer le visage à l'eau tiède plutôt qu'à l'eau chaude.",
+      "Règle d'Or 1 : Appliquer le Sérum au Baobab le soir uniquement.",
+      "Règle d'Or 2 : Utiliser l'Écran Minéral SPF 50 chaque matin dès 8h.",
     ]
   };
 }
@@ -249,6 +278,7 @@ function ChatContent() {
 
   const [mediaFeed, setMediaFeed] = useState<MultimodalMediaItem[]>([]);
   const [activeStep, setActiveStep] = useState<number>(1);
+  const [selectedZone, setSelectedZone] = useState<string | null>(null);
 
   // Dynamic pathology state
   const [dynamicFlow, setDynamicFlow] = useState<any>(null);
@@ -293,7 +323,7 @@ function ChatContent() {
     }
   };
 
-  // 1. 📷 PHOTO UPLOAD / DEMO TRIGGER
+  // 1. 📷 PHOTO UPLOAD WITH BODY ZONE SELECTION
   const handleTriggerPhotoAnalysis = (photoUrl?: string) => {
     const demoPhoto = photoUrl || '/kene_afro_beauty_hero.png';
 
@@ -319,11 +349,11 @@ function ChatContent() {
         id: `doc-photo-ack-${Date.now()}`,
         type: 'text',
         sender: 'doctor',
-        text: `J'ai bien reçu votre photo ${userName}. J'observe des zones d'hyperpigmentation localisées et une réactivité mélanique. Poursuivons l'examen.`,
+        text: `J'ai bien reçu votre photo ${userName}. Veuillez indiquer ci-dessous la zone du corps exacte prise en photo (Dos, Visage, Cuir Chevelu...) pour adapter la prescription.`,
         timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
       };
       setMediaFeed(prev => [...prev, docResponse]);
-      handleSelectSymptom("Taches foncées observées sur photo cutanée");
+      setActiveStep(1);
     }, 1500);
   };
 
@@ -355,7 +385,7 @@ function ChatContent() {
         type: 'audio',
         sender: 'patient',
         audioDuration: '0:28',
-        text: "Note Vocale Audio Cliente : 'Docteur, j'ai des tiraillements et des taches sur les joues.'",
+        text: "Note Vocale Audio Cliente : 'Docteur, j'ai des tiraillements et des boutons sur le dos.'",
         timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
       };
       setMediaFeed(prev => [...prev, patientAudio]);
@@ -369,11 +399,11 @@ function ChatContent() {
           type: 'audio',
           sender: 'doctor',
           audioDuration: '0:35',
-          text: `Note Vocale du Dr. Mama Kènè : ${userName}, j'ai écouté attentivement votre message. Je prends en compte la gêne sous le soleil.`,
+          text: `Note Vocale du Dr. Mama Kènè : ${userName}, j'ai bien écouté votre note vocale concernant votre dos. Je prends en compte la gêne due à la sueur.`,
           timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
         };
         setMediaFeed(prev => [...prev, docAudioAck]);
-        handleSelectSymptom("Taches foncées & tiraillements (Note Vocale)");
+        handleSelectSymptom("Boutons et taches sur le dos", "dos");
       }, 1400);
     }, 2200);
   };
@@ -385,8 +415,8 @@ function ChatContent() {
       id: `video-${Date.now()}`,
       type: 'video',
       sender: 'doctor',
-      videoTitle: 'Capsule Vidéo : Application du Sérum Baobab & Écran SPF 50',
-      text: 'Le Dr. Mama Kènè vous montre en vidéo comment appliquer votre sérum sans saturer vos pores.',
+      videoTitle: 'Capsule Vidéo : Application du Spray Exfoliant & Sérum au Baobab',
+      text: 'Le Dr. Mama Kènè vous montre en vidéo comment appliquer vos soins selon la zone du corps.',
       timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
     };
     setMediaFeed(prev => [...prev, videoItem]);
@@ -408,21 +438,25 @@ function ChatContent() {
     setMediaFeed(prev => [...prev, patientSms]);
     if (!customText) setInput('');
 
-    toast({ title: "📱 SMS Transmis", description: "Votre message SMS a été reçu par le Dr. Mama Kènè." });
-    handleSelectSymptom(textToSend);
+    let zone: string | undefined = undefined;
+    if (textToSend.toLowerCase().includes('dos') || textToSend.toLowerCase().includes('épaule')) zone = 'dos';
+    if (textToSend.toLowerCase().includes('cheveu') || textToSend.toLowerCase().includes('cuir')) zone = 'cuir_chevelu';
+    if (textToSend.toLowerCase().includes('barbe') || textToSend.toLowerCase().includes('cou')) zone = 'cou_menton';
+
+    handleSelectSymptom(textToSend, zone);
   };
 
-  // 🧠 Dynamic Pathology Symptom Handler
-  const handleSelectSymptom = (symptomText: string) => {
+  // 🧠 Dynamic Pathology & Body Zone Symptom Handler
+  const handleSelectSymptom = (symptomText: string, bodyZone?: string) => {
     setIsThinking(true);
+    setSelectedZone(bodyZone || null);
 
-    // Generate dynamic pathology flow tailored to this symptom
-    const flow = generateDynamicPathologyFlow(symptomText, userName);
+    const flow = generateDynamicPathologyFlow(symptomText, userName, bodyZone);
     setDynamicFlow(flow);
 
     setConsultationData(prev => ({
       ...prev,
-      symptom: symptomText,
+      symptom: `${symptomText} (${flow.bodyZoneName || 'Zone Corporelle'})`,
       diagnosis: flow.diagnosisMap.default,
       prescription: flow.prescription,
       goldenRules: flow.goldenRules,
@@ -431,7 +465,7 @@ function ChatContent() {
     setTimeout(() => {
       setIsThinking(false);
       setActiveStep(2);
-      speakText(`Étape 2 : Examen clinique. ${flow.step2Question}`);
+      speakText(`Étape 2 : Examen clinique pour la zone ${flow.bodyZoneName}. ${flow.step2Question}`);
     }, 1300);
   };
 
@@ -442,7 +476,7 @@ function ChatContent() {
     setTimeout(() => {
       setIsThinking(false);
       setActiveStep(3);
-      speakText(`Étape 3 : Diagnostic Médical Posé pour ${userName}. ${consultationData.diagnosis}`);
+      speakText(`Étape 3 : Diagnostic Médical Posé pour le ${dynamicFlow?.bodyZoneName || 'corps'}. ${consultationData.diagnosis}`);
     }, 1300);
   };
 
@@ -462,6 +496,7 @@ function ChatContent() {
     setConsultationData({});
     setMediaFeed([]);
     setDynamicFlow(null);
+    setSelectedZone(null);
     speakText(`Bonjour ${userName} ! Bienvenue dans votre Spa Télémédecine 3D.`);
   };
 
@@ -634,7 +669,7 @@ function ChatContent() {
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-[#1A110A] border-2 border-[#FFD700]/40 rounded-3xl p-4 shadow-2xl flex flex-col items-center text-center space-y-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-[#FFD700] font-mono">
               <Activity className="w-4 h-4 text-[#FFD700]" />
-              <span>Analyse Biométrique 5-Axes Cutanée</span>
+              <span>Analyse Biométrique 5-Axes ({dynamicFlow?.bodyZoneName || 'Zone Corporelle'})</span>
             </div>
             <BiometricRadarCanvas />
           </motion.div>
@@ -712,10 +747,10 @@ function ChatContent() {
           )}
         </AnimatePresence>
 
-        {/* ── 3. INTERACTIVE 5-STEP WIZARD CARDS WITH DYNAMIC PATHOLOGY ── */}
+        {/* ── 3. INTERACTIVE 5-STEP WIZARD CARDS WITH BODY ZONE DETECTOR ── */}
         <AnimatePresence mode="wait">
           
-          {/* 📍 ÉTAPE 1 : ANAMNÈSE MÉDICALE */}
+          {/* 📍 ÉTAPE 1 : ANAMNÈSE MÉDICALE & SÉLECTION DE LA ZONE DU CORPS */}
           {activeStep === 1 && (
             <motion.div
               key="step-1"
@@ -727,28 +762,29 @@ function ChatContent() {
               <div className="bg-[#1A110A] border-2 border-[#FFD700]/50 rounded-3xl p-5 shadow-2xl space-y-3 text-left">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
                   <span className="text-[10px] font-mono font-bold text-[#FFD700] uppercase tracking-wider flex items-center gap-1.5">
-                    <Stethoscope className="w-3.5 h-3.5" /> 1. Anamnèse Médicale Humaine
+                    <Stethoscope className="w-3.5 h-3.5" /> 1. Sélection de la Zone du Corps & Symptôme
                   </span>
                   <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[9px]">1 / 5</Badge>
                 </div>
                 
                 <p className="text-xs text-white leading-relaxed font-sans font-medium">
-                  "Bonjour {userName} ! Je suis ravie de m'entretenir avec vous. Dites-moi en toute liberté : quel est le problème principal qui vous tracasse sur votre peau ou vos cheveux ?"
+                  "Bonjour {userName} ! Pour adapter le diagnostic et l'ordonnance à la bonne épaisseur d'épiderme, indiquez la **zone du corps** concernée :"
                 </p>
 
                 <div className="space-y-2 pt-1">
                   {[
-                    "🔴 Taches foncées ou noires sur les joues",
-                    "🟡 Boutons, acné & peau qui brille",
-                    "🟠 Cuir chevelu qui démange après tresses",
-                    "🟤 Sécheresse & tiraillements intenses",
-                  ].map((chip, idx) => (
+                    { label: "🩻 Dos & Épaules (Acné du dos / Taches dorsales)", zone: "dos" },
+                    { label: "💆 Visage & Joues (Hyperpigmentation faciale)", zone: "visage" },
+                    { label: "💇 Cuir Chevelu & Tempes (Tresses & Alopécie)", zone: "cuir_chevelu" },
+                    { label: "🪒 Cou & Menton (Boutons de rasage / PFB)", zone: "cou_menton" },
+                    { label: "🦵 Bras, Jambes & Corps (Sécheresse & Kératose)", zone: "bras_jambes" },
+                  ].map((item, idx) => (
                     <button
                       key={idx}
-                      onClick={() => handleSelectSymptom(chip)}
+                      onClick={() => handleSelectSymptom(item.label, item.zone)}
                       className="w-full text-left text-xs text-white/90 hover:text-white bg-[#26170D] hover:bg-[#341F12] border border-[#FFD700]/30 hover:border-[#FFD700] p-3 rounded-2xl transition cursor-pointer flex items-center justify-between group shadow-sm"
                     >
-                      <span className="font-medium">{chip}</span>
+                      <span className="font-medium">{item.label}</span>
                       <ChevronRight className="w-4 h-4 text-[#FFD700] group-hover:translate-x-1 transition-transform" />
                     </button>
                   ))}
@@ -757,7 +793,7 @@ function ChatContent() {
             </motion.div>
           )}
 
-          {/* 📍 ÉTAPE 2 : EXAMEN CLINIQUE DYNAMIQUE ADAPTÉ À LA PATHOLOGIE */}
+          {/* 📍 ÉTAPE 2 : EXAMEN CLINIQUE DYNAMIQUE ADAPTÉ À LA ZONE DU CORPS */}
           {activeStep === 2 && dynamicFlow && (
             <motion.div
               key="step-2"
@@ -769,21 +805,21 @@ function ChatContent() {
               <div className="bg-[#1A110A] border-2 border-[#FFD700]/50 rounded-3xl p-5 shadow-2xl space-y-3 text-left">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
                   <span className="text-[10px] font-mono font-bold text-[#FFD700] uppercase tracking-wider flex items-center gap-1.5">
-                    <Sun className="w-3.5 h-3.5" /> 2. Examen Clinique Ciblé (Pathologie Identifiée)
+                    <Sun className="w-3.5 h-3.5" /> 2. Examen Clinique Ciblé : Zone {dynamicFlow.bodyZoneName}
                   </span>
                   <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[9px]">2 / 5</Badge>
                 </div>
 
                 <div className="bg-[#26170D] border border-[#FFD700]/30 p-3 rounded-2xl text-xs text-[#FFD700] font-bold">
-                  Symptôme enregistré : {consultationData.symptom}
+                  Zone & Symptôme enregistrés : {consultationData.symptom}
                 </div>
                 
-                {/* DYNAMIC QUESTION TAILORED TO THE PATHOLOGY */}
+                {/* DYNAMIC QUESTION TAILORED TO BODY ZONE */}
                 <p className="text-xs text-white leading-relaxed font-sans font-medium">
                   "{dynamicFlow.step2Question}"
                 </p>
 
-                {/* DYNAMIC OPTIONS TAILORED TO THE PATHOLOGY */}
+                {/* DYNAMIC OPTIONS TAILORED TO BODY ZONE */}
                 <div className="space-y-2 pt-1">
                   {dynamicFlow.step2Options.map((trigger: string, idx: number) => (
                     <button
@@ -812,7 +848,7 @@ function ChatContent() {
               <div className="bg-[#1A110A] border-2 border-[#FFD700]/60 rounded-3xl p-5 shadow-2xl space-y-4 text-left">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
                   <span className="text-[10px] font-mono font-bold text-[#FFD700] uppercase tracking-wider flex items-center gap-1.5">
-                    🩺 3. Diagnostic Médical Posé
+                    🩺 3. Diagnostic Médical Posé ({dynamicFlow?.bodyZoneName || 'Zone Corporelle'})
                   </span>
                   <Badge className="bg-emerald-500/20 text-emerald-400 text-[9px]">3 / 5</Badge>
                 </div>
@@ -827,7 +863,7 @@ function ChatContent() {
                 </div>
 
                 <p className="text-xs text-white/90 leading-relaxed font-sans font-medium">
-                  {userName}, en tenant compte de vos précisions ({consultationData.trigger}), le film hydrolipidique réagit pour protéger votre épiderme.
+                  {userName}, en tenant compte de vos précisions sur le {dynamicFlow?.bodyZoneName} ({consultationData.trigger}), la structure épidermique nécessite un soin adapté.
                 </p>
 
                 <Button
@@ -965,8 +1001,8 @@ function ChatContent() {
                   <span className="font-bold text-white">{userName}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white/60">Médecin :</span>
-                  <span className="font-bold text-[#FFD700]">Dr. Mama Kènè (Ordre Dermo)</span>
+                  <span className="text-white/60">Zone du Corps :</span>
+                  <span className="font-bold text-[#FFD700]">{dynamicFlow?.bodyZoneName || 'Visage / Dos'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-white/60">Diagnostic :</span>
