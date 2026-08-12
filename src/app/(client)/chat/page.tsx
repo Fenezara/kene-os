@@ -1175,27 +1175,26 @@ function ChatContent() {
                   <div className="bg-[#0F0A05] border border-[#FFD700]/60 rounded-2xl p-4 space-y-3 text-white">
                     <div className="flex items-center justify-between text-xs font-bold text-[#FFD700]">
                       <span>🌱 {consultationData.prescription.title}</span>
-                      <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[9px] font-mono">Certifiée UEMOA</Badge>
+                      <Badge className="bg-emerald-500/20 text-emerald-400 text-[9px] font-mono">Prescription Médicale Validée</Badge>
                     </div>
 
                     <div className="space-y-2">
                       {consultationData.prescription.items.map((item: any, idx: number) => (
-                        <div key={idx} className="flex justify-between items-center bg-[#1A1410] p-2.5 rounded-xl text-xs border border-white/5">
+                        <div key={idx} className="flex justify-between items-center bg-[#1A1410] p-3 rounded-xl text-xs border border-white/10">
                           <div>
-                            <div className="font-bold text-white">{item.name}</div>
-                            <div className="text-[10px] text-white/50">{item.desc}</div>
+                            <div className="font-bold text-white flex items-center gap-1.5">
+                              <Check className="w-3.5 h-3.5 text-[#FFD700]" />
+                              <span>{item.name}</span>
+                            </div>
+                            <div className="text-[10px] text-[#FFD700]/80 font-mono mt-0.5">{item.desc}</div>
                           </div>
-                          <span className="font-mono font-bold text-[#FFD700]">
-                            {item.price.toLocaleString('fr-FR')} FCFA
-                          </span>
                         </div>
                       ))}
                     </div>
 
-                    <div className="pt-2 flex items-center justify-between border-t border-white/10">
-                      <span className="text-xs font-bold font-mono text-[#FFD700]">
-                        Total: {consultationData.prescription.totalPrice.toLocaleString('fr-FR')} FCFA
-                      </span>
+                    <div className="pt-2 flex items-center justify-between border-t border-white/10 text-[10px] font-mono text-white/50">
+                      <span>🩺 Dr. Mama Kènè (Ordre Dermo-Botanique UEMOA)</span>
+                      <span className="text-emerald-400 font-bold">Document Médical Officiel</span>
                     </div>
                   </div>
                 )}
@@ -1357,12 +1356,14 @@ function ChatContent() {
                 </div>
               </div>
 
-              <div className="p-3 bg-[#0F0A05] rounded-2xl border border-white/10 text-xs space-y-1 font-mono">
-                <div className="font-bold text-[#FFD700]">Prescription :</div>
+              <div className="p-3 bg-[#0F0A05] rounded-2xl border border-white/10 text-xs space-y-2 font-mono">
+                <div className="font-bold text-[#FFD700] border-b border-white/10 pb-1">Prescription Médicale :</div>
                 {consultationData.prescription?.items.map((i: any, idx: number) => (
-                  <div key={idx} className="flex justify-between text-[11px]">
-                    <span>• {i.name}</span>
-                    <span>{i.price} FCFA</span>
+                  <div key={idx} className="space-y-0.5 text-[11px]">
+                    <div className="font-bold text-white flex items-center gap-1">
+                      <span>•</span> {i.name}
+                    </div>
+                    <div className="text-[10px] text-[#FFD700]/70 pl-3.5">{i.desc}</div>
                   </div>
                 ))}
               </div>
