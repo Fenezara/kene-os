@@ -1,5 +1,6 @@
 'use client';
 
+// Kènè OS — Clean Chat v2.5 Fresh Deploy (No Demo Cards Cache)
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
