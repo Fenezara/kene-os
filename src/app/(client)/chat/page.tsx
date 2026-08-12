@@ -48,7 +48,7 @@ function ChatContent() {
       id: 'msg-1',
       sender: 'doctor',
       type: 'text',
-      text: "Bonjour ! Je suis le Dr. Mama Kènè, votre médecin dermatologue dermo-cosmétique UEMOA. Je prends connaissance de votre situation géo-climatique (Dakar/Abidjan 32°C). Comment se porte votre peau aujourd'hui ?",
+      text: "Bonjour ! Je suis le Dr. Mama Kènè, votre médecin dermatologue dermo-cosmétique. Comment se porte votre peau aujourd'hui ?",
       timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -198,10 +198,10 @@ function ChatContent() {
               <div>
                 <h1 className="font-serif font-bold text-sm text-white leading-tight flex items-center gap-1.5">
                   Dr. Mama Kènè <span className="text-[#FFD700]">IA</span>
-                  <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[9px] font-mono">Médical UEMOA</Badge>
+                  <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[9px] font-mono">Dermatologie Dermo-Botanique</Badge>
                 </h1>
                 <p className="text-[10px] text-emerald-400 font-mono">
-                  En ligne 24/7 · Globe 3D & Consultation Multimodale
+                  En ligne 24/7 · Audio & SMS Multimodal
                 </p>
               </div>
             </div>
