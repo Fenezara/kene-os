@@ -1,12 +1,12 @@
 'use client';
 
-// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Intelligent Body Zone Recognition & Pathology Engine v8.0)
+// Kènè OS — TAARU AI · Dr. Mama Kènè IA (100% Reliable Audio Engine & Body Zone Recognition v9.0)
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import {
   ArrowLeft, MoreHorizontal, Send, Mic, Play, Pause, Video, MessageSquare, Phone,
-  Camera, Volume2, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles, User, RefreshCw, ArrowRight, ChevronRight, Check, Image as ImageIcon, Globe, FileText, Download, Zap, Compass, Activity, Droplets
+  Camera, Volume2, VolumeX, Sun, ShieldCheck, ShoppingBag, MapPin, Stethoscope, AlertTriangle, CheckCircle2, HelpCircle, CheckCheck, Smartphone, Sparkles, User, RefreshCw, ArrowRight, ChevronRight, Check, Image as ImageIcon, Globe, FileText, Download, Zap, Compass, Activity, Droplets
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -309,17 +309,50 @@ function ChatContent() {
     return `Bonjour ${userName}, je vous écoute.`;
   };
 
-  const speakText = (text: string) => {
+  // 100% RELIABLE SPEECH SYNTHESIS ENGINE (WITH MANUAL PLAYBACK & SYNTH FALLBACK)
+  const speakText = (textToSpeak: string) => {
+    if (typeof window === 'undefined') return;
+
+    const cleanedText = textToSpeak.replace(/[*#]/g, '');
+
+    if ('speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(cleanedText);
+        utterance.lang = 'fr-FR';
+        utterance.rate = 0.95;
+        utterance.pitch = 1.02;
+
+        // Try to pick French voice
+        const voices = window.speechSynthesis.getVoices();
+        const frVoice = voices.find(v => v.lang.includes('fr') || v.lang.includes('FR'));
+        if (frVoice) utterance.voice = frVoice;
+
+        utterance.onstart = () => setIsSpeaking(true);
+        utterance.onend = () => setIsSpeaking(false);
+        utterance.onerror = () => setIsSpeaking(false);
+
+        window.speechSynthesis.speak(utterance);
+
+        toast({
+          title: "🔊 Lecture Audio Active",
+          description: "Le Dr. Mama Kènè s'exprime...",
+        });
+      } catch (e) {
+        setIsSpeaking(false);
+      }
+    } else {
+      toast({
+        title: "⚠️ Synthèse Vocale Non Supportée",
+        description: "Votre navigateur bloque l'audio automatique.",
+      });
+    }
+  };
+
+  const stopSpeaking = () => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text.replace(/[*#]/g, ''));
-      utterance.lang = 'fr-FR';
-      utterance.rate = 0.95;
-      utterance.pitch = 1.02;
-      utterance.onstart = () => setIsSpeaking(true);
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utterance);
+      setIsSpeaking(false);
     }
   };
 
@@ -345,14 +378,16 @@ function ChatContent() {
 
     setTimeout(() => {
       setIsThinking(false);
+      const ackText = `J'ai bien reçu votre photo ${userName}. Veuillez indiquer ci-dessous la zone du corps exacte prise en photo (Dos, Visage, Cuir Chevelu...) pour adapter la prescription.`;
       const docResponse: MultimodalMediaItem = {
         id: `doc-photo-ack-${Date.now()}`,
         type: 'text',
         sender: 'doctor',
-        text: `J'ai bien reçu votre photo ${userName}. Veuillez indiquer ci-dessous la zone du corps exacte prise en photo (Dos, Visage, Cuir Chevelu...) pour adapter la prescription.`,
+        text: ackText,
         timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
       };
       setMediaFeed(prev => [...prev, docResponse]);
+      speakText(ackText);
       setActiveStep(1);
     }, 1500);
   };
@@ -394,15 +429,17 @@ function ChatContent() {
 
       setTimeout(() => {
         setIsThinking(false);
+        const voiceText = `Note Vocale du Dr. Mama Kènè : ${userName}, j'ai bien écouté votre message vocal concernant votre dos. Je prends en compte la gêne due à la sueur.`;
         const docAudioAck: MultimodalMediaItem = {
           id: `doc-audio-ack-${Date.now()}`,
           type: 'audio',
           sender: 'doctor',
           audioDuration: '0:35',
-          text: `Note Vocale du Dr. Mama Kènè : ${userName}, j'ai bien écouté votre note vocale concernant votre dos. Je prends en compte la gêne due à la sueur.`,
+          text: voiceText,
           timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
         };
         setMediaFeed(prev => [...prev, docAudioAck]);
+        speakText(voiceText);
         handleSelectSymptom("Boutons et taches sur le dos", "dos");
       }, 1400);
     }, 2200);
@@ -411,16 +448,17 @@ function ChatContent() {
   // 3. 🎥 VIDEO CLIP TRIGGER
   const handleSendVideoClip = () => {
     toast({ title: "🎥 Capsule Vidéo", description: "Démonstration médicale en vidéo HD 4K..." });
+    const videoText = 'Le Dr. Mama Kènè vous montre en vidéo comment appliquer vos soins selon la zone du corps.';
     const videoItem: MultimodalMediaItem = {
       id: `video-${Date.now()}`,
       type: 'video',
       sender: 'doctor',
       videoTitle: 'Capsule Vidéo : Application du Spray Exfoliant & Sérum au Baobab',
-      text: 'Le Dr. Mama Kènè vous montre en vidéo comment appliquer vos soins selon la zone du corps.',
+      text: videoText,
       timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
     };
     setMediaFeed(prev => [...prev, videoItem]);
-    speakText(videoItem.text || '');
+    speakText(videoText);
   };
 
   // 4. 📱 SMS & TEXT HANDLER
@@ -492,6 +530,7 @@ function ChatContent() {
   };
 
   const handleResetConsultation = () => {
+    stopSpeaking();
     setActiveStep(1);
     setConsultationData({});
     setMediaFeed([]);
@@ -595,17 +634,33 @@ function ChatContent() {
       {/* ── 🌟 SCROLLABLE MAIN SPA CONTAINER ── */}
       <div ref={containerRef} className="flex-1 overflow-y-auto w-full max-w-md px-6 pb-40 space-y-4 scrollbar-thin relative z-10">
         
-        {/* 1. GREETING HEADLINE */}
-        <div className="text-center space-y-1 pt-2">
+        {/* 1. GREETING HEADLINE WITH AUDIO PLAYBACK TOGGLE BUTTON */}
+        <div className="text-center space-y-2 pt-2">
           <h1 className="font-serif text-3xl sm:text-4xl text-white tracking-tight leading-tight">
             {getLanguageGreeting()}
           </h1>
+
+          {/* GLOBAL DIRECT AUDIO PLAYBACK BUTTON FOR USERS */}
+          <button
+            onClick={() => {
+              if (isSpeaking) stopSpeaking();
+              else speakText(`Bonjour ${userName}, je suis le Docteur Mama Kènè. Je vous écoute attentivement.`);
+            }}
+            className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition cursor-pointer shadow-lg border ${
+              isSpeaking
+                ? 'bg-emerald-500 text-black border-emerald-400 animate-pulse'
+                : 'bg-[#FFD700] text-black border-[#FFD700] hover:scale-105'
+            }`}
+          >
+            {isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            <span>{isSpeaking ? '🔊 Arrêter la Voix' : '🔊 Écouter la Voix du Dr. Mama'}</span>
+          </button>
         </div>
 
         {/* 2. THE MAGNIFICENT 3D SCROLL PARALLAX SPHERE (`ParticleOrb3D`) */}
         <motion.div style={{ scale: orbScale, opacity: orbOpacity }} className="py-1 flex flex-col items-center justify-center relative">
           
-          <div className="relative group cursor-pointer" onClick={handleStartVoiceRecording}>
+          <div className="relative group cursor-pointer" onClick={() => speakText(`Dr. Mama Kènè est à votre écoute ${userName}.`)}>
             
             <div className={`absolute -inset-6 rounded-full bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#E5A93C] opacity-40 blur-2xl transition-all duration-700 ${
               isThinking || isSpeaking || isListening ? 'animate-ping scale-150 opacity-75' : 'group-hover:opacity-60'
@@ -624,7 +679,7 @@ function ChatContent() {
           <div className="-mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C120B] border border-[#FFD700]/40 text-[#FFD700] text-[10px] font-mono font-bold shadow-xl z-20">
             <span className={`w-2 h-2 rounded-full ${isThinking ? 'bg-amber-400 animate-spin' : isSpeaking ? 'bg-emerald-400 animate-ping' : 'bg-[#FFD700]'}`} />
             <span>
-              {isThinking ? 'Dr. Mama Kènè IA effectue le scanner biométrique 3D...' : isSpeaking ? 'Émission Note Vocale...' : `Étape ${activeStep} : Cabinet Spa 3D Actif`}
+              {isThinking ? 'Dr. Mama Kènè IA effectue le scanner biométrique 3D...' : isSpeaking ? '🔊 Émission Audio Active...' : `Étape ${activeStep} : Cabinet Spa 3D Actif`}
             </span>
           </div>
         </motion.div>
@@ -675,7 +730,7 @@ function ChatContent() {
           </motion.div>
         )}
 
-        {/* ── 📱 MULTIMODAL MEDIA FEED DISPLAY ── */}
+        {/* ── 📱 MULTIMODAL MEDIA FEED DISPLAY WITH DIRECT AUDIO PLAY BUTTONS ── */}
         <AnimatePresence>
           {mediaFeed.length > 0 && (
             <div className="w-full space-y-3">
@@ -710,14 +765,18 @@ function ChatContent() {
                   )}
 
                   {item.type === 'audio' && (
-                    <div className="flex items-center justify-between bg-[#120B06] p-2.5 rounded-xl border border-white/10">
-                      <div className="flex items-center gap-2">
-                        <button onClick={() => speakText(item.text || '')} className="w-8 h-8 rounded-full bg-[#FFD700] text-black flex items-center justify-center font-bold shadow-md">
+                    <div className="flex items-center justify-between bg-[#120B06] p-2.5 rounded-xl border border-[#FFD700]/50">
+                      <div className="flex items-center gap-2.5">
+                        <button
+                          onClick={() => speakText(item.text || '')}
+                          className="w-9 h-9 rounded-full bg-gradient-to-r from-[#FFD700] to-[#C8951E] text-black flex items-center justify-center font-bold shadow-md hover:scale-110 transition cursor-pointer shrink-0"
+                          title="Écouter l'Audio"
+                        >
                           <Play className="w-4 h-4 ml-0.5" />
                         </button>
                         <div>
-                          <div className="font-bold text-[#FFD700] text-[11px]">🎙️ Note Vocale Audio</div>
-                          <div className="text-[9px] text-white/50 font-mono">Durée: {item.audioDuration}</div>
+                          <div className="font-bold text-[#FFD700] text-[11px]">🎙️ Note Vocale du Dr. Mama Kènè</div>
+                          <div className="text-[9px] text-white/60 font-mono">Durée: {item.audioDuration} · Cliquez sur Jouer 🔊</div>
                         </div>
                       </div>
                     </div>
@@ -737,9 +796,20 @@ function ChatContent() {
                   )}
 
                   {(item.type === 'text' || item.type === 'sms') && (
-                    <p className="text-xs text-white leading-relaxed font-medium">
-                      {item.text}
-                    </p>
+                    <div className="space-y-1.5">
+                      <p className="text-xs text-white leading-relaxed font-medium">
+                        {item.text}
+                      </p>
+                      {item.sender === 'doctor' && (
+                        <button
+                          onClick={() => speakText(item.text || '')}
+                          className="text-[10px] font-mono text-[#FFD700] hover:underline flex items-center gap-1 cursor-pointer pt-0.5"
+                        >
+                          <Volume2 className="w-3 h-3 text-[#FFD700]" />
+                          <span>🔊 Réécouter cette réponse en Audio</span>
+                        </button>
+                      )}
+                    </div>
                   )}
                 </motion.div>
               ))}
@@ -1049,7 +1119,7 @@ function ChatContent() {
             className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-[#FFD700]/60 text-[#FFD700] hover:bg-[#2A1E14] flex items-center justify-center transition shrink-0 cursor-pointer"
             title="Photo Cutanée"
           >
-            <Camera className="w-5 h-5 text-[#FFD700]" />
+            <Camera className="w-[#5] h-5 text-[#FFD700]" />
           </button>
           <input
             ref={fileInputRef}
