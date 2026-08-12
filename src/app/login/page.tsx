@@ -73,6 +73,9 @@ function LoginFormContent() {
     setLoginError(null);
 
     try {
+      // Clear explicit logout flag upon logging in
+      localStorage.removeItem('kene_logged_out');
+
       const authRes = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

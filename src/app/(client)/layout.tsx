@@ -27,10 +27,11 @@ export default function ClientLayout({
   useEffect(() => {
     setMounted(true);
     if (typeof window !== 'undefined') {
+      const isExplicitlyLoggedOut = localStorage.getItem('kene_logged_out') === 'true';
       const savedUser = localStorage.getItem('kene_user');
       const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
 
-      if (!savedUser && !hasCookie) {
+      if (!savedUser && !hasCookie && !isExplicitlyLoggedOut) {
         const guestUser = {
           firstName: 'Cliente',
           lastName: '',
