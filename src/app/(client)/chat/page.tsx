@@ -124,7 +124,7 @@ function ChatContent() {
     // AI Multimodal Doctor Response Simulation
     setTimeout(() => {
       let doctorText = "Je comprends tout à fait vos symptômes. En période de forte chaleur à Dakar/Abidjan (32°C), l'exposition UV stimule la mélanogénèse et provoque une hyperpigmentation post-inflammatoire (PIH).";
-      let rx = undefined;
+      let rx: { title: string; items: { name: string; desc: string; price: number }[]; totalPrice: number } | undefined = undefined;
 
       if (textToSend.toLowerCase().includes('tache') || textToSend.toLowerCase().includes('bouton')) {
         doctorText = "Diagnostic Médical : Hyperpigmentation Post-Inflammatoire (PIH). Je vous prescris le Sérum Hibiscus & Baobab Bio (Niacinamide 10%) à appliquer le soir, associé à l'Écran Minéral SPF 50 le matin.";
