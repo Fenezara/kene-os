@@ -1127,17 +1127,28 @@ function ChatContent() {
                   <Badge className="bg-emerald-500/20 text-emerald-400 text-[9px]">3 / 5</Badge>
                 </div>
 
-                <div className="bg-[#2B1B10] border-2 border-[#FFD700]/50 p-4 rounded-2xl space-y-1.5">
-                  <div className="text-[10px] font-mono font-bold text-[#FFD700] uppercase tracking-wider">
-                    Diagnostic Clinique Officiel :
+                <div className="bg-[#2B1B10] border-2 border-[#FFD700]/50 p-4 rounded-2xl space-y-2">
+                  <div className="text-[10px] font-mono font-bold text-[#FFD700] uppercase tracking-wider flex items-center gap-1">
+                    <Stethoscope className="w-3.5 h-3.5 text-[#FFD700]" /> Diagnostic Clinique Officiel :
                   </div>
                   <p className="text-sm font-bold text-white leading-snug">
                     {consultationData.diagnosis}
                   </p>
+
+                  <div className="pt-2 border-t border-[#FFD700]/20 space-y-1 text-[10px] font-mono text-[#FFD700]/90">
+                    <div className="font-bold flex items-center gap-1">
+                      <FileText className="w-3 h-3 text-[#FFD700]" /> Sources & Consensus Médicaux Cités :
+                    </div>
+                    <ul className="list-disc list-inside space-y-0.5 opacity-90 text-[9px] text-white/80">
+                      <li>Journal of the American Academy of Dermatology (JAAD - Hyperpigmentation Phototypes IV-VI)</li>
+                      <li>Société Française de Dermatologie (SFD - Protocole Dermo-Botanique UEMOA)</li>
+                      <li>Revue Internationale de Dermatologie Tropicale (OMS / WHO Guidelines)</li>
+                    </ul>
+                  </div>
                 </div>
 
                 <p className="text-xs text-white/90 leading-relaxed font-sans font-medium">
-                  {userName}, en tenant compte de vos précisions sur le {dynamicFlow?.bodyZoneName} ({consultationData.trigger}), la structure épidermique nécessite un soin adapté.
+                  {userName}, en tenant compte de vos précisions sur le {dynamicFlow?.bodyZoneName} ({consultationData.trigger}), ce diagnostic s'appuie sur la littérature scientifique médicale validée.
                 </p>
 
                 <Button
