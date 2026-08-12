@@ -23,7 +23,7 @@ export interface MultimodalMediaItem {
   timestamp: string;
 }
 
-export function ChatContent() {
+function ChatContent() {
   const router = useRouter();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
