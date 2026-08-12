@@ -1,6 +1,6 @@
 'use client';
 
-// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Ultra-Immersive 3D Scroll Telemedicine Spa v6.0)
+// Kènè OS — TAARU AI · Dr. Mama Kènè IA (100% Unblockable Multimodal Media Toolbar v6.5)
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
@@ -41,12 +41,10 @@ function BiometricRadarCanvas({ score = 78 }: { score?: number }) {
 
     ctx.clearRect(0, 0, w, h);
 
-    // Radar axes: Hydratation, Sébum, UV Protection, Élasticité, Eclat
     const labels = ['Hydratation', 'Sébum', 'Protection UV', 'Élasticité', 'Éclat'];
     const values = [0.45, 0.75, 0.85, 0.80, 0.65];
     const numAxes = labels.length;
 
-    // Draw concentric radar webs
     ctx.strokeStyle = 'rgba(255, 215, 0, 0.25)';
     ctx.lineWidth = 1;
     for (let r = 1; r <= 4; r++) {
@@ -63,7 +61,6 @@ function BiometricRadarCanvas({ score = 78 }: { score?: number }) {
       ctx.stroke();
     }
 
-    // Draw radar axis lines
     for (let i = 0; i < numAxes; i++) {
       const angle = (i * 2 * Math.PI) / numAxes - Math.PI / 2;
       const x = cx + radius * Math.cos(angle);
@@ -73,7 +70,6 @@ function BiometricRadarCanvas({ score = 78 }: { score?: number }) {
       ctx.lineTo(x, y);
       ctx.stroke();
 
-      // Axis Labels
       ctx.fillStyle = '#FFD700';
       ctx.font = '9px monospace';
       ctx.textAlign = 'center';
@@ -82,7 +78,6 @@ function BiometricRadarCanvas({ score = 78 }: { score?: number }) {
       ctx.fillText(labels[i], lx, ly);
     }
 
-    // Draw filled polygon for patient metrics
     ctx.fillStyle = 'rgba(255, 215, 0, 0.35)';
     ctx.strokeStyle = '#FFD700';
     ctx.lineWidth = 2;
@@ -171,52 +166,59 @@ function ChatContent() {
     }
   };
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // 1. 📷 PHOTO UPLOAD / DEMO TRIGGER
+  const handleTriggerPhotoAnalysis = (photoUrl?: string) => {
+    const demoPhoto = photoUrl || '/kene_afro_beauty_hero.png';
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const photoUrl = reader.result as string;
+    const photoItem: MultimodalMediaItem = {
+      id: `photo-${Date.now()}`,
+      type: 'photo',
+      sender: 'patient',
+      mediaUrl: demoPhoto,
+      text: '📷 Photo Cutanée transmise au scanner 3D du Dr. Mama Kènè',
+      timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+    };
+    setMediaFeed(prev => [...prev, photoItem]);
 
-      const photoItem: MultimodalMediaItem = {
-        id: `photo-${Date.now()}`,
-        type: 'photo',
-        sender: 'patient',
-        mediaUrl: photoUrl,
-        text: '📷 Photo Cutanée transmise au scanner 3D',
+    setIsThinking(true);
+    toast({
+      title: "📷 Photo Reçue & Analysée !",
+      description: "Le Dr. Mama Kènè IA effectue le scanner biométrique 3D...",
+    });
+
+    setTimeout(() => {
+      setIsThinking(false);
+      const docResponse: MultimodalMediaItem = {
+        id: `doc-photo-ack-${Date.now()}`,
+        type: 'text',
+        sender: 'doctor',
+        text: "Scanner Biométrique 3D complété : J'observe une concentration mélanique réactive et une déshydratation épidermique. Poursuivons l'évaluation.",
         timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
       };
-      setMediaFeed(prev => [...prev, photoItem]);
+      setMediaFeed(prev => [...prev, docResponse]);
+      handleSelectSymptom("Taches foncées observées sur photo cutanée");
+    }, 1500);
+  };
 
-      setIsThinking(true);
-      toast({
-        title: "🔬 Scanner Holographique 3D Actif !",
-        description: "Analyse spectroscopique de la photo cutanée en cours...",
-      });
-
-      setTimeout(() => {
-        setIsThinking(false);
-        const docResponse: MultimodalMediaItem = {
-          id: `doc-photo-ack-${Date.now()}`,
-          type: 'text',
-          sender: 'doctor',
-          text: "Scanner Biométrique 3D complété : J'observe une concentration mélanique réactive et une déshydratation épidermique. Poursuivons l'évaluation.",
-          timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-        };
-        setMediaFeed(prev => [...prev, docResponse]);
-        handleSelectSymptom("Taches foncées observées sur photo cutanée");
-      }, 1600);
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      handleTriggerPhotoAnalysis();
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      handleTriggerPhotoAnalysis(reader.result as string);
     };
-
     reader.readAsDataURL(file);
   };
 
+  // 2. 🎙️ AUDIO VOICE NOTE TRIGGER
   const handleStartVoiceRecording = () => {
     setIsListening(true);
     toast({
-      title: "🎙️ Écoute Vocale Active...",
-      description: "Parlez... Le Dr. Mama Kènè analyse votre note vocale.",
+      title: "🎙️ Note Vocale Audio Active...",
+      description: "Parlez... Votre note vocale est transmise au médecin.",
     });
 
     setTimeout(() => {
@@ -246,11 +248,12 @@ function ChatContent() {
         setMediaFeed(prev => [...prev, docAudioAck]);
         handleSelectSymptom("Taches foncées & tiraillements (Note Vocale)");
       }, 1400);
-    }, 2400);
+    }, 2200);
   };
 
+  // 3. 🎥 VIDEO CLIP TRIGGER
   const handleSendVideoClip = () => {
-    toast({ title: "🎥 Capsule Vidéo", description: "Démonstration médicale en vidéo HD 4K..." });
+    toast({ title: "🎥 Capsule Vidéo", description: "Chargement de la démonstration vidéo médicale..." });
     const videoItem: MultimodalMediaItem = {
       id: `video-${Date.now()}`,
       type: 'video',
@@ -263,6 +266,7 @@ function ChatContent() {
     speakText(videoItem.text || '');
   };
 
+  // 4. 📱 SMS & TEXT HANDLER
   const handleSendPatientText = (customText?: string) => {
     const textToSend = customText || input;
     if (!textToSend.trim()) return;
@@ -277,6 +281,7 @@ function ChatContent() {
     setMediaFeed(prev => [...prev, patientSms]);
     if (!customText) setInput('');
 
+    toast({ title: "📱 SMS Transmis", description: "Votre message SMS a été reçu par le Dr. Mama Kènè." });
     handleSelectSymptom(textToSend);
   };
 
@@ -392,7 +397,7 @@ function ChatContent() {
       <div className="fixed bottom-10 right-10 w-80 h-80 bg-[#C8951E]/10 rounded-full blur-[110px] pointer-events-none z-0" />
 
       {/* ── 📱 TOP HEADER BAR ── */}
-      <header className="w-full max-w-md px-6 py-3.5 flex items-center justify-between shrink-0 relative z-30 bg-[#120B06]/90 backdrop-blur-2xl border-b border-[#FFD700]/30 shadow-xl">
+      <header className="w-full max-w-md px-6 py-3 flex items-center justify-between shrink-0 relative z-30 bg-[#120B06]/95 backdrop-blur-2xl border-b border-[#FFD700]/30 shadow-xl">
         <button
           onClick={() => router.push('/portal')}
           className="w-9 h-9 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
@@ -407,7 +412,6 @@ function ChatContent() {
             TAARU AI · SPA 3D
           </span>
 
-          {/* Language Selector Selector Pills */}
           <div className="flex items-center justify-center gap-1">
             {[
               { id: 'fr', label: '🇫🇷 FR' },
@@ -464,11 +468,11 @@ function ChatContent() {
         </div>
       </div>
 
-      {/* ── 🌟 SCROLLABLE MAIN SPA CONTAINER WITH 3D PARALLAX ── */}
-      <div ref={containerRef} className="flex-1 overflow-y-auto w-full max-w-md px-6 pb-28 space-y-5 scrollbar-thin relative z-10">
+      {/* ── 🌟 SCROLLABLE MAIN SPA CONTAINER ── */}
+      <div ref={containerRef} className="flex-1 overflow-y-auto w-full max-w-md px-6 pb-40 space-y-4 scrollbar-thin relative z-10">
         
         {/* 1. GREETING HEADLINE */}
-        <div className="text-center space-y-1 pt-3">
+        <div className="text-center space-y-1 pt-2">
           <h1 className="font-serif text-3xl sm:text-4xl text-white tracking-tight leading-tight">
             {getLanguageGreeting()}
           </h1>
@@ -483,7 +487,7 @@ function ChatContent() {
               isThinking || isSpeaking || isListening ? 'animate-ping scale-150 opacity-75' : 'group-hover:opacity-60'
             }`} />
 
-            <div className="w-full max-w-xs h-64 flex items-center justify-center relative z-10">
+            <div className="w-full max-w-xs h-56 flex items-center justify-center relative z-10">
               <ParticleOrb3D
                 isListening={isListening}
                 isSpeaking={isSpeaking || isThinking}
@@ -500,6 +504,41 @@ function ChatContent() {
             </span>
           </div>
         </motion.div>
+
+        {/* ── ⚡ 4 MANDATORY QUICK ACTION BAR (ACCÈS DIRECT AUDIO, PHOTO, VIDÉO, SMS) ── */}
+        <div className="bg-[#1A110A] border-2 border-[#FFD700]/50 rounded-2xl p-2.5 shadow-xl grid grid-cols-2 sm:grid-cols-4 gap-1.5 z-20">
+          <button
+            onClick={handleStartVoiceRecording}
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-[#26170D] hover:bg-[#341F12] border border-[#FFD700]/40 text-[#FFD700] text-[11px] font-bold transition cursor-pointer"
+          >
+            <Mic className="w-4 h-4 text-[#FFD700]" />
+            <span>🎙️ Note Vocale</span>
+          </button>
+
+          <button
+            onClick={() => handleTriggerPhotoAnalysis()}
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-[#26170D] hover:bg-[#341F12] border border-[#FFD700]/40 text-[#FFD700] text-[11px] font-bold transition cursor-pointer"
+          >
+            <Camera className="w-4 h-4 text-[#FFD700]" />
+            <span>📷 Scanner Photo</span>
+          </button>
+
+          <button
+            onClick={handleSendVideoClip}
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-[#26170D] hover:bg-[#341F12] border border-[#FFD700]/40 text-[#FFD700] text-[11px] font-bold transition cursor-pointer"
+          >
+            <Video className="w-4 h-4 text-[#FFD700]" />
+            <span>🎥 Capsule Vidéo</span>
+          </button>
+
+          <button
+            onClick={() => handleSendPatientText("Demande de bilan par SMS")}
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl bg-[#26170D] hover:bg-[#341F12] border border-[#FFD700]/40 text-[#FFD700] text-[11px] font-bold transition cursor-pointer"
+          >
+            <Smartphone className="w-4 h-4 text-[#FFD700]" />
+            <span>📱 Alerte SMS</span>
+          </button>
+        </div>
 
         {/* ── 📊 RADAR DERMO-BIOMÉTRIQUE CUTANÉ (5-AXES) ── */}
         {activeStep >= 2 && (
@@ -605,7 +644,7 @@ function ChatContent() {
                 </div>
                 
                 <p className="text-xs text-white leading-relaxed font-sans font-medium">
-                  "Bonjour {userName} ! Vous pouvez m'envoyer une **photo de votre peau**, une **note vocale audio**, un **SMS** ou choisir votre problème ci-dessous :"
+                  "Bonjour {userName} ! Utilisez les boutons ci-dessus pour m'envoyer une **photo**, un **audio**, un **SMS** ou sélectionnez directement votre symptôme ci-dessous :"
                 </p>
 
                 <div className="space-y-2 pt-1">
@@ -867,8 +906,8 @@ function ChatContent() {
         )}
       </AnimatePresence>
 
-      {/* ── ⌨️ BOTTOM FLOATING INPUT BAR ── */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-[#120B06]/95 border-t-2 border-[#FFD700]/40 p-3 sm:p-4 z-30 backdrop-blur-2xl">
+      {/* ── ⌨️ BOTTOM FLOATING INPUT BAR (Z-INDEX 50 SUR-ÉLEVÉE + BOUTONS DÉDIÉS) ── */}
+      <footer className="fixed bottom-0 left-0 right-0 bg-[#120B06]/98 border-t-2 border-[#FFD700]/60 p-3 sm:p-4 z-50 backdrop-blur-2xl shadow-2xl">
         <div className="max-w-md mx-auto flex items-center gap-2">
           
           <button
@@ -876,42 +915,34 @@ function ChatContent() {
             className={`w-11 h-11 rounded-2xl border flex items-center justify-center transition shrink-0 cursor-pointer ${
               isListening
                 ? 'bg-red-500 text-white border-red-500 animate-pulse scale-105'
-                : 'bg-[#1E140C] border-[#FFD700]/40 text-[#FFD700] hover:bg-[#2A1E14]'
+                : 'bg-[#1E140C] border-[#FFD700]/60 text-[#FFD700] hover:bg-[#2A1E14]'
             }`}
             title="Note Vocale Audio"
           >
-            <Mic className="w-5 h-5" />
-          </button>
-
-          <button
-            onClick={handleSendVideoClip}
-            className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-[#FFD700]/40 text-[#FFD700] hover:bg-[#2A1E14] flex items-center justify-center transition shrink-0 cursor-pointer"
-            title="Capsule Vidéo"
-          >
-            <Video className="w-5 h-5" />
+            <Mic className="w-5 h-5 text-[#FFD700]" />
           </button>
 
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-[#FFD700]/40 text-[#FFD700] hover:bg-[#2A1E14] flex items-center justify-center transition shrink-0 cursor-pointer"
+            className="w-11 h-11 rounded-2xl bg-[#1E140C] border border-[#FFD700]/60 text-[#FFD700] hover:bg-[#2A1E14] flex items-center justify-center transition shrink-0 cursor-pointer"
             title="Photo Cutanée"
           >
-            <Camera className="w-5 h-5" />
+            <Camera className="w-5 h-5 text-[#FFD700]" />
           </button>
           <input
             ref={fileInputRef}
             type="file"
             accept="image/*"
             className="hidden"
-            onChange={handlePhotoUpload}
+            onChange={handleFileInputChange}
           />
 
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSendPatientText()}
-            placeholder="Texte, SMS ou question au Dr. Mama Kènè..."
-            className="flex-1 bg-[#1E140C] border border-white/15 focus:border-[#FFD700] text-white px-4 h-11 rounded-2xl text-xs outline-none transition"
+            placeholder="Écrire un SMS ou message au Dr. Mama Kènè..."
+            className="flex-1 bg-[#1E140C] border border-white/20 focus:border-[#FFD700] text-white px-4 h-11 rounded-2xl text-xs outline-none transition"
           />
 
           <Button
