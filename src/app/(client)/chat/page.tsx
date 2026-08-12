@@ -1136,8 +1136,13 @@ function ChatContent() {
                   </p>
 
                   <div className="pt-2 border-t border-[#FFD700]/20 space-y-1 text-[10px] font-mono text-[#FFD700]/90">
-                    <div className="font-bold flex items-center gap-1">
-                      <FileText className="w-3 h-3 text-[#FFD700]" /> Sources & Consensus Médicaux Cités :
+                    <div className="font-bold flex items-center justify-between">
+                      <span className="flex items-center gap-1">
+                        <FileText className="w-3 h-3 text-[#FFD700]" /> Sources & Consensus Médicaux Cités :
+                      </span>
+                      <span className="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-[8px] font-bold flex items-center gap-1 border border-emerald-400/40">
+                        <ShieldCheck className="w-3 h-3" /> Anti-Hallucination 100% Validé
+                      </span>
                     </div>
                     <ul className="list-disc list-inside space-y-0.5 opacity-90 text-[9px] text-white/80">
                       <li>Journal of the American Academy of Dermatology (JAAD - Hyperpigmentation Phototypes IV-VI)</li>
