@@ -1,6 +1,6 @@
 'use client';
 
-// Kènè OS — TAARU AI · Dr. Mama Kènè IA (100% Unblockable Multimodal Media Toolbar v6.5)
+// Kènè OS — TAARU AI · Dr. Mama Kènè IA (Humanized Dynamic Pathology Engine v7.0)
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
@@ -22,6 +22,130 @@ export interface MultimodalMediaItem {
   audioDuration?: string;
   videoTitle?: string;
   timestamp: string;
+}
+
+// 🧠 Dynamic Humanized Pathology Clinical Generator
+function generateDynamicPathologyFlow(symptomText: string, name: string) {
+  const q = symptomText.toLowerCase();
+
+  // Warm Human intros
+  const humanIntros = [
+    `${name}, je comprends parfaitement votre préoccupation.`,
+    `Rassurez-vous ${name}, nous allons traiter cela ensemble avec douceur.`,
+    `Ah, je vois exactement ce dont vous me parlez ${name}. C'est une réaction très fréquente sous notre climat.`,
+  ];
+  const randomIntro = humanIntros[Math.floor(Math.random() * humanIntros.length)];
+
+  // 1. TACHES & HYPERPIGMENTATION
+  if (q.includes('tache') || q.includes('noire') || q.includes('foncée') || q.includes('joue') || q.includes('hyperpigmentation') || q.includes('masque')) {
+    return {
+      step2Question: `${randomIntro} Pour ajuster votre diagnostic : s'agit-il plutôt de taches sombres laissées après des boutons récents, ou d'un masque plus diffus apparu progressivement sur vos joues ?`,
+      step2Options: [
+        "🔴 Taches sombres post-boutons (PIH réactive)",
+        "🟤 Masque diffus étendu sur les pommettes (Melasma)",
+        "☀️ Taches qui s'accentuent l'après-midi sous le soleil",
+        "✨ Teint terne et pigmenté sans relief",
+      ],
+      diagnosisMap: {
+        default: "Hyperpigmentation Post-Inflammatoire (PIH) & Oxydation Mélanique due aux UV tropicaux.",
+      },
+      prescription: {
+        title: 'Ordonnance Anti-Taches PIH & Éclat Dermo-Botanique',
+        items: [
+          { name: 'Sérum Hibiscus & Baobab 10% Bio', desc: 'Inhibiteur tyrosinase - Appliquer le soir', price: 18500 },
+          { name: 'Écran Solaire Minéral SPF 50', desc: 'Filtre UV peaux mates - Appliquer le matin', price: 15000 },
+        ],
+        totalPrice: 33500,
+      },
+      goldenRules: [
+        "Règle d'Or 1 : Appliquer le Sérum au Baobab exclusivement le soir pour éviter l'oxydation sous le soleil.",
+        "Règle d'Or 2 : Proscrire absolument les crèmes dépigmentantes hydroquinonées qui aggravent les taches.",
+        "Règle d'Or 3 : Proéger votre visage avec l'Écran Minéral SPF 50 chaque matin dès 8h.",
+      ]
+    };
+  }
+
+  // 2. BOUTONS & ACNÉ
+  if (q.includes('bouton') || q.includes('acné') || q.includes('grasse') || q.includes('sébum') || q.includes('brille')) {
+    return {
+      step2Question: `${randomIntro} Précisons l'examen : vos boutons sont-ils plutôt sous forme de kystes sensibles sous la peau, ou de petites imperfections rétentionnelles dues à la sueur et au sébum ?`,
+      step2Options: [
+        "💥 Kystes sensibles sous la peau (Acné kystique)",
+        "🕳️ Points noirs & pores dilatés sur la Zone T",
+        "🧔 Boutons d'irritation folliculaire / rasage",
+        "🔥 Brillance excessive et sueur dès 11h du matin",
+      ],
+      diagnosisMap: {
+        default: "Hyperséborrhée Réactive & Obstruction Folliculaire Inflammatoire.",
+      },
+      prescription: {
+        title: 'Ordonnance Anti-Boutons Purifiante Moringa',
+        items: [
+          { name: 'Gel Nettoyant Clarifiant Moringa & Baobab 200ml', desc: 'Nettoyant purifiant doux matin & soir', price: 12000 },
+          { name: 'Lotion Matifiante Eau de Rose & Niacinamide', desc: 'Resserre les pores & équilibre le pH', price: 14500 },
+        ],
+        totalPrice: 26500,
+      },
+      goldenRules: [
+        "Règle d'Or 1 : Ne jamais percer ni triturer les boutons pour éviter les cicatrices noires définitives.",
+        "Règle d'Or 2 : Nettoyer le visage avec le Gel Moringa matin et soir sans frotter excessivement.",
+      ]
+    };
+  }
+
+  // 3. CUIR CHEVELU & TRESSES
+  if (q.includes('cheveu') || q.includes('cuir') || q.includes('tresse') || q.includes('démange') || q.includes('picotement') || q.includes('chute')) {
+    return {
+      step2Question: `${randomIntro} Les tresses serrées sous 32°C sollicitent énormément le cuir chevelu. Ressentez-vous une douleur aiguë au niveau des racines, ou s'agit-il de pellicules et démangeaisons tenaces ?`,
+      step2Options: [
+        "💆 Douleur & tiraillement intense au niveau des racines",
+        "❄️ Démangeaisons & squames blanches/jaunâtres",
+        "💇 Perte de densité ou casse au niveau des tempes",
+        "🔥 Sensation de chaleur sur le sommet du crâne",
+      ],
+      diagnosisMap: {
+        default: "Tension Folliculaire & Micro-Inflammation Cuir Chevelu après Tressage.",
+      },
+      prescription: {
+        title: 'Ordonnance Apaisante Cuir Chevelu Nigelle & Karité',
+        items: [
+          { name: 'Élixir Apaisant Nigelle & Karité Liquide 100ml', desc: 'Appliquer en gouttes sur les raies du cuir chevelu', price: 16000 },
+          { name: 'Shampoing Doux Purifiant Sans Sulfate', desc: 'Nettoyage apaisant hebdomadaire', price: 11000 },
+        ],
+        totalPrice: 27000,
+      },
+      goldenRules: [
+        "Règle d'Or 1 : Proscrire les tresses trop tendues au niveau des bordures pour préserver les follicules pileux.",
+        "Règle d'Or 2 : Appliquer l'Élixir à la Nigelle directement sur le cuir chevelu sans frotter.",
+      ]
+    };
+  }
+
+  // 4. SÉCHERESSE & TIRAILLEMENTS (FALLBACK)
+  return {
+    step2Question: `${randomIntro} Quand ressentez-vous la plus forte inconfort : juste après avoir lavé votre visage à l'eau, ou tout au long de la journée sous l'air sec ou la climatisation ?`,
+    step2Options: [
+      "🔥 Brûlure et tiraillement immédiat après lavage",
+      "🍂 Peau rêche qui pèle sur les joues et les ailes du nez",
+      "🌵 Sensation d'étau permanent malgré les crèmes classiques",
+      "✨ Envie de retrouver du confort et une souplesse naturelle",
+    ],
+    diagnosisMap: {
+      default: "Altération de la Barrière Hydrolipidique Protective.",
+    },
+    prescription: {
+      title: 'Ordonnance Réparatrice Karité Brut Korhogo',
+      items: [
+        { name: 'Beurre de Karité Brut Korhogo 100g', desc: 'Soin régénérateur barrière lipidique', price: 9500 },
+        { name: 'Sérum Nourrissant Huile de Baobab Bio', desc: 'Huile réparatrice profonde du soir', price: 13500 },
+      ],
+      totalPrice: 23000,
+    },
+    goldenRules: [
+      "Règle d'Or 1 : Appliquer le Beurre de Karité brut en compresse le soir sur peau légèrement humide.",
+      "Règle d'Or 2 : Rincer le visage à l'eau tiède plutôt qu'à l'eau chaude.",
+    ]
+  };
 }
 
 function BiometricRadarCanvas({ score = 78 }: { score?: number }) {
@@ -125,6 +249,9 @@ function ChatContent() {
 
   const [mediaFeed, setMediaFeed] = useState<MultimodalMediaItem[]>([]);
   const [activeStep, setActiveStep] = useState<number>(1);
+
+  // Dynamic pathology state
+  const [dynamicFlow, setDynamicFlow] = useState<any>(null);
   const [consultationData, setConsultationData] = useState<{
     symptom?: string;
     trigger?: string;
@@ -192,7 +319,7 @@ function ChatContent() {
         id: `doc-photo-ack-${Date.now()}`,
         type: 'text',
         sender: 'doctor',
-        text: "Scanner Biométrique 3D complété : J'observe une concentration mélanique réactive et une déshydratation épidermique. Poursuivons l'évaluation.",
+        text: `J'ai bien reçu votre photo ${userName}. J'observe des zones d'hyperpigmentation localisées et une réactivité mélanique. Poursuivons l'examen.`,
         timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
       };
       setMediaFeed(prev => [...prev, docResponse]);
@@ -242,7 +369,7 @@ function ChatContent() {
           type: 'audio',
           sender: 'doctor',
           audioDuration: '0:35',
-          text: "Note Vocale du Dr. Mama Kènè : J'ai bien écouté votre note vocale. Je prends en compte les tiraillements dus au soleil.",
+          text: `Note Vocale du Dr. Mama Kènè : ${userName}, j'ai écouté attentivement votre message. Je prends en compte la gêne sous le soleil.`,
           timestamp: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
         };
         setMediaFeed(prev => [...prev, docAudioAck]);
@@ -253,7 +380,7 @@ function ChatContent() {
 
   // 3. 🎥 VIDEO CLIP TRIGGER
   const handleSendVideoClip = () => {
-    toast({ title: "🎥 Capsule Vidéo", description: "Chargement de la démonstration vidéo médicale..." });
+    toast({ title: "🎥 Capsule Vidéo", description: "Démonstration médicale en vidéo HD 4K..." });
     const videoItem: MultimodalMediaItem = {
       id: `video-${Date.now()}`,
       type: 'video',
@@ -285,66 +412,27 @@ function ChatContent() {
     handleSelectSymptom(textToSend);
   };
 
+  // 🧠 Dynamic Pathology Symptom Handler
   const handleSelectSymptom = (symptomText: string) => {
     setIsThinking(true);
-    let diag = "Hyperpigmentation Post-Inflammatoire (PIH) & Oxydation Mélanique due aux UV tropicaux.";
-    let rx = {
-      title: 'Ordonnance Anti-Taches PIH Certifiée',
-      items: [
-        { name: 'Sérum Hibiscus & Baobab 10% Bio', desc: 'Appliquer le soir sur les taches', price: 18500 },
-        { name: 'Écran Solaire Minéral SPF 50', desc: 'Appliquer chaque matin', price: 15000 },
-      ],
-      totalPrice: 33500,
-    };
-    let rules = [
-      "Règle d'Or 1 : Ne jamais appliquer d'acides exfoliants forts durant la journée sous le soleil.",
-      "Règle d'Or 2 : Appliquer l'Écran Solaire Minéral SPF 50 chaque matin même par temps nuageux.",
-      "Règle d'Or 3 : Rincer le visage à l'eau tiède et proscrire les savons décapants durs.",
-    ];
 
-    if (symptomText.includes('Boutons') || symptomText.includes('grasse')) {
-      diag = "Hyperséborrhée Réactive & Obstruction Folliculaire Inflammatoire.";
-      rx = {
-        title: 'Ordonnance Anti-Boutons Purifiante',
-        items: [
-          { name: 'Gel Nettoyant Moringa & Baobab 200ml', desc: 'Nettoyage purifiant matin & soir', price: 12000 },
-          { name: 'Lotion Matifiante Eau de Rose Bio', desc: 'Resserre les pores & équilibre pH', price: 14500 },
-        ],
-        totalPrice: 26500,
-      };
-      rules = [
-        "Règle d'Or 1 : Nettoyer le visage matin et soir sans frotter excessivement.",
-        "Règle d'Or 2 : Éviter de percer les imperfections pour prévenir les taches secondaires.",
-      ];
-    } else if (symptomText.includes('chevalu') || symptomText.includes('tresses')) {
-      diag = "Tension Folliculaire & Micro-Inflammation du Cuir Chevelu.";
-      rx = {
-        title: 'Ordonnance Apaisante Cuir Chevelu',
-        items: [
-          { name: 'Élixir Apaisant Nigelle & Karité 100ml', desc: 'Appliquer en gouttes sur les raies', price: 16000 },
-          { name: 'Shampoing Doux Purifiant Sans Sulfate', desc: 'Lavage apaisant hebdomadaire', price: 11000 },
-        ],
-        totalPrice: 27000,
-      };
-      rules = [
-        "Règle d'Or 1 : Ne pas serrer excessivement les tresses au niveau des tempes.",
-        "Règle d'Or 2 : Appliquer l'élixir au Karité & Nigelle sans frotter le cuir chevelu.",
-      ];
-    }
+    // Generate dynamic pathology flow tailored to this symptom
+    const flow = generateDynamicPathologyFlow(symptomText, userName);
+    setDynamicFlow(flow);
 
     setConsultationData(prev => ({
       ...prev,
       symptom: symptomText,
-      diagnosis: diag,
-      prescription: rx,
-      goldenRules: rules,
+      diagnosis: flow.diagnosisMap.default,
+      prescription: flow.prescription,
+      goldenRules: flow.goldenRules,
     }));
 
     setTimeout(() => {
       setIsThinking(false);
       setActiveStep(2);
-      speakText("Étape 2 : Examen clinique. Depuis combien de temps observez-vous ce problème et quelle est votre exposition au soleil ?");
-    }, 1200);
+      speakText(`Étape 2 : Examen clinique. ${flow.step2Question}`);
+    }, 1300);
   };
 
   const handleSelectTrigger = (triggerText: string) => {
@@ -354,8 +442,8 @@ function ChatContent() {
     setTimeout(() => {
       setIsThinking(false);
       setActiveStep(3);
-      speakText(`Étape 3 : Diagnostic Médical Posé. ${consultationData.diagnosis}`);
-    }, 1200);
+      speakText(`Étape 3 : Diagnostic Médical Posé pour ${userName}. ${consultationData.diagnosis}`);
+    }, 1300);
   };
 
   const handleGoToStep4 = () => {
@@ -366,14 +454,15 @@ function ChatContent() {
   const handleGoToStep5 = () => {
     setActiveStep(5);
     const rulesSpeech = consultationData.goldenRules ? consultationData.goldenRules.join('. ') : '';
-    speakText(`Étape 5 : Conseils hygiéno-diététiques et règles d'or. ${rulesSpeech}`);
+    speakText(`Étape 5 : Conseils hygiéno-diététiques et règles d'or du Dr. Mama Kènè. ${rulesSpeech}`);
   };
 
   const handleResetConsultation = () => {
     setActiveStep(1);
     setConsultationData({});
     setMediaFeed([]);
-    speakText("Bonjour Aïsha ! Bienvenue dans votre Spa Télémédecine 3D.");
+    setDynamicFlow(null);
+    speakText(`Bonjour ${userName} ! Bienvenue dans votre Spa Télémédecine 3D.`);
   };
 
   return (
@@ -505,7 +594,7 @@ function ChatContent() {
           </div>
         </motion.div>
 
-        {/* ── ⚡ 4 MANDATORY QUICK ACTION BAR (ACCÈS DIRECT AUDIO, PHOTO, VIDÉO, SMS) ── */}
+        {/* ── ⚡ 4 MANDATORY QUICK ACTION BAR ── */}
         <div className="bg-[#1A110A] border-2 border-[#FFD700]/50 rounded-2xl p-2.5 shadow-xl grid grid-cols-2 sm:grid-cols-4 gap-1.5 z-20">
           <button
             onClick={handleStartVoiceRecording}
@@ -623,7 +712,7 @@ function ChatContent() {
           )}
         </AnimatePresence>
 
-        {/* ── 3. INTERACTIVE 5-STEP WIZARD CARDS ── */}
+        {/* ── 3. INTERACTIVE 5-STEP WIZARD CARDS WITH DYNAMIC PATHOLOGY ── */}
         <AnimatePresence mode="wait">
           
           {/* 📍 ÉTAPE 1 : ANAMNÈSE MÉDICALE */}
@@ -638,18 +727,18 @@ function ChatContent() {
               <div className="bg-[#1A110A] border-2 border-[#FFD700]/50 rounded-3xl p-5 shadow-2xl space-y-3 text-left">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
                   <span className="text-[10px] font-mono font-bold text-[#FFD700] uppercase tracking-wider flex items-center gap-1.5">
-                    <Stethoscope className="w-3.5 h-3.5" /> 1. Anamnèse Médicale Multimodale
+                    <Stethoscope className="w-3.5 h-3.5" /> 1. Anamnèse Médicale Humaine
                   </span>
                   <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[9px]">1 / 5</Badge>
                 </div>
                 
                 <p className="text-xs text-white leading-relaxed font-sans font-medium">
-                  "Bonjour {userName} ! Utilisez les boutons ci-dessus pour m'envoyer une **photo**, un **audio**, un **SMS** ou sélectionnez directement votre symptôme ci-dessous :"
+                  "Bonjour {userName} ! Je suis ravie de m'entretenir avec vous. Dites-moi en toute liberté : quel est le problème principal qui vous tracasse sur votre peau ou vos cheveux ?"
                 </p>
 
                 <div className="space-y-2 pt-1">
                   {[
-                    "🟢 Taches foncées ou noires sur les joues",
+                    "🔴 Taches foncées ou noires sur les joues",
                     "🟡 Boutons, acné & peau qui brille",
                     "🟠 Cuir chevelu qui démange après tresses",
                     "🟤 Sécheresse & tiraillements intenses",
@@ -668,8 +757,8 @@ function ChatContent() {
             </motion.div>
           )}
 
-          {/* 📍 ÉTAPE 2 : EXAMEN CLINIQUE & DÉCLENCHEURS */}
-          {activeStep === 2 && (
+          {/* 📍 ÉTAPE 2 : EXAMEN CLINIQUE DYNAMIQUE ADAPTÉ À LA PATHOLOGIE */}
+          {activeStep === 2 && dynamicFlow && (
             <motion.div
               key="step-2"
               initial={{ opacity: 0, y: 12 }}
@@ -680,7 +769,7 @@ function ChatContent() {
               <div className="bg-[#1A110A] border-2 border-[#FFD700]/50 rounded-3xl p-5 shadow-2xl space-y-3 text-left">
                 <div className="flex items-center justify-between border-b border-white/10 pb-2">
                   <span className="text-[10px] font-mono font-bold text-[#FFD700] uppercase tracking-wider flex items-center gap-1.5">
-                    <Sun className="w-3.5 h-3.5" /> 2. Examen Clinique & Facteurs Déclencheurs
+                    <Sun className="w-3.5 h-3.5" /> 2. Examen Clinique Ciblé (Pathologie Identifiée)
                   </span>
                   <Badge className="bg-[#FFD700]/20 text-[#FFD700] text-[9px]">2 / 5</Badge>
                 </div>
@@ -689,17 +778,14 @@ function ChatContent() {
                   Symptôme enregistré : {consultationData.symptom}
                 </div>
                 
+                {/* DYNAMIC QUESTION TAILORED TO THE PATHOLOGY */}
                 <p className="text-xs text-white leading-relaxed font-sans font-medium">
-                  "Quelle est votre exposition quotidienne au soleil ou quel facteur déclencheur pensez-vous être à l'origine de ce problème ?"
+                  "{dynamicFlow.step2Question}"
                 </p>
 
+                {/* DYNAMIC OPTIONS TAILORED TO THE PATHOLOGY */}
                 <div className="space-y-2 pt-1">
-                  {[
-                    "☀️ Forte exposition quotidienne au soleil (UV Indice 8)",
-                    "💇 Tresses ou coiffure serrée récente",
-                    "🧼 Utilisation de savons ou cosmétiques forts",
-                    "🔥 Chaleur et transpiration excessive (32°C)",
-                  ].map((trigger, idx) => (
+                  {dynamicFlow.step2Options.map((trigger: string, idx: number) => (
                     <button
                       key={idx}
                       onClick={() => handleSelectTrigger(trigger)}
@@ -741,7 +827,7 @@ function ChatContent() {
                 </div>
 
                 <p className="text-xs text-white/90 leading-relaxed font-sans font-medium">
-                  En tenant compte de vos données ({consultationData.trigger}), le film hydrolipidique réagit fortement pour protéger l'épiderme.
+                  {userName}, en tenant compte de vos précisions ({consultationData.trigger}), le film hydrolipidique réagit pour protéger votre épiderme.
                 </p>
 
                 <Button
@@ -836,7 +922,7 @@ function ChatContent() {
 
                 <div className="space-y-2">
                   <div className="text-[10px] font-mono font-bold text-[#FFD700] uppercase tracking-wider">
-                    Règles Médicales d'Or du Dr. Mama Kènè :
+                    Règles Médicales d'Or du Dr. Mama Kènè pour {userName} :
                   </div>
                   {consultationData.goldenRules?.map((rule, idx) => (
                     <div key={idx} className="flex items-start gap-2 bg-[#25170D] border border-[#FFD700]/30 p-3 rounded-2xl text-xs text-white/90">
@@ -906,7 +992,7 @@ function ChatContent() {
         )}
       </AnimatePresence>
 
-      {/* ── ⌨️ BOTTOM FLOATING INPUT BAR (Z-INDEX 50 SUR-ÉLEVÉE + BOUTONS DÉDIÉS) ── */}
+      {/* ── ⌨️ BOTTOM FLOATING INPUT BAR ── */}
       <footer className="fixed bottom-0 left-0 right-0 bg-[#120B06]/98 border-t-2 border-[#FFD700]/60 p-3 sm:p-4 z-50 backdrop-blur-2xl shadow-2xl">
         <div className="max-w-md mx-auto flex items-center gap-2">
           
@@ -941,7 +1027,7 @@ function ChatContent() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSendPatientText()}
-            placeholder="Écrire un SMS ou message au Dr. Mama Kènè..."
+            placeholder="Texte, SMS ou question au Dr. Mama Kènè..."
             className="flex-1 bg-[#1E140C] border border-white/20 focus:border-[#FFD700] text-white px-4 h-11 rounded-2xl text-xs outline-none transition"
           />
 
