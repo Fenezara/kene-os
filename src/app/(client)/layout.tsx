@@ -148,29 +148,31 @@ export default function ClientLayout({
         </div>
       </header>
 
-      {/* ── 📱 FLOATING GLASS CAPSULE NAVIGATION BAR (MOBILE & TABLET BOTTOM) ── */}
-      <div className="md:hidden fixed bottom-3 left-3 right-3 z-50">
-        <div className="bg-[#140C06]/90 border-2 border-[#FFD700] rounded-full p-2 shadow-2xl backdrop-blur-2xl flex items-center justify-around">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href || (link.href.includes('chat') && pathname.includes('chat'));
-            const Icon = link.icon;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-full transition-all ${
-                  isActive
-                    ? 'bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black shadow-lg scale-105'
-                    : 'text-white/70 hover:text-white'
-                }`}
-              >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-black font-bold' : 'text-[#FFD700]'}`} />
-                <span className="text-[9px] font-bold truncate max-w-[64px]">{link.label.split(' ')[0]}</span>
-              </Link>
-            );
-          })}
+      {/* ── 📱 FLOATING GLASS CAPSULE NAVIGATION BAR (MOBILE & TABLET BOTTOM - HIDDEN ON CHAT PAGE) ── */}
+      {!pathname.includes('/chat') && (
+        <div className="md:hidden fixed bottom-3 left-3 right-3 z-50">
+          <div className="bg-[#140C06]/90 border-2 border-[#FFD700] rounded-full p-2 shadow-2xl backdrop-blur-2xl flex items-center justify-around">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href || (link.href.includes('chat') && pathname.includes('chat'));
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-full transition-all ${
+                    isActive
+                      ? 'bg-gradient-to-r from-[#FFD700] via-[#C8951E] to-[#D4AF37] text-black font-black shadow-lg scale-105'
+                      : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-black font-bold' : 'text-[#FFD700]'}`} />
+                  <span className="text-[9px] font-bold truncate max-w-[64px]">{link.label.split(' ')[0]}</span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Mobile Drawer Menu */}
       <AnimatePresence>
