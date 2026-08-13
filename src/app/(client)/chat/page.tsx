@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ParticleOrb3D } from '@/components/ParticleOrb3D';
 import { useToast } from '@/hooks/use-toast';
+import { AdinkraDuafe, AdinkraAya, AdinkraSankofa, BogolanPatternBorder, AfroHologramHalo } from '@/components/AfricanSymbols';
 
 export interface MultimodalMediaItem {
   id: string;
@@ -762,8 +763,9 @@ function ChatContent() {
 
         <div className="text-center space-y-0.5">
           <span className="text-[10px] font-mono tracking-[0.3em] text-[#FFD700] font-black uppercase flex items-center gap-1.5 justify-center">
-            <Sparkles className="w-3.5 h-3.5 text-[#FFD700] animate-spin" />
+            <AdinkraDuafe className="w-4 h-4 text-[#FFD700] animate-pulse" />
             TAARU AI · SPA 3D
+            <AdinkraAya className="w-4 h-4 text-[#FFD700] animate-pulse" />
           </span>
 
           <div className="flex items-center justify-center gap-1">
@@ -820,6 +822,7 @@ function ChatContent() {
             />
           ))}
         </div>
+        <BogolanPatternBorder />
       </div>
 
       {/* ── 🌟 SCROLLABLE MAIN SPA CONTAINER ── */}
