@@ -12,22 +12,10 @@ export const viewport: Viewport = {
   themeColor: "#C8951E",
 };
 
-const ojuju = Ojuju({
-  variable: "--font-ojuju",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
-});
-
-const cinzel = Cinzel({
-  variable: "--font-cinzel",
-  subsets: ["latin"],
-  weight: ["500", "700", "900"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -83,7 +71,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className="dark" suppressHydrationWarning>
       <body
-        className={`${ojuju.variable} ${plusJakartaSans.variable} ${cinzel.variable} ${jetbrainsMono.variable} antialiased bg-[#0F0A05] text-[#F8F1E4]`}
+        className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} antialiased bg-[#0F0A05] text-[#F8F1E4]`}
       >
         <OfflineIndicator />
 
