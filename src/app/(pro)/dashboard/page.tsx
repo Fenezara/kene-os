@@ -413,6 +413,8 @@ export default function ProDashboardPage() {
             </motion.div>
           );
         })}
+      </motion.div>
+
       {/* ── 2.5 CREATIVE EXCLUSIVE PLAN-SPECIFIC MODULE ── */}
       {isEssentiel && (
         <motion.div variants={itemVariants} className="rounded-3xl border border-emerald-500/30 bg-[#0A120D] p-5 shadow-2xl space-y-4">
