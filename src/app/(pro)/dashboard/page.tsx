@@ -413,7 +413,124 @@ export default function ProDashboardPage() {
             </motion.div>
           );
         })}
-      </motion.div>
+      {/* ── 2.5 CREATIVE EXCLUSIVE PLAN-SPECIFIC MODULE ── */}
+      {isEssentiel && (
+        <motion.div variants={itemVariants} className="rounded-3xl border border-emerald-500/30 bg-[#0A120D] p-5 shadow-2xl space-y-4">
+          <div className="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-emerald-400 animate-ping" />
+              <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest">
+                🟢 Mode Carnet Caisse Express (Plan Essentiel)
+              </span>
+            </div>
+            <span className="text-[10px] font-mono text-white/40">Conçu pour Solo & TPE</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/5 space-y-1">
+              <span className="text-white/40 text-[10px] uppercase font-bold">Encaissements Espèces & Mobile</span>
+              <div className="text-xl font-bold text-emerald-400 font-mono">180 000 FCFA</div>
+              <div className="text-[10px] text-white/50">6 ventes effectuées aujourd'hui</div>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/5 space-y-1">
+              <span className="text-white/40 text-[10px] uppercase font-bold">Rappel Cliente Automatique</span>
+              <div className="text-sm font-bold text-white">Aminata Diallo (14h00)</div>
+              <button className="text-[10px] font-bold text-emerald-400 hover:underline flex items-center gap-1">
+                <span>Rappeler par WhatsApp</span> →
+              </button>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-1 flex flex-col justify-between">
+              <span className="text-emerald-300 font-bold text-[11px]">💡 Débloquez l'IA Dermo-Botanique</span>
+              <span className="text-[10px] text-white/60">Passez au Plan Pro (15 000 F) pour activer les diagnostics 3D.</span>
+              <button 
+                onClick={() => { setActivePlan('pro'); localStorage.setItem('kene_active_plan', 'pro'); }}
+                className="text-[10px] font-black bg-emerald-400 text-black px-3 py-1 rounded-xl w-fit"
+              >
+                Tester le Plan Pro ⭐
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {isPro && (
+        <motion.div variants={itemVariants} className="rounded-3xl border border-[#C8951E]/40 bg-[#160E08] p-5 shadow-2xl space-y-4">
+          <div className="flex items-center justify-between border-b border-[#C8951E]/20 pb-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#C8951E] animate-spin" />
+              <span className="text-xs font-mono font-bold text-[#F3E5AB] uppercase tracking-widest">
+                ⭐ Cockpit Dermo-Botanique (Plan Pro)
+              </span>
+            </div>
+            <span className="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              💡 Humidité 85% à Abidjan — Recommandez les Soins Scellants
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/5 space-y-1">
+              <span className="text-[#C8951E] text-[10px] uppercase font-bold">Dernier Diagnostic Cutané 3D</span>
+              <div className="text-sm font-bold text-white">Phototype V — Hydratation 48%</div>
+              <div className="text-[10px] text-white/50">Formule : Masque Beurre de Karité & Moringa</div>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/5 space-y-1">
+              <span className="text-[#C8951E] text-[10px] uppercase font-bold">Affluence Cabine (Pic 16h-18h)</span>
+              <div className="text-sm font-bold text-emerald-400">Occupation 88% (4 Cabines)</div>
+              <div className="text-[10px] text-white/50">2 créneaux libres ce soir</div>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-[#C8951E]/10 border border-[#C8951E]/30 space-y-1 flex flex-col justify-between">
+              <span className="text-[#F3E5AB] font-bold text-[11px]">👑 Besoin du Multi-Salons & SYSCOHADA ?</span>
+              <span className="text-[10px] text-white/60">Passez au Plan Élite (30 000 F) pour superviser plusieurs instituts.</span>
+              <button 
+                onClick={() => { setActivePlan('elite'); localStorage.setItem('kene_active_plan', 'elite'); }}
+                className="text-[10px] font-black bg-[#C8951E] text-black px-3 py-1 rounded-xl w-fit"
+              >
+                Tester le Plan Élite 👑
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {isElite && (
+        <motion.div variants={itemVariants} className="rounded-3xl border-2 border-[#FFD700]/60 bg-[#1F1106] p-5 shadow-2xl space-y-4 backdrop-blur-2xl">
+          <div className="flex items-center justify-between border-b border-[#FFD700]/30 pb-3">
+            <div className="flex items-center gap-2">
+              <Award className="w-5 h-5 text-[#FFD700] animate-bounce" />
+              <span className="text-xs font-mono font-black text-[#FFD700] uppercase tracking-widest">
+                👑 Executive Control Center — Multi-Salons & Machine Learning (Plan Élite)
+              </span>
+            </div>
+            <span className="text-[10px] font-mono text-black font-black bg-[#FFD700] px-2.5 py-0.5 rounded-full shadow-md">
+              CONSOLIDATION UEMOA / OHADA ACTIVE
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-[#FFD700]/30 space-y-1">
+              <span className="text-[#FFD700] text-[10px] uppercase font-bold flex items-center gap-1">
+                <span>📍</span> Abidjan · Cocody Riviera
+              </span>
+              <div className="text-base font-black text-white font-mono">11 250 000 FCFA</div>
+              <div className="text-[10px] text-emerald-400 font-bold">142 clientes · Santé 98%</div>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-[#FFD700]/30 space-y-1">
+              <span className="text-[#FFD700] text-[10px] uppercase font-bold flex items-center gap-1">
+                <span>📍</span> Dakar · Almadies
+              </span>
+              <div className="text-base font-black text-white font-mono">4 850 000 FCFA</div>
+              <div className="text-[10px] text-emerald-400 font-bold">89 clientes · Santé 94%</div>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-[#FFD700]/30 space-y-1">
+              <span className="text-[#FFD700] text-[10px] uppercase font-bold flex items-center gap-1">
+                <span>📍</span> Bamako · ACI 2000
+              </span>
+              <div className="text-base font-black text-white font-mono">2 400 000 FCFA</div>
+              <div className="text-[10px] text-amber-400 font-bold">46 clientes · En expansion</div>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       {/* ── 3. INTERACTIVE DIAGRAMS & ANALYTICS SECTION (ADAPTS DYNAMICALLY TO PLAN) ── */}
       <motion.div
