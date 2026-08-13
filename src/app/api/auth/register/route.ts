@@ -1,3 +1,6 @@
+import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import { registerAccount } from '@/lib/user-store';
 import { signJWT } from '@/lib/jwt-auth';
 
 export async function POST(request: Request) {
