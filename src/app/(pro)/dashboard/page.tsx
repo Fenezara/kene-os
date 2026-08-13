@@ -326,26 +326,34 @@ export default function ProDashboardPage() {
         <motion.div variants={itemVariants} className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
           <div className="space-y-2">
             <div className="text-[10px] sm:text-xs font-mono tracking-[0.2em] uppercase text-[#C8951E] font-bold flex items-center gap-2">
-              <span className="bg-[#C8951E]/15 border border-[#C8951E]/30 px-2.5 py-0.5 rounded-full">
+              <span className={`border px-2.5 py-0.5 rounded-full ${
+                isEssentiel ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400' : isPro ? 'bg-[#C8951E]/15 border-[#C8951E]/30 text-[#F3E5AB]' : 'bg-[#FFD700]/20 border-[#FFD700]/40 text-[#FFD700]'
+              }`}>
                 {now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
               </span>
               <span>•</span>
-              <span className="text-emerald-400 font-bold flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                Certifié OHADA & UEMOA
+              <span className={`font-bold flex items-center gap-1 ${isEssentiel ? 'text-emerald-400' : isPro ? 'text-[#C8951E]' : 'text-[#FFD700]'}`}>
+                <span className={`w-2 h-2 rounded-full animate-pulse ${isEssentiel ? 'bg-emerald-400' : isPro ? 'bg-[#C8951E]' : 'bg-[#FFD700]'}`} />
+                {isEssentiel ? '🟢 Mode Carnet Caisse Solo' : isPro ? '⭐ Mode Institut & Spa Dermo-Botanique' : '👑 Mode Executive Multi-Salons UEMOA'}
               </span>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-[#C8951E]/15 border border-[#C8951E]/30 text-[#F3E5AB] text-xs font-bold font-display shadow-md">
-              <Building2 className="w-4 h-4 text-[#C8951E]" />
+            <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-2xl border text-xs font-bold font-display shadow-md ${
+              isEssentiel ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200' : isPro ? 'bg-[#C8951E]/15 border-[#C8951E]/30 text-[#F3E5AB]' : 'bg-[#FFD700]/20 border-[#FFD700]/40 text-[#FFD700]'
+            }`}>
+              <Building2 className="w-4 h-4" />
               <span>Établissement : <strong className="text-white font-black">{tenantName}</strong></span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-display font-black text-white tracking-tight leading-tight">
-              {greeting}, <span className="text-[#F3E5AB]">{employeeName}</span> 👋
+              {greeting}, <span className={isEssentiel ? 'text-emerald-300' : isPro ? 'text-[#F3E5AB]' : 'text-[#FFD700]'}>{employeeName}</span> 👋
             </h1>
             <p className="text-xs sm:text-sm text-white/70 font-sans max-w-xl">
-              Que souhaitez-vous effectuer aujourd'hui ?
+              {isEssentiel 
+                ? '🟢 Votre tableau de bord simplifié : encaissements caisse, rendez-vous du jour et rappels WhatsApp.' 
+                : isPro 
+                ? '⭐ Votre cockpit opérationnel : taux d’occupation des cabines, diagnostics 3D IA et recettes par soin.' 
+                : '👑 Votre centre de contrôle exécutif : supervision multi-salons, prédictions Machine Learning 90j et comptabilité SYSCOHADA.'}
             </p>
           </div>
 
