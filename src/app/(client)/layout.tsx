@@ -82,10 +82,10 @@ export default function ClientLayout({
   });
 
   return (
-    <div className="min-h-screen bg-[#0F0A05] text-white flex flex-col font-sans selection:bg-[#FFD700] selection:text-black">
+    <div className="h-screen h-[100dvh] w-screen overflow-hidden bg-[#0F0A05] text-white flex flex-col font-sans selection:bg-[#FFD700] selection:text-black">
       
-      {/* ── 🌸 TOP SUSPENDED GLASS HEADER (DESKTOP & MOBILE STICKY FIXED TOP) ── */}
-      <header className="h-16 bg-[#160E08]/95 border-b-2 border-[#FFD700]/40 px-4 md:px-8 flex items-center justify-between w-full shadow-2xl z-50 backdrop-blur-2xl sticky top-0 left-0 right-0">
+      {/* ── 🌸 TOP SUSPENDED GLASS HEADER (PHYSICALLY FIXED TOP NAVBAR - NEVER SCROLLS) ── */}
+      <header className="h-16 shrink-0 z-50 bg-[#160E08]/95 border-b-2 border-[#FFD700]/40 px-4 md:px-8 flex items-center justify-between w-full shadow-2xl backdrop-blur-2xl">
         <div className="max-w-7xl w-full mx-auto flex items-center justify-between">
           
           {/* Left Logo & Back Button */}
@@ -238,8 +238,8 @@ export default function ClientLayout({
         )}
       </AnimatePresence>
 
-      {/* Main Page Children */}
-      <main className="flex-1 pb-16 md:pb-0">
+      {/* Main Page Children — Only this element scrolls */}
+      <main className="flex-1 overflow-y-auto overflow-x-hidden w-full pb-24 md:pb-6 relative z-10">
         {children}
       </main>
 
