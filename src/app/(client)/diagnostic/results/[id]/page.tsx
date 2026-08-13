@@ -210,9 +210,14 @@ export default function ResultsPage() {
             <h2 className="font-display font-black text-sm text-[#F3E5AB] flex items-center gap-2 uppercase tracking-wider">
               <Sparkles className="w-4 h-4 text-[var(--gold-kene)]" /> Cartographie 3D Octo-Spectrale
             </h2>
-            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 font-bold">
-              ● Live 60 FPS
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-bold flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-emerald-400" /> Anti-Hallucination Cutanée Validé
+              </span>
+              <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 font-bold hidden sm:inline-block">
+                ● Live 60 FPS
+              </span>
+            </div>
           </div>
 
           <SpectralScanOverlay
