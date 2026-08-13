@@ -709,185 +709,274 @@ export default function ProDashboardPage() {
         </motion.div>
       </motion.div>
 
-      {/* ── 4. HEURES DE POINTE & OBJECTIFS (2 COLS) ── */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 gap-6"
-      >
-        {/* Objectif Mensuel + Top Praticienne */}
-        <motion.div variants={itemVariants} className="rounded-3xl border border-white/10 bg-[#1A1410] p-5 sm:p-6 shadow-2xl flex flex-col justify-between">
-          <div>
-            <div className="flex justify-between items-start mb-4">
+      {/* ── 3. INTERACTIVE DIAGRAMS & ANALYTICS SECTION (STRICT PLAN ISOLATION) ── */}
+      {/* 🟢 PLAN ESSENTIEL DIAGRAMS & CARDS */}
+      {isEssentiel && (
+        <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <motion.div variants={itemVariants} className="rounded-3xl border border-emerald-500/30 bg-[#0C1510] p-5 sm:p-6 shadow-2xl">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-emerald-500/20">
+                <div className="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-emerald-400" /> Recettes Caisse du Jour & Semaine (Plan Essentiel)
+                </div>
+                <span className="text-[10px] bg-emerald-500/10 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30">1 Cabine Solo</span>
+              </div>
+              <h3 className="text-base font-display font-black text-white mb-4">Total Encaissé : 180 000 FCFA</h3>
+              <div className="space-y-3">
+                {WEEKLY_DATA.slice(0, 5).map((d, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <span className="text-xs font-mono font-bold text-white/70 w-10">{d.day}</span>
+                    <div className="flex-1 h-3 bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${(d.val / 580000) * 100}%` }} />
+                    </div>
+                    <span className="text-xs font-mono font-bold text-emerald-400 w-24 text-right">{d.val.toLocaleString('fr-FR')} F</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="rounded-3xl border border-emerald-500/30 bg-[#0C1510] p-5 sm:p-6 shadow-2xl flex flex-col justify-between">
               <div>
-                <div className="text-[10px] font-mono text-[#C8951E] uppercase tracking-wider mb-1 font-bold">Objectif Financier Mensuel</div>
-                <div className="text-xl sm:text-2xl font-display font-black text-white">14.85M <span className="text-xs text-white/40">/ 18.0M FCFA</span></div>
-              </div>
-              <div className="w-10 h-10 rounded-2xl bg-[#C8951E]/15 flex items-center justify-center border border-[#C8951E]/30">
-                <Award className="w-5 h-5 text-[#C8951E]" />
-              </div>
-            </div>
-
-            <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden relative mb-2">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: '82.5%' }}
-                transition={{ duration: 1.5, ease: 'easeOut' }}
-                className="absolute top-0 left-0 h-full rounded-full"
-                style={{ background: 'linear-gradient(90deg, #8A3B14, #C8951E, #F3E5AB)' }}
-              />
-            </div>
-            <div className="flex justify-between text-[10px] font-bold">
-              <span className="text-[#C8951E]">Avancement (82.5%)</span>
-              <span className="text-white/40">+3.15M FCFA restants</span>
-            </div>
-          </div>
-
-          <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-4">
-            <div className="relative shrink-0">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#C8951E] to-[#8A3B14] p-[2px]">
-                <div className="w-full h-full rounded-2xl bg-[#1A1410] flex items-center justify-center">
-                  <span className="text-lg font-bold text-[#C8951E]">F</span>
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-emerald-500/20">
+                  <div className="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                    <CalendarCheck className="w-4 h-4 text-emerald-400" /> RDV du Jour (Plan Essentiel)
+                  </div>
+                  <span className="text-[10px] text-white/50">4 clientes inscrites</span>
+                </div>
+                <div className="space-y-2.5">
+                  {[
+                    { time: '09h00', client: 'Awa Koné', service: 'Soin Karité Express', phone: '+225 07 00 11 22' },
+                    { time: '11h30', client: 'Fatou Sarr', service: 'Tresses Afro Naturelles', phone: '+225 05 44 33 22' },
+                    { time: '14h30', client: 'Mariam Coulibaly', service: 'Bain d\'Huile Baobab', phone: '+225 01 99 88 77' },
+                  ].map((rdv, i) => (
+                    <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/5 text-xs">
+                      <div>
+                        <span className="font-mono text-emerald-400 font-bold mr-2">{rdv.time}</span>
+                        <strong className="text-white">{rdv.client}</strong>
+                        <div className="text-[10px] text-white/50">{rdv.service}</div>
+                      </div>
+                      <a href={`https://wa.me/${rdv.phone.replace(/[\s\+]/g, '')}`} target="_blank" rel="noreferrer" className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-xl hover:bg-emerald-500/20">
+                        WhatsApp →
+                      </a>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="absolute -bottom-1 -right-1 bg-[#C8951E] text-[#0F0A05] text-[8px] font-black px-1.5 rounded-full">
-                #1
+              <div className="mt-4 pt-3 border-t border-emerald-500/20 text-[10px] text-emerald-300/80 font-mono text-center">
+                🟢 Plan Essentiel actif · Caisse & Agenda simplifiés
               </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[10px] font-mono text-[#C8951E] uppercase font-bold">Top Praticienne du mois</div>
-              <div className="text-sm font-bold text-white truncate">Fatou Sylla</div>
-              <div className="text-[10px] text-white/50">2.4M FCFA de CA · 124 prestations</div>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
+      )}
 
-        {/* Heatmap des Heures de Pointe Cabines */}
-        <motion.div variants={itemVariants} className="rounded-3xl border border-white/10 bg-[#1A1410] p-5 sm:p-6 shadow-2xl flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
-              <div className="text-[10px] font-mono text-[#C8951E] uppercase tracking-wider font-bold flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5" /> Taux d'Occupation Cabines
-              </div>
-              <span className="text-[10px] font-mono text-emerald-400 font-bold">88% Moyen</span>
-            </div>
-            <h3 className="text-base font-display font-black text-white mb-4">Planning des Heures de Pointe</h3>
-
-            <div className="space-y-2.5">
-              {PEAK_HOURS.map((slot, i) => (
-                <div key={i} className="flex items-center gap-3 p-2 rounded-2xl bg-white/5 border border-white/5">
-                  <span className="text-xs font-mono font-bold text-white/70 w-16 shrink-0">{slot.time}</span>
-                  <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${slot.occupancy}%`,
-                        background: slot.occupancy === 100 ? '#8A1C14' : slot.occupancy > 80 ? '#C8951E' : '#4CAF6E'
-                      }}
-                    />
+      {/* ⭐ PLAN PRO DIAGRAMS & CARDS */}
+      {isPro && (
+        <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* DIAGRAMME 1 PRO */}
+            <motion.div variants={itemVariants} className="lg:col-span-2 rounded-3xl border border-[#C8951E]/40 bg-[#1A1410] p-5 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+                <div>
+                  <div className="text-[10px] font-mono text-[#C8951E] uppercase tracking-wider font-bold flex items-center gap-1.5">
+                    <BarChart3 className="w-3.5 h-3.5" /> Diagramme Analytique Hebdomadaire (Plan Pro ⭐)
                   </div>
-                  <span
-                    className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full shrink-0"
-                    style={{
-                      background: slot.occupancy === 100 ? '#8A1C1430' : '#C8951E20',
-                      color: slot.occupancy === 100 ? '#FF6B6B' : '#C8951E'
-                    }}
-                  >
-                    {slot.status} ({slot.occupancy}%)
+                  <h3 className="text-lg font-display font-black text-white">Évolution du Chiffre d'Affaires & RDV</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-bold">
+                    +18.4% cette semaine
                   </span>
                 </div>
-              ))}
-            </div>
+              </div>
+
+              {/* SVG Curved Area Chart */}
+              <div className="relative h-48 w-full my-2">
+                <svg className="w-full h-full overflow-visible" viewBox="0 0 700 180" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#C8951E" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="#C8951E" stopOpacity="0.0" />
+                    </linearGradient>
+                  </defs>
+                  {[0, 45, 90, 135, 180].map((y, idx) => (
+                    <line key={idx} x1="0" y1={y} x2="700" y2={y} stroke="rgba(255,255,255,0.05)" strokeDasharray="4 4" />
+                  ))}
+                  <polygon
+                    points={`0,180 ${WEEKLY_DATA.map((d, i) => `${(i / (WEEKLY_DATA.length - 1)) * 700},${180 - (d.val / maxVal) * 150}`).join(' ')} 700,180`}
+                    fill="url(#chartGradient)"
+                  />
+                  <polyline
+                    fill="none" stroke="#C8951E" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"
+                    points={WEEKLY_DATA.map((d, i) => `${(i / (WEEKLY_DATA.length - 1)) * 700},${180 - (d.val / maxVal) * 150}`).join(' ')}
+                  />
+                  {WEEKLY_DATA.map((d, i) => {
+                    const cx = (i / (WEEKLY_DATA.length - 1)) * 700;
+                    const cy = 180 - (d.val / maxVal) * 150;
+                    const isSelected = activeChartPoint === i;
+                    return (
+                      <g key={i} className="cursor-pointer" onClick={() => setActiveChartPoint(i)}>
+                        <circle cx={cx} cy={cy} r={isSelected ? "7" : "4.5"} fill={isSelected ? "#FFD700" : "#C8951E"} stroke="#0F0A05" strokeWidth="2.5" />
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+
+              <div className="grid grid-cols-7 gap-1 text-center pt-3 border-t border-white/5">
+                {WEEKLY_DATA.map((d, i) => (
+                  <button key={i} onClick={() => setActiveChartPoint(i)} className={`py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${activeChartPoint === i ? 'bg-[#C8951E] text-black font-black' : 'text-white/50 hover:bg-white/5'}`}>
+                    <div>{d.day}</div>
+                    <div className="text-[9px] opacity-80">{Math.round(d.val / 1000)}k</div>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* DIAGRAMME 2 PRO */}
+            <motion.div variants={itemVariants} className="rounded-3xl border border-[#C8951E]/40 bg-[#1A1410] p-5 sm:p-6 shadow-2xl flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
+                  <div className="text-[10px] font-mono text-[#C8951E] uppercase tracking-wider font-bold flex items-center gap-1.5">
+                    <PieChart className="w-3.5 h-3.5" /> Répartition par Soins (Plan Pro ⭐)
+                  </div>
+                  <span className="text-[10px] font-mono text-white/40">Par Catégorie</span>
+                </div>
+                <h3 className="text-base font-display font-black text-white mb-4">Ventes par Type de Prestation</h3>
+                <div className="space-y-4">
+                  {CATEGORY_DISTRIBUTION.map((cat, i) => (
+                    <div key={i} className="space-y-1.5">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="flex items-center gap-2 font-semibold text-white/90 truncate"><span>{cat.icon}</span> {cat.label}</span>
+                        <span className="font-mono font-bold text-white shrink-0 ml-2">{cat.pct}%</span>
+                      </div>
+                      <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-full rounded-full" style={{ width: `${cat.pct}%`, background: cat.color }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-white/5 text-[10px] text-white/40 font-mono flex items-center justify-between">
-            <span>💡 AI Tip: Ouvrez des créneaux supplémentaires de 16h à 18h</span>
-          </div>
-        </motion.div>
-      </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <motion.div variants={itemVariants} className="rounded-3xl border border-white/10 bg-[#1A1410] p-5 sm:p-6 shadow-2xl flex flex-col justify-between">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <div className="text-[10px] font-mono text-[#C8951E] uppercase tracking-wider mb-1 font-bold">Objectif Financier Mensuel</div>
+                  <div className="text-xl sm:text-2xl font-display font-black text-white">14.85M <span className="text-xs text-white/40">/ 18.0M FCFA</span></div>
+                </div>
+                <div className="w-10 h-10 rounded-2xl bg-[#C8951E]/15 flex items-center justify-center border border-[#C8951E]/30">
+                  <Award className="w-5 h-5 text-[#C8951E]" />
+                </div>
+              </div>
+              <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden relative mb-2">
+                <div className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-[#8A3B14] via-[#C8951E] to-[#F3E5AB]" style={{ width: '82.5%' }} />
+              </div>
+            </motion.div>
 
-      {/* ── 5. PROCHAINS RDV & ACTIVITÉ RÉCENTE (2 COLS) ── */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 gap-6"
-      >
-        {/* Prochains RDV */}
-        <motion.div variants={itemVariants} className="rounded-3xl border border-white/10 bg-[#1A1410] overflow-hidden shadow-2xl">
-          <div className="flex items-center justify-between p-5 border-b border-white/5">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[#C8951E]/15 flex items-center justify-center">
-                <CalendarCheck className="w-4 h-4 text-[#C8951E]" />
+            <motion.div variants={itemVariants} className="rounded-3xl border border-white/10 bg-[#1A1410] p-5 sm:p-6 shadow-2xl flex flex-col justify-between">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
+                <div className="text-[10px] font-mono text-[#C8951E] uppercase tracking-wider font-bold flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5" /> Taux d'Occupation Cabines (Plan Pro ⭐)
+                </div>
+                <span className="text-[10px] font-mono text-emerald-400 font-bold">88% Moyen</span>
               </div>
-              <span className="font-display font-bold text-sm text-white">Prochains RDV Cabine Aujourd'hui</span>
-            </div>
-            <Link href="/agenda">
-              <button className="flex items-center gap-1 text-xs font-bold text-[#C8951E] hover:underline cursor-pointer">
-                Agenda complet <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </Link>
-          </div>
-          <div className="p-4 space-y-2.5">
-            {[
-              { time: '09:00', client: 'Awa Koné', service: 'Soin Karité Profond', phototype: 'Phototype V' },
-              { time: '10:30', client: 'Fatoumata Diallo', service: 'Peeling Enzymatique Papaye', phototype: 'Phototype VI' },
-              { time: '14:00', client: 'Mariama Traoré', service: 'Hydratation Intensive Baobab', phototype: 'Phototype IV' },
-            ].map((rdv, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
-                <div className="text-xs font-mono text-[#C8951E] w-12 shrink-0 font-bold">{rdv.time}</div>
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#C8951E]/20 to-[#8A3B14]/20 flex items-center justify-center shrink-0">
-                  <span className="text-xs font-bold text-[#C8951E]">{rdv.client.charAt(0)}</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-xs font-bold text-white truncate">{rdv.client}</div>
-                  <div className="text-[10px] text-white/50 truncate">{rdv.service}</div>
-                </div>
-                <div className="text-[9px] bg-blue-500/10 text-blue-400 px-2.5 py-0.5 rounded-full shrink-0 font-mono font-bold border border-blue-500/20">
-                  {rdv.phototype}
-                </div>
+              <div className="space-y-2.5">
+                {PEAK_HOURS.slice(0, 3).map((slot, i) => (
+                  <div key={i} className="flex items-center gap-3 p-2 rounded-2xl bg-white/5 border border-white/5 text-xs">
+                    <span className="font-mono text-white/70 w-16">{slot.time}</span>
+                    <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${slot.occupancy}%`, background: slot.occupancy === 100 ? '#8A1C14' : '#C8951E' }} />
+                    </div>
+                    <span className="font-mono text-[9px] font-bold text-[#C8951E]">{slot.status}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </motion.div>
           </div>
         </motion.div>
+      )}
 
-        {/* Activité Récente */}
-        <motion.div variants={itemVariants} className="rounded-3xl border border-white/10 bg-[#1A1410] overflow-hidden shadow-2xl">
-          <div className="flex items-center justify-between p-5 border-b border-white/5">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[#4CAF6E]/15 flex items-center justify-center">
-                <Activity className="w-4 h-4 text-[#4CAF6E]" />
-              </div>
-              <span className="font-display font-bold text-sm text-white">Activité & Ventes Récentes</span>
-            </div>
-            <Link href="/pos">
-              <button className="flex items-center gap-1 text-xs font-bold text-[#C8951E] hover:underline cursor-pointer">
-                Ouvrir POS <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </Link>
-          </div>
-          <div className="p-4 space-y-2.5">
-            {[
-              { label: 'Encaissement Vente POS', amount: '25 000 FCFA (Wave)', time: '12 min', icon: '💰' },
-              { label: 'Nouvelle cliente enregistrée', amount: 'Adjoua A. — Phototype V', time: '35 min', icon: '👤' },
-              { label: 'Sérum Sur-Mesure Préparé', amount: 'Formule Karité LOT-042', time: '1h', icon: '🧪' },
-              { label: 'Avis 5 Étoiles Reçu', amount: '"Soin exceptionnel et apaisant"', time: '3h', icon: '⭐' },
-            ].map((event, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
-                <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 text-base">
-                  {event.icon}
+      {/* 👑 PLAN ÉLITE DIAGRAMS & CARDS */}
+      {isElite && (
+        <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* DIAGRAMME PREDICTIF MACHINE LEARNING 90J */}
+            <motion.div variants={itemVariants} className="lg:col-span-2 rounded-3xl border-2 border-[#FFD700]/70 bg-[#1F1106] p-5 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between backdrop-blur-2xl">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#FFD700]/30">
+                <div>
+                  <div className="text-[10px] font-mono text-[#FFD700] uppercase tracking-wider font-black flex items-center gap-1.5">
+                    <Zap className="w-4 h-4 text-[#FFD700] animate-bounce" /> 👑 Machine Learning & Prédictions IA à 90 jours (Plan Élite 👑)
+                  </div>
+                  <h3 className="text-lg font-display font-black text-white">Prévision du Chiffre d'Affaires Trimestriel Consolidé</h3>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-xs font-bold text-white truncate">{event.label}</div>
-                  <div className="text-[10px] text-white/50 truncate">{event.amount}</div>
-                </div>
-                <div className="text-[9px] text-white/40 shrink-0 font-mono">{event.time}</div>
+                <span className="text-[10px] font-mono bg-[#FFD700] text-black font-black px-3 py-1 rounded-full shadow-lg">
+                  Précision IA 96.4%
+                </span>
               </div>
-            ))}
+
+              {/* Machine Learning Curve */}
+              <div className="relative h-48 w-full my-2">
+                <svg className="w-full h-full overflow-visible" viewBox="0 0 700 180" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="eliteGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#FFD700" stopOpacity="0.5" />
+                      <stop offset="100%" stopColor="#8A1C14" stopOpacity="0.0" />
+                    </linearGradient>
+                  </defs>
+                  <polygon points="0,180 0,120 150,90 300,110 450,50 600,30 700,10 700,180" fill="url(#eliteGradient)" />
+                  <polyline fill="none" stroke="#FFD700" strokeWidth="4" strokeLinecap="round" points="0,120 150,90 300,110 450,50 600,30 700,10" />
+                  {[0, 150, 300, 450, 600, 700].map((cx, i) => (
+                    <circle key={i} cx={cx} cy={[120, 90, 110, 50, 30, 10][i]} r="6" fill="#FFD700" stroke="#000" strokeWidth="2" />
+                  ))}
+                </svg>
+              </div>
+
+              <div className="grid grid-cols-4 gap-2 text-center pt-3 border-t border-[#FFD700]/20 text-xs font-mono font-bold">
+                <div className="p-2 rounded-xl bg-white/5"><div className="text-white/50 text-[9px]">Mois M</div><div className="text-[#FFD700]">18.5M FCFA</div></div>
+                <div className="p-2 rounded-xl bg-white/5"><div className="text-white/50 text-[9px]">Mois M+1 (IA)</div><div className="text-emerald-400">21.2M FCFA</div></div>
+                <div className="p-2 rounded-xl bg-white/5"><div className="text-white/50 text-[9px]">Mois M+2 (IA)</div><div className="text-emerald-400">24.8M FCFA</div></div>
+                <div className="p-2 rounded-xl bg-white/5"><div className="text-white/50 text-[9px]">Mois M+3 (IA)</div><div className="text-[#FFD700]">28.5M FCFA</div></div>
+              </div>
+            </motion.div>
+
+            {/* SUPERVISION DE LA MASSE SALARIALE & CNPS SYSCOHADA */}
+            <motion.div variants={itemVariants} className="rounded-3xl border-2 border-[#FFD700]/70 bg-[#1F1106] p-5 sm:p-6 shadow-2xl flex flex-col justify-between backdrop-blur-2xl">
+              <div>
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#FFD700]/30">
+                  <div className="text-[10px] font-mono text-[#FFD700] uppercase tracking-wider font-black flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-[#FFD700]" /> 👑 Paie CNPS & Comptabilité SYSCOHADA
+                  </div>
+                  <span className="text-[9px] bg-red-500/20 text-red-300 font-bold px-2 py-0.5 rounded-full border border-red-500/40">UEMOA Certifié</span>
+                </div>
+
+                <div className="space-y-3 text-xs">
+                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex justify-between items-center">
+                    <span className="text-white/70">Compte 5711 (Caisse Principale Abidjan)</span>
+                    <strong className="text-[#FFD700] font-mono">18 500 000 F</strong>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex justify-between items-center">
+                    <span className="text-white/70">Masse Salariale Nette (12 Praticiennes)</span>
+                    <strong className="text-white font-mono">4 250 000 F</strong>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex justify-between items-center">
+                    <span className="text-white/70">Cotisations CNPS Patronales (7.7%)</span>
+                    <strong className="text-emerald-400 font-mono">327 250 F</strong>
+                  </div>
+                </div>
+              </div>
+
+              <Link href="/compta" className="mt-4">
+                <button className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-[#FFD700] to-[#C8951E] text-black font-black text-xs uppercase tracking-wider shadow-xl hover:scale-[1.02] transition-transform">
+                  Ouvrir le Journal SYSCOHADA 👑 →
+                </button>
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
-      </motion.div>
+      )}
 
       {/* ── 6. CATALOGUE DES MODULES ACTIFS ── */}
       <motion.div
