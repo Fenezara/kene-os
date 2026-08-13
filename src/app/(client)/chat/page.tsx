@@ -751,8 +751,8 @@ function ChatContent() {
       <div className="fixed top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#FFD700]/15 rounded-full blur-[130px] pointer-events-none z-0" />
       <div className="fixed bottom-10 right-10 w-80 h-80 bg-[#C8951E]/10 rounded-full blur-[110px] pointer-events-none z-0" />
 
-      {/* ── 📱 TOP HEADER BAR ── */}
-      <header className="w-full max-w-md px-6 py-3 flex items-center justify-between shrink-0 relative z-30 bg-[#120B06]/95 backdrop-blur-2xl border-b border-[#FFD700]/30 shadow-xl">
+      {/* ── 📱 TOP HEADER BAR (STICKY FIXED TOP) ── */}
+      <header className="w-full max-w-md px-6 py-3 flex items-center justify-between shrink-0 sticky top-0 left-0 right-0 z-50 bg-[#120B06]/95 backdrop-blur-2xl border-b border-[#FFD700]/30 shadow-xl">
         <button
           onClick={() => router.push('/portal')}
           className="w-9 h-9 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"

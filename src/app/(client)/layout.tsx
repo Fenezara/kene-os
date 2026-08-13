@@ -84,8 +84,8 @@ export default function ClientLayout({
   return (
     <div className="min-h-screen bg-[#0F0A05] text-white flex flex-col font-sans selection:bg-[#FFD700] selection:text-black">
       
-      {/* ── 🌸 TOP SUSPENDED GLASS HEADER (DESKTOP / PC & TABLET) ── */}
-      <header className="h-16 bg-[#160E08]/90 border-b-2 border-[#FFD700]/40 px-4 md:px-8 flex items-center justify-between w-full shadow-2xl z-40 backdrop-blur-2xl sticky top-0">
+      {/* ── 🌸 TOP SUSPENDED GLASS HEADER (DESKTOP & MOBILE STICKY FIXED TOP) ── */}
+      <header className="h-16 bg-[#160E08]/95 border-b-2 border-[#FFD700]/40 px-4 md:px-8 flex items-center justify-between w-full shadow-2xl z-50 backdrop-blur-2xl sticky top-0 left-0 right-0">
         <div className="max-w-7xl w-full mx-auto flex items-center justify-between">
           
           {/* Left Logo & Back Button */}
