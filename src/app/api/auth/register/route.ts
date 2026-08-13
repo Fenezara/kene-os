@@ -1,6 +1,4 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { registerAccount } from '@/lib/user-store';
+import { signJWT } from '@/lib/jwt-auth';
 
 export async function POST(request: Request) {
   try {
@@ -29,6 +27,16 @@ export async function POST(request: Request) {
       role: normalizedRole,
     });
 
+    // Sign cryptographic JWT token (HMAC SHA-256)
+    const token = await signJWT({
+      sub: newAccount.id,
+      name: newAccount.name,
+      email: newAccount.email,
+      phone: newAccount.phone,
+      role: normalizedRole,
+      tenantId: 'tenant-default-abidjan',
+    });
+
     // Optionally create record in DB if available
     try {
       const { db } = await import('@/lib/db');
@@ -53,15 +61,14 @@ export async function POST(request: Request) {
       // Ignore DB error
     }
 
-    // Set 1-year persistent HTTP session cookie
-    const sessionId = `${normalizedRole}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    // Set 30-day persistent HTTP-Only Session Cookie
     const cookieStore = await cookies();
-    cookieStore.set('kene-session', sessionId, {
-      httpOnly: true,
+    cookieStore.set('kene-session', token, {
+      httpOnly: true, // Prevents XSS script token theft
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 60 * 24 * 365,
+      maxAge: 60 * 60 * 24 * 30, // 30 days valid JWT session
     });
 
     const targetPath = normalizedRole === 'gerant' ? '/dashboard' : normalizedRole === 'admin' ? '/admin' : '/portal';
