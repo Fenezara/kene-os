@@ -94,6 +94,21 @@ export default function RootLayout({
           }
         ` }} />
 
+        {/* Synchronous inline script to suppress splash screen on subsequent page navigations */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (window.sessionStorage && window.sessionStorage.getItem('kene_splash_shown') === 'true') {
+                  document.write('<style>#kene-instant-splash-screen { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }</style>');
+                } else if (window.sessionStorage) {
+                  window.sessionStorage.setItem('kene_splash_shown', 'true');
+                }
+              } catch(e) {}
+            `,
+          }}
+        />
+
         <div
           id="kene-instant-splash-screen"
           style={{
