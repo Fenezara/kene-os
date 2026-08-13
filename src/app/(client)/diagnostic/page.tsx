@@ -66,32 +66,47 @@ export default function DiagnosticPage() {
     });
   };
 
+  const streamRef = useRef<MediaStream | null>(null);
+
+  const stopCameraHardware = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+    }
+    setIsCameraActive(false);
+  };
+
   const startCamera = async () => {
+    stopCameraHardware();
     setCameraError(null);
     let mediaStream: MediaStream | null = null;
     try {
-      // 1st attempt: soft ideal constraints for mobile
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: facingMode }, width: { ideal: 1280 }, height: { ideal: 720 } },
         audio: false
       });
     } catch {
       try {
-        // 2nd attempt: generic video fallback
-        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-      } catch (err: any) {
-        console.error('Camera access error:', err);
-        setIsCameraActive(false);
-        setCameraError(
-          "Impossible d'accéder à la caméra. Utilisez le bouton 'Téléverser des Photos' ci-dessous pour choisir vos clichés depuis votre téléphone ou galerie."
-        );
-        return;
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false
+        });
+      } catch (err) {
+        setCameraError("Impossible d'accéder à la caméra. Veuillez autoriser l'accès.");
       }
     }
 
     if (mediaStream) {
+      streamRef.current = mediaStream;
       setStream(mediaStream);
       setIsCameraActive(true);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('kene_camera_permission_granted', 'true');
+      }
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
         videoRef.current.play().catch(e => console.log('Video play error:', e));
@@ -102,9 +117,7 @@ export default function DiagnosticPage() {
   useEffect(() => {
     startCamera();
     return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
+      stopCameraHardware();
     };
   }, [facingMode]);
 
@@ -205,6 +218,7 @@ export default function DiagnosticPage() {
     }
 
     setLoading(true);
+    stopCameraHardware();
 
     try {
       if (typeof window !== 'undefined' && photos.length > 0) {
