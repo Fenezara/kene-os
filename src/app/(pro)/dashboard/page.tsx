@@ -415,25 +415,29 @@ export default function ProDashboardPage() {
         })}
       </motion.div>
 
-      {/* ── 3. INTERACTIVE DIAGRAMS & ANALYTICS SECTION ── */}
+      {/* ── 3. INTERACTIVE DIAGRAMS & ANALYTICS SECTION (ADAPTS DYNAMICALLY TO PLAN) ── */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
         className="grid grid-cols-1 lg:grid-cols-3 gap-6"
       >
-        {/* DIAGRAMME 1 : Courbe d'Évolution des Revenus (2 COLS) */}
+        {/* DIAGRAMME 1 : Adapté selon le Plan (2 COLS) */}
         <motion.div variants={itemVariants} className="lg:col-span-2 rounded-3xl border border-white/10 bg-[#1A1410] p-5 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between">
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
             <div>
               <div className="text-[10px] font-mono text-[#C8951E] uppercase tracking-wider font-bold flex items-center gap-1.5">
-                <BarChart3 className="w-3.5 h-3.5" /> Diagramme Analytique Hebdomadaire
+                <BarChart3 className="w-3.5 h-3.5" /> {isEssentiel ? 'Diagramme Ventes Caisse Simplifiées (Plan Essentiel)' : isPro ? 'Diagramme Analytique Hebdomadaire (Plan Pro ⭐)' : '👑 Diagramme Prédictif IA & Multi-Salons (Plan Élite 👑)'}
               </div>
-              <h3 className="text-lg font-display font-black text-white">Évolution du Chiffre d'Affaires & RDV</h3>
+              <h3 className="text-lg font-display font-black text-white">
+                {isEssentiel ? "Suivi Hebdomadaire des Recettes Caisse" : isPro ? "Évolution du Chiffre d'Affaires & RDV" : "Prévisions IA 90j & Comparatif Multi-Salons"}
+              </h3>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full font-bold">
-                +18.4% cette semaine
+              <span className={`text-[10px] font-mono border px-2.5 py-1 rounded-full font-bold ${
+                isEssentiel ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : isPro ? 'bg-[#C8951E]/15 text-[#F3E5AB] border-[#C8951E]/30' : 'bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/40'
+              }`}>
+                {isEssentiel ? 'Vue Simplifiée 1 Cabine' : isPro ? '+18.4% cette semaine' : '👑 Machine Learning 90j Active'}
               </span>
             </div>
           </div>
