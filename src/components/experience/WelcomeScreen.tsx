@@ -167,20 +167,20 @@ export function WelcomeScreen({ onReplayIntro }: WelcomeScreenProps) {
             className="h-full"
           >
             <Link href="/portal" onClick={triggerHaptic}>
-              <div className="group relative rounded-2xl p-4 sm:p-5 border border-white/15 bg-gradient-to-b from-white/10 via-[#1A1410]/90 to-[#0A0603] backdrop-blur-xl hover:border-[#C8951E] transition-all duration-300 cursor-pointer shadow-2xl h-full flex flex-col justify-between overflow-hidden">
+              <div className="group relative rounded-2xl p-4 sm:p-5 border border-[#FFD700]/30 bg-gradient-to-b from-[#1E1610]/95 via-[#1A1410]/90 to-[#0A0603] backdrop-blur-2xl hover:border-[#FFD700] transition-all duration-300 cursor-pointer shadow-2xl h-full flex flex-col justify-between overflow-hidden glass-card-hover shimmer-sweep">
                 
                 <div className="space-y-2.5 relative z-10">
                   <div className="flex items-center justify-between">
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#F3E5AB]/20 to-[#C8951E]/30 border border-[#C8951E]/50 flex items-center justify-center text-xl shadow-md">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#FFD700]/30 via-[#C8951E]/20 to-[#8A3B14]/40 border border-[#FFD700]/60 flex items-center justify-center text-xl shadow-lg">
                       🌸
                     </div>
-                    <Badge className="bg-[#C8951E]/20 text-[#F3E5AB] border border-[#C8951E]/40 font-mono text-[9px] sm:text-[10px] font-bold px-2.5 py-0.5">
-                      ESPACE CLIENTE
+                    <Badge className="bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/50 font-mono text-[9px] sm:text-[10px] font-bold px-2.5 py-0.5 shadow-md">
+                      ESPACE CLIENTE PRIVILÈGE
                     </Badge>
                   </div>
 
                   <div className="space-y-0.5">
-                    <h2 className="font-display font-black text-lg sm:text-xl text-white group-hover:text-[#F3E5AB] transition-colors">
+                    <h2 className="font-display font-black text-lg sm:text-xl text-white group-hover:text-[#FFD700] transition-colors">
                       Je suis une Cliente
                     </h2>
                     <p className="text-[11px] text-white/70 leading-relaxed font-sans line-clamp-2">
@@ -190,20 +190,20 @@ export function WelcomeScreen({ onReplayIntro }: WelcomeScreenProps) {
 
                   {/* Feature Pills */}
                   <div className="grid grid-cols-2 gap-1.5 pt-1 text-[10px] font-semibold text-white/80">
-                    <div className="flex items-center gap-1 bg-black/50 border border-white/10 px-2 py-1 rounded-lg">
-                      <ScanFace className="w-3 h-3 text-[#C8951E]" /> Dermo-IA
+                    <div className="flex items-center gap-1 bg-black/60 border border-[#FFD700]/20 px-2 py-1 rounded-lg">
+                      <ScanFace className="w-3 h-3 text-[#FFD700]" /> Dermo-IA 3D
                     </div>
-                    <div className="flex items-center gap-1 bg-black/50 border border-white/10 px-2 py-1 rounded-lg">
-                      <Calendar className="w-3 h-3 text-[#C8951E]" /> RDV 1-Click
+                    <div className="flex items-center gap-1 bg-black/60 border border-[#FFD700]/20 px-2 py-1 rounded-lg">
+                      <Calendar className="w-3 h-3 text-[#FFD700]" /> RDV 1-Click
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-2.5 mt-2.5 border-t border-white/10 flex items-center justify-between text-xs font-bold text-[#F3E5AB] relative z-10">
+                <div className="pt-2.5 mt-2.5 border-t border-white/10 flex items-center justify-between text-xs font-bold text-[#FFD700] relative z-10">
                   <span className="flex items-center gap-1 text-[11px]">
-                    Entrer dans mon Espace <ChevronRight className="w-3.5 h-3.5 text-[#C8951E]" />
+                    Entrer dans mon Espace <ChevronRight className="w-3.5 h-3.5 text-[#FFD700]" />
                   </span>
-                  <div className="w-7 h-7 rounded-xl bg-gradient-to-r from-[#F3E5AB] to-[#C8951E] text-black font-bold flex items-center justify-center shadow-md">
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-r from-[#FFD700] via-[#D4AF37] to-[#C8951E] text-black font-bold flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                     <ArrowRight className="w-4 h-4 text-black" />
                   </div>
                 </div>
@@ -220,14 +220,14 @@ export function WelcomeScreen({ onReplayIntro }: WelcomeScreenProps) {
             className="h-full"
           >
             <Link href="/dashboard" onClick={triggerHaptic}>
-              <div className="group relative rounded-2xl p-4 sm:p-5 border border-white/15 bg-gradient-to-b from-white/10 via-[#0A1A10]/90 to-[#0A0603] backdrop-blur-xl hover:border-emerald-500 transition-all duration-300 cursor-pointer shadow-2xl h-full flex flex-col justify-between overflow-hidden">
+              <div className="group relative rounded-2xl p-4 sm:p-5 border border-emerald-500/30 bg-gradient-to-b from-[#0E1B13]/95 via-[#0A1A10]/90 to-[#0A0603] backdrop-blur-2xl hover:border-emerald-400 transition-all duration-300 cursor-pointer shadow-2xl h-full flex flex-col justify-between overflow-hidden glass-card-hover shimmer-sweep">
                 
                 <div className="space-y-2.5 relative z-10">
                   <div className="flex items-center justify-between">
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-700/30 border border-emerald-500/50 flex items-center justify-center text-xl shadow-md">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-emerald-500/30 via-emerald-600/20 to-emerald-800/40 border border-emerald-500/60 flex items-center justify-center text-xl shadow-lg">
                       🏬
                     </div>
-                    <Badge className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-[9px] sm:text-[10px] font-bold px-2.5 py-0.5">
+                    <Badge className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 font-mono text-[9px] sm:text-[10px] font-bold px-2.5 py-0.5 shadow-md">
                       ESPACE SALON PRO
                     </Badge>
                   </div>
@@ -243,10 +243,10 @@ export function WelcomeScreen({ onReplayIntro }: WelcomeScreenProps) {
 
                   {/* Feature Pills */}
                   <div className="grid grid-cols-2 gap-1.5 pt-1 text-[10px] font-semibold text-white/80">
-                    <div className="flex items-center gap-1 bg-black/50 border border-white/10 px-2 py-1 rounded-lg">
+                    <div className="flex items-center gap-1 bg-black/60 border border-emerald-500/20 px-2 py-1 rounded-lg">
                       <ShoppingCart className="w-3 h-3 text-emerald-400" /> Caisse Wave/OM
                     </div>
-                    <div className="flex items-center gap-1 bg-black/50 border border-white/10 px-2 py-1 rounded-lg">
+                    <div className="flex items-center gap-1 bg-black/60 border border-emerald-500/20 px-2 py-1 rounded-lg">
                       <Building2 className="w-3 h-3 text-emerald-400" /> Paie CNPS
                     </div>
                   </div>
@@ -256,7 +256,7 @@ export function WelcomeScreen({ onReplayIntro }: WelcomeScreenProps) {
                   <span className="flex items-center gap-1 text-[11px]">
                     Accéder au Back-Office <ChevronRight className="w-3.5 h-3.5 text-emerald-400" />
                   </span>
-                  <div className="w-7 h-7 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-bold flex items-center justify-center shadow-md">
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 text-black font-bold flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                     <ArrowRight className="w-4 h-4 text-black" />
                   </div>
                 </div>

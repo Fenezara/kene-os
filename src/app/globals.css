@@ -132,29 +132,37 @@ button, a, [role="button"] {
 }
 
 .gold-border-glow {
-  border: 1px solid rgba(200, 149, 30, 0.4);
-  box-shadow: 0 0 20px rgba(200, 149, 30, 0.15), inset 0 0 10px rgba(200, 149, 30, 0.05);
+  border: 1px solid rgba(200, 149, 30, 0.5);
+  box-shadow: 0 0 25px rgba(200, 149, 30, 0.2), inset 0 0 15px rgba(200, 149, 30, 0.08);
 }
 
 .glass-card-afro {
   background: rgba(26, 20, 16, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(200, 149, 30, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(200, 149, 30, 0.3);
+}
+
+.glass-card-afro-gold {
+  background: linear-gradient(145deg, rgba(30, 22, 16, 0.9) 0%, rgba(15, 10, 5, 0.95) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1.5px solid rgba(255, 215, 0, 0.4);
+  box-shadow: 0 12px 40px -10px rgba(200, 149, 30, 0.3), inset 0 1px 0 rgba(255, 215, 0, 0.2);
 }
 
 .glass-card-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .glass-card-hover:hover {
-  border-color: rgba(200, 149, 30, 0.6);
-  box-shadow: 0 10px 30px -10px rgba(200, 149, 30, 0.25);
-  transform: translateY(-2px);
+  border-color: rgba(255, 215, 0, 0.8);
+  box-shadow: 0 16px 45px -10px rgba(255, 215, 0, 0.4), 0 0 30px rgba(200, 149, 30, 0.25);
+  transform: translateY(-4px) scale(1.01);
 }
 
 /* Background Woven Pattern Lines */
 .bg-pattern-kente {
-  background-image: radial-gradient(rgba(200, 149, 30, 0.1) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(200, 149, 30, 0.15) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
@@ -164,13 +172,44 @@ button, a, [role="button"] {
     transform: scale(1);
   }
   50% {
-    opacity: 0.8;
-    transform: scale(1.05);
+    opacity: 0.95;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes goldShimmerSweep {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(45deg);
   }
 }
 
 .animate-pulse-glow {
   animation: pulseGlow 4s infinite ease-in-out;
+}
+
+.shimmer-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-sweep::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 215, 0, 0.15) 50%,
+    transparent 100%
+  );
+  transform: rotate(30deg);
+  animation: goldShimmerSweep 6s infinite ease-in-out;
+  pointer-events: none;
 }
 
 /* ─── KÈNÈ INNOVATIVE TYPOGRAPHY UTILITIES ─── */
