@@ -6,7 +6,7 @@ import { signJWT } from '@/lib/jwt-auth';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { role, name, firstName, lastName, email, phone, salonName } = body;
+    const { role, name, firstName, lastName, email, phone, salonName, password } = body;
 
     const identifier = email || phone || salonName;
     if (!identifier) {
@@ -22,12 +22,13 @@ export async function POST(request: Request) {
 
     const accountName = name || (firstName && lastName ? `${firstName} ${lastName}` : salonName || 'Utilisateur Kènè');
 
-    // Register user account into verified registry
+    // Register user account into verified registry with bcrypt password hashing
     const newAccount = registerAccount({
       name: accountName,
       email: email || undefined,
       phone: phone || undefined,
       role: normalizedRole,
+      rawPassword: password || undefined,
     });
 
     // Sign cryptographic JWT token (HMAC SHA-256)

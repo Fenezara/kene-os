@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { findRegisteredAccount, registerAccount, UserAccount } from '@/lib/user-store';
+import { findRegisteredAccount, registerAccount, verifyUserPassword, UserAccount } from '@/lib/user-store';
 import { signJWT } from '@/lib/jwt-auth';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { role, email } = body;
+    const { role, email, password } = body;
 
     const identifier = email?.trim();
     if (!identifier) {
@@ -19,7 +19,15 @@ export async function POST(request: Request) {
     // 🔒 ACCOUNT LOOKUP
     let registeredAccount: UserAccount | null = await findRegisteredAccount(identifier);
 
-    if (!registeredAccount) {
+    if (registeredAccount) {
+      // 🔐 Check password if provided or required
+      if (password && !verifyUserPassword(registeredAccount, password)) {
+        return NextResponse.json({ 
+          success: false, 
+          error: 'Mot de passe incorrect pour ce compte. Veuillez vérifier votre saisie.' 
+        }, { status: 401 });
+      }
+    } else {
       const isProAccount = isProRole;
       const defaultRole: 'admin' | 'gerant' | 'client' = isProAccount ? 'gerant' : 'client';
       const isEmail = identifier.includes('@');
@@ -30,7 +38,8 @@ export async function POST(request: Request) {
         name: isProAccount 
           ? (identifier.includes('@') ? `Salon ${identifier.split('@')[0]}` : `Salon ${identifier}`) 
           : (identifier.includes('@') ? identifier.split('@')[0] : `Cliente Kènè (${identifier})`),
-        role: defaultRole
+        role: defaultRole,
+        rawPassword: password || undefined,
       });
     }
 

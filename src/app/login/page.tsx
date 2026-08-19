@@ -76,21 +76,27 @@ function LoginFormContent() {
       // Clear explicit logout flag upon logging in
       localStorage.removeItem('kene_logged_out');
 
+      const enteredPassword = activeTab === 'salon' ? salonPassword : activeTab === 'admin' ? adminPassword : '';
+
       const authRes = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role, email: userEmailOrName })
+        body: JSON.stringify({ 
+          role, 
+          email: userEmailOrName,
+          password: enteredPassword || undefined
+        })
       });
       const authData = await authRes.json();
 
-      // 🔒 SECURITY CHECK: Reject login if account is not registered
+      // 🔒 SECURITY CHECK: Reject login if account is not registered or password wrong
       if (!authRes.ok || !authData.success) {
         setLoading(false);
-        const errMsg = authData.error || 'Compte introuvable. Veuillez créer un compte pour vous connecter.';
+        const errMsg = authData.error || 'Identifiant ou mot de passe incorrect.';
         setLoginError(errMsg);
         toast({
-          title: '🔒 Accès Refusé — Compte Introuvable',
-          description: 'Aucun compte enregistré ne correspond à cet identifiant.',
+          title: '🔒 Échec d\'Authentification',
+          description: errMsg,
           variant: 'destructive',
         });
         return;
@@ -110,9 +116,6 @@ function LoginFormContent() {
       const isClient = roleLower.includes('client');
       const isSuperAdmin = roleLower.includes('admin') || roleLower.includes('super');
       const sessionRole = isClient ? 'client' : isSuperAdmin ? 'admin' : 'gerant';
-
-      // 🔐 ÉTAPE 1 : Effacer toute ancienne session avant d'en créer une nouvelle
-      document.cookie = 'kene-session=; path=/; max-age=0; SameSite=Lax';
 
       if (isClient) {
         let cleanFirstName = 'Awa';
@@ -163,9 +166,7 @@ function LoginFormContent() {
 
         registerNewClient(clientUserData);
         localStorage.setItem('kene_user', JSON.stringify(clientUserData));
-        document.cookie = `kene-session=client-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
       } else {
-        document.cookie = `kene-session=${sessionRole}-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
 
         // Extract employee name cleanly (e.g. "Fatou Koné", "Aminata Diallo")
         let finalEmployeeName = isSuperAdmin ? 'Super-Admin SaaS Kènè' : displayName;
