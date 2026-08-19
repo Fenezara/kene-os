@@ -3,7 +3,11 @@
  * Built using native Web Crypto API (HMAC-SHA256) for zero-dependency Edge Runtime compatibility.
  */
 
-const JWT_SECRET = process.env.JWT_SECRET || 'kene_os_afro_beauty_enterprise_secret_key_2026_99x#z!';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET && process.env.NODE_ENV === 'production') {
+  throw new Error('FATAL: JWT_SECRET environment variable is required in production');
+}
+const SECRET = JWT_SECRET || 'dev-only-local-secret-not-for-production';
 
 export interface JWTPayload {
   sub: string;
@@ -58,7 +62,7 @@ export async function signJWT(payload: Omit<JWTPayload, 'iat' | 'exp'>, expiresI
   const encodedPayload = base64UrlEncode(JSON.stringify(fullPayload));
 
   const dataToSign = `${encodedHeader}.${encodedPayload}`;
-  const key = await getCryptoKey(JWT_SECRET);
+  const key = await getCryptoKey(SECRET);
   const encoder = new TextEncoder();
   const signatureBuffer = await crypto.subtle.sign('HMAC', key, encoder.encode(dataToSign));
   
@@ -80,7 +84,7 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
     const [encodedHeader, encodedPayload, encodedSignature] = parts;
     const dataToSign = `${encodedHeader}.${encodedPayload}`;
 
-    const key = await getCryptoKey(JWT_SECRET);
+    const key = await getCryptoKey(SECRET);
     const encoder = new TextEncoder();
 
     // Reconstruct signature bytes

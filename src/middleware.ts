@@ -55,25 +55,22 @@ export async function middleware(request: NextRequest) {
   const token = sessionCookie?.value;
   const payload = token ? await verifyJWT(token) : null;
 
-  // 1. Pro Route Protection: Requires valid JWT with 'gerant' or 'admin' role
+  // 1. Pro Route Protection: Requires VALID JWT with 'gerant' or 'admin' role
   const isProRoute = PRO_ROUTES.some(p => pathname.startsWith(p));
   if (isProRoute) {
     if (!payload || (payload.role !== 'gerant' && payload.role !== 'admin')) {
-      // Fallback: If legacy cookie exists during migration, allow, otherwise redirect to login
-      if (!sessionCookie) {
-        const loginUrl = new URL('/login', request.url);
-        loginUrl.searchParams.set('redirect', pathname);
-        const response = NextResponse.redirect(loginUrl);
-        applySecurityHeaders(response);
-        return response;
-      }
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      const response = NextResponse.redirect(loginUrl);
+      applySecurityHeaders(response);
+      return response;
     }
   }
 
-  // 2. Client Route Protection: Requires valid JWT or session
+  // 2. Client Route Protection: Requires valid JWT session
   const isClientRoute = CLIENT_ROUTES.some(p => pathname.startsWith(p));
   if (isClientRoute) {
-    if (!sessionCookie) {
+    if (!payload) {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       const response = NextResponse.redirect(loginUrl);
@@ -92,18 +89,27 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 4. CSRF & Security checks for API routes
-  if (pathname.startsWith('/api/') && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)) {
+  // 4. CSRF & Security checks for API routes (mutating requests)
+  if (pathname.startsWith('/api/') && !pathname.startsWith('/api/auth') && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)) {
     const origin = request.headers.get('origin');
     const host = request.headers.get('host');
     
-    if (process.env.NODE_ENV === 'production' && origin && host) {
-      const originHost = new URL(origin).host;
-      if (originHost !== host) {
-        return new NextResponse(JSON.stringify({ error: 'CSRF verification failed' }), {
+    if (process.env.NODE_ENV === 'production') {
+      // Block requests without Origin header on mutating API calls (except auth routes)
+      if (!origin) {
+        return new NextResponse(JSON.stringify({ error: 'Origin header required' }), {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
         });
+      }
+      if (host) {
+        const originHost = new URL(origin).host;
+        if (originHost !== host) {
+          return new NextResponse(JSON.stringify({ error: 'CSRF verification failed' }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
       }
     }
   }

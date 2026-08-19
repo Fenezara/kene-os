@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 export const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET || "kene-secret-key-2026",
+  secret: process.env.NEXTAUTH_SECRET || (process.env.NODE_ENV === 'production' ? (() => { throw new Error('FATAL: NEXTAUTH_SECRET required'); })() : 'dev-only-nextauth-secret'),
   providers: [
     CredentialsProvider({
       name: "Credentials",

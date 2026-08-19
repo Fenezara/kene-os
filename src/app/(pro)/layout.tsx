@@ -186,14 +186,8 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
       const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('kene-session='));
 
       if (!savedUser && !hasCookie) {
-        const guestProUser = {
-          name: 'Partenaire Salon Kènè',
-          email: '',
-          role: 'gerant',
-          salonName: 'Partenaire Salon Kènè',
-        };
-        localStorage.setItem('kene_user', JSON.stringify(guestProUser));
-        document.cookie = `kene-session=gerant-${Date.now()}; path=/; max-age=31536000; SameSite=Lax`;
+        // No session — middleware will redirect to /login
+        // Do NOT auto-create guest accounts
       }
 
       const savedTenant = localStorage.getItem('kene_tenant_settings')
