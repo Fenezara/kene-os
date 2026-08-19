@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Plus, Search, AlertTriangle, Edit2, Trash2, RefreshCw, Filter, Store, Eye, EyeOff, Sparkles, Leaf, Stethoscope, Utensils, Crown, X } from 'lucide-react';
+import { Package, Plus, Search, AlertTriangle, Edit2, Trash2, RefreshCw, Filter, Store, Eye, EyeOff, Sparkles, Leaf, Stethoscope, Utensils, Crown, X, Camera, Upload, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -439,6 +439,70 @@ export default function ProInventoryPage() {
                     <Label className="text-white/60 text-xs">Prix Vente Client (FCFA)</Label>
                     <Input type="number" required min="0" className="bg-white/5 border-white/10 text-white rounded-xl" value={formData.salePrice} onChange={(e) => setFormData({ ...formData, salePrice: e.target.value })} />
                   </div>
+                  {/* SECTION UPLOAD PHOTO PRODUIT */}
+                  <div className="space-y-1.5 col-span-2 bg-[#1A1410] border border-[#C8951E]/40 p-3 rounded-2xl">
+                    <Label className="text-[#F3E5AB] font-bold text-xs flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Camera className="w-3.5 h-3.5 text-[#C8951E]" /> Photo du Produit à Vendre
+                      </span>
+                      <span className="text-[10px] text-white/50 font-normal">Galerie local / Photos HD</span>
+                    </Label>
+                    
+                    <div className="flex items-center gap-3">
+                      {/* Image Preview Thumbnail */}
+                      <div className="w-16 h-16 rounded-xl border border-[#C8951E]/50 overflow-hidden bg-black/60 shrink-0 relative group">
+                        {formData.image ? (
+                          <img src={formData.image} alt="Aperçu Produit" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex flex-col items-center justify-center text-white/30">
+                            <ImageIcon className="w-5 h-5 text-[#C8951E]/60 mb-0.5" />
+                            <span className="text-[7px] font-mono text-center">Sans Photo</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Controls */}
+                      <div className="flex-1 space-y-1.5">
+                        <label className="w-full flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#C8951E]/20 border border-[#C8951E]/40 text-[#F3E5AB] text-xs font-bold hover:bg-[#C8951E]/30 transition cursor-pointer">
+                          <Upload className="w-3.5 h-3.5 text-[#C8951E]" />
+                          <span>Sélectionner une Photo (Galerie appareil)</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              const reader = new FileReader();
+                              reader.onload = () => setFormData({ ...formData, image: reader.result as string });
+                              reader.readAsDataURL(file);
+                            }}
+                          />
+                        </label>
+
+                        {/* Quick HD Presets */}
+                        <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-mono">
+                          <span className="text-white/40 shrink-0">Photos HD :</span>
+                          {[
+                            { label: 'Sérum 🧪', url: '/images/kene_botanical_lab_serum.jpg' },
+                            { label: 'Flacon 🫗', url: '/images/kene_custom_botanical_bottle.png' },
+                            { label: 'Ingrédients 🌿', url: '/images/botanical_ingredients_flatlay.jpg' },
+                            { label: 'Scanner 🔬', url: '/images/afro_skin_spectral_scanner.jpg' },
+                          ].map((preset, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => setFormData({ ...formData, image: preset.url })}
+                              className="px-2 py-0.5 rounded-lg bg-white/5 border border-white/10 hover:border-[#C8951E] text-white/70 hover:text-white shrink-0 cursor-pointer"
+                            >
+                              {preset.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="space-y-1 col-span-2">
                     <Label className="text-white/60 text-xs">Quantité en Stock Initial</Label>
                     <Input type="number" required min="0" className="bg-white/5 border-white/10 text-white rounded-xl" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} />
@@ -524,6 +588,70 @@ export default function ProInventoryPage() {
                 <Label className="text-white/60 text-xs">Prix Vente Client (FCFA)</Label>
                 <Input type="number" required min="0" className="bg-white/5 border-white/10 text-white rounded-xl" value={formData.salePrice} onChange={(e) => setFormData({ ...formData, salePrice: e.target.value })} />
               </div>
+              {/* SECTION UPLOAD PHOTO PRODUIT EDIT */}
+              <div className="space-y-1.5 col-span-2 bg-[#1A1410] border border-[#C8951E]/40 p-3 rounded-2xl">
+                <Label className="text-[#F3E5AB] font-bold text-xs flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <Camera className="w-3.5 h-3.5 text-[#C8951E]" /> Photo du Produit à Vendre
+                  </span>
+                  <span className="text-[10px] text-white/50 font-normal font-mono">Changer la Photo</span>
+                </Label>
+                
+                <div className="flex items-center gap-3">
+                  {/* Image Preview Thumbnail */}
+                  <div className="w-16 h-16 rounded-xl border border-[#C8951E]/50 overflow-hidden bg-black/60 shrink-0 relative group">
+                    {formData.image ? (
+                      <img src={formData.image} alt="Aperçu Produit" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center text-white/30">
+                        <ImageIcon className="w-5 h-5 text-[#C8951E]/60 mb-0.5" />
+                        <span className="text-[7px] font-mono text-center">Sans Photo</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Controls */}
+                  <div className="flex-1 space-y-1.5">
+                    <label className="w-full flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#C8951E]/20 border border-[#C8951E]/40 text-[#F3E5AB] text-xs font-bold hover:bg-[#C8951E]/30 transition cursor-pointer">
+                      <Upload className="w-3.5 h-3.5 text-[#C8951E]" />
+                      <span>Changer la Photo (Galerie)</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const reader = new FileReader();
+                          reader.onload = () => setFormData({ ...formData, image: reader.result as string });
+                          reader.readAsDataURL(file);
+                        }}
+                      />
+                    </label>
+
+                    {/* Quick HD Presets */}
+                    <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-mono">
+                      <span className="text-white/40 shrink-0">Photos HD :</span>
+                      {[
+                        { label: 'Sérum 🧪', url: '/images/kene_botanical_lab_serum.jpg' },
+                        { label: 'Flacon 🫗', url: '/images/kene_custom_botanical_bottle.png' },
+                        { label: 'Ingrédients 🌿', url: '/images/botanical_ingredients_flatlay.jpg' },
+                        { label: 'Scanner 🔬', url: '/images/afro_skin_spectral_scanner.jpg' },
+                      ].map((preset, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, image: preset.url })}
+                          className="px-2 py-0.5 rounded-lg bg-white/5 border border-white/10 hover:border-[#C8951E] text-white/70 hover:text-white shrink-0 cursor-pointer"
+                        >
+                          {preset.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-1 col-span-2">
                 <Label className="text-white/60 text-xs">Quantité en Stock Actuelle</Label>
                 <Input type="number" required min="0" className="bg-white/5 border-white/10 text-white rounded-xl" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} />
