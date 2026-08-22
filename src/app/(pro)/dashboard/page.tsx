@@ -12,6 +12,8 @@ import {
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { KENE_PRICING_PLANS } from '@/config/pricing';
+import { OnboardingChecklist } from '@/components/OnboardingChecklist';
+import { SimpleModeSwitcher } from '@/components/SimpleModeSwitcher';
 
 interface TenantStats {
   appointmentsToday: number;
@@ -95,6 +97,7 @@ export default function ProDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [activeChartPoint, setActiveChartPoint] = useState<number | null>(5); // Default to Saturday
   const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('pro');
+  const [isSimpleMode, setIsSimpleMode] = useState(true);
 
   useEffect(() => {
     const updatePlan = () => {
@@ -103,12 +106,20 @@ export default function ProDashboardPage() {
         if (stored && (stored === 'essentiel' || stored === 'pro' || stored === 'elite')) {
           setActivePlan(stored);
         }
+        const simple = localStorage.getItem('kene_simple_mode');
+        if (simple !== null) {
+          setIsSimpleMode(simple === 'true');
+        }
       } catch (e) {}
     };
 
     updatePlan();
     window.addEventListener('kene_plan_changed', updatePlan);
-    return () => window.removeEventListener('kene_plan_changed', updatePlan);
+    window.addEventListener('kene_simple_mode_changed', updatePlan);
+    return () => {
+      window.removeEventListener('kene_plan_changed', updatePlan);
+      window.removeEventListener('kene_simple_mode_changed', updatePlan);
+    };
   }, []);
 
   const isEssentiel = activePlan === 'essentiel';
@@ -183,25 +194,32 @@ export default function ProDashboardPage() {
 
   const maxVal = Math.max(...WEEKLY_DATA.map(d => d.val));
 
-  const activeQuickActions = isEssentiel
+  const activeQuickActions = isSimpleMode
     ? [
-        { label: 'Nouveau RDV', href: '/agenda', icon: CalendarCheck, color: 'from-emerald-600 to-emerald-900', textColor: 'text-white' },
-        { label: 'Encaisser POS', href: '/pos', icon: ShoppingCart, color: 'from-emerald-700 to-teal-950', textColor: 'text-emerald-200' },
-        { label: 'Ajouter Cliente', href: '/clients', icon: Users, color: 'from-slate-700 to-slate-900', textColor: 'text-slate-200' },
-        { label: 'Services & Tarifs', href: '/services', icon: Scissors, color: 'from-slate-800 to-slate-950', textColor: 'text-slate-300' },
+        { label: '💵 Faire un Encaissement (Caisse)', href: '/pos', icon: ShoppingCart, color: 'from-[#2E5A36] to-[#1A3820]', textColor: 'text-emerald-200' },
+        { label: '📅 Prendre un RDV (Agenda)', href: '/agenda', icon: CalendarCheck, color: 'from-[#C8951E] to-[#8A5C0A]', textColor: 'text-[#0F0A05]' },
+        { label: '👥 Mon Carnet Clientes', href: '/clients', icon: Users, color: 'from-[#1E3A5F] to-[#0E1E35]', textColor: 'text-blue-200' },
+        { label: '✂️ Mes Services & Tarifs', href: '/services', icon: Scissors, color: 'from-[#8A3B14] to-[#4A1B07]', textColor: 'text-amber-200' },
+      ]
+    : isEssentiel
+    ? [
+        { label: '📅 Prendre un RDV', href: '/agenda', icon: CalendarCheck, color: 'from-emerald-600 to-emerald-900', textColor: 'text-white' },
+        { label: '💵 Faire un Encaissement (Caisse)', href: '/pos', icon: ShoppingCart, color: 'from-emerald-700 to-teal-950', textColor: 'text-emerald-200' },
+        { label: '👥 Mon Carnet Clientes', href: '/clients', icon: Users, color: 'from-slate-700 to-slate-900', textColor: 'text-slate-200' },
+        { label: '✂️ Mes Services & Tarifs', href: '/services', icon: Scissors, color: 'from-slate-800 to-slate-950', textColor: 'text-slate-300' },
       ]
     : isPro
     ? [
-        { label: 'Nouveau RDV', href: '/agenda', icon: CalendarCheck, color: 'from-[#C8951E] to-[#8A5C0A]', textColor: 'text-[#0F0A05]' },
-        { label: 'Encaisser POS', href: '/pos', icon: ShoppingCart, color: 'from-[#2E5A36] to-[#1A3820]', textColor: 'text-emerald-200' },
-        { label: 'Diagnostic 3D IA', href: '/diagnoses', icon: ScanFace, color: 'from-[#C8951E]/80 to-[#D4AF37]', textColor: 'text-black' },
-        { label: 'Stocks Produits', href: '/inventory', icon: Package, color: 'from-[#8A3B14] to-[#4A1B07]', textColor: 'text-amber-200' },
+        { label: '📅 Prendre un RDV', href: '/agenda', icon: CalendarCheck, color: 'from-[#C8951E] to-[#8A5C0A]', textColor: 'text-[#0F0A05]' },
+        { label: '💵 Faire un Encaissement (Caisse)', href: '/pos', icon: ShoppingCart, color: 'from-[#2E5A36] to-[#1A3820]', textColor: 'text-emerald-200' },
+        { label: '🔬 Bilan Dermo-IA 3D', href: '/diagnoses', icon: ScanFace, color: 'from-[#C8951E]/80 to-[#D4AF37]', textColor: 'text-black' },
+        { label: '📦 Stocks & Produits', href: '/inventory', icon: Package, color: 'from-[#8A3B14] to-[#4A1B07]', textColor: 'text-amber-200' },
       ]
     : [
-        { label: 'Labo Sur-Mesure 👑', href: '/lab', icon: FlaskConical, color: 'from-[#FFD700] via-[#C8951E] to-[#8A1C14]', textColor: 'text-black font-black' },
-        { label: 'Compta SYSCOHADA 👑', href: '/compta', icon: BarChart3, color: 'from-[#1E3A5F] to-[#0E1E35]', textColor: 'text-blue-200' },
-        { label: 'Diagnostic 3D IA', href: '/diagnoses', icon: ScanFace, color: 'from-[#C8951E] to-[#8A5C0A]', textColor: 'text-[#0F0A05]' },
-        { label: 'Paie & CNPS 👑', href: '/rh', icon: ShieldCheck, color: 'from-[#8A1C14] to-[#4A0A05]', textColor: 'text-red-200' },
+        { label: '🧪 Labo Sur-Mesure 👑', href: '/lab', icon: FlaskConical, color: 'from-[#FFD700] via-[#C8951E] to-[#8A1C14]', textColor: 'text-black font-black' },
+        { label: '📊 Compta SYSCOHADA 👑', href: '/compta', icon: BarChart3, color: 'from-[#1E3A5F] to-[#0E1E35]', textColor: 'text-blue-200' },
+        { label: '🔬 Bilan Dermo-IA 3D', href: '/diagnoses', icon: ScanFace, color: 'from-[#C8951E] to-[#8A5C0A]', textColor: 'text-[#0F0A05]' },
+        { label: '👥 Paie & CNPS 👑', href: '/rh', icon: ShieldCheck, color: 'from-[#8A1C14] to-[#4A0A05]', textColor: 'text-red-200' },
       ];
 
   const statCards = [
@@ -252,57 +270,20 @@ export default function ProDashboardPage() {
   return (
     <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-24 md:pb-8 font-sans">
 
-      {/* ── 0. INTERACTIVE PLAN SWITCHER CONTROL BAR ── */}
-      <div className={`p-4 rounded-3xl border shadow-2xl backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-4 transition-all duration-500 ${
-        isEssentiel ? 'bg-[#0E1511]/90 border-emerald-500/30' : isPro ? 'bg-[#18110B]/90 border-[#C8951E]/40' : 'bg-[#1E1108]/90 border-2 border-[#FFD700]/70'
-      }`}>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-[#C8951E]/20 border border-[#C8951E]/40 flex items-center justify-center text-xl shrink-0">
-            {isEssentiel ? '🟢' : isPro ? '⭐' : '👑'}
-          </div>
-          <div>
-            <div className="text-[10px] font-mono text-[#C8951E] uppercase tracking-wider font-bold flex items-center gap-2">
-              <span>Sélecteur de Plan en Direct</span>
-              <span className="text-[9px] bg-white/10 px-2 py-0.2 rounded-full text-white/70">Cliquez pour tester</span>
-            </div>
-            <div className="text-sm font-bold text-white">
-              Plan Actif : <span className="text-[#F3E5AB] font-black">{isEssentiel ? 'Plan 1 — Essentiel (7 500 F)' : isPro ? 'Plan 2 — Pro ⭐ (15 000 F)' : 'Plan 3 — Élite 👑 (30 000 F)'}</span>
-            </div>
-          </div>
+      {/* ── 0. CONTROL BAR & SIMPLE MODE SWITCHER ── */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#16100B] border border-[#C8951E]/30 p-3.5 rounded-3xl shadow-xl">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold text-[#F3E5AB]">Expérience Salon :</span>
+          <SimpleModeSwitcher />
         </div>
-
-        <div className="grid grid-cols-3 gap-2 w-full md:w-auto">
-          {[
-            { id: 'essentiel', label: 'Plan 1: Essentiel', price: '7 500 F', color: 'border-emerald-500 bg-emerald-500/20 text-emerald-300' },
-            { id: 'pro', label: 'Plan 2: Pro ⭐', price: '15 000 F', color: 'border-[#C8951E] bg-[#C8951E]/25 text-[#F3E5AB]' },
-            { id: 'elite', label: 'Plan 3: Élite 👑', price: '30 000 F', color: 'border-[#FFD700] bg-[#FFD700]/30 text-[#FFD700]' },
-          ].map((plan) => {
-            const isSelected = activePlan === plan.id;
-            return (
-              <button
-                key={plan.id}
-                onClick={() => {
-                  setActivePlan(plan.id as any);
-                  localStorage.setItem('kene_active_plan', plan.id);
-                  window.dispatchEvent(new Event('kene_plan_changed'));
-                  toast({
-                    title: `✨ Plan basculé sur "${plan.label}" !`,
-                    description: `Le tableau de bord et les cartes visuelles ont été adaptés au ${plan.label}.`,
-                  });
-                }}
-                className={`px-3 py-2 rounded-2xl text-xs font-bold font-mono transition-all duration-300 border cursor-pointer ${
-                  isSelected
-                    ? `${plan.color} shadow-lg scale-105 font-black ring-2 ring-white/20`
-                    : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                <div className="truncate">{plan.label}</div>
-                <div className="text-[9px] opacity-75">{plan.price}/mois</div>
-              </button>
-            );
-          })}
+        
+        <div className="flex items-center gap-2 text-xs font-mono text-white/50">
+          <span>Plan Actif : <strong className="text-white font-bold">{isEssentiel ? 'Essentiel 🟢' : isPro ? 'Pro ⭐' : 'Élite 👑'}</strong></span>
         </div>
       </div>
+
+      {/* ── 0.1 ONBOARDING CHECKLIST GUIDÉE EN 3 ÉTAPES ── */}
+      <OnboardingChecklist />
 
       {/* ── 1. HERO GREETING BANNER ── */}
       <motion.div

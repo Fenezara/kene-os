@@ -45,18 +45,18 @@ export function ExperienceOrchestrator() {
     }
   }, []);
 
-  // Auto transition from Splash to Onboarding after 3.8 seconds for first-time visitors
+  // Auto transition from Splash to Welcome after 2.2 seconds for quick entry
   useEffect(() => {
     if (step === 'splash') {
       const timer = setTimeout(() => {
-        setStep('onboarding');
-      }, 3800);
+        setStep('welcome');
+      }, 2200);
       return () => clearTimeout(timer);
     }
   }, [step]);
 
   const handleSplashComplete = () => {
-    setStep('onboarding');
+    setStep('welcome');
   };
 
   const handleOnboardingComplete = () => {

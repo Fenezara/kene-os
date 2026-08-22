@@ -54,6 +54,7 @@ const groupLabels: Record<string, string> = {
 function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
   const { toast } = useToast();
   const [activePlan, setActivePlan] = useState<'essentiel' | 'pro' | 'elite'>('essentiel');
+  const [isSimpleMode, setIsSimpleMode] = useState(true);
 
   React.useEffect(() => {
     const updatePlan = () => {
@@ -62,15 +63,26 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
         if (stored && (stored === 'essentiel' || stored === 'pro' || stored === 'elite')) {
           setActivePlan(stored);
         }
+        const simple = localStorage.getItem('kene_simple_mode');
+        if (simple !== null) {
+          setIsSimpleMode(simple === 'true');
+        }
       } catch (e) {}
     };
 
     updatePlan();
     window.addEventListener('kene_plan_changed', updatePlan);
-    return () => window.removeEventListener('kene_plan_changed', updatePlan);
+    window.addEventListener('kene_simple_mode_changed', updatePlan);
+    return () => {
+      window.removeEventListener('kene_plan_changed', updatePlan);
+      window.removeEventListener('kene_simple_mode_changed', updatePlan);
+    };
   }, []);
 
-  const allowedModules = KENE_PRICING_PLANS[activePlan]?.allowedModules || KENE_PRICING_PLANS.pro.allowedModules;
+  const allowedModules = isSimpleMode 
+    ? ['dashboard', 'agenda', 'pos', 'clients', 'services', 'settings']
+    : (KENE_PRICING_PLANS[activePlan]?.allowedModules || KENE_PRICING_PLANS.pro.allowedModules);
+
   const groups = Array.from(new Set(navItems.map(i => i.group)))
 
   return (
@@ -79,8 +91,34 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
       <div className="px-4 pt-5 pb-3">
         <KeneLogo href="/dashboard" subtitle="PRO" size="md" />
 
-        {/* Dynamic Plan Switcher Widget */}
-        <PlanSwitcher />
+        {/* Dynamic Mode & Plan Switcher */}
+        <div className="mt-2 space-y-2">
+          {/* Mode Switcher */}
+          <div className="flex items-center justify-between bg-black/40 p-1 rounded-xl border border-white/10 text-[10px] font-bold">
+            <button
+              onClick={() => {
+                setIsSimpleMode(true);
+                localStorage.setItem('kene_simple_mode', 'true');
+                window.dispatchEvent(new Event('kene_simple_mode_changed'));
+              }}
+              className={`flex-1 py-1 rounded-lg transition cursor-pointer ${isSimpleMode ? 'bg-[#C8951E] text-black font-black' : 'text-white/60 hover:text-white'}`}
+            >
+              ⚡ Simple
+            </button>
+            <button
+              onClick={() => {
+                setIsSimpleMode(false);
+                localStorage.setItem('kene_simple_mode', 'false');
+                window.dispatchEvent(new Event('kene_simple_mode_changed'));
+              }}
+              className={`flex-1 py-1 rounded-lg transition cursor-pointer ${!isSimpleMode ? 'bg-[#C8951E] text-black font-black' : 'text-white/60 hover:text-white'}`}
+            >
+              👑 Complet
+            </button>
+          </div>
+
+          <PlanSwitcher />
+        </div>
 
         {/* Search & Notifications */}
         <div className="mt-3 flex items-center gap-2">
@@ -96,7 +134,7 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
         </div>
       </div>
 
-      {/* Dynamic Nav groups according to activePlan */}
+      {/* Dynamic Nav groups according to activePlan and isSimpleMode */}
       <nav className="flex-1 overflow-y-auto px-3 pb-4 space-y-4 scrollbar-none">
         {groups.map((group) => {
           const items = navItems.filter(i => i.group === group && allowedModules.includes(i.id))
@@ -105,7 +143,7 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
           return (
             <div key={group}>
               <div className="px-2 mb-1.5 text-[9px] font-bold tracking-[0.15em] uppercase text-[#FFD700]/70 flex items-center justify-between">
-                <span>{groupLabels[group]}</span>
+                <span>{isSimpleMode ? '⚡ Fonctions Essentielles' : groupLabels[group]}</span>
               </div>
               <div className="space-y-0.5">
                 {items.map((item) => {

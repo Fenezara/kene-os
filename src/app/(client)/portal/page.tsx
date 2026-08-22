@@ -570,6 +570,53 @@ export default function ClientPortalPage() {
         </Link>
       </motion.div>
 
+      {/* ── 🌟 LES 3 ACTIONS CLÉS EN 1-CLIC POUR LA CLIENTE ── */}
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Action 1: RDV */}
+          <Link href="/checkout" className="block group">
+            <div className="p-4 rounded-3xl bg-gradient-to-br from-[#2E5A36]/30 via-[#1A3820]/20 to-[#0F1E12] border-2 border-emerald-500/40 hover:border-emerald-400 transition-all shadow-xl flex items-center justify-between cursor-pointer group-hover:scale-[1.02]">
+              <div className="space-y-1">
+                <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase tracking-wider">Étape 1</span>
+                <h4 className="font-bold text-sm text-white group-hover:text-emerald-300">📅 Prendre un RDV</h4>
+                <p className="text-[11px] text-white/60">Réserver une prestation ou un soin</p>
+              </div>
+              <div className="w-9 h-9 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 flex items-center justify-center font-bold text-base shrink-0 group-hover:bg-emerald-500 group-hover:text-black transition-colors">
+                →
+              </div>
+            </div>
+          </Link>
+
+          {/* Action 2: Diagnostic */}
+          <Link href="/diagnostic" className="block group">
+            <div className="p-4 rounded-3xl bg-gradient-to-br from-[#C8951E]/30 via-[#8A5C0A]/20 to-[#1A1208] border-2 border-[#C8951E]/40 hover:border-[#FFD700] transition-all shadow-xl flex items-center justify-between cursor-pointer group-hover:scale-[1.02]">
+              <div className="space-y-1">
+                <span className="text-[10px] font-mono text-[#FFD700] font-bold uppercase tracking-wider">Étape 2</span>
+                <h4 className="font-bold text-sm text-white group-hover:text-[#FFD700]">🔬 Bilan Peau Dermo-IA</h4>
+                <p className="text-[11px] text-white/60">Scanner spectral & routine sur-mesure</p>
+              </div>
+              <div className="w-9 h-9 rounded-2xl bg-[#C8951E]/20 border border-[#C8951E]/40 text-[#FFD700] flex items-center justify-center font-bold text-base shrink-0 group-hover:bg-[#FFD700] group-hover:text-black transition-colors">
+                →
+              </div>
+            </div>
+          </Link>
+
+          {/* Action 3: Boutique */}
+          <Link href="/inventory" className="block group">
+            <div className="p-4 rounded-3xl bg-gradient-to-br from-[#8A3B14]/30 via-[#4A1B07]/20 to-[#1A0A04] border-2 border-amber-600/40 hover:border-amber-400 transition-all shadow-xl flex items-center justify-between cursor-pointer group-hover:scale-[1.02]">
+              <div className="space-y-1">
+                <span className="text-[10px] font-mono text-amber-300 font-bold uppercase tracking-wider">Étape 3</span>
+                <h4 className="font-bold text-sm text-white group-hover:text-amber-300">🛍️ Boutique Botanique</h4>
+                <p className="text-[11px] text-white/60">Karité brut, Baobab & Sérums</p>
+              </div>
+              <div className="w-9 h-9 rounded-2xl bg-amber-600/20 border border-amber-600/40 text-amber-300 flex items-center justify-center font-bold text-base shrink-0 group-hover:bg-amber-500 group-hover:text-black transition-colors">
+                →
+              </div>
+            </div>
+          </Link>
+        </div>
+      </motion.div>
+
       {/* ── RITUEL DU JOUR & CHECKLIST SKINCARE INTERACTIVE ── */}
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
         <Card className="bg-[#1A1410] border border-[var(--gold-kene)]/30 rounded-3xl overflow-hidden shadow-xl">
